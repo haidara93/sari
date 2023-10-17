@@ -21,3 +21,9 @@ class SavePostEvent extends GroupEvent {
 
   SavePostEvent(this.postId, this.groupId);
 }
+
+class UnSavePostEvent extends GroupEvent {
+  final int postId;
+
+  UnSavePostEvent(this.postId);
+}

@@ -202,6 +202,7 @@ class MyApp extends StatelessWidget {
                 ],
                 child: MaterialApp(
                   title: 'التخليص الجمركي',
+                  locale: Locale('ar', 'SY'),
                   theme: ThemeData(
                     primarySwatch: Colors.blue,
                     textTheme: GoogleFonts.changaTextTheme(

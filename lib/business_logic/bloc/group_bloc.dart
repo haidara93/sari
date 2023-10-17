@@ -56,5 +56,24 @@ class GroupBloc extends Bloc<GroupEvent, GroupState> {
         }
       },
     );
+
+    on<UnSavePostEvent>(
+      (event, emit) async {
+        GroupListLoadedSuccess currentstate = state as GroupListLoadedSuccess;
+        emit(GroupLoadingProgress());
+        try {
+          var savedpost = await postRepository.unSavePost(event.postId);
+          if (savedpost) {
+            emit(PostUnsavedSuccessfully());
+            var groups = currentstate.groups;
+            emit(GroupListLoadedSuccess(groups));
+          } else {
+            emit(GroupLoadedFailed("errortext"));
+          }
+        } catch (e) {
+          emit(GroupLoadedFailed(e.toString()));
+        }
+      },
+    );
   }
 }

@@ -22,3 +22,5 @@ class GroupLoadedFailed extends GroupState {
 
   GroupLoadedFailed(this.errortext);
 }
+
+class PostUnsavedSuccessfully extends GroupState {}

@@ -17,5 +17,19 @@ class PostBloc extends Bloc<PostEvent, PostState> {
         emit(PostLoadedSuccess(posts));
       } catch (e) {}
     });
+
+    on<PostSaveEvent>(
+      (event, emit) {
+        PostLoadedSuccess currentstate = state as PostLoadedSuccess;
+        emit(PostLoadingProgress());
+        for (var i = 0; i < currentstate.posts.length; i++) {
+          if (currentstate.posts[i].id! == event.postId) {
+            currentstate.posts[i].is_saved = event.save;
+            break;
+          }
+        }
+        emit(PostLoadedSuccess(currentstate.posts));
+      },
+    );
   }
 }

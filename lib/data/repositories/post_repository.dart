@@ -16,7 +16,6 @@ class PostRepository {
 
     var rs = await HttpHelper.get(POSTS_ENDPOINT, apiToken: jwt);
     posts = [];
-    print(rs.statusCode);
     if (rs.statusCode == 200) {
       var myDataString = utf8.decode(rs.bodyBytes);
 
@@ -32,13 +31,11 @@ class PostRepository {
     prefs = await SharedPreferences.getInstance();
     var token = prefs.getString("token");
     var jwt = token!.split(".");
-    print(jwt);
     var payload =
         json.decode(ascii.decode(base64.decode(base64.normalize(jwt![1]))));
     var rs = await HttpHelper.post(
         GROUPS_ENDPOINT, {"name": name, "user": payload["user_id"]},
         apiToken: token);
-    print(rs.statusCode);
     if (rs.statusCode == 201) {
       var myDataString = utf8.decode(rs.bodyBytes);
 
@@ -53,7 +50,6 @@ class PostRepository {
     prefs = await SharedPreferences.getInstance();
     var token = prefs.getString("token");
     var jwt = token!.split(".");
-    print(jwt);
     var payload =
         json.decode(ascii.decode(base64.decode(base64.normalize(jwt![1]))));
     var rs = await HttpHelper.post(
@@ -64,7 +60,6 @@ class PostRepository {
           "groups": [group]
         },
         apiToken: token);
-    print(rs.statusCode);
     if (rs.statusCode == 201) {
       var myDataString = utf8.decode(rs.bodyBytes);
 
@@ -75,6 +70,20 @@ class PostRepository {
     return null;
   }
 
+  Future<bool> unSavePost(int post) async {
+    prefs = await SharedPreferences.getInstance();
+    var token = prefs.getString("token");
+    var response = await HttpHelper.delete(
+        "${SAVED_POSTS_ENDPOINT}delete/$post/",
+        apiToken: token);
+    print(response.statusCode);
+    if (response.statusCode == 200) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
   Future<List<SavedPost>> getsavedPosts(int group) async {
     prefs = await SharedPreferences.getInstance();
     var jwt = prefs.getString("token");
@@ -82,7 +91,6 @@ class PostRepository {
     var rs = await HttpHelper.get('$SAVED_POSTS_ENDPOINT?groups=$group',
         apiToken: jwt);
     savedPosts = [];
-    print(rs.statusCode);
     if (rs.statusCode == 200) {
       var myDataString = utf8.decode(rs.bodyBytes);
 
