@@ -202,14 +202,14 @@ class MyApp extends StatelessWidget {
                 ],
                 child: MaterialApp(
                   title: 'التخليص الجمركي',
-                  locale: Locale('ar', 'SY'),
+                  locale: const Locale('ar', 'SY'),
                   theme: ThemeData(
                     primarySwatch: Colors.blue,
                     textTheme: GoogleFonts.changaTextTheme(
                       Theme.of(context).textTheme,
                     ),
                   ),
-                  home: showHome ? ControlView() : IntroductionView(),
+                  home: showHome ? const ControlView() : IntroductionView(),
                 ),
               ),
             );

@@ -15,6 +15,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:image_picker/image_picker.dart';
 
 class TraderAttachementScreen extends StatefulWidget {
+  final int? offerType;
   final int customAgency;
   final int customeState;
   final int? packagesNum;
@@ -31,6 +32,7 @@ class TraderAttachementScreen extends StatefulWidget {
       {Key? key,
       required this.customAgency,
       required this.customeState,
+      this.offerType,
       this.packagesNum,
       this.tabalehNum,
       this.weight,
@@ -142,177 +144,308 @@ class _TraderAttachementScreenState extends State<TraderAttachementScreen> {
                 });
               }
             },
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                const Text("الطلب رقم: 3475"),
-                Card(
-                  margin: const EdgeInsets.symmetric(vertical: 7),
-                  child: Padding(
-                    padding: const EdgeInsets.all(8.0),
+            child: Padding(
+              padding: EdgeInsets.symmetric(horizontal: 18.w),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  // Text(
+                  //   "الطلب رقم: 3475",
+                  //   style: TextStyle(color: AppColor.activeGreen),
+                  // ),
+                  const SizedBox(
+                    height: 25,
+                  ),
+                  Container(
+                    margin: const EdgeInsets.symmetric(vertical: 7),
+                    padding: const EdgeInsets.all(12.0),
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(25),
+                      gradient: const LinearGradient(
+                          colors: [
+                            Color.fromARGB(255, 229, 215, 94),
+                            Colors.white,
+                            Colors.white,
+                          ],
+                          begin: Alignment.topCenter,
+                          end: Alignment.bottomCenter),
+                    ),
                     child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           const Text("تاريخ وصول البضاعة"),
+                          const SizedBox(
+                            height: 15,
+                          ),
                           TextField(
                             controller: _expireDate,
                             decoration: InputDecoration(
-                                icon: GestureDetector(
+                                suffixIcon: GestureDetector(
                                     onTap: _showDatePicker,
                                     child: const Icon(Icons.date_range)),
+                                contentPadding: EdgeInsets.zero,
                                 border: OutlineInputBorder(
-                                    borderRadius: BorderRadius.circular(5))),
+                                    borderRadius: BorderRadius.circular(12))),
                           ),
                           SizedBox(
-                            height: 30.h,
+                            height: 10.h,
                           ),
+                        ]),
+                  ),
+                  const SizedBox(
+                    height: 5,
+                  ),
+                  Container(
+                    margin: const EdgeInsets.symmetric(vertical: 7),
+                    padding: const EdgeInsets.all(15.0),
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(25),
+                      gradient: const LinearGradient(
+                          colors: [
+                            Color.fromARGB(255, 229, 215, 94),
+                            Colors.white,
+                            Colors.white,
+                          ],
+                          begin: Alignment.topCenter,
+                          end: Alignment.bottomCenter),
+                    ),
+                    child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
                           const Text("المرفقات"),
                           const Text("يرجى تحميل المرفقات المتاحة حاليا"),
+                          const SizedBox(
+                            height: 15,
+                          ),
                           Row(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
                               CustomButton(
-                                color: AppColor.deepYellow,
+                                color: AppColor.activeGreen,
                                 onTap: () {
                                   showDialog(
                                     context: context,
                                     builder: (context) => StatefulBuilder(
                                         builder:
                                             (context, StateSetter setState) {
-                                      return SimpleDialog(
-                                        title: const Text('إضافة مرفق'),
-                                        children: [
-                                          _previewImages(),
-                                          CustomButton(
-                                            title: const Text("رفع صورة"),
-                                            color: AppColor.deepYellow,
-                                            onTap: () async {
-                                              var pickedImage =
-                                                  await _picker.pickImage(
-                                                      source:
-                                                          ImageSource.gallery);
-                                              setState(() {
-                                                _image =
-                                                    File(pickedImage!.path);
-                                              });
-                                            },
-                                          ),
-                                          CustomButton(
-                                              title: const Text("رفع ملف"),
+                                      return Directionality(
+                                        textDirection: TextDirection.rtl,
+                                        child: SimpleDialog(
+                                          title: const Text('إضافة مرفق'),
+                                          shape: RoundedRectangleBorder(
+                                              borderRadius:
+                                                  BorderRadius.circular(15)),
+                                          contentPadding:
+                                              const EdgeInsets.all(8),
+                                          children: [
+                                            _previewImages(),
+                                            const SizedBox(
+                                              height: 7,
+                                            ),
+                                            CustomButton(
+                                              title: const Text("رفع صورة"),
                                               color: AppColor.deepYellow,
-                                              onTap: () {}),
-                                          BlocBuilder<AttachmentTypeBloc,
-                                              AttachmentTypeState>(
-                                            builder: (context, state2) {
-                                              if (state2
-                                                  is AttachmentTypeLoadedSuccess) {
-                                                return DropdownButtonHideUnderline(
-                                                  child: DropdownButton2<
-                                                      AttachmentType>(
-                                                    isExpanded: true,
-                                                    hint: Text(
-                                                      "اختر نوع المرفق",
-                                                      style: TextStyle(
-                                                        fontSize: 14,
-                                                        color: Theme.of(context)
-                                                            .hintColor,
+                                              onTap: () async {
+                                                var pickedImage =
+                                                    await _picker.pickImage(
+                                                        source: ImageSource
+                                                            .gallery);
+                                                setState(() {
+                                                  _image =
+                                                      File(pickedImage!.path);
+                                                });
+                                              },
+                                            ),
+                                            const SizedBox(
+                                              height: 7,
+                                            ),
+                                            CustomButton(
+                                                title: const Text("رفع ملف"),
+                                                color: AppColor.deepYellow,
+                                                onTap: () {}),
+                                            const SizedBox(
+                                              height: 15,
+                                            ),
+                                            BlocBuilder<AttachmentTypeBloc,
+                                                AttachmentTypeState>(
+                                              builder: (context, state2) {
+                                                if (state2
+                                                    is AttachmentTypeLoadedSuccess) {
+                                                  return DropdownButtonHideUnderline(
+                                                    child: DropdownButton2<
+                                                        AttachmentType>(
+                                                      isExpanded: true,
+                                                      hint: Text(
+                                                        "اختر نوع المرفق",
+                                                        style: TextStyle(
+                                                          fontSize: 14,
+                                                          color:
+                                                              Theme.of(context)
+                                                                  .hintColor,
+                                                        ),
+                                                      ),
+                                                      items: state2
+                                                          .attachmentTypes
+                                                          .map((AttachmentType
+                                                                  item) =>
+                                                              DropdownMenuItem<
+                                                                  AttachmentType>(
+                                                                value: item,
+                                                                child: Text(
+                                                                  item.name!,
+                                                                  style:
+                                                                      const TextStyle(
+                                                                    fontSize:
+                                                                        14,
+                                                                  ),
+                                                                ),
+                                                              ))
+                                                          .toList(),
+                                                      value:
+                                                          selectedAttachmentType,
+                                                      onChanged:
+                                                          (AttachmentType?
+                                                              value) {
+                                                        setState(() {
+                                                          selectedAttachmentType =
+                                                              value;
+                                                        });
+                                                      },
+                                                      buttonStyleData:
+                                                          ButtonStyleData(
+                                                        height: 50,
+                                                        width: double.infinity,
+                                                        padding:
+                                                            const EdgeInsets
+                                                                    .only(
+                                                                left: 14,
+                                                                right: 14),
+                                                        decoration:
+                                                            BoxDecoration(
+                                                          borderRadius:
+                                                              BorderRadius
+                                                                  .circular(12),
+                                                          border: Border.all(
+                                                            color:
+                                                                Colors.black26,
+                                                          ),
+                                                          color: Colors.white,
+                                                        ),
+                                                        elevation: 2,
+                                                      ),
+                                                      iconStyleData:
+                                                          const IconStyleData(
+                                                        icon: Icon(
+                                                          Icons
+                                                              .arrow_forward_ios_outlined,
+                                                        ),
+                                                        iconSize: 14,
+                                                        iconEnabledColor:
+                                                            AppColor
+                                                                .AccentGreen,
+                                                        iconDisabledColor:
+                                                            Colors.grey,
+                                                      ),
+                                                      dropdownStyleData:
+                                                          DropdownStyleData(
+                                                        decoration:
+                                                            BoxDecoration(
+                                                          borderRadius:
+                                                              BorderRadius
+                                                                  .circular(14),
+                                                          color: Colors.white,
+                                                        ),
+                                                        scrollbarTheme:
+                                                            ScrollbarThemeData(
+                                                          radius: const Radius
+                                                              .circular(40),
+                                                          thickness:
+                                                              MaterialStateProperty
+                                                                  .all(6),
+                                                          thumbVisibility:
+                                                              MaterialStateProperty
+                                                                  .all(true),
+                                                        ),
+                                                      ),
+                                                      menuItemStyleData:
+                                                          const MenuItemStyleData(
+                                                        height: 40,
                                                       ),
                                                     ),
-                                                    items: state2
-                                                        .attachmentTypes
-                                                        .map((AttachmentType
-                                                                item) =>
-                                                            DropdownMenuItem<
-                                                                AttachmentType>(
-                                                              value: item,
-                                                              child: Text(
-                                                                item.name!,
-                                                                style:
-                                                                    const TextStyle(
-                                                                  fontSize: 14,
-                                                                ),
-                                                              ),
-                                                            ))
-                                                        .toList(),
-                                                    value:
-                                                        selectedAttachmentType,
-                                                    onChanged: (AttachmentType?
-                                                        value) {
-                                                      setState(() {
-                                                        selectedAttachmentType =
-                                                            value;
-                                                      });
-                                                    },
-                                                    buttonStyleData:
-                                                        const ButtonStyleData(
-                                                      padding:
-                                                          EdgeInsets.symmetric(
-                                                              horizontal: 16),
-                                                      height: 40,
-                                                      width: 140,
-                                                    ),
-                                                    menuItemStyleData:
-                                                        const MenuItemStyleData(
-                                                      height: 40,
-                                                    ),
-                                                  ),
-                                                );
-                                              } else if (state2
-                                                  is AttachmentTypeLoadingProgress) {
-                                                return const Center(
-                                                  child:
-                                                      CircularProgressIndicator(),
-                                                );
-                                              } else {
-                                                return Container();
-                                              }
-                                            },
-                                          ),
-                                          const SizedBox(
-                                            height: 10,
-                                          ),
-                                          BlocBuilder<AttachmentBloc,
-                                              AttachmentState>(
-                                            builder: (context, state) {
-                                              if (state
-                                                  is AttachmentLoadingProgress) {
-                                                return const CircularProgressIndicator();
-                                              } else {
-                                                return Row(
-                                                  mainAxisAlignment:
-                                                      MainAxisAlignment
-                                                          .spaceAround,
-                                                  children: [
-                                                    CustomButton(
-                                                        title:
-                                                            const Text("إغلاق"),
-                                                        color:
-                                                            AppColor.deepYellow,
-                                                        onTap: () {
-                                                          Navigator.pop(
-                                                              context);
-                                                        }),
-                                                    CustomButton(
-                                                        title:
-                                                            const Text("حفظ"),
-                                                        color:
-                                                            AppColor.deepYellow,
-                                                        onTap: () {
-                                                          BlocProvider.of<
-                                                                      AttachmentBloc>(
-                                                                  context)
-                                                              .add(AddAttachmentEvent(
-                                                                  selectedAttachmentType!
-                                                                      .id!,
-                                                                  _image!));
-                                                        }),
-                                                  ],
-                                                );
-                                              }
-                                            },
-                                          )
-                                        ],
+                                                  );
+                                                } else if (state2
+                                                    is AttachmentTypeLoadingProgress) {
+                                                  return const Center(
+                                                    child:
+                                                        CircularProgressIndicator(),
+                                                  );
+                                                } else {
+                                                  return Container();
+                                                }
+                                              },
+                                            ),
+                                            const SizedBox(
+                                              height: 15,
+                                            ),
+                                            BlocBuilder<AttachmentBloc,
+                                                AttachmentState>(
+                                              builder: (context, state) {
+                                                if (state
+                                                    is AttachmentLoadingProgress) {
+                                                  return Row(
+                                                    mainAxisAlignment:
+                                                        MainAxisAlignment
+                                                            .center,
+                                                    children: const [
+                                                      Center(
+                                                          child:
+                                                              CircularProgressIndicator()),
+                                                    ],
+                                                  );
+                                                } else {
+                                                  return Row(
+                                                    mainAxisAlignment:
+                                                        MainAxisAlignment
+                                                            .spaceAround,
+                                                    children: [
+                                                      CustomButton(
+                                                          title: const SizedBox(
+                                                            width: 90,
+                                                            child: Center(
+                                                                child: Text(
+                                                                    "إغلاق")),
+                                                          ),
+                                                          color: AppColor
+                                                              .deepYellow,
+                                                          onTap: () {
+                                                            Navigator.pop(
+                                                                context);
+                                                          }),
+                                                      CustomButton(
+                                                          title: const SizedBox(
+                                                              width: 90,
+                                                              child: Center(
+                                                                  child: Text(
+                                                                      "حفظ"))),
+                                                          color: AppColor
+                                                              .deepYellow,
+                                                          onTap: () {
+                                                            BlocProvider.of<
+                                                                        AttachmentBloc>(
+                                                                    context)
+                                                                .add(AddAttachmentEvent(
+                                                                    selectedAttachmentType!
+                                                                        .id!,
+                                                                    _image!));
+                                                          }),
+                                                    ],
+                                                  );
+                                                }
+                                              },
+                                            )
+                                          ],
+                                        ),
                                       );
                                     }),
                                   );
@@ -326,96 +459,118 @@ class _TraderAttachementScreenState extends State<TraderAttachementScreen> {
                               )
                             ],
                           ),
+                          BlocBuilder<AttachmentBloc, AttachmentState>(
+                            builder: (context, state) {
+                              if (state is AttachmentLoadedSuccess) {
+                                return Wrap(
+                                    children: _buildAttachmentslist(
+                                        state.attachments));
+                              } else {
+                                return Container();
+                              }
+                            },
+                          ),
                         ]),
                   ),
-                ),
-                const SizedBox(
-                  height: 5,
-                ),
-                Card(
-                  margin: const EdgeInsets.symmetric(vertical: 7),
-                  child: BlocBuilder<AttachmentBloc, AttachmentState>(
-                    builder: (context, state) {
-                      if (state is AttachmentLoadedSuccess) {
-                        return Wrap(
-                            children: _buildAttachmentslist(state.attachments));
-                      } else {
-                        return Container();
-                      }
-                    },
+                  const SizedBox(
+                    height: 20,
                   ),
-                ),
-                const SizedBox(
-                  height: 100,
-                ),
-                const Text("اترك ملاحظاتك للمخلص"),
-                TextField(
-                  controller: _traderNotes,
-                  maxLines: 4,
-                  decoration: InputDecoration(
-                      border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(5))),
-                ),
-                SizedBox(
-                  height: 30.h,
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceAround,
-                  children: [
-                    CustomButton(
-                      onTap: () {},
-                      color: AppColor.deepYellow,
-                      title: const SizedBox(
-                          width: 100, child: Center(child: Text("إلغاء"))),
+                  Container(
+                    margin: const EdgeInsets.symmetric(vertical: 7),
+                    padding: const EdgeInsets.all(15.0),
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(25),
+                      gradient: const LinearGradient(
+                          colors: [
+                            Color.fromARGB(255, 229, 215, 94),
+                            Colors.white,
+                            Colors.white,
+                            Colors.white,
+                            Colors.white,
+                          ],
+                          begin: Alignment.topCenter,
+                          end: Alignment.bottomCenter),
                     ),
-                    BlocConsumer<OfferBloc, OfferState>(
-                      listener: (context, state) {
-                        // TODO: implement listener
-                      },
-                      builder: (context, state) {
-                        if (state is OfferLoadingProgress) {
-                          return CustomButton(
-                            onTap: () {},
-                            color: AppColor.deepYellow,
-                            title: const SizedBox(
-                                width: 100,
-                                child:
-                                    Center(child: CircularProgressIndicator())),
-                          );
-                        } else {
-                          return CustomButton(
-                            onTap: () {
-                              BlocProvider.of<OfferBloc>(context).add(
-                                  AddOfferEvent(
-                                      widget.packagesNum!,
-                                      widget.tabalehNum!,
-                                      widget.weight!,
-                                      widget.price!,
-                                      widget.taxes!,
-                                      1,
-                                      1,
-                                      widget.customAgency,
-                                      widget.customeState,
-                                      widget.origin!,
-                                      widget.packageType!,
-                                      _expireDate.text,
-                                      _traderNotes.text,
-                                      widget.product!,
-                                      attachmentsId,
-                                      widget.rawMaterial!,
-                                      widget.industrial!));
-                            },
-                            color: AppColor.deepYellow,
-                            title: const SizedBox(
-                                width: 100,
-                                child: Center(child: Text("طلب مخلص"))),
-                          );
-                        }
-                      },
-                    ),
-                  ],
-                ),
-              ],
+                    child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          const Text("اترك ملاحظاتك للمخلص",
+                              style: TextStyle(fontSize: 16)),
+                          SizedBox(
+                            height: 15.h,
+                          ),
+                          TextField(
+                            controller: _traderNotes,
+                            maxLines: 4,
+                            decoration: InputDecoration(
+                                border: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(12)),
+                                hintText: "اكتب ملاحظة للمخلص الجمركي ان وجد"),
+                          ),
+                        ]),
+                  ),
+
+                  SizedBox(
+                    height: 30.h,
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    children: [
+                      CustomButton(
+                        onTap: () {},
+                        color: AppColor.deepYellow,
+                        title: const SizedBox(
+                            width: 100, child: Center(child: Text("إلغاء"))),
+                      ),
+                      BlocConsumer<OfferBloc, OfferState>(
+                        listener: (context, state) {
+                          // TODO: implement listener
+                        },
+                        builder: (context, state) {
+                          if (state is OfferLoadingProgress) {
+                            return CustomButton(
+                              onTap: () {},
+                              color: AppColor.deepYellow,
+                              title: const SizedBox(
+                                  width: 100,
+                                  child: Center(
+                                      child: CircularProgressIndicator())),
+                            );
+                          } else {
+                            return CustomButton(
+                              onTap: () {
+                                BlocProvider.of<OfferBloc>(context).add(
+                                    AddOfferEvent(
+                                        widget.packagesNum!,
+                                        widget.tabalehNum!,
+                                        widget.weight!,
+                                        widget.price!,
+                                        widget.taxes!,
+                                        1,
+                                        1,
+                                        widget.customAgency,
+                                        widget.customeState,
+                                        widget.origin!,
+                                        widget.packageType!,
+                                        _expireDate.text,
+                                        _traderNotes.text,
+                                        widget.product!,
+                                        attachmentsId,
+                                        widget.rawMaterial!,
+                                        widget.industrial!));
+                              },
+                              color: AppColor.deepYellow,
+                              title: const SizedBox(
+                                  width: 100,
+                                  child: Center(child: Text("طلب مخلص"))),
+                            );
+                          }
+                        },
+                      ),
+                    ],
+                  ),
+                ],
+              ),
             ),
           ),
         ),

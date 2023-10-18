@@ -6,10 +6,12 @@ import 'package:custome_mobile/views/widgets/custom_botton.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:shimmer/shimmer.dart';
 
 class TraderBillReview extends StatelessWidget {
   final int customAgency;
   final int customeState;
+  final int? offerType;
   final int? packagesNum;
   final int? tabalehNum;
   final int? weight;
@@ -24,6 +26,7 @@ class TraderBillReview extends StatelessWidget {
       {Key? key,
       required this.customAgency,
       required this.customeState,
+      this.offerType,
       this.packagesNum,
       this.tabalehNum,
       this.weight,
@@ -51,7 +54,7 @@ class TraderBillReview extends StatelessWidget {
               SizedBox(
                 height: 40.h,
               ),
-              Text(
+              const Text(
                 "الضرائب والرسوم",
                 style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
               ),
@@ -66,35 +69,51 @@ class TraderBillReview extends StatelessWidget {
                       return Container(
                         padding: EdgeInsets.symmetric(horizontal: 15.w),
                         decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(25),
-                            border: const Border(
-                              left: BorderSide(
-                                color: Colors.blue,
-                                width: 1.0,
-                              ),
-                              right: BorderSide(
-                                color: Colors.blue,
-                                width: 1.0,
-                              ),
-                              top: BorderSide(
-                                color: Colors.blue,
-                                width: 1.0,
-                              ),
-                              bottom: BorderSide(
-                                color: Colors.blue,
-                                width: 1.0,
-                              ),
-                            ),
-                            color: Colors.white),
+                          borderRadius: BorderRadius.circular(25),
+                          // border: const Border(
+                          //   left: BorderSide(
+                          //     color: Colors.blue,
+                          //     width: 1.0,
+                          //   ),
+                          //   right: BorderSide(
+                          //     color: Colors.blue,
+                          //     width: 1.0,
+                          //   ),
+                          //   top: BorderSide(
+                          //     color: Colors.blue,
+                          //     width: 1.0,
+                          //   ),
+                          //   bottom: BorderSide(
+                          //     color: Colors.blue,
+                          //     width: 1.0,
+                          //   ),
+                          // ),
+                          gradient: const LinearGradient(
+                              colors: [
+                                Color.fromARGB(255, 229, 215, 94),
+                                Colors.white,
+                                Colors.white,
+                                Colors.white,
+                                Colors.white,
+                                Colors.white,
+                                Colors.white,
+                                Colors.white,
+                              ],
+                              begin: Alignment.topCenter,
+                              end: Alignment.bottomCenter),
+                        ),
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.start,
                           children: [
                             const Text(
-                              "ضرائب البنود",
+                              "رسوم البنود",
                               style: TextStyle(
                                   fontWeight: FontWeight.bold, fontSize: 22),
                             ),
-                            Divider(color: Colors.yellow[800]),
+                            // Divider(color: Colors.greenAccent),
+                            const SizedBox(
+                              height: 10,
+                            ),
                             Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
@@ -203,8 +222,26 @@ class TraderBillReview extends StatelessWidget {
                         ),
                       );
                     } else {
-                      return const Center(
-                        child: CircularProgressIndicator(),
+                      return Shimmer.fromColors(
+                        baseColor: (Colors.grey[300])!,
+                        highlightColor: (Colors.grey[100])!,
+                        enabled: true,
+                        child: ListView.builder(
+                          shrinkWrap: true,
+                          itemBuilder: (_, __) => Card(
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(25.0),
+                            ),
+                            elevation: 1,
+                            color: Colors.white,
+                            margin: const EdgeInsets.symmetric(vertical: 15),
+                            clipBehavior: Clip.hardEdge,
+                            child: SizedBox(
+                              height: 290.h,
+                            ),
+                          ),
+                          itemCount: 4,
+                        ),
                       );
                     }
                   },
@@ -221,26 +258,39 @@ class TraderBillReview extends StatelessWidget {
                       return Container(
                         padding: EdgeInsets.symmetric(horizontal: 15.w),
                         decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(25),
-                            border: const Border(
-                              left: BorderSide(
-                                color: Colors.blue,
-                                width: 1.0,
-                              ),
-                              right: BorderSide(
-                                color: Colors.blue,
-                                width: 1.0,
-                              ),
-                              top: BorderSide(
-                                color: Colors.blue,
-                                width: 1.0,
-                              ),
-                              bottom: BorderSide(
-                                color: Colors.blue,
-                                width: 1.0,
-                              ),
-                            ),
-                            color: Colors.white),
+                          borderRadius: BorderRadius.circular(25),
+                          // border: const Border(
+                          //   left: BorderSide(
+                          //     color: Colors.blue,
+                          //     width: 1.0,
+                          //   ),
+                          //   right: BorderSide(
+                          //     color: Colors.blue,
+                          //     width: 1.0,
+                          //   ),
+                          //   top: BorderSide(
+                          //     color: Colors.blue,
+                          //     width: 1.0,
+                          //   ),
+                          //   bottom: BorderSide(
+                          //     color: Colors.blue,
+                          //     width: 1.0,
+                          //   ),
+                          // ),
+                          gradient: const LinearGradient(
+                              colors: [
+                                Color.fromARGB(255, 229, 215, 94),
+                                Colors.white,
+                                Colors.white,
+                                Colors.white,
+                                Colors.white,
+                                Colors.white,
+                                Colors.white,
+                                Colors.white,
+                              ],
+                              begin: Alignment.topCenter,
+                              end: Alignment.bottomCenter),
+                        ),
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.start,
                           children: [
@@ -249,7 +299,9 @@ class TraderBillReview extends StatelessWidget {
                               style: TextStyle(
                                   fontWeight: FontWeight.bold, fontSize: 22),
                             ),
-                            Divider(color: Colors.yellow[800]),
+                            const SizedBox(
+                              height: 10,
+                            ),
                             Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
@@ -359,8 +411,26 @@ class TraderBillReview extends StatelessWidget {
                         ),
                       );
                     } else {
-                      return const Center(
-                        child: CircularProgressIndicator(),
+                      return Shimmer.fromColors(
+                        baseColor: (Colors.grey[300])!,
+                        highlightColor: (Colors.grey[100])!,
+                        enabled: true,
+                        child: ListView.builder(
+                          shrinkWrap: true,
+                          itemBuilder: (_, __) => Card(
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(25.0),
+                            ),
+                            elevation: 1,
+                            color: Colors.white,
+                            margin: const EdgeInsets.symmetric(vertical: 15),
+                            clipBehavior: Clip.hardEdge,
+                            child: SizedBox(
+                              height: 290.h,
+                            ),
+                          ),
+                          itemCount: 4,
+                        ),
                       );
                     }
                   },
@@ -377,26 +447,34 @@ class TraderBillReview extends StatelessWidget {
                       return Container(
                         padding: EdgeInsets.symmetric(horizontal: 15.w),
                         decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(25),
-                            border: const Border(
-                              left: BorderSide(
-                                color: Colors.blue,
-                                width: 1.0,
-                              ),
-                              right: BorderSide(
-                                color: Colors.blue,
-                                width: 1.0,
-                              ),
-                              top: BorderSide(
-                                color: Colors.blue,
-                                width: 1.0,
-                              ),
-                              bottom: BorderSide(
-                                color: Colors.blue,
-                                width: 1.0,
-                              ),
-                            ),
-                            color: Colors.white),
+                          borderRadius: BorderRadius.circular(25),
+                          // border: Border(
+                          //   left: BorderSide(
+                          //     color: AppColor.activeGreen,
+                          //     width: 1.0,
+                          //   ),
+                          //   right: BorderSide(
+                          //     color: AppColor.activeGreen,
+                          //     width: 1.0,
+                          //   ),
+                          //   top: BorderSide(
+                          //     color: AppColor.activeGreen,
+                          //     width: 1.0,
+                          //   ),
+                          //   bottom: BorderSide(
+                          //     color: AppColor.activeGreen,
+                          //     width: 1.0,
+                          //   ),
+                          // ),
+                          gradient: const LinearGradient(
+                              colors: [
+                                Color.fromARGB(255, 229, 215, 94),
+                                Colors.white,
+                                Colors.white,
+                              ],
+                              begin: Alignment.topCenter,
+                              end: Alignment.bottomCenter),
+                        ),
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.start,
                           children: [
@@ -405,7 +483,9 @@ class TraderBillReview extends StatelessWidget {
                               style: TextStyle(
                                   fontWeight: FontWeight.bold, fontSize: 22),
                             ),
-                            Divider(color: Colors.yellow[800]),
+                            const SizedBox(
+                              height: 10,
+                            ),
                             Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
@@ -426,8 +506,26 @@ class TraderBillReview extends StatelessWidget {
                         ),
                       );
                     } else {
-                      return const Center(
-                        child: CircularProgressIndicator(),
+                      return Shimmer.fromColors(
+                        baseColor: (Colors.grey[300])!,
+                        highlightColor: (Colors.grey[100])!,
+                        enabled: true,
+                        child: ListView.builder(
+                          shrinkWrap: true,
+                          itemBuilder: (_, __) => Card(
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(25.0),
+                            ),
+                            elevation: 1,
+                            color: Colors.white,
+                            margin: const EdgeInsets.symmetric(vertical: 15),
+                            clipBehavior: Clip.hardEdge,
+                            child: SizedBox(
+                              height: 290.h,
+                            ),
+                          ),
+                          itemCount: 4,
+                        ),
                       );
                     }
                   },
@@ -468,6 +566,7 @@ class TraderBillReview extends StatelessWidget {
                           context,
                           MaterialPageRoute(
                             builder: (context) => TraderAttachementScreen(
+                              offerType: offerType,
                               customAgency: customAgency,
                               customeState: customeState,
                               origin: origin,
