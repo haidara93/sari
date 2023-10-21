@@ -13,6 +13,7 @@ class OfferBloc extends Bloc<OfferEvent, OfferState> {
       emit(OfferLoadingProgress());
       try {
         var data = await stateAgencyRepository.postOffer(
+          event.offerType,
           event.packageNum,
           event.tabalehNum,
           event.weight,
@@ -75,24 +76,24 @@ class OfferBloc extends Bloc<OfferEvent, OfferState> {
       },
     );
 
-    on<AddAdditionalAttachmentEvent>(
-      (event, emit) async {
-        OfferListLoadedSuccess currentState = state as OfferListLoadedSuccess;
-        emit(OfferListLoadingProgress());
-        try {
-          var data =
-              await stateAgencyRepository.updateOfferAditionalAttachments(
-                  event.additionalList, event.offerId);
-          if (data) {
-            emit(OfferListLoadedSuccess(currentState.offers));
-          } else {
-            emit(OfferLoadedFailed("خطأ"));
-          }
-        } catch (e) {
-          print('error');
-          emit(OfferLoadedFailed(e.toString()));
-        }
-      },
-    );
+    // on<AddAdditionalAttachmentEvent>(
+    //   (event, emit) async {
+    //     OfferListLoadedSuccess currentState = state as OfferListLoadedSuccess;
+    //     emit(OfferListLoadingProgress());
+    //     try {
+    //       var data =
+    //           await stateAgencyRepository.updateOfferAditionalAttachments(
+    //               event.attachments, event.additionalList, event.offerId);
+    //       if (data) {
+    //         emit(OfferListLoadedSuccess(currentState.offers));
+    //       } else {
+    //         emit(OfferLoadedFailed("خطأ"));
+    //       }
+    //     } catch (e) {
+    //       print('error');
+    //       emit(OfferLoadedFailed(e.toString()));
+    //     }
+    //   },
+    // );
   }
 }

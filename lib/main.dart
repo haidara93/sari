@@ -1,4 +1,5 @@
 import 'package:connectivity_plus/connectivity_plus.dart';
+import 'package:custome_mobile/business_logic/bloc/additional_attachment_bloc.dart';
 import 'package:custome_mobile/business_logic/bloc/attachment_bloc.dart';
 import 'package:custome_mobile/business_logic/bloc/attachment_type_bloc.dart';
 import 'package:custome_mobile/business_logic/bloc/auth_bloc.dart';
@@ -178,6 +179,12 @@ class MyApp extends StatelessWidget {
                   ),
                   BlocProvider(
                     create: (context) => AttachmentBloc(
+                        stateAgencyRepository:
+                            RepositoryProvider.of<StateAgencyRepository>(
+                                context)),
+                  ),
+                  BlocProvider(
+                    create: (context) => AdditionalAttachmentBloc(
                         stateAgencyRepository:
                             RepositoryProvider.of<StateAgencyRepository>(
                                 context)),

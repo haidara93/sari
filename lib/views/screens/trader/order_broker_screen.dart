@@ -79,9 +79,9 @@ class _OrderBrokerScreenState extends State<OrderBrokerScreen> {
   int packageNum = 0;
   int tabalehNum = 0;
 
-  int selectedPanel = 1;
+  int selectedPanel = 0;
   bool showtypeError = false;
-  int selectedRadioTile = 0;
+  String selectedRadioTile = "";
   String statePlaceholder = "اختر مديرية";
   String agencyPlaceholder = "اختر أمانة";
 
@@ -381,7 +381,7 @@ class _OrderBrokerScreenState extends State<OrderBrokerScreen> {
     }
   }
 
-  setSelectedRadioTile(int val) {
+  setSelectedRadioTile(String val) {
     setState(() {
       selectedRadioTile = val;
     });
@@ -450,7 +450,7 @@ class _OrderBrokerScreenState extends State<OrderBrokerScreen> {
                         SizedBox(
                           width: MediaQuery.of(context).size.width * .38,
                           child: RadioListTile(
-                            value: 1,
+                            value: "I",
                             groupValue: selectedRadioTile,
                             title: const Text("استيراد"),
                             // subtitle: Text("Radio 1 Subtitle"),
@@ -460,13 +460,13 @@ class _OrderBrokerScreenState extends State<OrderBrokerScreen> {
                               setSelectedRadioTile(val!);
                             },
                             activeColor: AppColor.activeGreen,
-                            selected: selectedRadioTile == 1,
+                            selected: selectedRadioTile == "I",
                           ),
                         ),
                         SizedBox(
                           width: MediaQuery.of(context).size.width * .38,
                           child: RadioListTile(
-                            value: 2,
+                            value: "E",
                             groupValue: selectedRadioTile,
                             title: const Text("تصدير"),
                             // subtitle: Text("Radio 2 Subtitle"),
@@ -477,7 +477,7 @@ class _OrderBrokerScreenState extends State<OrderBrokerScreen> {
                             },
                             activeColor: AppColor.activeGreen,
 
-                            selected: selectedRadioTile == 2,
+                            selected: selectedRadioTile == "E",
                           ),
                         )
                       ],

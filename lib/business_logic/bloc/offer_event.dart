@@ -16,14 +16,17 @@ class OfferStatusUpdateEvent extends OfferEvent {
   const OfferStatusUpdateEvent(this.offerId, this.state);
 }
 
-class AddAdditionalAttachmentEvent extends OfferEvent {
-  final List<int> additionalList;
-  final int offerId;
+// class AddAdditionalAttachmentEvent extends OfferEvent {
+//   final List<int> additionalList;
+//   final List<int> attachments;
+//   final int offerId;
 
-  AddAdditionalAttachmentEvent(this.additionalList, this.offerId);
-}
+//   AddAdditionalAttachmentEvent(
+//       this.attachments, this.additionalList, this.offerId);
+// }
 
 class AddOfferEvent extends OfferEvent {
+  final String offerType;
   final int packageNum;
   final int tabalehNum;
   final int weight;
@@ -43,6 +46,7 @@ class AddOfferEvent extends OfferEvent {
   final List<int> attachments;
 
   const AddOfferEvent(
+      this.offerType,
       this.packageNum,
       this.tabalehNum,
       this.weight,

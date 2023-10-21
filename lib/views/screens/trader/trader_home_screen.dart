@@ -22,6 +22,8 @@ import 'package:custome_mobile/views/screens/trader/trader_calculator_screen.dar
 import 'package:custome_mobile/views/screens/trader/trader_main_screen.dart';
 import 'package:custome_mobile/views/widgets/custom_app_bar.dart';
 import 'package:custome_mobile/views/widgets/custom_botton.dart';
+import 'package:custome_mobile/views/widgets/item_taxes_widget.dart';
+import 'package:custome_mobile/views/widgets/pens_taxes_widget.dart';
 import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -1583,145 +1585,20 @@ class _TraderHomeScreenState extends State<TraderHomeScreen>
                 child: BlocBuilder<CalculateResultBloc, CalculateResultState>(
                   builder: (context, state) {
                     if (state is CalculateResultSuccessed) {
-                      return Container(
-                        padding: EdgeInsets.symmetric(horizontal: 15.w),
-                        decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(25),
-                            border: const Border(
-                              left: BorderSide(
-                                color: Colors.blue,
-                                width: 1.0,
-                              ),
-                              right: BorderSide(
-                                color: Colors.blue,
-                                width: 1.0,
-                              ),
-                              top: BorderSide(
-                                color: Colors.blue,
-                                width: 1.0,
-                              ),
-                              bottom: BorderSide(
-                                color: Colors.blue,
-                                width: 1.0,
-                              ),
-                            ),
-                            color: Colors.white),
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          children: [
-                            const Text(
-                              "ضرائب البنود",
-                              style: TextStyle(
-                                  fontWeight: FontWeight.bold, fontSize: 22),
-                            ),
-                            Divider(color: Colors.yellow[800]),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                const Text(
-                                  "الرسم الجمركي",
-                                  maxLines: 3,
-                                ),
-                                Text(state.result.customsFee!.toString()),
-                              ],
-                            ),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                const Text(
-                                  "رسم الانفاق الاستهلاكي",
-                                  maxLines: 3,
-                                ),
-                                Text(state.result.spendingFee!.toString()),
-                              ],
-                            ),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                const Text(
-                                  "رسم محلية عمران",
-                                  maxLines: 3,
-                                ),
-                                Text(state.result.imranLocality!.toString()),
-                              ],
-                            ),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                const Text(
-                                  "رسم محلية محافظة",
-                                  maxLines: 3,
-                                ),
-                                Text(state.result.conservativeLocality!
-                                    .toString()),
-                              ],
-                            ),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                const Text(
-                                  "رسم دعم وتنمية الانتاج المحلي",
-                                  maxLines: 3,
-                                ),
-                                Text(state.result.feeSupportingLocalProduction!
-                                    .toString()),
-                              ],
-                            ),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                const Text(
-                                  "رسم اعادة تأهيل وحماية المدن والمنشأة :",
-                                  maxLines: 3,
-                                ),
-                                Text(state.result.citiesProtectionFee!
-                                    .toString()),
-                              ],
-                            ),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                const Text(
-                                  "رسم صندوق الجفاف و الكوارث الطبيعية: :",
-                                  maxLines: 3,
-                                ),
-                                Text(state.result.naturalDisasterFee!
-                                    .toString()),
-                              ],
-                            ),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                const Text(
-                                  "رسم السلفة على ضريبة الدخل:",
-                                  maxLines: 3,
-                                ),
-                                Text(state.result.incomeTaxFee!.toString()),
-                              ],
-                            ),
-                            const SizedBox(
-                              height: 5,
-                            ),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                const Text(
-                                  "مجموع الرسوم:",
-                                  maxLines: 3,
-                                  style: TextStyle(fontWeight: FontWeight.bold),
-                                ),
-                                Text(
-                                  state.result.finalFee!.toString(),
-                                  style: TextStyle(fontWeight: FontWeight.bold),
-                                ),
-                              ],
-                            ),
-                            const SizedBox(
-                              height: 15,
-                            ),
-                          ],
-                        ),
+                      return ItemTaxesWidget(
+                        customsFee: state.result.customsFee!,
+                        spendingFee: state.result.spendingFee!,
+                        conservativeLocality:
+                            state.result.conservativeLocality!,
+                        citiesProtectionFee: state.result.citiesProtectionFee!,
+                        feeSupportingLocalProduction:
+                            state.result.feeSupportingLocalProduction!,
+                        imranLocality: state.result.imranLocality!,
+                        incomeTaxFee: state.result.incomeTaxFee!,
+                        naturalDisasterFee: state.result.naturalDisasterFee!,
+                        finalFee: state.result.finalTotal!,
                       );
+                      ;
                     } else {
                       return const Center(
                         child: CircularProgressIndicator(),
@@ -1738,145 +1615,15 @@ class _TraderHomeScreenState extends State<TraderHomeScreen>
                 child: BlocBuilder<CalculateResultBloc, CalculateResultState>(
                   builder: (context, state) {
                     if (state is CalculateResultSuccessed) {
-                      return Container(
-                        padding: EdgeInsets.symmetric(horizontal: 15.w),
-                        decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(25),
-                            border: const Border(
-                              left: BorderSide(
-                                color: Colors.blue,
-                                width: 1.0,
-                              ),
-                              right: BorderSide(
-                                color: Colors.blue,
-                                width: 1.0,
-                              ),
-                              top: BorderSide(
-                                color: Colors.blue,
-                                width: 1.0,
-                              ),
-                              bottom: BorderSide(
-                                color: Colors.blue,
-                                width: 1.0,
-                              ),
-                            ),
-                            color: Colors.white),
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          children: [
-                            const Text(
-                              "ضرائب الأقلام",
-                              style: TextStyle(
-                                  fontWeight: FontWeight.bold, fontSize: 22),
-                            ),
-                            Divider(color: Colors.yellow[800]),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                const Text(
-                                  "طوابع وضرائب مضافة",
-                                  maxLines: 3,
-                                ),
-                                Text(state.result.addedTaxes!.toString()),
-                              ],
-                            ),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                const Text(
-                                  "شهادة جمركية",
-                                  maxLines: 3,
-                                ),
-                                Text(state.result.customsCertificate!
-                                    .toString()),
-                              ],
-                            ),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                const Text(
-                                  "رسم تأمين إلزامي",
-                                  maxLines: 3,
-                                ),
-                                Text(state.result.billTax!.toString()),
-                              ],
-                            ),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                const Text(
-                                  "رسم طابع",
-                                  maxLines: 3,
-                                ),
-                                Text(state.result.stampFee!.toStringAsFixed(2)),
-                              ],
-                            ),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                const Text(
-                                  "ضريبة محلية محافظة",
-                                  maxLines: 3,
-                                ),
-                                Text(state.result.provincialLocalTax!
-                                    .toStringAsFixed(2)),
-                              ],
-                            ),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                const Text(
-                                  "السلفة على ضريبة الدخل",
-                                  maxLines: 3,
-                                ),
-                                Text(state.result.advanceIncomeTax!
-                                    .toStringAsFixed(2)),
-                              ],
-                            ),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                const Text(
-                                  "رسم المساهمة الوطنية لإعادة الاإعمار:",
-                                  maxLines: 3,
-                                ),
-                                Text(state.result.reconstructionFee!
-                                    .toStringAsFixed(2)),
-                              ],
-                            ),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                const Text(
-                                  "رسم المساهمة الوطنية لإعادة الاإعمار:",
-                                  maxLines: 3,
-                                ),
-                                Text(state.result.reconstructionFee!
-                                    .toStringAsFixed(2)),
-                              ],
-                            ),
-                            const SizedBox(
-                              height: 5,
-                            ),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                const Text(
-                                  "مجموع الضرائب:",
-                                  maxLines: 3,
-                                  style: TextStyle(fontWeight: FontWeight.bold),
-                                ),
-                                Text(
-                                  state.result.finalTaxes!.toStringAsFixed(2),
-                                  style: TextStyle(fontWeight: FontWeight.bold),
-                                ),
-                              ],
-                            ),
-                            const SizedBox(
-                              height: 15,
-                            ),
-                          ],
-                        ),
+                      return PensTaxesWidget(
+                        addedTaxes: state.result.addedTaxes!,
+                        customsCertificate: state.result.customsCertificate!,
+                        billTax: state.result.billTax!,
+                        stampFee: state.result.stampFee!,
+                        provincialLocalTax: state.result.provincialLocalTax!,
+                        advanceIncomeTax: state.result.advanceIncomeTax!,
+                        reconstructionFee: state.result.reconstructionFee!,
+                        finalTaxes: state.result.finalTaxes!,
                       );
                     } else {
                       return const Center(

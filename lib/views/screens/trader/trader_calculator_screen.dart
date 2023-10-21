@@ -393,16 +393,38 @@ class _TraderCalculatorScreenState extends State<TraderCalculatorScreen> {
                       height: 25,
                     ),
                     Container(
-                      padding: const EdgeInsets.symmetric(
-                          vertical: 10, horizontal: 15),
+                      margin: const EdgeInsets.symmetric(vertical: 7),
                       decoration: BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: BorderRadius.circular(20)),
+                        borderRadius: BorderRadius.circular(25),
+                        gradient: const LinearGradient(
+                            colors: [
+                              Color.fromARGB(255, 229, 215, 94),
+                              Colors.white,
+                              Colors.white,
+                              Colors.white,
+                              Colors.white,
+                              Colors.white,
+                              Colors.white,
+                              Colors.white,
+                              Colors.white,
+                              Colors.white,
+                              Colors.white,
+                              Colors.white,
+                              Colors.white,
+                            ],
+                            begin: Alignment.topCenter,
+                            end: Alignment.bottomCenter),
+                      ),
+                      width: double.infinity,
+                      padding: const EdgeInsets.all(8.0),
                       child: Form(
                         key: _calformkey,
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
+                            const SizedBox(
+                              height: 12,
+                            ),
                             TypeAheadField(
                               textFieldConfiguration: TextFieldConfiguration(
                                 // autofocus: true,
@@ -415,10 +437,12 @@ class _TraderCalculatorScreenState extends State<TraderCalculatorScreen> {
                                 style: DefaultTextStyle.of(context)
                                     .style
                                     .copyWith(fontStyle: FontStyle.italic),
-                                decoration: const InputDecoration(
-                                  label: Text("نوع البضاعة"),
-                                  border: OutlineInputBorder(),
-                                ),
+                                decoration: InputDecoration(
+                                    label: const Text("  نوع البضاعة"),
+                                    border: OutlineInputBorder(
+                                        borderRadius:
+                                            BorderRadius.circular(12)),
+                                    contentPadding: EdgeInsets.zero),
                               ),
                               suggestionsCallback: (pattern) async {
                                 if (pattern.isNotEmpty) {
@@ -559,14 +583,13 @@ class _TraderCalculatorScreenState extends State<TraderCalculatorScreen> {
                               enabled: !valueEnabled,
                               keyboardType: TextInputType.number,
                               decoration: InputDecoration(
-                                labelText: wieghtLabel,
-                                prefixText: showunit ? wieghtUnit : "",
-                                prefixStyle:
-                                    const TextStyle(color: Colors.black),
-                                border: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(5),
-                                ),
-                              ),
+                                  labelText: wieghtLabel,
+                                  prefixText: showunit ? wieghtUnit : "",
+                                  prefixStyle:
+                                      const TextStyle(color: Colors.black),
+                                  border: OutlineInputBorder(
+                                      borderRadius: BorderRadius.circular(12)),
+                                  contentPadding: EdgeInsets.zero),
                               onChanged: (value) {
                                 if (_originController.text.isNotEmpty) {
                                   setState(() {
@@ -602,8 +625,11 @@ class _TraderCalculatorScreenState extends State<TraderCalculatorScreen> {
                                     .style
                                     .copyWith(fontStyle: FontStyle.italic),
                                 decoration: InputDecoration(
-                                    label: const Text("المنشأ"),
-                                    border: const OutlineInputBorder(),
+                                    label: const Text("  المنشأ"),
+                                    border: OutlineInputBorder(
+                                        borderRadius:
+                                            BorderRadius.circular(12)),
+                                    contentPadding: EdgeInsets.zero,
                                     prefixIcon:
                                         _originController.text.isNotEmpty
                                             ? SvgPicture.network(
@@ -654,7 +680,7 @@ class _TraderCalculatorScreenState extends State<TraderCalculatorScreen> {
                             Visibility(
                                 visible: originerror,
                                 child: const Text(
-                                  "الرجاء اختيار المنشأ",
+                                  "  الرجاء اختيار المنشأ",
                                   style: TextStyle(color: Colors.red),
                                 )),
                             const SizedBox(
@@ -673,13 +699,12 @@ class _TraderCalculatorScreenState extends State<TraderCalculatorScreen> {
                               enabled: valueEnabled,
                               keyboardType: TextInputType.number,
                               decoration: InputDecoration(
-                                labelText: valueEnabled
-                                    ? "قيمة البضاعة الاجمالية بالدولار"
-                                    : "سعر الواحدة لدى الجمارك",
-                                border: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(5),
-                                ),
-                              ),
+                                  labelText: valueEnabled
+                                      ? "  قيمة البضاعة الاجمالية بالدولار"
+                                      : "  سعر الواحدة لدى الجمارك",
+                                  border: OutlineInputBorder(
+                                      borderRadius: BorderRadius.circular(12)),
+                                  contentPadding: EdgeInsets.zero),
                               onChanged: (value) {
                                 if (_originController.text.isNotEmpty) {
                                   setState(() {

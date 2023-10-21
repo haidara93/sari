@@ -122,7 +122,7 @@ class StateAgencyRepository {
     request.fields['attachment_type'] = attachmentTypeId.toString();
     request.fields['user'] = 1.toString();
     var response = await request.send();
-
+    print(response.statusCode);
     if (response.statusCode == 201) {
       final respStr = await response.stream.bytesToString();
       var res = jsonDecode(respStr);
@@ -152,6 +152,7 @@ class StateAgencyRepository {
   }
 
   Future<Offer?> postOffer(
+    String? offerType,
     int? packagesNum,
     int? tabalehNum,
     int? weight,
@@ -173,6 +174,7 @@ class StateAgencyRepository {
     var prefs = await SharedPreferences.getInstance();
     var jwt = prefs.getString("token");
     var response = await HttpHelper.post(OFFERS_ENDPOINT, apiToken: jwt, {
+      "offer_type": offerType,
       "packages_num": packagesNum,
       "tabaleh_num": tabalehNum,
       "raw_material": rawMaterial,
@@ -194,6 +196,7 @@ class StateAgencyRepository {
 
     var jsonObject = jsonDecode(response.body);
     print(response.statusCode);
+    print(response.body);
     if (response.statusCode == 201) {
       return Offer.fromJson(jsonObject);
     } else {
@@ -261,12 +264,12 @@ class StateAgencyRepository {
   }
 
   Future<bool> updateOfferAditionalAttachments(
-      List<int> additional, int offerId) async {
+      List<int> attachments, List<int> additional, int offerId) async {
     var prefs = await SharedPreferences.getInstance();
     var jwt = prefs.getString("token");
     var response = await HttpHelper.patch(
       "$OFFERS_ENDPOINT$offerId/",
-      {"aditional_attachments": additional},
+      {"attachments": attachments, "aditional_attachments": additional},
       apiToken: jwt,
     );
     if (response.statusCode == 200) {

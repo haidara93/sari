@@ -15,7 +15,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:image_picker/image_picker.dart';
 
 class TraderAttachementScreen extends StatefulWidget {
-  final int? offerType;
+  final String? offerType;
   final int customAgency;
   final int customeState;
   final int? packagesNum;
@@ -28,6 +28,8 @@ class TraderAttachementScreen extends StatefulWidget {
   final int? packageType;
   final int? rawMaterial;
   final int? industrial;
+
+  var homeCarouselIndicator = 0;
   TraderAttachementScreen(
       {Key? key,
       required this.customAgency,
@@ -59,6 +61,7 @@ class _TraderAttachementScreenState extends State<TraderAttachementScreen> {
   AttachmentType? selectedAttachmentType;
   List<Attachment> attachments = [];
   List<int> attachmentsId = [];
+  List<AttachmentType> attachmentTypes = [];
 
   @override
   void initState() {
@@ -108,15 +111,82 @@ class _TraderAttachementScreenState extends State<TraderAttachementScreen> {
     }
   }
 
+  String attachmentName(int attachmentType) {
+    for (var element in attachmentTypes) {
+      if (element.id! == attachmentType) {
+        return element.name!;
+      }
+    }
+    return "مرفق";
+  }
+
   List<Widget> _buildAttachmentslist(List<Attachment> attachments) {
     List<Widget> list = [];
     int i = 0;
     for (var element in attachments) {
       var elem = Container(
+        margin: const EdgeInsets.all(7),
         padding: const EdgeInsets.all(7),
-        height: 100.h,
-        width: 100.w,
-        child: CachedNetworkImage(imageUrl: element.image!),
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(25),
+          border: Border(
+            left: BorderSide(
+              color: AppColor.deepAppBarBlue,
+              width: 1.0,
+            ),
+            right: BorderSide(
+              color: AppColor.deepAppBarBlue,
+              width: 1.0,
+            ),
+            top: BorderSide(
+              color: AppColor.deepAppBarBlue,
+              width: 1.0,
+            ),
+            bottom: BorderSide(
+              color: AppColor.deepAppBarBlue,
+              width: 1.0,
+            ),
+          ),
+        ),
+        height: 150.h,
+        width: 130.w,
+        child: Column(
+          children: [
+            const SizedBox(
+              height: 5,
+            ),
+            Text(attachmentName(element.attachmentType!)),
+            const SizedBox(
+              height: 7,
+            ),
+            Image.network(
+              element.image!,
+              fit: BoxFit.cover,
+              height: 75.h,
+              width: 75.w,
+              loadingBuilder: (context, child, loadingProgress) {
+                if (loadingProgress == null) {
+                  return child;
+                }
+                return Center(
+                  child: CircularProgressIndicator(
+                    value: loadingProgress.expectedTotalBytes != null
+                        ? loadingProgress.cumulativeBytesLoaded /
+                            loadingProgress.expectedTotalBytes!
+                        : null,
+                  ),
+                );
+              },
+            ),
+            const SizedBox(
+              height: 3,
+            ),
+            // GestureDetector(
+            //   onTap: () {},
+            //   child: const Text("تعديل"),
+            // )
+          ],
+        ),
       );
       i++;
       list.add(elem);
@@ -272,6 +342,8 @@ class _TraderAttachementScreenState extends State<TraderAttachementScreen> {
                                               builder: (context, state2) {
                                                 if (state2
                                                     is AttachmentTypeLoadedSuccess) {
+                                                  attachmentTypes =
+                                                      state2.attachmentTypes;
                                                   return DropdownButtonHideUnderline(
                                                     child: DropdownButton2<
                                                         AttachmentType>(
@@ -541,6 +613,7 @@ class _TraderAttachementScreenState extends State<TraderAttachementScreen> {
                               onTap: () {
                                 BlocProvider.of<OfferBloc>(context).add(
                                     AddOfferEvent(
+                                        widget.offerType!,
                                         widget.packagesNum!,
                                         widget.tabalehNum!,
                                         widget.weight!,

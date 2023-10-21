@@ -54,7 +54,22 @@ class OfferDetailsScreen extends StatelessWidget {
         body: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Card(
+            const SizedBox(
+              height: 15,
+            ),
+            Container(
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(25),
+                gradient: const LinearGradient(colors: [
+                  Color.fromARGB(255, 229, 215, 94),
+                  Colors.white,
+                  Colors.white,
+                  Colors.white,
+                  Colors.white,
+                  Colors.white,
+                  Colors.white,
+                ], begin: Alignment.topCenter, end: Alignment.bottomCenter),
+              ),
               child: Padding(
                 padding:
                     const EdgeInsets.symmetric(horizontal: 15.0, vertical: 7.5),
@@ -111,7 +126,15 @@ class OfferDetailsScreen extends StatelessWidget {
             const SizedBox(
               height: 15,
             ),
-            Card(
+            Container(
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(25),
+                gradient: const LinearGradient(colors: [
+                  Color.fromARGB(255, 229, 215, 94),
+                  Colors.white,
+                  Colors.white,
+                ], begin: Alignment.topCenter, end: Alignment.bottomCenter),
+              ),
               child: Padding(
                 padding:
                     const EdgeInsets.symmetric(horizontal: 15.0, vertical: 7.5),
@@ -172,7 +195,15 @@ class OfferDetailsScreen extends StatelessWidget {
             const SizedBox(
               height: 15,
             ),
-            Card(
+            Container(
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(25),
+                gradient: const LinearGradient(colors: [
+                  Color.fromARGB(255, 229, 215, 94),
+                  Colors.white,
+                  Colors.white,
+                ], begin: Alignment.topCenter, end: Alignment.bottomCenter),
+              ),
               child: Padding(
                 padding:
                     const EdgeInsets.symmetric(horizontal: 15.0, vertical: 7.5),
@@ -188,7 +219,9 @@ class OfferDetailsScreen extends StatelessWidget {
                               builder: (context) => BrokerAttachmentsScreen(
                                   attachments: offer.attachments!,
                                   additionalAttachments:
-                                      offer.additional_attachments!),
+                                      offer.additional_attachments!,
+                                  offerId: offer.id!,
+                                  offerState: offer.orderStatus!),
                             ));
                       },
                       child: Padding(

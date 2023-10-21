@@ -32,6 +32,7 @@ class _OrderAttachmentScreenState extends State<OrderAttachmentScreen> {
   List<Attachment> attachments = [];
   List<int> attachmentsId = [];
   List<int> selectedAttachmentsId = [];
+  List<AttachmentType> attachmentTypes = [];
 
   @override
   void initState() {
@@ -88,15 +89,82 @@ class _OrderAttachmentScreenState extends State<OrderAttachmentScreen> {
     }
   }
 
+  String attachmentName(int attachmentType) {
+    for (var element in attachmentTypes) {
+      if (element.id! == attachmentType) {
+        return element.name!;
+      }
+    }
+    return "مرفق";
+  }
+
   List<Widget> _buildAttachmentslist(List<Attachment> attachments) {
     List<Widget> list = [];
     int i = 0;
     for (var element in attachments) {
       var elem = Container(
         margin: const EdgeInsets.all(7),
-        height: 100.h,
-        width: 100.w,
-        child: CachedNetworkImage(imageUrl: element.image!),
+        padding: const EdgeInsets.all(7),
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(25),
+          border: Border(
+            left: BorderSide(
+              color: AppColor.deepAppBarBlue,
+              width: 1.0,
+            ),
+            right: BorderSide(
+              color: AppColor.deepAppBarBlue,
+              width: 1.0,
+            ),
+            top: BorderSide(
+              color: AppColor.deepAppBarBlue,
+              width: 1.0,
+            ),
+            bottom: BorderSide(
+              color: AppColor.deepAppBarBlue,
+              width: 1.0,
+            ),
+          ),
+        ),
+        height: 150.h,
+        width: 130.w,
+        child: Column(
+          children: [
+            const SizedBox(
+              height: 5,
+            ),
+            Text(attachmentName(element.attachmentType!)),
+            const SizedBox(
+              height: 7,
+            ),
+            Image.network(
+              element.image!,
+              fit: BoxFit.cover,
+              height: 75.h,
+              width: 75.w,
+              loadingBuilder: (context, child, loadingProgress) {
+                if (loadingProgress == null) {
+                  return child;
+                }
+                return Center(
+                  child: CircularProgressIndicator(
+                    value: loadingProgress.expectedTotalBytes != null
+                        ? loadingProgress.cumulativeBytesLoaded /
+                            loadingProgress.expectedTotalBytes!
+                        : null,
+                  ),
+                );
+              },
+            ),
+            const SizedBox(
+              height: 3,
+            ),
+            // GestureDetector(
+            //   onTap: () {},
+            //   child: const Text("تعديل"),
+            // )
+          ],
+        ),
       );
       i++;
       list.add(elem);
@@ -175,7 +243,7 @@ class _OrderAttachmentScreenState extends State<OrderAttachmentScreen> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           const Text("الأوراق المحملة"),
-                          SizedBox(
+                          const SizedBox(
                             height: 5,
                           ),
                           Wrap(children: _buildAttachmentslist(attachments)),
@@ -194,17 +262,18 @@ class _OrderAttachmentScreenState extends State<OrderAttachmentScreen> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           const Text("الأوراق الاضافية المطلوبة"),
-                          SizedBox(
+                          const SizedBox(
                             height: 5,
                           ),
                           BlocBuilder<AttachmentTypeBloc, AttachmentTypeState>(
                             builder: (context, state) {
                               if (state is AttachmentTypeLoadedSuccess) {
+                                attachmentTypes = state.attachmentTypes;
                                 return Wrap(
                                     children: _buildAttachmentsTypelist(
                                         state.attachmentTypes));
                               } else {
-                                return Center(
+                                return const Center(
                                   child: CircularProgressIndicator(),
                                 );
                               }
@@ -214,8 +283,9 @@ class _OrderAttachmentScreenState extends State<OrderAttachmentScreen> {
                   ),
                 ),
                 const SizedBox(
-                  height: 75,
+                  height: 5,
                 ),
+                Text("asd"),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceAround,
                   children: [
@@ -231,7 +301,7 @@ class _OrderAttachmentScreenState extends State<OrderAttachmentScreen> {
                         Navigator.pushReplacement(
                             context,
                             MaterialPageRoute(
-                              builder: (context) => ControlView(),
+                              builder: (context) => const ControlView(),
                             ));
                       },
                       builder: (context, state) {
@@ -247,9 +317,9 @@ class _OrderAttachmentScreenState extends State<OrderAttachmentScreen> {
                         } else {
                           return CustomButton(
                             onTap: () {
-                              BlocProvider.of<OfferBloc>(context).add(
-                                  AddAdditionalAttachmentEvent(
-                                      selectedAttachmentsId, widget.offer.id!));
+                              // BlocProvider.of<OfferBloc>(context).add(
+                              //     AddAdditionalAttachmentEvent(
+                              //         selectedAttachmentsId, widget.offer.id!));
                             },
                             color: AppColor.deepYellow,
                             title: const SizedBox(
