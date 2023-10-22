@@ -10,5 +10,5 @@ abstract class FeeEvent extends Equatable {
 class FeeLoadEvent extends FeeEvent {
   final String subchapterId;
 
-  FeeLoadEvent(this.subchapterId);
+  const FeeLoadEvent(this.subchapterId);
 }

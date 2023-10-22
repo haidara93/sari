@@ -28,5 +28,5 @@ class OfferLoadedSuccess extends OfferState {
 class OfferLoadedFailed extends OfferState {
   final String errortext;
 
-  OfferLoadedFailed(this.errortext);
+  const OfferLoadedFailed(this.errortext);
 }

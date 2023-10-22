@@ -1,7 +1,7 @@
-import 'package:bloc/bloc.dart';
 import 'package:custome_mobile/data/models/post_model.dart';
 import 'package:custome_mobile/data/repositories/post_repository.dart';
 import 'package:equatable/equatable.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 part 'saved_post_event.dart';
 part 'saved_post_state.dart';

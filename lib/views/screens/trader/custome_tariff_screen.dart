@@ -10,7 +10,6 @@ import 'package:custome_mobile/business_logic/bloc/sub_chapter_bloc.dart';
 import 'package:custome_mobile/constants/enums.dart';
 import 'package:custome_mobile/data/models/accurdion_model.dart';
 import 'package:custome_mobile/data/repositories/accurdion_repository.dart';
-import 'package:expandable/expandable.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_img/flutter_img.dart';
@@ -25,8 +24,8 @@ class CustomeTariffScreen extends StatefulWidget {
 }
 
 class _CustomeTariffScreenState extends State<CustomeTariffScreen> {
-  final _headerStyle = const TextStyle(
-      color: Color(0xffffffff), fontSize: 15, fontWeight: FontWeight.bold);
+  // final _headerStyle = const TextStyle(
+  //     color: Color(0xffffffff), fontSize: 15, fontWeight: FontWeight.bold);
   final ScrollController _scrollController = ScrollController();
 
   List<Widget> buildFeesTradeDescription() {
@@ -229,7 +228,7 @@ class _CustomeTariffScreenState extends State<CustomeTariffScreen> {
             //     });
             //   }
             // },
-            children: [],
+            children: const [],
           ),
           ExpansionTile(
             title: Row(
@@ -304,11 +303,8 @@ class _CustomeTariffScreenState extends State<CustomeTariffScreen> {
           ),
           GestureDetector(
             onTap: () {
-              print("asd");
               BlocProvider.of<CalculatorPanelBloc>(context)
                   .add(CalculatorPanelOpenEvent());
-
-              print("oooo");
               BlocProvider.of<FeeItemBloc>(context)
                   .add(FeeItemLoadEvent(fe.id!));
             },
@@ -486,7 +482,6 @@ class _CustomeTariffScreenState extends State<CustomeTariffScreen> {
                     initiallyExpanded: index4 == feeselected,
                     trailing: GestureDetector(
                       onTap: () {
-                        print("asd");
                         BlocProvider.of<NoteBloc>(context).add(NoteLoadEvent(
                             state.fees[index4].id!.toString(), NoteType.Fee));
                         if (!shownote) {
@@ -748,7 +743,6 @@ class _CustomeTariffScreenState extends State<CustomeTariffScreen> {
                     ),
                     trailing: GestureDetector(
                       onTap: () {
-                        print("asd");
                         BlocProvider.of<NoteBloc>(context).add(NoteLoadEvent(
                             state.subchapters[index3].id!.toString(),
                             NoteType.SubChapter));

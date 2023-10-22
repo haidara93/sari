@@ -12,5 +12,5 @@ class SectionLoadEvent extends SectionEvent {}
 class SectionSelectedEvent extends SectionEvent {
   final Section section;
   final List<Chapter> chapters;
-  SectionSelectedEvent(this.section, this.chapters);
+  const SectionSelectedEvent(this.section, this.chapters);
 }

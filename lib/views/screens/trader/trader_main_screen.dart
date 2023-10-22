@@ -3,16 +3,13 @@ import 'dart:math';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:custome_mobile/business_logic/bloc/group_bloc.dart';
 import 'package:custome_mobile/business_logic/bloc/post_bloc.dart';
-import 'package:custome_mobile/helpers/color_constants.dart';
-import 'package:custome_mobile/views/widgets/custom_app_bar.dart';
+import 'package:custome_mobile/views/widgets/calculator_loading_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:flutter_svg/flutter_svg.dart';
-import 'package:shimmer/shimmer.dart';
 
 class TraderMainScreen extends StatefulWidget {
-  TraderMainScreen({Key? key}) : super(key: key);
+  const TraderMainScreen({Key? key}) : super(key: key);
 
   @override
   State<TraderMainScreen> createState() => _TraderMainScreenState();
@@ -29,7 +26,7 @@ class _TraderMainScreenState extends State<TraderMainScreen> {
     Colors.pink[200]!,
     Colors.purple[200]!
   ];
-  GlobalKey<FormState> _groupform = GlobalKey();
+  final GlobalKey<FormState> _groupform = GlobalKey();
   String groupName = "";
 
   String diffText(Duration diff) {
@@ -205,6 +202,7 @@ class _TraderMainScreenState extends State<TraderMainScreen> {
                                                                                     if (value!.isEmpty) {
                                                                                       return "أدخل اسم";
                                                                                     }
+                                                                                    return null;
                                                                                   },
                                                                                   onSaved: (newValue) {
                                                                                     groupName = newValue!;
@@ -361,28 +359,7 @@ class _TraderMainScreenState extends State<TraderMainScreen> {
                     },
                   );
                 } else {
-                  return Shimmer.fromColors(
-                    baseColor: (Colors.grey[300])!,
-                    highlightColor: (Colors.grey[100])!,
-                    enabled: true,
-                    child: ListView.builder(
-                      shrinkWrap: true,
-                      itemBuilder: (_, __) => Card(
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(25.0),
-                        ),
-                        elevation: 1,
-                        color: Colors.white,
-                        margin: const EdgeInsets.symmetric(
-                            horizontal: 25, vertical: 15),
-                        clipBehavior: Clip.hardEdge,
-                        child: SizedBox(
-                          height: 290.h,
-                        ),
-                      ),
-                      itemCount: 4,
-                    ),
-                  );
+                  return const CalculatorLoadingScreen();
                 }
               },
             ),

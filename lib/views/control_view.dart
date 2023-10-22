@@ -1,7 +1,5 @@
 import 'package:custome_mobile/business_logic/bloc/auth_bloc.dart';
-import 'package:custome_mobile/business_logic/bloc/post_bloc.dart';
 import 'package:custome_mobile/business_logic/cubit/internet_cubit.dart';
-import 'package:custome_mobile/data/repositories/post_repository.dart';
 import 'package:custome_mobile/views/screens/broker/broker_home_screen.dart';
 import 'package:custome_mobile/views/screens/select_user_type.dart';
 import 'package:custome_mobile/views/screens/trader/trader_home_screen.dart';

@@ -1,7 +1,7 @@
-import 'package:bloc/bloc.dart';
 import 'package:custome_mobile/data/models/post_model.dart';
 import 'package:custome_mobile/data/repositories/post_repository.dart';
 import 'package:equatable/equatable.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 part 'group_event.dart';
 part 'group_state.dart';
@@ -12,7 +12,7 @@ class GroupBloc extends Bloc<GroupEvent, GroupState> {
     on<GroupLoadEvent>((event, emit) async {
       emit(GroupLoadingProgress());
       try {
-        var groups = await this.postRepository.getgroups();
+        var groups = await postRepository.getgroups();
         emit(GroupListLoadedSuccess(groups));
       } catch (e) {
         emit(GroupLoadedFailed(e.toString()));
@@ -30,7 +30,7 @@ class GroupBloc extends Bloc<GroupEvent, GroupState> {
             groups.add(group);
             emit(GroupListLoadedSuccess(groups));
           } else {
-            emit(GroupLoadedFailed("errortext"));
+            emit(const GroupLoadedFailed("errortext"));
           }
         } catch (e) {
           emit(GroupLoadedFailed(e.toString()));
@@ -49,7 +49,7 @@ class GroupBloc extends Bloc<GroupEvent, GroupState> {
             var groups = currentstate.groups;
             emit(GroupListLoadedSuccess(groups));
           } else {
-            emit(GroupLoadedFailed("errortext"));
+            emit(const GroupLoadedFailed("errortext"));
           }
         } catch (e) {
           emit(GroupLoadedFailed(e.toString()));
@@ -68,7 +68,7 @@ class GroupBloc extends Bloc<GroupEvent, GroupState> {
             var groups = currentstate.groups;
             emit(GroupListLoadedSuccess(groups));
           } else {
-            emit(GroupLoadedFailed("errortext"));
+            emit(const GroupLoadedFailed("errortext"));
           }
         } catch (e) {
           emit(GroupLoadedFailed(e.toString()));

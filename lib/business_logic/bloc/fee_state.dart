@@ -14,11 +14,11 @@ class FeeLoadingProgress extends FeeState {}
 class FeeLoadedSuccess extends FeeState {
   final List<FeeSet> fees;
 
-  FeeLoadedSuccess(this.fees);
+  const FeeLoadedSuccess(this.fees);
 }
 
 class FeeLoadedFailed extends FeeState {
   final String errortext;
 
-  FeeLoadedFailed(this.errortext);
+  const FeeLoadedFailed(this.errortext);
 }

@@ -1,5 +1,3 @@
-import 'package:curved_navigation_bar/curved_navigation_bar.dart';
-import 'package:custome_mobile/business_logic/bloc/agency_bloc.dart';
 import 'package:custome_mobile/business_logic/bloc/attachment_type_bloc.dart';
 import 'package:custome_mobile/business_logic/bloc/auth_bloc.dart';
 import 'package:custome_mobile/business_logic/bloc/calculate_result_bloc.dart';
@@ -43,8 +41,8 @@ class _TraderHomeScreenState extends State<TraderHomeScreen>
   int currentIndex = 2;
   int navigationValue = 2;
   String title = "الرئيسية";
-  Widget currentScreen = TraderMainScreen();
-  final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
+  Widget currentScreen = const TraderMainScreen();
+  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   late TabController _tabController;
   bool _isKeyboardVisible = false;
   late AnimationController _animationController;
@@ -111,7 +109,7 @@ class _TraderHomeScreenState extends State<TraderHomeScreen>
           setState(() {
             title = "حاسبة الرسوم";
 
-            currentScreen = const TraderCalculatorScreen();
+            currentScreen = TraderCalculatorScreen();
           });
           break;
         }
@@ -122,7 +120,7 @@ class _TraderHomeScreenState extends State<TraderHomeScreen>
 
             BlocProvider.of<PostBloc>(context).add(PostLoadEvent());
 
-            currentScreen = TraderMainScreen();
+            currentScreen = const TraderMainScreen();
           });
           break;
         }
@@ -137,11 +135,12 @@ class _TraderHomeScreenState extends State<TraderHomeScreen>
         }
       case 4:
         {
-          BlocProvider.of<TraderLogBloc>(context).add(TraderLogLoadEvent("R"));
+          BlocProvider.of<TraderLogBloc>(context)
+              .add(const TraderLogLoadEvent("R"));
           setState(() {
             title = "السجل";
 
-            currentScreen = LogScreen();
+            currentScreen = const LogScreen();
           });
           break;
         }
@@ -158,7 +157,6 @@ class _TraderHomeScreenState extends State<TraderHomeScreen>
           AppColor.deepAppBarBlue,
           AppColor.deepAppBarBlue,
         ];
-        break;
       case 1:
         return [
           AppColor.lightAppBarBlue,
@@ -167,7 +165,6 @@ class _TraderHomeScreenState extends State<TraderHomeScreen>
           AppColor.deepAppBarBlue,
           AppColor.deepAppBarBlue,
         ];
-        break;
       case 2:
         return [
           AppColor.deepAppBarBlue,
@@ -176,7 +173,6 @@ class _TraderHomeScreenState extends State<TraderHomeScreen>
           AppColor.lightAppBarBlue,
           AppColor.deepAppBarBlue,
         ];
-        break;
       case 3:
         return [
           AppColor.deepAppBarBlue,
@@ -185,7 +181,6 @@ class _TraderHomeScreenState extends State<TraderHomeScreen>
           AppColor.lighterAppBarBlue,
           AppColor.lightAppBarBlue,
         ];
-        break;
       case 4:
         return [
           AppColor.deepAppBarBlue,
@@ -194,7 +189,6 @@ class _TraderHomeScreenState extends State<TraderHomeScreen>
           AppColor.lightAppBarBlue,
           AppColor.lighterAppBarBlue,
         ];
-        break;
       default:
         return [
           AppColor.deepAppBarBlue,
@@ -212,6 +206,7 @@ class _TraderHomeScreenState extends State<TraderHomeScreen>
     } else if (state == PanelState.hidden) {
       return (size.height);
     }
+    return null;
   }
 
   double? _getSizeForPanel(PanelState state, Size size) {
@@ -220,6 +215,7 @@ class _TraderHomeScreenState extends State<TraderHomeScreen>
     } else if (state == PanelState.hidden) {
       return (size.height * 0.5);
     }
+    return null;
   }
 
   @override
@@ -1055,7 +1051,6 @@ class _TraderHomeScreenState extends State<TraderHomeScreen>
                   syrianTotalValue = "0.0";
                   totalValueWithEnsurance = "0.0";
                 });
-                print("jhgjh");
                 selectSuggestion(state.fee);
               }
             },
@@ -1107,9 +1102,9 @@ class _TraderHomeScreenState extends State<TraderHomeScreen>
                               const SizedBox(
                                 height: 12,
                               ),
-                              Visibility(
+                              const Visibility(
                                   // visible: allowexport,
-                                  child: const Text(
+                                  child: Text(
                                 "هذا البند ممنوع من الاستيراد",
                                 style: TextStyle(color: Colors.red),
                               )),
@@ -1565,7 +1560,7 @@ class _TraderHomeScreenState extends State<TraderHomeScreen>
       child: Scaffold(
         backgroundColor: Colors.grey[200],
         appBar: AppBar(
-          title: Text("طلب مخلص"),
+          title: const Text("طلب مخلص"),
         ),
         body: SingleChildScrollView(
           child: Column(
@@ -1573,7 +1568,7 @@ class _TraderHomeScreenState extends State<TraderHomeScreen>
               SizedBox(
                 height: 40.h,
               ),
-              Text(
+              const Text(
                 "الضرائب والرسوم",
                 style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
               ),
@@ -1598,7 +1593,6 @@ class _TraderHomeScreenState extends State<TraderHomeScreen>
                         naturalDisasterFee: state.result.naturalDisasterFee!,
                         finalFee: state.result.finalTotal!,
                       );
-                      ;
                     } else {
                       return const Center(
                         child: CircularProgressIndicator(),
@@ -1682,7 +1676,8 @@ class _TraderHomeScreenState extends State<TraderHomeScreen>
                                 ),
                                 Text(
                                   state.result.finalTotal!.toStringAsFixed(2),
-                                  style: TextStyle(fontWeight: FontWeight.bold),
+                                  style: const TextStyle(
+                                      fontWeight: FontWeight.bold),
                                 ),
                               ],
                             ),
@@ -1703,7 +1698,7 @@ class _TraderHomeScreenState extends State<TraderHomeScreen>
               SizedBox(
                 height: 30.h,
               ),
-              Text(
+              const Text(
                   "هذه الرسوم تقديرية ولا تتضمن مصاريف التخليص الجمركي ورسوم الخدمات"),
               SizedBox(
                 height: 30.h,

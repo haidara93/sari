@@ -1,4 +1,4 @@
-import 'dart:io';
+// import 'dart:io';
 
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:custome_mobile/business_logic/bloc/attachment_bloc.dart';
@@ -10,7 +10,6 @@ import 'package:custome_mobile/helpers/color_constants.dart';
 import 'package:custome_mobile/views/control_view.dart';
 import 'package:custome_mobile/views/widgets/custom_app_bar.dart';
 import 'package:custome_mobile/views/widgets/custom_botton.dart';
-import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -19,15 +18,15 @@ import 'package:image_picker/image_picker.dart';
 class OrderAttachmentScreen extends StatefulWidget {
   final Offer offer;
 
-  OrderAttachmentScreen({required this.offer});
+  const OrderAttachmentScreen({super.key, required this.offer});
 
   @override
   State<OrderAttachmentScreen> createState() => _OrderAttachmentScreenState();
 }
 
 class _OrderAttachmentScreenState extends State<OrderAttachmentScreen> {
-  File? _image;
-  final ImagePicker _picker = ImagePicker();
+  // File? _image;
+  // final ImagePicker _picker = ImagePicker();
   AttachmentType? selectedAttachmentType;
   List<Attachment> attachments = [];
   List<int> attachmentsId = [];
@@ -37,7 +36,6 @@ class _OrderAttachmentScreenState extends State<OrderAttachmentScreen> {
   @override
   void initState() {
     super.initState();
-    print(widget.offer.attachments!.length);
     for (var element in widget.offer.attachments!) {
       setState(() {
         attachmentsId.add(element.id!);
@@ -63,7 +61,7 @@ class _OrderAttachmentScreenState extends State<OrderAttachmentScreen> {
   imageButtonPressed(ImageSource source, {bool isMultiImage = false}) async {
     if (isMultiImage) {
       try {
-        final List<XFile>? pickedFileList = await _picker.pickMultiImage();
+        // final List<XFile> pickedFileList = await _picker.pickMultiImage();
         // _imageFileList = pickedFileList;
       } catch (e) {
         // _pickImageError = e;
@@ -73,21 +71,21 @@ class _OrderAttachmentScreenState extends State<OrderAttachmentScreen> {
     }
   }
 
-  Widget _buildimagelist() {
-    return Image.file(File(_image!.path));
-  }
+  // Widget _buildimagelist() {
+  //   return Image.file(File(_image!.path));
+  // }
 
-  Widget _previewImages() {
-    if (_image != null) {
-      return _buildimagelist();
-    } else {
-      return const Text(
-        'الرجاء اختيار صورة لرفعها.',
-        textAlign: TextAlign.center,
-        style: TextStyle(color: Colors.black),
-      );
-    }
-  }
+  // Widget _previewImages() {
+  //   if (_image != null) {
+  //     return _buildimagelist();
+  //   } else {
+  //     return const Text(
+  //       'الرجاء اختيار صورة لرفعها.',
+  //       textAlign: TextAlign.center,
+  //       style: TextStyle(color: Colors.black),
+  //     );
+  //   }
+  // }
 
   String attachmentName(int attachmentType) {
     for (var element in attachmentTypes) {
@@ -100,7 +98,7 @@ class _OrderAttachmentScreenState extends State<OrderAttachmentScreen> {
 
   List<Widget> _buildAttachmentslist(List<Attachment> attachments) {
     List<Widget> list = [];
-    int i = 0;
+    // int i = 0;
     for (var element in attachments) {
       var elem = Container(
         margin: const EdgeInsets.all(7),
@@ -166,7 +164,7 @@ class _OrderAttachmentScreenState extends State<OrderAttachmentScreen> {
           ],
         ),
       );
-      i++;
+      // i++;
       list.add(elem);
     }
     return list;
@@ -174,7 +172,7 @@ class _OrderAttachmentScreenState extends State<OrderAttachmentScreen> {
 
   List<Widget> _buildAttachmentsTypelist(List<AttachmentType> attachments) {
     List<Widget> list = [];
-    int i = 0;
+    // int i = 0;
     for (var element in attachments) {
       var elem = SizedBox(
         width: 200.w,
@@ -204,7 +202,7 @@ class _OrderAttachmentScreenState extends State<OrderAttachmentScreen> {
           },
         ),
       );
-      i++;
+      // i++;
       list.add(elem);
     }
     return list;
@@ -285,7 +283,7 @@ class _OrderAttachmentScreenState extends State<OrderAttachmentScreen> {
                 const SizedBox(
                   height: 5,
                 ),
-                Text("asd"),
+                const Text("asd"),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceAround,
                   children: [
@@ -297,7 +295,6 @@ class _OrderAttachmentScreenState extends State<OrderAttachmentScreen> {
                     ),
                     BlocConsumer<OfferBloc, OfferState>(
                       listener: (context, state) {
-                        // TODO: implement listener
                         Navigator.pushReplacement(
                             context,
                             MaterialPageRoute(

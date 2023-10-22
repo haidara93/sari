@@ -1,9 +1,7 @@
-import 'dart:convert';
-
-import 'package:bloc/bloc.dart';
 import 'package:custome_mobile/data/models/accurdion_model.dart';
 import 'package:custome_mobile/data/repositories/accurdion_repository.dart';
 import 'package:equatable/equatable.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 part 'section_event.dart';
 part 'section_state.dart';
@@ -16,6 +14,7 @@ class SectionBloc extends Bloc<SectionEvent, SectionState> {
       try {
         var sections = await accordionRepository.getSections();
         emit(SectionLoadedSuccess(sections));
+        // ignore: empty_catches
       } catch (e) {}
     });
 
@@ -25,7 +24,6 @@ class SectionBloc extends Bloc<SectionEvent, SectionState> {
 
         for (var element in currentState.sections) {
           if (element.id == event.section.id) {
-            print(jsonEncode(element));
             // element.chapters = event.chapters;
           }
         }

@@ -10,5 +10,5 @@ abstract class SubChapterEvent extends Equatable {
 class SubChapterLoadEvent extends SubChapterEvent {
   final String chapterId;
 
-  SubChapterLoadEvent(this.chapterId);
+  const SubChapterLoadEvent(this.chapterId);
 }

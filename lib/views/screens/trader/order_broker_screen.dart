@@ -85,8 +85,8 @@ class _OrderBrokerScreenState extends State<OrderBrokerScreen> {
   String statePlaceholder = "اختر مديرية";
   String agencyPlaceholder = "اختر أمانة";
 
-  FocusNode _statenode = new FocusNode();
-  FocusNode _agencynode = new FocusNode();
+  final FocusNode _statenode = FocusNode();
+  // final FocusNode _agencynode = FocusNode();
   @override
   void initState() {
     super.initState();

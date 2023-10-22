@@ -1,7 +1,7 @@
-import 'package:bloc/bloc.dart';
 import 'package:custome_mobile/data/models/post_model.dart';
 import 'package:custome_mobile/data/repositories/post_repository.dart';
 import 'package:equatable/equatable.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 part 'post_event.dart';
 part 'post_state.dart';
@@ -12,9 +12,9 @@ class PostBloc extends Bloc<PostEvent, PostState> {
     on<PostLoadEvent>((event, emit) async {
       emit(PostLoadingProgress());
       try {
-        print("dfg");
         var posts = await postRepository.getposts();
         emit(PostLoadedSuccess(posts));
+        // ignore: empty_catches
       } catch (e) {}
     });
 

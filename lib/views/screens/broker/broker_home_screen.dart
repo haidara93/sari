@@ -30,8 +30,8 @@ class _BrokerHomeScreenState extends State<BrokerHomeScreen>
   int currentIndex = 2;
   int navigationValue = 2;
   String title = "الرئيسية";
-  Widget currentScreen = TraderMainScreen();
-  final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
+  Widget currentScreen = const TraderMainScreen();
+  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   late TabController _tabController;
 
   @override
@@ -61,7 +61,7 @@ class _BrokerHomeScreenState extends State<BrokerHomeScreen>
         {
           setState(() {
             title = "طلبات التخليص";
-            currentScreen = TraderOrdersScreen();
+            currentScreen = const TraderOrdersScreen();
           });
           break;
         }
@@ -70,7 +70,7 @@ class _BrokerHomeScreenState extends State<BrokerHomeScreen>
           setState(() {
             title = "حاسبة الرسوم";
 
-            currentScreen = const TraderCalculatorScreen();
+            currentScreen = TraderCalculatorScreen();
           });
           break;
         }
@@ -81,7 +81,7 @@ class _BrokerHomeScreenState extends State<BrokerHomeScreen>
 
             BlocProvider.of<PostBloc>(context).add(PostLoadEvent());
 
-            currentScreen = TraderMainScreen();
+            currentScreen = const TraderMainScreen();
           });
           break;
         }
@@ -99,7 +99,7 @@ class _BrokerHomeScreenState extends State<BrokerHomeScreen>
           setState(() {
             title = "السجل";
 
-            currentScreen = LogScreen();
+            currentScreen = const LogScreen();
           });
           break;
         }
@@ -116,7 +116,6 @@ class _BrokerHomeScreenState extends State<BrokerHomeScreen>
           AppColor.deepAppBarBlue,
           AppColor.deepAppBarBlue,
         ];
-        break;
       case 1:
         return [
           AppColor.lightAppBarBlue,
@@ -125,7 +124,6 @@ class _BrokerHomeScreenState extends State<BrokerHomeScreen>
           AppColor.deepAppBarBlue,
           AppColor.deepAppBarBlue,
         ];
-        break;
       case 2:
         return [
           AppColor.deepAppBarBlue,
@@ -134,7 +132,7 @@ class _BrokerHomeScreenState extends State<BrokerHomeScreen>
           AppColor.lightAppBarBlue,
           AppColor.deepAppBarBlue,
         ];
-        break;
+
       case 3:
         return [
           AppColor.deepAppBarBlue,
@@ -143,7 +141,7 @@ class _BrokerHomeScreenState extends State<BrokerHomeScreen>
           AppColor.lighterAppBarBlue,
           AppColor.lightAppBarBlue,
         ];
-        break;
+
       case 4:
         return [
           AppColor.deepAppBarBlue,
@@ -152,7 +150,7 @@ class _BrokerHomeScreenState extends State<BrokerHomeScreen>
           AppColor.lightAppBarBlue,
           AppColor.lighterAppBarBlue,
         ];
-        break;
+
       default:
         return [
           AppColor.deepAppBarBlue,

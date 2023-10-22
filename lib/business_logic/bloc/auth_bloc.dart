@@ -1,6 +1,6 @@
-import 'package:bloc/bloc.dart';
 import 'package:custome_mobile/data/repositories/auth_repository.dart';
 import 'package:equatable/equatable.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 part 'auth_event.dart';
@@ -50,8 +50,6 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
 
         var data = await authRepository.login(
             username: event.username, password: event.password);
-        print(data["status"]);
-        print(userType);
         if (data["status"] == 200) {
           switch (userType) {
             case "Trader":

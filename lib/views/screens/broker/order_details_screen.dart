@@ -2,7 +2,6 @@ import 'package:custome_mobile/business_logic/bloc/offer_bloc.dart';
 import 'package:custome_mobile/data/models/offer_model.dart';
 import 'package:custome_mobile/helpers/color_constants.dart';
 import 'package:custome_mobile/views/screens/broker/order_attachments_screen.dart';
-import 'package:custome_mobile/views/screens/broker/order_cost_screen.dart';
 import 'package:custome_mobile/views/widgets/custom_app_bar.dart';
 import 'package:custome_mobile/views/widgets/custom_botton.dart';
 import 'package:flutter/material.dart';
@@ -11,16 +10,14 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class OrderDetailsScreen extends StatelessWidget {
   final Offer offer;
-  const OrderDetailsScreen({required this.offer});
+  const OrderDetailsScreen({super.key, required this.offer});
 
   String getOfferType(String offer) {
     switch (offer) {
       case "I":
         return "استيراد";
-        break;
       case "E":
         return "تصدير";
-        break;
       default:
         return "تصدير";
     }
@@ -40,8 +37,8 @@ class OrderDetailsScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    DateTime now = DateTime.now();
-    Duration diff = now.difference(offer.createdDate!);
+    // DateTime now = DateTime.now();
+    // Duration diff = now.difference(offer.createdDate!);
     return Directionality(
       textDirection: TextDirection.rtl,
       child: Scaffold(

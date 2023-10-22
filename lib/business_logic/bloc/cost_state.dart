@@ -18,5 +18,5 @@ class CostListLoadedSuccess extends CostState {
 class CostLoadedFailed extends CostState {
   final String errortext;
 
-  CostLoadedFailed(this.errortext);
+  const CostLoadedFailed(this.errortext);
 }

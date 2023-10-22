@@ -14,11 +14,11 @@ class SectionLoadingProgress extends SectionState {}
 class SectionLoadedSuccess extends SectionState {
   final List<Section> sections;
 
-  SectionLoadedSuccess(this.sections);
+  const SectionLoadedSuccess(this.sections);
 }
 
 class SectionLoadedFailed extends SectionState {
   final String errortext;
 
-  SectionLoadedFailed(this.errortext);
+  const SectionLoadedFailed(this.errortext);
 }

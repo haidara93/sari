@@ -2,10 +2,11 @@ import 'package:custome_mobile/helpers/color_constants.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
+// ignore: must_be_immutable
 class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   String title;
   GlobalKey<ScaffoldState>? scaffoldKey;
-  CustomAppBar({required this.title, this.scaffoldKey});
+  CustomAppBar({super.key, required this.title, this.scaffoldKey});
 
   @override
   Widget build(BuildContext context) {
@@ -32,7 +33,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
       child: Padding(
         padding: EdgeInsets.symmetric(horizontal: 12.w),
         child: Column(children: [
-          Spacer(),
+          const Spacer(),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
@@ -43,7 +44,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
                           onTap: () {
                             Navigator.pop(context);
                           },
-                          child: Container(
+                          child: SizedBox(
                             // margin:
                             //     EdgeInsets.symmetric(vertical: 13.h, horizontal: 3.w),
                             height: 35.h,
@@ -59,7 +60,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
                           onTap: () {
                             scaffoldKey!.currentState!.openDrawer();
                           },
-                          child: Container(
+                          child: SizedBox(
                             // margin:
                             //     EdgeInsets.symmetric(vertical: 13.h, horizontal: 3.w),
                             height: 35.h,
@@ -78,7 +79,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
                     onTap: () {
                       // scaffoldKey.currentState!.openDrawer();
                     },
-                    child: Container(
+                    child: SizedBox(
                       // margin:
                       //     EdgeInsets.symmetric(vertical: 13.h, horizontal: 3.w),
                       height: 35.h,

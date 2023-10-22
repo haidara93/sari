@@ -11,7 +11,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class OrderCostScreen extends StatefulWidget {
   final Offer offer;
-  OrderCostScreen({required this.offer});
+  const OrderCostScreen({super.key, required this.offer});
 
   @override
   State<OrderCostScreen> createState() => _OrderCostScreenState();
@@ -20,7 +20,7 @@ class OrderCostScreen extends StatefulWidget {
 class _OrderCostScreenState extends State<OrderCostScreen> {
   final TextEditingController _noteController = TextEditingController();
   List<Widget> _children = [];
-  List<Widget> _labels = [];
+  // List<Widget> _labels = [];
   List<Cost> costs = [];
 
   List<TextEditingController> controllers = [];
@@ -234,9 +234,7 @@ class _OrderCostScreenState extends State<OrderCostScreen> {
                         width: 100, child: Center(child: Text("إلغاء"))),
                   ),
                   BlocConsumer<CostBloc, CostState>(
-                    listener: (context, state) {
-                      // TODO: implement listener
-                    },
+                    listener: (context, state) {},
                     builder: (context, state) {
                       if (state is CostListLoadingProgress) {
                         return CustomButton(

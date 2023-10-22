@@ -10,5 +10,5 @@ class TraderLogEvent extends Equatable {
 class TraderLogLoadEvent extends TraderLogEvent {
   final String state;
 
-  TraderLogLoadEvent(this.state);
+  const TraderLogLoadEvent(this.state);
 }

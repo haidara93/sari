@@ -20,5 +20,5 @@ class AttachmentTypeLoadedSuccess extends AttachmentTypeState {
 class AttachmentTypeLoadedFailed extends AttachmentTypeState {
   final String errortext;
 
-  AttachmentTypeLoadedFailed(this.errortext);
+  const AttachmentTypeLoadedFailed(this.errortext);
 }

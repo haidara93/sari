@@ -14,11 +14,11 @@ class PackageTypeLoadingProgress extends PackageTypeState {}
 class PackageTypeLoadedSuccess extends PackageTypeState {
   final List<PackageType> packageTypes;
 
-  PackageTypeLoadedSuccess(this.packageTypes);
+  const PackageTypeLoadedSuccess(this.packageTypes);
 }
 
 class PackageTypeLoadedFailed extends PackageTypeState {
   final String errortext;
 
-  PackageTypeLoadedFailed(this.errortext);
+  const PackageTypeLoadedFailed(this.errortext);
 }

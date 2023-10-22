@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+// ignore: must_be_immutable
 class SelectUserType extends StatelessWidget {
   SelectUserType({Key? key}) : super(key: key);
 
@@ -69,7 +70,8 @@ class SelectUserType extends StatelessWidget {
                             Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                  builder: (context) => TraderSigninScreen(),
+                                  builder: (context) =>
+                                      const TraderSigninScreen(),
                                 ));
                             userType = UserType.trader;
                             SharedPreferences prefs =
@@ -107,7 +109,8 @@ class SelectUserType extends StatelessWidget {
                             Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                  builder: (context) => TraderSigninScreen(),
+                                  builder: (context) =>
+                                      const TraderSigninScreen(),
                                 ));
                             userType = UserType.broker;
                             SharedPreferences prefs =

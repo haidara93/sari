@@ -1,9 +1,11 @@
+// ignore_for_file: unused_local_variable, unnecessary_null_comparison
+
 import 'dart:io';
 
-import 'package:bloc/bloc.dart';
 import 'package:custome_mobile/data/models/attachments_models.dart';
 import 'package:custome_mobile/data/repositories/state_agency_repository.dart';
 import 'package:equatable/equatable.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 part 'additional_attachment_event.dart';
 part 'additional_attachment_state.dart';
@@ -22,9 +24,7 @@ class AdditionalAttachmentBloc
           var result = await stateAgencyRepository.postAttachment(
               event.image, event.type);
           List<Attachment> attachments = [];
-          if (currentState != null) {
-            attachments = [];
-          }
+          attachments = [];
           attachments.add(result!);
           List<int> newattachments = event.attachments;
           newattachments.add(result.id!);

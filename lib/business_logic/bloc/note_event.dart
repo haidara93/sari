@@ -11,5 +11,5 @@ class NoteLoadEvent extends NoteEvent {
   final String id;
   final NoteType type;
 
-  NoteLoadEvent(this.id, this.type);
+  const NoteLoadEvent(this.id, this.type);
 }

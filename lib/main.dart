@@ -43,7 +43,7 @@ void main() async {
   );
   FirebaseMessaging messaging = FirebaseMessaging.instance;
   messaging.getToken().then((value) {
-    print(value);
+    // print(value);
     // firebase_token = value;
   });
 
@@ -216,7 +216,8 @@ class MyApp extends StatelessWidget {
                       Theme.of(context).textTheme,
                     ),
                   ),
-                  home: showHome ? const ControlView() : IntroductionView(),
+                  home:
+                      showHome ? const ControlView() : const IntroductionView(),
                 ),
               ),
             );

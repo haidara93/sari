@@ -12,7 +12,7 @@ class TraderMessageScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Color.fromRGBO(13, 52, 83, 1),
+      backgroundColor: const Color.fromRGBO(13, 52, 83, 1),
       body: Column(
         children: [
           SizedBox(
@@ -64,9 +64,9 @@ class TraderMessageScreen extends StatelessWidget {
                       color: Colors.white,
                       fontSize: 16.sp,
                     ),
-                    decoration: InputDecoration(
+                    decoration: const InputDecoration(
                       hintText: "",
-                      hintStyle: const TextStyle(
+                      hintStyle: TextStyle(
                         color: Color.fromARGB(255, 7, 3, 3),
                         fontSize: 16,
                       ),
@@ -93,7 +93,7 @@ class TraderMessageScreen extends StatelessWidget {
                         Navigator.push(
                             context,
                             MaterialPageRoute(
-                              builder: (context) => TraderConfirmScreen(),
+                              builder: (context) => const TraderConfirmScreen(),
                             ));
                       },
                     )),

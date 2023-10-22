@@ -2,10 +2,11 @@ import 'package:custome_mobile/helpers/color_constants.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
+// ignore: must_be_immutable
 class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   String title;
   GlobalKey<ScaffoldState>? scaffoldKey;
-  CustomAppBar({required this.title, this.scaffoldKey});
+  CustomAppBar({super.key, required this.title, this.scaffoldKey});
 
   @override
   Widget build(BuildContext context) {

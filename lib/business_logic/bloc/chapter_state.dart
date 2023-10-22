@@ -14,11 +14,11 @@ class ChapterLoadingProgress extends ChapterState {}
 class ChapterLoadedSuccess extends ChapterState {
   final List<Chapter> chapters;
 
-  ChapterLoadedSuccess(this.chapters);
+  const ChapterLoadedSuccess(this.chapters);
 }
 
 class ChapterLoadedFailed extends ChapterState {
   final String errortext;
 
-  ChapterLoadedFailed(this.errortext);
+  const ChapterLoadedFailed(this.errortext);
 }

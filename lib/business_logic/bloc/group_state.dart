@@ -20,7 +20,7 @@ class GroupListLoadedSuccess extends GroupState {
 class GroupLoadedFailed extends GroupState {
   final String errortext;
 
-  GroupLoadedFailed(this.errortext);
+  const GroupLoadedFailed(this.errortext);
 }
 
 class PostUnsavedSuccessfully extends GroupState {}

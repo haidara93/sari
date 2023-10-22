@@ -3,15 +3,14 @@ import 'package:custome_mobile/data/models/offer_model.dart';
 import 'package:custome_mobile/data/models/package_model.dart';
 import 'package:custome_mobile/data/services/calculator_service.dart';
 import 'package:custome_mobile/helpers/color_constants.dart';
-import 'package:custome_mobile/views/screens/trader/log_screens/broker_attachments)screen.dart';
+import 'package:custome_mobile/views/screens/trader/log_screens/broker_attachments_screen.dart';
 import 'package:custome_mobile/views/screens/trader/log_screens/broker_costs_screen.dart';
-import 'package:custome_mobile/views/screens/trader/trader_bill_review.dart';
 import 'package:custome_mobile/views/widgets/custom_app_bar.dart';
-import 'package:custome_mobile/views/widgets/custom_botton.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
+// ignore: must_be_immutable
 class OfferDetailsScreen extends StatelessWidget {
   final Offer offer;
   OfferDetailsScreen({Key? key, required this.offer}) : super(key: key);
@@ -21,10 +20,8 @@ class OfferDetailsScreen extends StatelessWidget {
     switch (offer) {
       case "I":
         return "استيراد";
-        break;
       case "E":
         return "تصدير";
-        break;
       default:
         return "تصدير";
     }
@@ -44,8 +41,8 @@ class OfferDetailsScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    DateTime now = DateTime.now();
-    Duration diff = now.difference(offer.createdDate!);
+    // DateTime now = DateTime.now();
+    // Duration diff = now.difference(offer.createdDate!);
     return Directionality(
       textDirection: TextDirection.rtl,
       child: Scaffold(
@@ -167,8 +164,10 @@ class OfferDetailsScreen extends StatelessWidget {
                         result.protectionFee = product.protectionFee!;
                         result.naturalFee = product.naturalFee!;
                         result.taxFee = product.taxFee!;
+                        // ignore: use_build_context_synchronously
                         BlocProvider.of<CalculateResultBloc>(context)
                             .add(CalculateTheResultEvent(result));
+                        // ignore: use_build_context_synchronously
                         Navigator.push(
                             context,
                             MaterialPageRoute(

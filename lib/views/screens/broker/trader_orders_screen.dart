@@ -18,10 +18,8 @@ class _TraderOrdersScreenState extends State<TraderOrdersScreen> {
     switch (offer) {
       case "I":
         return "استيراد";
-        break;
       case "E":
         return "تصدير";
-        break;
       default:
         return "تصدير";
     }

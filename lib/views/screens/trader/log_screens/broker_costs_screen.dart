@@ -1,17 +1,15 @@
 import 'package:custome_mobile/business_logic/bloc/calculate_result_bloc.dart';
 import 'package:custome_mobile/data/models/offer_model.dart';
 import 'package:custome_mobile/data/models/package_model.dart';
-import 'package:custome_mobile/data/services/calculator_service.dart';
-import 'package:custome_mobile/helpers/color_constants.dart';
-import 'package:custome_mobile/views/screens/trader/trader_bill_review.dart';
+import 'package:custome_mobile/views/widgets/calculator_loading_screen.dart';
 import 'package:custome_mobile/views/widgets/custom_app_bar.dart';
-import 'package:custome_mobile/views/widgets/custom_botton.dart';
 import 'package:custome_mobile/views/widgets/item_taxes_widget.dart';
 import 'package:custome_mobile/views/widgets/pens_taxes_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
+// ignore: must_be_immutable
 class BrokerCostDetailsScreen extends StatelessWidget {
   final Offer offer;
   BrokerCostDetailsScreen({Key? key, required this.offer}) : super(key: key);
@@ -21,10 +19,8 @@ class BrokerCostDetailsScreen extends StatelessWidget {
     switch (offer) {
       case "I":
         return "استيراد";
-        break;
       case "E":
         return "تصدير";
-        break;
       default:
         return "تصدير";
     }
@@ -44,8 +40,8 @@ class BrokerCostDetailsScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    DateTime now = DateTime.now();
-    Duration diff = now.difference(offer.createdDate!);
+    // DateTime now = DateTime.now();
+    // Duration diff = now.difference(offer.createdDate!);
     return Directionality(
       textDirection: TextDirection.rtl,
       child: Scaffold(
@@ -83,9 +79,7 @@ class BrokerCostDetailsScreen extends StatelessWidget {
                         finalFee: state.result.finalTotal!,
                       );
                     } else {
-                      return const Center(
-                        child: CircularProgressIndicator(),
-                      );
+                      return const CalculatorLoadingScreen();
                     }
                   },
                 ),
@@ -109,9 +103,7 @@ class BrokerCostDetailsScreen extends StatelessWidget {
                         finalTaxes: state.result.finalTaxes!,
                       );
                     } else {
-                      return const Center(
-                        child: CircularProgressIndicator(),
-                      );
+                      return const CalculatorLoadingScreen();
                     }
                   },
                 ),
@@ -170,9 +162,7 @@ class BrokerCostDetailsScreen extends StatelessWidget {
                         ),
                       );
                     } else {
-                      return const Center(
-                        child: CircularProgressIndicator(),
-                      );
+                      return const CalculatorLoadingScreen();
                     }
                   },
                 ),
@@ -272,9 +262,7 @@ class BrokerCostDetailsScreen extends StatelessWidget {
                         ),
                       );
                     } else {
-                      return const Center(
-                        child: CircularProgressIndicator(),
-                      );
+                      return const CalculatorLoadingScreen();
                     }
                   },
                 ),
@@ -345,9 +333,7 @@ class BrokerCostDetailsScreen extends StatelessWidget {
                         ),
                       );
                     } else {
-                      return const Center(
-                        child: CircularProgressIndicator(),
-                      );
+                      return const CalculatorLoadingScreen();
                     }
                   },
                 ),

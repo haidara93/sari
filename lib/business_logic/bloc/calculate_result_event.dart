@@ -10,5 +10,5 @@ class CalculateResultEvent extends Equatable {
 class CalculateTheResultEvent extends CalculateResultEvent {
   final CalculateObject object;
 
-  CalculateTheResultEvent(this.object);
+  const CalculateTheResultEvent(this.object);
 }

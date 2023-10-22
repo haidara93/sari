@@ -23,7 +23,6 @@ class StateAgencyRepository {
 
     var rs = await HttpHelper.get(STATE_CUSTOMES_ENDPOINT, apiToken: jwt);
     states = [];
-    print(rs.body);
     if (rs.statusCode == 200) {
       var myDataString = utf8.decode(rs.bodyBytes);
 
@@ -42,7 +41,6 @@ class StateAgencyRepository {
     var rs = await HttpHelper.get('$STATE_CUSTOMES_ENDPOINT$id/agencies/',
         apiToken: jwt);
     agencies = [];
-    print(rs.statusCode);
     if (rs.statusCode == 200) {
       var myDataString = utf8.decode(rs.bodyBytes);
 
@@ -60,7 +58,6 @@ class StateAgencyRepository {
 
     var rs = await HttpHelper.get(PACKAGE_TYPES_ENDPOINT, apiToken: jwt);
     packageTypes = [];
-    print(rs.statusCode);
     if (rs.statusCode == 200) {
       var myDataString = utf8.decode(rs.bodyBytes);
 
@@ -78,7 +75,6 @@ class StateAgencyRepository {
 
     var rs = await HttpHelper.get(ATTACHMENT_TYPES_ENDPOINT, apiToken: jwt);
     attachmentTypes = [];
-    print(rs.statusCode);
     if (rs.statusCode == 200) {
       var myDataString = utf8.decode(rs.bodyBytes);
 
@@ -122,7 +118,6 @@ class StateAgencyRepository {
     request.fields['attachment_type'] = attachmentTypeId.toString();
     request.fields['user'] = 1.toString();
     var response = await request.send();
-    print(response.statusCode);
     if (response.statusCode == 201) {
       final respStr = await response.stream.bytesToString();
       var res = jsonDecode(respStr);
@@ -146,7 +141,6 @@ class StateAgencyRepository {
     var myDataString = utf8.decode(response.bodyBytes);
 
     var json = jsonDecode(myDataString);
-    print(myDataString);
     var result = CalculatorResult.fromJson(json);
     return result;
   }
@@ -195,8 +189,6 @@ class StateAgencyRepository {
     });
 
     var jsonObject = jsonDecode(response.body);
-    print(response.statusCode);
-    print(response.body);
     if (response.statusCode == 201) {
       return Offer.fromJson(jsonObject);
     } else {
@@ -213,7 +205,6 @@ class StateAgencyRepository {
       apiToken: jwt,
     );
     var myDataString = utf8.decode(response.bodyBytes);
-    print(response.statusCode);
     var json = jsonDecode(myDataString);
     if (response.statusCode == 200) {
       for (var element in json) {
@@ -235,7 +226,6 @@ class StateAgencyRepository {
       apiToken: jwt,
     );
     var myDataString = utf8.decode(response.bodyBytes);
-    print(response.statusCode);
     var json = jsonDecode(myDataString);
     if (response.statusCode == 200) {
       for (var element in json) {
@@ -306,15 +296,11 @@ class StateAgencyRepository {
       );
 
       if (response.statusCode == 201) {
-        print('Costs created successfully.');
         return true;
       } else {
-        print('Failed to create costs. Status code: ${response.statusCode}');
-        print('Response body: ${response.body}');
         return false;
       }
     } catch (error) {
-      print('Error creating costs: $error');
       return false;
     }
   }

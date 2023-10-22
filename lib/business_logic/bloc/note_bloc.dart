@@ -1,8 +1,8 @@
-import 'package:bloc/bloc.dart';
 import 'package:custome_mobile/constants/enums.dart';
 import 'package:custome_mobile/data/models/accurdion_model.dart';
 import 'package:custome_mobile/data/repositories/accurdion_repository.dart';
 import 'package:equatable/equatable.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 part 'note_event.dart';
 part 'note_state.dart';

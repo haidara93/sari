@@ -10,5 +10,5 @@ class SavedPostEvent extends Equatable {
 class SavedPostLoadEvent extends SavedPostEvent {
   final int groupId;
 
-  SavedPostLoadEvent(this.groupId);
+  const SavedPostLoadEvent(this.groupId);
 }

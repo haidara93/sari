@@ -1,6 +1,7 @@
 import 'package:custome_mobile/business_logic/bloc/calculate_result_bloc.dart';
 import 'package:custome_mobile/helpers/color_constants.dart';
 import 'package:custome_mobile/views/screens/trader/trader_attachement_screen.dart';
+import 'package:custome_mobile/views/widgets/calculator_loading_screen.dart';
 import 'package:custome_mobile/views/widgets/custom_app_bar.dart';
 import 'package:custome_mobile/views/widgets/custom_botton.dart';
 import 'package:custome_mobile/views/widgets/item_taxes_widget.dart';
@@ -8,7 +9,6 @@ import 'package:custome_mobile/views/widgets/pens_taxes_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:shimmer/shimmer.dart';
 
 class TraderBillReview extends StatelessWidget {
   final int customAgency;
@@ -24,7 +24,7 @@ class TraderBillReview extends StatelessWidget {
   final int? packageType;
   final int? rawMaterial;
   final int? industrial;
-  TraderBillReview(
+  const TraderBillReview(
       {Key? key,
       required this.customAgency,
       required this.customeState,
@@ -82,27 +82,7 @@ class TraderBillReview extends StatelessWidget {
                         finalFee: state.result.finalTotal!,
                       );
                     } else {
-                      return Shimmer.fromColors(
-                        baseColor: (Colors.grey[300])!,
-                        highlightColor: (Colors.grey[100])!,
-                        enabled: true,
-                        child: ListView.builder(
-                          shrinkWrap: true,
-                          itemBuilder: (_, __) => Card(
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(25.0),
-                            ),
-                            elevation: 1,
-                            color: Colors.white,
-                            margin: const EdgeInsets.symmetric(vertical: 15),
-                            clipBehavior: Clip.hardEdge,
-                            child: SizedBox(
-                              height: 290.h,
-                            ),
-                          ),
-                          itemCount: 4,
-                        ),
-                      );
+                      return const CalculatorLoadingScreen();
                     }
                   },
                 ),
@@ -126,27 +106,7 @@ class TraderBillReview extends StatelessWidget {
                         finalTaxes: state.result.finalTaxes!,
                       );
                     } else {
-                      return Shimmer.fromColors(
-                        baseColor: (Colors.grey[300])!,
-                        highlightColor: (Colors.grey[100])!,
-                        enabled: true,
-                        child: ListView.builder(
-                          shrinkWrap: true,
-                          itemBuilder: (_, __) => Card(
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(25.0),
-                            ),
-                            elevation: 1,
-                            color: Colors.white,
-                            margin: const EdgeInsets.symmetric(vertical: 15),
-                            clipBehavior: Clip.hardEdge,
-                            child: SizedBox(
-                              height: 290.h,
-                            ),
-                          ),
-                          itemCount: 4,
-                        ),
-                      );
+                      return const CalculatorLoadingScreen();
                     }
                   },
                 ),
@@ -210,7 +170,8 @@ class TraderBillReview extends StatelessWidget {
                                 ),
                                 Text(
                                   state.result.finalTotal!.toStringAsFixed(2),
-                                  style: TextStyle(fontWeight: FontWeight.bold),
+                                  style: const TextStyle(
+                                      fontWeight: FontWeight.bold),
                                 ),
                               ],
                             ),
@@ -221,27 +182,7 @@ class TraderBillReview extends StatelessWidget {
                         ),
                       );
                     } else {
-                      return Shimmer.fromColors(
-                        baseColor: (Colors.grey[300])!,
-                        highlightColor: (Colors.grey[100])!,
-                        enabled: true,
-                        child: ListView.builder(
-                          shrinkWrap: true,
-                          itemBuilder: (_, __) => Card(
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(25.0),
-                            ),
-                            elevation: 1,
-                            color: Colors.white,
-                            margin: const EdgeInsets.symmetric(vertical: 15),
-                            clipBehavior: Clip.hardEdge,
-                            child: SizedBox(
-                              height: 290.h,
-                            ),
-                          ),
-                          itemCount: 4,
-                        ),
-                      );
+                      return const CalculatorLoadingScreen();
                     }
                   },
                 ),

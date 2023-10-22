@@ -13,5 +13,5 @@ class PostSaveEvent extends PostEvent {
   final int postId;
   final bool save;
 
-  PostSaveEvent(this.postId, this.save);
+  const PostSaveEvent(this.postId, this.save);
 }

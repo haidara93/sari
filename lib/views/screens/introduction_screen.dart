@@ -6,7 +6,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 
 class IntroductionView extends StatefulWidget {
-  IntroductionView({Key? key}) : super(key: key);
+  const IntroductionView({Key? key}) : super(key: key);
 
   @override
   State<IntroductionView> createState() => _IntroductionViewState();
@@ -165,7 +165,7 @@ class _IntroductionViewState extends State<IntroductionView> {
                 Navigator.pushReplacement(
                     context,
                     MaterialPageRoute(
-                      builder: (context) => ControlView(),
+                      builder: (context) => const ControlView(),
                     ));
               },
               child: Text(

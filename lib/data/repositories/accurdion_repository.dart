@@ -19,7 +19,6 @@ class AccordionRepository {
 
     var rs = await HttpHelper.get(ACCURDION_SECTION_ENDPOINT, apiToken: jwt);
     sections = [];
-    print(rs.statusCode);
     if (rs.statusCode == 200) {
       var myDataString = utf8.decode(rs.bodyBytes);
 
@@ -38,7 +37,6 @@ class AccordionRepository {
     var rs = await HttpHelper.get("$ACCURDION_CHAPTERS_ENDPOINT$sectionId/",
         apiToken: jwt);
     chapters = [];
-    print(rs.statusCode);
     if (rs.statusCode == 200) {
       var myDataString = utf8.decode(rs.bodyBytes);
 
@@ -57,7 +55,6 @@ class AccordionRepository {
     var rs = await HttpHelper.get("$ACCURDION_SUBCHAPTERS_ENDPOINT$chapterId/",
         apiToken: jwt);
     subchapters = [];
-    print(rs.statusCode);
     if (rs.statusCode == 200) {
       var myDataString = utf8.decode(rs.bodyBytes);
 
@@ -76,7 +73,6 @@ class AccordionRepository {
     var rs = await HttpHelper.get("$ACCURDION_FEES_ENDPOINT$subchapterId/",
         apiToken: jwt);
     fees = [];
-    print(rs.statusCode);
     if (rs.statusCode == 200) {
       var myDataString = utf8.decode(rs.bodyBytes);
 
@@ -95,7 +91,8 @@ class AccordionRepository {
     var rs = await HttpHelper.get(
         "$ACCURDION_FEES_TRADE_DESCRIPTION_ENDPOINT$feeId/",
         apiToken: jwt);
-    var feedescription = null;
+    // ignore: prefer_typing_uninitialized_variables
+    late var feedescription;
     if (rs.statusCode == 200) {
       var myDataString = utf8.decode(rs.bodyBytes);
 
@@ -108,6 +105,7 @@ class AccordionRepository {
   Future<List<SectionNote>> getNotes(String id, NoteType type) async {
     prefs = await SharedPreferences.getInstance();
     var jwt = prefs.getString("token");
+    // ignore: prefer_typing_uninitialized_variables
     var rs;
 
     switch (type) {
@@ -137,7 +135,6 @@ class AccordionRepository {
       default:
     }
     notes = [];
-    print(rs.statusCode);
     if (rs.statusCode == 200) {
       var myDataString = utf8.decode(rs.bodyBytes);
 

@@ -21,5 +21,5 @@ class AttachmentLoadedSuccess extends AttachmentState {
 class AttachmentLoadedFailed extends AttachmentState {
   final String errortext;
 
-  AttachmentLoadedFailed(this.errortext);
+  const AttachmentLoadedFailed(this.errortext);
 }

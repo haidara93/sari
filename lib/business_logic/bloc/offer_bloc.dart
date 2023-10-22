@@ -1,7 +1,7 @@
-import 'package:bloc/bloc.dart';
 import 'package:custome_mobile/data/models/offer_model.dart';
 import 'package:custome_mobile/data/repositories/state_agency_repository.dart';
 import 'package:equatable/equatable.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 part 'offer_event.dart';
 part 'offer_state.dart';
@@ -35,7 +35,7 @@ class OfferBloc extends Bloc<OfferEvent, OfferState> {
         if (data != null) {
           emit(OfferLoadedSuccess(data));
         } else {
-          emit(OfferLoadedFailed("error"));
+          emit(const OfferLoadedFailed("error"));
         }
       } catch (e) {
         emit(OfferLoadedFailed(e.toString()));
@@ -47,11 +47,8 @@ class OfferBloc extends Bloc<OfferEvent, OfferState> {
         emit(OfferListLoadingProgress());
         try {
           var data = await stateAgencyRepository.getBrokerOffers();
-          print('success');
-
           emit(OfferListLoadedSuccess(data));
         } catch (e) {
-          print('offer-error');
           emit(OfferLoadedFailed(e.toString()));
         }
       },
@@ -67,10 +64,9 @@ class OfferBloc extends Bloc<OfferEvent, OfferState> {
           if (data) {
             emit(OfferListLoadedSuccess(currentState.offers));
           } else {
-            emit(OfferLoadedFailed("خطأ"));
+            emit(const OfferLoadedFailed("خطأ"));
           }
         } catch (e) {
-          print('error');
           emit(OfferLoadedFailed(e.toString()));
         }
       },

@@ -1,3 +1,5 @@
+// ignore_for_file: non_constant_identifier_names
+
 class Section {
   int? id;
   String? label;
@@ -469,12 +471,12 @@ class SectionNote {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['id'] = this.id;
-    data['note_a'] = this.noteA;
-    data['note_b'] = this.noteB;
-    data['note_c'] = this.noteC;
-    data['note_num'] = this.noteNum;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['id'] = id;
+    data['note_a'] = noteA;
+    data['note_b'] = noteB;
+    data['note_c'] = noteC;
+    data['note_num'] = noteNum;
     // data['id_section'] = this.idSection;
     return data;
   }

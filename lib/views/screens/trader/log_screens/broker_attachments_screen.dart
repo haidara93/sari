@@ -2,7 +2,6 @@ import 'dart:io';
 
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:custome_mobile/business_logic/bloc/additional_attachment_bloc.dart';
-import 'package:custome_mobile/business_logic/bloc/attachment_bloc.dart';
 import 'package:custome_mobile/business_logic/bloc/offer_bloc.dart';
 import 'package:custome_mobile/data/models/attachments_models.dart';
 import 'package:custome_mobile/helpers/color_constants.dart';
@@ -19,7 +18,7 @@ class BrokerAttachmentsScreen extends StatefulWidget {
   final int offerId;
   final String offerState;
 
-  BrokerAttachmentsScreen(
+  const BrokerAttachmentsScreen(
       {Key? key,
       required this.attachments,
       required this.additionalAttachments,
@@ -77,7 +76,6 @@ class _BrokerAttachmentsScreenState extends State<BrokerAttachmentsScreen> {
 
   List<Widget> _buildAttachmentslist(List<Attachment> attachments) {
     List<Widget> list = [];
-    int i = 0;
     for (var element in attachments) {
       var elem = Container(
         margin: const EdgeInsets.all(7),
@@ -143,7 +141,6 @@ class _BrokerAttachmentsScreenState extends State<BrokerAttachmentsScreen> {
           ],
         ),
       );
-      i++;
       list.add(elem);
     }
     return list;
@@ -152,7 +149,6 @@ class _BrokerAttachmentsScreenState extends State<BrokerAttachmentsScreen> {
   List<Widget> _buildAttachmentsTypelist(
       List<AttachmentType> attachments, BuildContext context) {
     List<Widget> list = [];
-    int i = 0;
     for (var element in attachments) {
       var elem = SizedBox(
         width: 200.w,
@@ -268,7 +264,6 @@ class _BrokerAttachmentsScreenState extends State<BrokerAttachmentsScreen> {
           ],
         ),
       );
-      i++;
       list.add(elem);
     }
     return list;
@@ -276,7 +271,6 @@ class _BrokerAttachmentsScreenState extends State<BrokerAttachmentsScreen> {
 
   List<Widget> _buildAddionalAttachmentslist(List<Attachment> attachments) {
     List<Widget> list = [];
-    int i = 0;
     for (var element in attachments) {
       var elem = Container(
         margin: const EdgeInsets.all(7),
@@ -342,7 +336,6 @@ class _BrokerAttachmentsScreenState extends State<BrokerAttachmentsScreen> {
           ],
         ),
       );
-      i++;
       list.add(elem);
     }
     return list;
@@ -499,7 +492,6 @@ class _BrokerAttachmentsScreenState extends State<BrokerAttachmentsScreen> {
                     ),
                     BlocConsumer<OfferBloc, OfferState>(
                       listener: (context, state) {
-                        // TODO: implement listener
                         // Navigator.pushReplacement(
                         //     context,
                         //     MaterialPageRoute(

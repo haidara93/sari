@@ -20,5 +20,5 @@ class SavedPostListLoadedSuccess extends SavedPostState {
 class SavedPostLoadedFailed extends SavedPostState {
   final String errortext;
 
-  SavedPostLoadedFailed(this.errortext);
+  const SavedPostLoadedFailed(this.errortext);
 }

@@ -1,6 +1,5 @@
 import 'package:custome_mobile/helpers/color_constants.dart';
 import 'package:custome_mobile/views/control_view.dart';
-import 'package:custome_mobile/views/screens/trader/trader_home_screen.dart';
 import 'package:custome_mobile/views/widgets/custom_botton.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -57,12 +56,12 @@ class TraderConfirmScreen extends StatelessWidget {
                     Navigator.push(
                         context,
                         MaterialPageRoute(
-                          builder: (context) => ControlView(),
+                          builder: (context) => const ControlView(),
                         ));
                   },
                 ),
               ),
-              Spacer()
+              const Spacer()
             ]),
       ),
     );

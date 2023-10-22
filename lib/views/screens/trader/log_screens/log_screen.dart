@@ -7,7 +7,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:shimmer/shimmer.dart';
 
 class LogScreen extends StatefulWidget {
-  LogScreen({Key? key}) : super(key: key);
+  const LogScreen({Key? key}) : super(key: key);
 
   @override
   State<LogScreen> createState() => _LogScreenState();
@@ -33,10 +33,8 @@ class _LogScreenState extends State<LogScreen>
     switch (offer) {
       case "I":
         return "استيراد";
-        break;
       case "E":
         return "تصدير";
-        break;
       default:
         return "تصدير";
     }
@@ -63,11 +61,11 @@ class _LogScreenState extends State<LogScreen>
           mainAxisAlignment: MainAxisAlignment.start,
           mainAxisSize: MainAxisSize.min,
           children: [
-            SizedBox(
+            const SizedBox(
               height: 15,
             ),
             Container(
-              padding: EdgeInsets.symmetric(horizontal: 7, vertical: 7),
+              padding: const EdgeInsets.symmetric(horizontal: 7, vertical: 7),
               decoration: BoxDecoration(
                 color: AppColor.deepBlue,
                 borderRadius: const BorderRadius.only(
@@ -90,11 +88,11 @@ class _LogScreenState extends State<LogScreen>
                   switch (value) {
                     case 0:
                       BlocProvider.of<TraderLogBloc>(context)
-                          .add(TraderLogLoadEvent("R"));
+                          .add(const TraderLogLoadEvent("R"));
                       break;
                     case 1:
                       BlocProvider.of<TraderLogBloc>(context)
-                          .add(TraderLogLoadEvent("C"));
+                          .add(const TraderLogLoadEvent("C"));
                       break;
                     default:
                   }
@@ -164,7 +162,6 @@ class _LogScreenState extends State<LogScreen>
                                         ),
                                         GestureDetector(
                                           onTap: () {
-                                            print("asd");
                                             Navigator.push(
                                                 context,
                                                 MaterialPageRoute(

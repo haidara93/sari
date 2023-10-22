@@ -12,11 +12,10 @@ class AuthRepository {
     try {
       Response response = await HttpHelper.post(
           LOGIN_ENDPOINT, {"username": username, "password": password});
-      final Map<String, dynamic> data = Map<String, dynamic>();
+      final Map<String, dynamic> data = <String, dynamic>{};
       data["status"] = response.statusCode;
 
       var jsonObject = jsonDecode(response.body);
-      print(response.statusCode);
       if (response.statusCode == 401) {
         data["details"] = jsonObject["details"];
       } else {
@@ -37,8 +36,6 @@ class AuthRepository {
   }
 
   Future<bool> isAuthenticated() async {
-    var prefs = await SharedPreferences.getInstance();
-
     var token = await jwtOrEmpty;
 
     if (token != "") {

@@ -2,14 +2,13 @@ import 'package:custome_mobile/business_logic/bloc/auth_bloc.dart';
 import 'package:custome_mobile/constants/text_constants.dart';
 import 'package:custome_mobile/helpers/color_constants.dart';
 import 'package:custome_mobile/views/screens/trader/trader_confirm_screen.dart';
-import 'package:custome_mobile/views/screens/trader/trader_message_screen.dart';
 import 'package:custome_mobile/views/widgets/custom_botton.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class TraderSigninScreen extends StatefulWidget {
-  TraderSigninScreen({Key? key}) : super(key: key);
+  const TraderSigninScreen({Key? key}) : super(key: key);
 
   @override
   State<TraderSigninScreen> createState() => _TraderSigninScreenState();
@@ -118,7 +117,7 @@ class _TraderSigninScreenState extends State<TraderSigninScreen> {
                                     horizontal: 20.w, vertical: 2.h),
                                 enabledBorder: OutlineInputBorder(
                                   borderRadius: BorderRadius.circular(42),
-                                  borderSide: BorderSide(
+                                  borderSide: const BorderSide(
                                     color: Color.fromRGBO(13, 52, 83, 1),
                                   ),
                                 ),
@@ -165,7 +164,7 @@ class _TraderSigninScreenState extends State<TraderSigninScreen> {
                                     horizontal: 20.w, vertical: 2.h),
                                 enabledBorder: OutlineInputBorder(
                                   borderRadius: BorderRadius.circular(42),
-                                  borderSide: BorderSide(
+                                  borderSide: const BorderSide(
                                     color: Color.fromRGBO(13, 52, 83, 1),
                                   ),
                                 ),
@@ -195,7 +194,7 @@ class _TraderSigninScreenState extends State<TraderSigninScreen> {
                                     context,
                                     MaterialPageRoute(
                                       builder: (context) =>
-                                          TraderConfirmScreen(),
+                                          const TraderConfirmScreen(),
                                     ));
                               }
                               if (state is AuthBrokerSuccessState) {
@@ -203,7 +202,7 @@ class _TraderSigninScreenState extends State<TraderSigninScreen> {
                                     context,
                                     MaterialPageRoute(
                                       builder: (context) =>
-                                          TraderConfirmScreen(),
+                                          const TraderConfirmScreen(),
                                     ));
                               }
                             },

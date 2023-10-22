@@ -32,7 +32,7 @@ class PostRepository {
     var token = prefs.getString("token");
     var jwt = token!.split(".");
     var payload =
-        json.decode(ascii.decode(base64.decode(base64.normalize(jwt![1]))));
+        json.decode(ascii.decode(base64.decode(base64.normalize(jwt[1]))));
     var rs = await HttpHelper.post(
         GROUPS_ENDPOINT, {"name": name, "user": payload["user_id"]},
         apiToken: token);
@@ -51,7 +51,7 @@ class PostRepository {
     var token = prefs.getString("token");
     var jwt = token!.split(".");
     var payload =
-        json.decode(ascii.decode(base64.decode(base64.normalize(jwt![1]))));
+        json.decode(ascii.decode(base64.decode(base64.normalize(jwt[1]))));
     var rs = await HttpHelper.post(
         SAVED_POSTS_ENDPOINT,
         {
@@ -76,7 +76,6 @@ class PostRepository {
     var response = await HttpHelper.delete(
         "${SAVED_POSTS_ENDPOINT}delete/$post/",
         apiToken: token);
-    print(response.statusCode);
     if (response.statusCode == 200) {
       return true;
     } else {
@@ -108,7 +107,6 @@ class PostRepository {
 
     var rs = await HttpHelper.get(GROUPS_ENDPOINT, apiToken: jwt);
     groups = [];
-    print(rs.statusCode);
     if (rs.statusCode == 200) {
       var myDataString = utf8.decode(rs.bodyBytes);
 

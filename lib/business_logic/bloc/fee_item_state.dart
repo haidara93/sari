@@ -14,11 +14,11 @@ class FeeItemLoadingProgress extends FeeItemState {}
 class FeeItemLoadedSuccess extends FeeItemState {
   final Package fee;
 
-  FeeItemLoadedSuccess(this.fee);
+  const FeeItemLoadedSuccess(this.fee);
 }
 
 class FeeItemLoadedFailed extends FeeItemState {
   final String errortext;
 
-  FeeItemLoadedFailed(this.errortext);
+  const FeeItemLoadedFailed(this.errortext);
 }

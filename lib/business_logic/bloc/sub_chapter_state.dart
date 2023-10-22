@@ -14,11 +14,11 @@ class SubChapterLoadingProgress extends SubChapterState {}
 class SubChapterLoadedSuccess extends SubChapterState {
   final List<SubChapter> subchapters;
 
-  SubChapterLoadedSuccess(this.subchapters);
+  const SubChapterLoadedSuccess(this.subchapters);
 }
 
 class SubChapterLoadedFailed extends SubChapterState {
   final String errortext;
 
-  SubChapterLoadedFailed(this.errortext);
+  const SubChapterLoadedFailed(this.errortext);
 }

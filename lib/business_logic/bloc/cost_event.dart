@@ -10,5 +10,5 @@ class CostEvent extends Equatable {
 class CostSubmitEvent extends CostEvent {
   final List<Cost> costs;
 
-  CostSubmitEvent(this.costs);
+  const CostSubmitEvent(this.costs);
 }

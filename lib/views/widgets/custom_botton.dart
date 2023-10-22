@@ -7,8 +7,9 @@ class CustomButton extends StatelessWidget {
   final Color color;
   final Function() onTap;
 
-  CustomButton(
-      {required this.title,
+  const CustomButton(
+      {super.key,
+      required this.title,
       this.isEnabled = true,
       this.hieght = 44,
       required this.onTap,

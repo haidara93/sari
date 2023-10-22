@@ -57,7 +57,7 @@ class PensTaxesWidget extends StatelessWidget {
                 "طوابع وضرائب مضافة",
                 maxLines: 3,
               ),
-              Text(addedTaxes!.toString()),
+              Text(addedTaxes.toString()),
             ],
           ),
           Row(
@@ -67,7 +67,7 @@ class PensTaxesWidget extends StatelessWidget {
                 "شهادة جمركية",
                 maxLines: 3,
               ),
-              Text(customsCertificate!.toString()),
+              Text(customsCertificate.toString()),
             ],
           ),
           Row(
@@ -77,7 +77,7 @@ class PensTaxesWidget extends StatelessWidget {
                 "رسم تأمين إلزامي",
                 maxLines: 3,
               ),
-              Text(billTax!.toString()),
+              Text(billTax.toString()),
             ],
           ),
           Row(
@@ -87,7 +87,7 @@ class PensTaxesWidget extends StatelessWidget {
                 "رسم طابع",
                 maxLines: 3,
               ),
-              Text(stampFee!.toStringAsFixed(2)),
+              Text(stampFee.toStringAsFixed(2)),
             ],
           ),
           Row(
@@ -97,7 +97,7 @@ class PensTaxesWidget extends StatelessWidget {
                 "ضريبة محلية محافظة",
                 maxLines: 3,
               ),
-              Text(provincialLocalTax!.toStringAsFixed(2)),
+              Text(provincialLocalTax.toStringAsFixed(2)),
             ],
           ),
           Row(
@@ -107,7 +107,7 @@ class PensTaxesWidget extends StatelessWidget {
                 "السلفة على ضريبة الدخل",
                 maxLines: 3,
               ),
-              Text(advanceIncomeTax!.toStringAsFixed(2)),
+              Text(advanceIncomeTax.toStringAsFixed(2)),
             ],
           ),
           Row(
@@ -117,7 +117,7 @@ class PensTaxesWidget extends StatelessWidget {
                 "رسم المساهمة الوطنية لإعادة الاإعمار:",
                 maxLines: 3,
               ),
-              Text(reconstructionFee!.toStringAsFixed(2)),
+              Text(reconstructionFee.toStringAsFixed(2)),
             ],
           ),
           const SizedBox(
@@ -132,7 +132,7 @@ class PensTaxesWidget extends StatelessWidget {
                 style: TextStyle(fontWeight: FontWeight.bold),
               ),
               Text(
-                finalTaxes!.toStringAsFixed(2),
+                finalTaxes.toStringAsFixed(2),
                 style: const TextStyle(fontWeight: FontWeight.bold),
               ),
             ],

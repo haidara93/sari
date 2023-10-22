@@ -12,18 +12,18 @@ class GroupLoadEvent extends GroupEvent {}
 class GroupAddEvent extends GroupEvent {
   final String name;
 
-  GroupAddEvent(this.name);
+  const GroupAddEvent(this.name);
 }
 
 class SavePostEvent extends GroupEvent {
   final int postId;
   final int groupId;
 
-  SavePostEvent(this.postId, this.groupId);
+  const SavePostEvent(this.postId, this.groupId);
 }
 
 class UnSavePostEvent extends GroupEvent {
   final int postId;
 
-  UnSavePostEvent(this.postId);
+  const UnSavePostEvent(this.postId);
 }

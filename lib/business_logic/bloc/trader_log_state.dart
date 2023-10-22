@@ -14,11 +14,11 @@ class TraderLogLoadingProgress extends TraderLogState {}
 class TraderLogLoadedSuccess extends TraderLogState {
   final List<Offer> offers;
 
-  TraderLogLoadedSuccess(this.offers);
+  const TraderLogLoadedSuccess(this.offers);
 }
 
 class TraderLogLoadedFailed extends TraderLogState {
   final String error;
 
-  TraderLogLoadedFailed(this.error);
+  const TraderLogLoadedFailed(this.error);
 }

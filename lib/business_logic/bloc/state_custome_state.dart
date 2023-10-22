@@ -14,11 +14,11 @@ class StateCustomeLoadingProgress extends StateCustomeState {}
 class StateCustomeLoadedSuccess extends StateCustomeState {
   final List<StateCustome> states;
 
-  StateCustomeLoadedSuccess(this.states);
+  const StateCustomeLoadedSuccess(this.states);
 }
 
 class StateCustomeLoadedFailed extends StateCustomeState {
   final String errortext;
 
-  StateCustomeLoadedFailed(this.errortext);
+  const StateCustomeLoadedFailed(this.errortext);
 }

@@ -10,5 +10,5 @@ class FeeTradeDescriptionEvent extends Equatable {
 class FeeTradeDescriptionLoadEvent extends FeeTradeDescriptionEvent {
   final String feeId;
 
-  FeeTradeDescriptionLoadEvent(this.feeId);
+  const FeeTradeDescriptionLoadEvent(this.feeId);
 }

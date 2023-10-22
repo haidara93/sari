@@ -10,5 +10,5 @@ abstract class ChapterEvent extends Equatable {
 class ChapterLoadEvent extends ChapterEvent {
   final int sectionId;
 
-  ChapterLoadEvent(this.sectionId);
+  const ChapterLoadEvent(this.sectionId);
 }

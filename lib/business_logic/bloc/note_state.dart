@@ -14,11 +14,11 @@ class NoteLoadingProgress extends NoteState {}
 class NoteLoadedSuccess extends NoteState {
   final List<SectionNote> notes;
 
-  NoteLoadedSuccess(this.notes);
+  const NoteLoadedSuccess(this.notes);
 }
 
 class NoteLoadedFailed extends NoteState {
   final String error;
 
-  NoteLoadedFailed(this.error);
+  const NoteLoadedFailed(this.error);
 }

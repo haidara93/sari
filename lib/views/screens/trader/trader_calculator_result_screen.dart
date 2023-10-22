@@ -1,5 +1,6 @@
 import 'package:custome_mobile/business_logic/bloc/calculate_result_bloc.dart';
 import 'package:custome_mobile/helpers/color_constants.dart';
+import 'package:custome_mobile/views/widgets/calculator_loading_screen.dart';
 import 'package:custome_mobile/views/widgets/custom_botton.dart';
 import 'package:custome_mobile/views/widgets/item_taxes_widget.dart';
 import 'package:custome_mobile/views/widgets/pens_taxes_widget.dart';
@@ -51,9 +52,7 @@ class TraderCalculatorResultScreen extends StatelessWidget {
                         finalFee: state.result.finalTotal!,
                       );
                     } else {
-                      return const Center(
-                        child: CircularProgressIndicator(),
-                      );
+                      return const CalculatorLoadingScreen();
                     }
                   },
                 ),
@@ -77,9 +76,7 @@ class TraderCalculatorResultScreen extends StatelessWidget {
                         finalTaxes: state.result.finalTaxes!,
                       );
                     } else {
-                      return const Center(
-                        child: CircularProgressIndicator(),
-                      );
+                      return const CalculatorLoadingScreen();
                     }
                   },
                 ),
@@ -137,9 +134,7 @@ class TraderCalculatorResultScreen extends StatelessWidget {
                         ),
                       );
                     } else {
-                      return const Center(
-                        child: CircularProgressIndicator(),
-                      );
+                      return const CalculatorLoadingScreen();
                     }
                   },
                 ),

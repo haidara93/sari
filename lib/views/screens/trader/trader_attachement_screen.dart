@@ -1,6 +1,5 @@
 import 'dart:io';
 
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:custome_mobile/business_logic/bloc/attachment_bloc.dart';
 import 'package:custome_mobile/business_logic/bloc/attachment_type_bloc.dart';
 import 'package:custome_mobile/business_logic/bloc/offer_bloc.dart';
@@ -14,6 +13,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:image_picker/image_picker.dart';
 
+// ignore: must_be_immutable
 class TraderAttachementScreen extends StatefulWidget {
   final String? offerType;
   final int customAgency;
@@ -85,7 +85,7 @@ class _TraderAttachementScreenState extends State<TraderAttachementScreen> {
   imageButtonPressed(ImageSource source, {bool isMultiImage = false}) async {
     if (isMultiImage) {
       try {
-        final List<XFile>? pickedFileList = await _picker.pickMultiImage();
+        // final List<XFile>? pickedFileList = await _picker.pickMultiImage();
         // _imageFileList = pickedFileList;
       } catch (e) {
         // _pickImageError = e;
@@ -122,7 +122,6 @@ class _TraderAttachementScreenState extends State<TraderAttachementScreen> {
 
   List<Widget> _buildAttachmentslist(List<Attachment> attachments) {
     List<Widget> list = [];
-    int i = 0;
     for (var element in attachments) {
       var elem = Container(
         margin: const EdgeInsets.all(7),
@@ -188,7 +187,6 @@ class _TraderAttachementScreenState extends State<TraderAttachementScreen> {
           ],
         ),
       );
-      i++;
       list.add(elem);
     }
     return list;
@@ -595,9 +593,7 @@ class _TraderAttachementScreenState extends State<TraderAttachementScreen> {
                             width: 100, child: Center(child: Text("إلغاء"))),
                       ),
                       BlocConsumer<OfferBloc, OfferState>(
-                        listener: (context, state) {
-                          // TODO: implement listener
-                        },
+                        listener: (context, state) {},
                         builder: (context, state) {
                           if (state is OfferLoadingProgress) {
                             return CustomButton(
