@@ -1,7 +1,4 @@
 import 'package:connectivity_plus/connectivity_plus.dart';
-import 'package:custome_mobile/business_logic/bloc/additional_attachment_bloc.dart';
-import 'package:custome_mobile/business_logic/bloc/attachment_bloc.dart';
-import 'package:custome_mobile/business_logic/bloc/attachment_type_bloc.dart';
 import 'package:custome_mobile/business_logic/bloc/auth_bloc.dart';
 import 'package:custome_mobile/business_logic/bloc/calculate_result_bloc.dart';
 import 'package:custome_mobile/business_logic/bloc/calculator_panel_bloc.dart';
@@ -10,6 +7,7 @@ import 'package:custome_mobile/business_logic/bloc/cost_bloc.dart';
 import 'package:custome_mobile/business_logic/bloc/fee_bloc.dart';
 import 'package:custome_mobile/business_logic/bloc/fee_item_bloc.dart';
 import 'package:custome_mobile/business_logic/bloc/fee_trade_description_bloc.dart';
+import 'package:custome_mobile/business_logic/bloc/flags_bloc.dart';
 import 'package:custome_mobile/business_logic/bloc/group_bloc.dart';
 import 'package:custome_mobile/business_logic/bloc/offer_bloc.dart';
 import 'package:custome_mobile/business_logic/bloc/package_type_bloc.dart';
@@ -19,21 +17,22 @@ import 'package:custome_mobile/business_logic/bloc/section_bloc.dart';
 import 'package:custome_mobile/business_logic/bloc/state_custome_bloc.dart';
 import 'package:custome_mobile/business_logic/bloc/sub_chapter_bloc.dart';
 import 'package:custome_mobile/business_logic/bloc/trader_log_bloc.dart';
+import 'package:custome_mobile/business_logic/cubit/bottom_nav_bar_cubit.dart';
 import 'package:custome_mobile/business_logic/cubit/internet_cubit.dart';
 import 'package:custome_mobile/data/repositories/accurdion_repository.dart';
 import 'package:custome_mobile/data/repositories/auth_repository.dart';
 import 'package:custome_mobile/data/repositories/post_repository.dart';
 import 'package:custome_mobile/data/repositories/state_agency_repository.dart';
 import 'package:custome_mobile/firebase_options.dart';
+import 'package:custome_mobile/helpers/color_constants.dart';
 import 'package:custome_mobile/views/control_view.dart';
 import 'package:firebase_core/firebase_core.dart';
-import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-
+import 'package:flutter_localizations/flutter_localizations.dart';
 import 'views/screens/introduction_screen.dart';
 
 void main() async {
@@ -41,11 +40,6 @@ void main() async {
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
-  FirebaseMessaging messaging = FirebaseMessaging.instance;
-  messaging.getToken().then((value) {
-    // print(value);
-    // firebase_token = value;
-  });
 
   final prefs = await SharedPreferences.getInstance();
   final showHome = prefs.getBool("showHome") ?? false;
@@ -172,46 +166,33 @@ class MyApp extends StatelessWidget {
                                 context)),
                   ),
                   BlocProvider(
-                    create: (context) => AttachmentTypeBloc(
-                        stateAgencyRepository:
-                            RepositoryProvider.of<StateAgencyRepository>(
-                                context)),
+                    create: (context) => FlagsBloc(),
                   ),
-                  BlocProvider(
-                    create: (context) => AttachmentBloc(
-                        stateAgencyRepository:
-                            RepositoryProvider.of<StateAgencyRepository>(
-                                context)),
-                  ),
-                  BlocProvider(
-                    create: (context) => AdditionalAttachmentBloc(
-                        stateAgencyRepository:
-                            RepositoryProvider.of<StateAgencyRepository>(
-                                context)),
-                  ),
-                  // BlocProvider(
-                  //   create: (context) => AgencyBloc(
-                  //       stateAgencyRepository:
-                  //           RepositoryProvider.of<StateAgencyRepository>(
-                  //               context)),
-                  // ),
-                  // BlocProvider(
-                  //   create: (context) => NoteBloc(
-                  //       accordionRepository:
-                  //           RepositoryProvider.of<AccordionRepository>(
-                  //               context)),
-                  // ),
                   BlocProvider(
                       create: (context) =>
                           InternetCubit(connectivity: connectivity)),
+                  BlocProvider(create: (context) => BottomNavBarCubit()),
                   BlocProvider(create: (context) => CalculatorPanelBloc()),
                   BlocProvider(create: (context) => FeeItemBloc()),
                 ],
                 child: MaterialApp(
                   title: 'التخليص الجمركي',
-                  locale: const Locale('ar', 'SY'),
+                  debugShowCheckedModeBanner: false,
+                  localizationsDelegates: const [
+                    GlobalMaterialLocalizations.delegate,
+                    GlobalWidgetsLocalizations.delegate,
+                    GlobalCupertinoLocalizations.delegate,
+                  ],
+                  supportedLocales: const [
+                    Locale('en', 'US'), //code
+                    Locale('ar', 'AR'), // arabic, no country code
+                  ],
+                  locale: const Locale("ar", "AR"),
                   theme: ThemeData(
-                    primarySwatch: Colors.blue,
+                    colorScheme: ColorScheme.fromSwatch().copyWith(
+                      primary: AppColor.deepBlue,
+                      secondary: AppColor.lightAppBarBlue,
+                    ),
                     textTheme: GoogleFonts.changaTextTheme(
                       Theme.of(context).textTheme,
                     ),

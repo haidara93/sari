@@ -46,7 +46,7 @@ class ItemTaxesWidget extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.start,
         children: [
           const Text(
-            "ضرائب البنود",
+            "ضرائب الرسوم",
             style: TextStyle(fontWeight: FontWeight.bold, fontSize: 22),
           ),
           const SizedBox(
@@ -66,7 +66,7 @@ class ItemTaxesWidget extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               const Text(
-                "رسم الانفاق الاستهلاكي",
+                "الانفاق الاستهلاكي",
                 maxLines: 3,
               ),
               Text(spendingFee!.toString()),
@@ -76,7 +76,7 @@ class ItemTaxesWidget extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               const Text(
-                "رسم محلية عمران",
+                "محلية عمران",
                 maxLines: 3,
               ),
               Text(imranLocality!.toString()),
@@ -86,7 +86,7 @@ class ItemTaxesWidget extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               const Text(
-                "رسم محلية محافظة",
+                "محلية محافظة",
                 maxLines: 3,
               ),
               Text(conservativeLocality!.toString()),
@@ -96,7 +96,7 @@ class ItemTaxesWidget extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               const Text(
-                "رسم دعم وتنمية الانتاج المحلي",
+                "دعم وتنمية الانتاج المحلي",
                 maxLines: 3,
               ),
               Text(feeSupportingLocalProduction!.toString()),
@@ -106,7 +106,7 @@ class ItemTaxesWidget extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               const Text(
-                "رسم اعادة تأهيل وحماية المدن والمنشأة :",
+                "اعادة تأهيل وحماية المدن والمنشأة :",
                 maxLines: 3,
               ),
               Text(citiesProtectionFee!.toString()),
@@ -116,7 +116,7 @@ class ItemTaxesWidget extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               const Text(
-                "رسم صندوق الجفاف و الكوارث الطبيعية: :",
+                "صندوق الجفاف و الكوارث الطبيعية: ",
                 maxLines: 3,
               ),
               Text(naturalDisasterFee!.toString()),
@@ -126,7 +126,7 @@ class ItemTaxesWidget extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               const Text(
-                "رسم السلفة على ضريبة الدخل:",
+                "السلفة على ضريبة الدخل:",
                 maxLines: 3,
               ),
               Text(incomeTaxFee!.toString()),

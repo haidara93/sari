@@ -176,6 +176,8 @@ class _TraderMainScreenState extends State<TraderMainScreen> {
                                                                           false;
                                                                     });
                                                                   }
+
+                                                                  print(state2);
                                                                 },
                                                                 builder: (context,
                                                                     groupstate) {
@@ -320,6 +322,33 @@ class _TraderMainScreenState extends State<TraderMainScreen> {
                                                                               ),
                                                                             ],
                                                                           );
+                                                                  } else if (groupstate
+                                                                      is GroupLoadedFailed) {
+                                                                    return Center(
+                                                                      child:
+                                                                          GestureDetector(
+                                                                        onTap:
+                                                                            () {
+                                                                          BlocProvider.of<GroupBloc>(context)
+                                                                              .add(GroupLoadEvent());
+                                                                        },
+                                                                        child:
+                                                                            Row(
+                                                                          mainAxisAlignment:
+                                                                              MainAxisAlignment.center,
+                                                                          children: const [
+                                                                            Text(
+                                                                              "حدث خطأأثناء تحميل القائمة...  ",
+                                                                              style: TextStyle(color: Colors.red),
+                                                                            ),
+                                                                            Icon(
+                                                                              Icons.refresh,
+                                                                              color: Colors.grey,
+                                                                            )
+                                                                          ],
+                                                                        ),
+                                                                      ),
+                                                                    );
                                                                   } else {
                                                                     return const CircularProgressIndicator();
                                                                   }
@@ -357,6 +386,27 @@ class _TraderMainScreenState extends State<TraderMainScreen> {
                             ]),
                       );
                     },
+                  );
+                } else if (state is PostLoadedFailed) {
+                  return Center(
+                    child: GestureDetector(
+                      onTap: () {
+                        BlocProvider.of<PostBloc>(context).add(PostLoadEvent());
+                      },
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: const [
+                          Text(
+                            "حدث خطأأثناء التحميل...  ",
+                            style: TextStyle(color: Colors.red),
+                          ),
+                          Icon(
+                            Icons.refresh,
+                            color: Colors.grey,
+                          )
+                        ],
+                      ),
+                    ),
                   );
                 } else {
                   return const CalculatorLoadingScreen();

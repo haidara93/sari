@@ -3,12 +3,14 @@ import 'package:custome_mobile/business_logic/bloc/auth_bloc.dart';
 import 'package:custome_mobile/business_logic/bloc/calculate_result_bloc.dart';
 import 'package:custome_mobile/business_logic/bloc/calculator_panel_bloc.dart';
 import 'package:custome_mobile/business_logic/bloc/fee_item_bloc.dart';
+import 'package:custome_mobile/business_logic/bloc/flags_bloc.dart';
 import 'package:custome_mobile/business_logic/bloc/group_bloc.dart';
 import 'package:custome_mobile/business_logic/bloc/package_type_bloc.dart';
 import 'package:custome_mobile/business_logic/bloc/post_bloc.dart';
 import 'package:custome_mobile/business_logic/bloc/section_bloc.dart';
 import 'package:custome_mobile/business_logic/bloc/state_custome_bloc.dart';
 import 'package:custome_mobile/business_logic/bloc/trader_log_bloc.dart';
+import 'package:custome_mobile/business_logic/cubit/bottom_nav_bar_cubit.dart';
 import 'package:custome_mobile/data/models/package_model.dart';
 import 'package:custome_mobile/data/services/calculator_service.dart';
 import 'package:custome_mobile/enum/panel_state.dart';
@@ -55,10 +57,7 @@ class _TraderHomeScreenState extends State<TraderHomeScreen>
   void initState() {
     super.initState();
     BlocProvider.of<PostBloc>(context).add(PostLoadEvent());
-    BlocProvider.of<SectionBloc>(context).add(SectionLoadEvent());
-    BlocProvider.of<StateCustomeBloc>(context).add(StateCustomeLoadEvent());
-    BlocProvider.of<PackageTypeBloc>(context).add(PackageTypeLoadEvent());
-    BlocProvider.of<AttachmentTypeBloc>(context).add(AttachmentTypeLoadEvent());
+    BlocProvider.of<FlagsBloc>(context).add(FlagsLoadEvent());
     BlocProvider.of<GroupBloc>(context).add(GroupLoadEvent());
     _tabController = TabController(
       initialIndex: 2,
@@ -100,6 +99,11 @@ class _TraderHomeScreenState extends State<TraderHomeScreen>
         {
           setState(() {
             title = "طلب مخلص";
+
+            BlocProvider.of<StateCustomeBloc>(context)
+                .add(StateCustomeLoadEvent());
+            BlocProvider.of<PackageTypeBloc>(context)
+                .add(PackageTypeLoadEvent());
             currentScreen = const OrderBrokerScreen();
           });
           break;
@@ -128,6 +132,7 @@ class _TraderHomeScreenState extends State<TraderHomeScreen>
         {
           setState(() {
             title = "التعرفة الجمركية";
+            BlocProvider.of<SectionBloc>(context).add(SectionLoadEvent());
 
             currentScreen = const CustomeTariffScreen();
           });
@@ -417,233 +422,241 @@ class _TraderHomeScreenState extends State<TraderHomeScreen>
                           ]),
                         ),
                       ),
-                      bottomNavigationBar: _isKeyboardVisible
-                          ? null
-                          : Container(
-                              height: 88.h,
-                              decoration: BoxDecoration(
-                                gradient: LinearGradient(
-                                  colors: bottomNavbarColor(),
-                                  begin: Alignment.centerRight,
-                                  end: Alignment.centerLeft,
+                      bottomNavigationBar:
+                          BlocBuilder<BottomNavBarCubit, BottomNavBarState>(
+                        builder: (context, state) {
+                          if (state is BottomNavBarShown) {
+                            return Container(
+                                height: 88.h,
+                                decoration: BoxDecoration(
+                                  gradient: LinearGradient(
+                                    colors: bottomNavbarColor(),
+                                    begin: Alignment.centerRight,
+                                    end: Alignment.centerLeft,
+                                  ),
                                 ),
-                              ),
-                              child: TabBar(
-                                  labelPadding: EdgeInsets.zero,
-                                  controller: _tabController,
-                                  indicatorColor: AppColor.activeGreen,
-                                  labelColor: AppColor.activeGreen,
-                                  unselectedLabelColor: Colors.white,
-                                  labelStyle: const TextStyle(fontSize: 15),
-                                  unselectedLabelStyle:
-                                      const TextStyle(fontSize: 14),
-                                  padding: EdgeInsets.zero,
-                                  onTap: (value) {
-                                    changeSelectedValue(
-                                        selectedValue: value, contxt: context);
-                                  },
-                                  tabs: [
-                                    Tab(
-                                      // text: "طلب مخلص",
-                                      height: 66.h,
-                                      icon: navigationValue == 0
-                                          ? Column(
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment.end,
-                                              children: [
-                                                Image.asset(
-                                                  "assets/icons/broker_order_active.png",
-                                                  width: 36.w,
-                                                  height: 36.h,
-                                                ),
-                                                Text(
-                                                  "طلب مخلص",
-                                                  style: TextStyle(
-                                                      color:
-                                                          AppColor.activeGreen,
-                                                      fontSize: 15),
-                                                )
-                                              ],
-                                            )
-                                          : Column(
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment.end,
-                                              children: [
-                                                Image.asset(
-                                                  "assets/icons/broker_order.png",
-                                                  width: 30.w,
-                                                  height: 30.h,
-                                                ),
-                                                const Text(
-                                                  "طلب مخلص",
-                                                  style: TextStyle(
-                                                      color: Colors.white,
-                                                      fontSize: 14),
-                                                )
-                                              ],
-                                            ),
-                                    ),
-                                    Tab(
-                                      // text: "الحاسبة",
-                                      height: 66.h,
-                                      icon: navigationValue == 1
-                                          ? Column(
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment.end,
-                                              children: [
-                                                Image.asset(
-                                                  "assets/icons/calculator_active.png",
-                                                  width: 36.w,
-                                                  height: 36.h,
-                                                ),
-                                                Text(
-                                                  "الحاسبة",
-                                                  style: TextStyle(
-                                                      color:
-                                                          AppColor.activeGreen,
-                                                      fontSize: 15),
-                                                )
-                                              ],
-                                            )
-                                          : Column(
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment.end,
-                                              children: [
-                                                SvgPicture.asset(
-                                                  "assets/icons/calculator.svg",
-                                                  width: 30.w,
-                                                  height: 30.h,
-                                                ),
-                                                const Text(
-                                                  "الحاسبة",
-                                                  style: TextStyle(
-                                                      color: Colors.white,
-                                                      fontSize: 15),
-                                                )
-                                              ],
-                                            ),
-                                    ),
-                                    Tab(
-                                      // text: "الرئيسية",
-                                      height: 66.h,
-                                      icon: navigationValue == 2
-                                          ? Column(
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment.end,
-                                              children: [
-                                                Image.asset(
-                                                  "assets/icons/home_active.png",
-                                                  width: 36.w,
-                                                  height: 36.h,
-                                                ),
-                                                Text(
-                                                  "الرئيسية",
-                                                  style: TextStyle(
-                                                      color:
-                                                          AppColor.activeGreen,
-                                                      fontSize: 15),
-                                                )
-                                              ],
-                                            )
-                                          : Column(
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment.end,
-                                              children: [
-                                                SvgPicture.asset(
-                                                  "assets/icons/home.svg",
-                                                  width: 30.w,
-                                                  height: 30.h,
-                                                ),
-                                                const Text(
-                                                  "الرئيسية",
-                                                  style: TextStyle(
-                                                      color: Colors.white,
-                                                      fontSize: 15),
-                                                )
-                                              ],
-                                            ),
-                                    ),
-                                    Tab(
-                                      // text: "التعرفة",
-                                      height: 66.h,
-                                      icon: navigationValue == 3
-                                          ? Column(
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment.end,
-                                              children: [
-                                                Image.asset(
-                                                  "assets/icons/tariff_active.png",
-                                                  width: 36.w,
-                                                  height: 36.h,
-                                                ),
-                                                Text(
-                                                  "التعرفة",
-                                                  style: TextStyle(
-                                                      color:
-                                                          AppColor.activeGreen,
-                                                      fontSize: 15),
-                                                )
-                                              ],
-                                            )
-                                          : Column(
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment.end,
-                                              children: [
-                                                SvgPicture.asset(
-                                                  "assets/icons/tariff.svg",
-                                                  width: 30.w,
-                                                  height: 30.h,
-                                                ),
-                                                const Text(
-                                                  "التعرفة",
-                                                  style: TextStyle(
-                                                      color: Colors.white,
-                                                      fontSize: 15),
-                                                )
-                                              ],
-                                            ),
-                                    ),
-                                    Tab(
-                                      // text: "السجل",
-                                      height: 66.h,
-                                      icon: navigationValue == 4
-                                          ? Column(
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment.end,
-                                              children: [
-                                                Image.asset(
-                                                  "assets/icons/log_active.png",
-                                                  width: 36.w,
-                                                  height: 36.h,
-                                                ),
-                                                Text(
-                                                  "السجل",
-                                                  style: TextStyle(
-                                                      color:
-                                                          AppColor.activeGreen,
-                                                      fontSize: 15),
-                                                )
-                                              ],
-                                            )
-                                          : Column(
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment.end,
-                                              children: [
-                                                SvgPicture.asset(
-                                                  "assets/icons/log.svg",
-                                                  width: 30.w,
-                                                  height: 30.h,
-                                                ),
-                                                const Text(
-                                                  "السجل",
-                                                  style: TextStyle(
-                                                      color: Colors.white,
-                                                      fontSize: 15),
-                                                )
-                                              ],
-                                            ),
-                                    ),
-                                  ])),
+                                child: TabBar(
+                                    labelPadding: EdgeInsets.zero,
+                                    controller: _tabController,
+                                    indicatorColor: AppColor.activeGreen,
+                                    labelColor: AppColor.activeGreen,
+                                    unselectedLabelColor: Colors.white,
+                                    labelStyle: const TextStyle(fontSize: 15),
+                                    unselectedLabelStyle:
+                                        const TextStyle(fontSize: 14),
+                                    padding: EdgeInsets.zero,
+                                    onTap: (value) {
+                                      changeSelectedValue(
+                                          selectedValue: value,
+                                          contxt: context);
+                                    },
+                                    tabs: [
+                                      Tab(
+                                        // text: "طلب مخلص",
+                                        height: 66.h,
+                                        icon: navigationValue == 0
+                                            ? Column(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment.end,
+                                                children: [
+                                                  Image.asset(
+                                                    "assets/icons/broker_order_active.png",
+                                                    width: 36.w,
+                                                    height: 36.h,
+                                                  ),
+                                                  Text(
+                                                    "طلب مخلص",
+                                                    style: TextStyle(
+                                                        color: AppColor
+                                                            .activeGreen,
+                                                        fontSize: 15),
+                                                  )
+                                                ],
+                                              )
+                                            : Column(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment.end,
+                                                children: [
+                                                  Image.asset(
+                                                    "assets/icons/broker_order.png",
+                                                    width: 30.w,
+                                                    height: 30.h,
+                                                  ),
+                                                  const Text(
+                                                    "طلب مخلص",
+                                                    style: TextStyle(
+                                                        color: Colors.white,
+                                                        fontSize: 14),
+                                                  )
+                                                ],
+                                              ),
+                                      ),
+                                      Tab(
+                                        // text: "الحاسبة",
+                                        height: 66.h,
+                                        icon: navigationValue == 1
+                                            ? Column(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment.end,
+                                                children: [
+                                                  Image.asset(
+                                                    "assets/icons/calculator_active.png",
+                                                    width: 36.w,
+                                                    height: 36.h,
+                                                  ),
+                                                  Text(
+                                                    "الحاسبة",
+                                                    style: TextStyle(
+                                                        color: AppColor
+                                                            .activeGreen,
+                                                        fontSize: 15),
+                                                  )
+                                                ],
+                                              )
+                                            : Column(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment.end,
+                                                children: [
+                                                  SvgPicture.asset(
+                                                    "assets/icons/calculator.svg",
+                                                    width: 30.w,
+                                                    height: 30.h,
+                                                  ),
+                                                  const Text(
+                                                    "الحاسبة",
+                                                    style: TextStyle(
+                                                        color: Colors.white,
+                                                        fontSize: 15),
+                                                  )
+                                                ],
+                                              ),
+                                      ),
+                                      Tab(
+                                        // text: "الرئيسية",
+                                        height: 66.h,
+                                        icon: navigationValue == 2
+                                            ? Column(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment.end,
+                                                children: [
+                                                  Image.asset(
+                                                    "assets/icons/home_active.png",
+                                                    width: 36.w,
+                                                    height: 36.h,
+                                                  ),
+                                                  Text(
+                                                    "الرئيسية",
+                                                    style: TextStyle(
+                                                        color: AppColor
+                                                            .activeGreen,
+                                                        fontSize: 15),
+                                                  )
+                                                ],
+                                              )
+                                            : Column(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment.end,
+                                                children: [
+                                                  SvgPicture.asset(
+                                                    "assets/icons/home.svg",
+                                                    width: 30.w,
+                                                    height: 30.h,
+                                                  ),
+                                                  const Text(
+                                                    "الرئيسية",
+                                                    style: TextStyle(
+                                                        color: Colors.white,
+                                                        fontSize: 15),
+                                                  )
+                                                ],
+                                              ),
+                                      ),
+                                      Tab(
+                                        // text: "التعرفة",
+                                        height: 66.h,
+                                        icon: navigationValue == 3
+                                            ? Column(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment.end,
+                                                children: [
+                                                  Image.asset(
+                                                    "assets/icons/tariff_active.png",
+                                                    width: 36.w,
+                                                    height: 36.h,
+                                                  ),
+                                                  Text(
+                                                    "التعرفة",
+                                                    style: TextStyle(
+                                                        color: AppColor
+                                                            .activeGreen,
+                                                        fontSize: 15),
+                                                  )
+                                                ],
+                                              )
+                                            : Column(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment.end,
+                                                children: [
+                                                  SvgPicture.asset(
+                                                    "assets/icons/tariff.svg",
+                                                    width: 30.w,
+                                                    height: 30.h,
+                                                  ),
+                                                  const Text(
+                                                    "التعرفة",
+                                                    style: TextStyle(
+                                                        color: Colors.white,
+                                                        fontSize: 15),
+                                                  )
+                                                ],
+                                              ),
+                                      ),
+                                      Tab(
+                                        // text: "السجل",
+                                        height: 66.h,
+                                        icon: navigationValue == 4
+                                            ? Column(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment.end,
+                                                children: [
+                                                  Image.asset(
+                                                    "assets/icons/log_active.png",
+                                                    width: 36.w,
+                                                    height: 36.h,
+                                                  ),
+                                                  Text(
+                                                    "السجل",
+                                                    style: TextStyle(
+                                                        color: AppColor
+                                                            .activeGreen,
+                                                        fontSize: 15),
+                                                  )
+                                                ],
+                                              )
+                                            : Column(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment.end,
+                                                children: [
+                                                  SvgPicture.asset(
+                                                    "assets/icons/log.svg",
+                                                    width: 30.w,
+                                                    height: 30.h,
+                                                  ),
+                                                  const Text(
+                                                    "السجل",
+                                                    style: TextStyle(
+                                                        color: Colors.white,
+                                                        fontSize: 15),
+                                                  )
+                                                ],
+                                              ),
+                                      ),
+                                    ]));
+                          } else {
+                            return const SizedBox.shrink();
+                          }
+                        },
+                      ),
                       body: currentScreen,
                     ),
                   ),

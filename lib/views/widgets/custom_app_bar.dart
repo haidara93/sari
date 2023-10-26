@@ -25,10 +25,10 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
           begin: Alignment.centerRight,
           end: Alignment.centerLeft,
         ),
-        borderRadius: const BorderRadius.only(
-          bottomLeft: Radius.circular(20.0),
-          bottomRight: Radius.circular(20.0),
-        ),
+        // borderRadius: const BorderRadius.only(
+        //   bottomLeft: Radius.circular(20.0),
+        //   bottomRight: Radius.circular(20.0),
+        // ),
       ),
       child: Padding(
         padding: EdgeInsets.symmetric(horizontal: 12.w),
@@ -99,7 +99,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
             ],
           ),
           SizedBox(
-            height: 11.h,
+            height: 7.h,
           ),
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
@@ -119,5 +119,5 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   }
 
   @override
-  Size get preferredSize => Size(double.infinity, 132.h);
+  Size get preferredSize => Size(double.infinity, 122.h);
 }
