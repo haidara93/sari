@@ -72,7 +72,29 @@ class _OrderBrokerScreenState extends State<OrderBrokerScreen> {
             builder: (context, stepstate) {
               return Stepper(
                 type: StepperType.horizontal,
-                steps: getSteps(),
+                steps: [
+                  Step(
+                      isActive: stepstate.value >= 0,
+                      title: Text(
+                        "معلومات الشحنة",
+                        style: TextStyle(fontSize: 12.sp),
+                      ),
+                      content: const StepperOrderBrokerScreen()),
+                  Step(
+                      isActive: stepstate.value >= 1,
+                      title: Text(
+                        "حساب الرسوم",
+                        style: TextStyle(fontSize: 12.sp),
+                      ),
+                      content: const TraderBillReview()),
+                  Step(
+                      isActive: stepstate.value >= 2,
+                      title: Text(
+                        "المرفقات",
+                        style: TextStyle(fontSize: 12.sp),
+                      ),
+                      content: TraderAttachementScreen()),
+                ],
                 currentStep: stepstate.value,
                 controlsBuilder: (context, details) {
                   return const SizedBox.shrink();
