@@ -1,6 +1,7 @@
 // import 'dart:io';
 
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:custome_mobile/business_logic/bloc/additional_attachment_bloc.dart';
 import 'package:custome_mobile/business_logic/bloc/attachment_bloc.dart';
 import 'package:custome_mobile/business_logic/bloc/attachment_type_bloc.dart';
 import 'package:custome_mobile/business_logic/bloc/offer_bloc.dart';
@@ -98,8 +99,10 @@ class _OrderAttachmentScreenState extends State<OrderAttachmentScreen> {
 
   List<Widget> _buildAttachmentslist(List<Attachment> attachments) {
     List<Widget> list = [];
+    attachmentsId = [];
     // int i = 0;
     for (var element in attachments) {
+      attachmentsId.add(element.id!);
       var elem = Container(
         margin: const EdgeInsets.all(7),
         padding: const EdgeInsets.all(7),
@@ -288,24 +291,27 @@ class _OrderAttachmentScreenState extends State<OrderAttachmentScreen> {
                   mainAxisAlignment: MainAxisAlignment.spaceAround,
                   children: [
                     CustomButton(
-                      onTap: () {},
-                      color: AppColor.deepYellow,
+                      onTap: () {
+                        Navigator.pop(context);
+                      },
                       title: const SizedBox(
                           width: 100, child: Center(child: Text("إلغاء"))),
                     ),
-                    BlocConsumer<OfferBloc, OfferState>(
+                    BlocConsumer<AdditionalAttachmentBloc,
+                        AdditionalAttachmentState>(
                       listener: (context, state) {
-                        Navigator.pushReplacement(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => const ControlView(),
-                            ));
+                        Navigator.pop(context);
+                        const snackBar = SnackBar(
+                          content: Text('تم إرسال المرفقات الإضافية بنجاح.'),
+                          duration: Duration(seconds: 4),
+                        );
+
+                        ScaffoldMessenger.of(context).showSnackBar(snackBar);
                       },
                       builder: (context, state) {
-                        if (state is OfferListLoadingProgress) {
+                        if (state is AdditionalAttachmentLoadingProgress) {
                           return CustomButton(
                             onTap: () {},
-                            color: AppColor.deepYellow,
                             title: const SizedBox(
                                 width: 100,
                                 child:
@@ -314,14 +320,15 @@ class _OrderAttachmentScreenState extends State<OrderAttachmentScreen> {
                         } else {
                           return CustomButton(
                             onTap: () {
-                              // BlocProvider.of<OfferBloc>(context).add(
-                              //     AddAdditionalAttachmentEvent(
-                              //         selectedAttachmentsId, widget.offer.id!));
+                              BlocProvider.of<AdditionalAttachmentBloc>(context)
+                                  .add(SubmitAdditionalAttachmentEvent(
+                                      attachmentsId,
+                                      selectedAttachmentsId,
+                                      widget.offer.id!));
                             },
-                            color: AppColor.deepYellow,
                             title: const SizedBox(
                                 width: 100,
-                                child: Center(child: Text("طلب مخلص"))),
+                                child: Center(child: Text("تأكيد المرفقات"))),
                           );
                         }
                       },

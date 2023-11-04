@@ -54,22 +54,18 @@ class OfferDetailsScreen extends StatelessWidget {
             const SizedBox(
               height: 15,
             ),
-            Container(
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(25),
-                gradient: const LinearGradient(colors: [
-                  Color.fromARGB(255, 229, 215, 94),
-                  Colors.white,
-                  Colors.white,
-                  Colors.white,
-                  Colors.white,
-                  Colors.white,
-                  Colors.white,
-                ], begin: Alignment.topCenter, end: Alignment.bottomCenter),
-              ),
+            Card(
+              clipBehavior: Clip.antiAlias,
+              shape: const RoundedRectangleBorder(
+                  borderRadius: BorderRadius.all(
+                Radius.circular(15),
+              )),
+              margin: EdgeInsets.symmetric(horizontal: 10.w),
+              elevation: 1,
+              color: Colors.white,
               child: Padding(
                 padding:
-                    const EdgeInsets.symmetric(horizontal: 15.0, vertical: 7.5),
+                    EdgeInsets.symmetric(horizontal: 15.w, vertical: 7.5.h),
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.start,
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -79,7 +75,7 @@ class OfferDetailsScreen extends StatelessWidget {
                       'رقم العملية: ${offer.id!}',
                       style: TextStyle(
                           color: AppColor.lightBlue,
-                          fontSize: 17,
+                          fontSize: 17.sp,
                           fontWeight: FontWeight.bold),
                     ),
                     Text('نوع العملية: ${getOfferType(offer.offerType!)}'),
@@ -120,21 +116,21 @@ class OfferDetailsScreen extends StatelessWidget {
                 ),
               ),
             ),
-            const SizedBox(
-              height: 15,
+            SizedBox(
+              height: 15.h,
             ),
-            Container(
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(25),
-                gradient: const LinearGradient(colors: [
-                  Color.fromARGB(255, 229, 215, 94),
-                  Colors.white,
-                  Colors.white,
-                ], begin: Alignment.topCenter, end: Alignment.bottomCenter),
-              ),
+            Card(
+              clipBehavior: Clip.antiAlias,
+              shape: const RoundedRectangleBorder(
+                  borderRadius: BorderRadius.all(
+                Radius.circular(15),
+              )),
+              margin: EdgeInsets.symmetric(horizontal: 10.w),
+              elevation: 1,
+              color: Colors.white,
               child: Padding(
                 padding:
-                    const EdgeInsets.symmetric(horizontal: 15.0, vertical: 7.5),
+                    EdgeInsets.symmetric(horizontal: 15.w, vertical: 7.5.h),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
@@ -143,11 +139,18 @@ class OfferDetailsScreen extends StatelessWidget {
                       totalCost(offer.costs),
                       style: TextStyle(
                         color: AppColor.lightBlue,
-                        fontSize: 15,
+                        fontSize: 15.sp,
                       ),
                     ),
                     GestureDetector(
                       onTap: () async {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => BrokerCostDetailsScreen(
+                                offer: offer,
+                              ),
+                            ));
                         var product = await CalculatorService.getProductInfo(
                             offer.product!.id!);
 
@@ -168,21 +171,14 @@ class OfferDetailsScreen extends StatelessWidget {
                         BlocProvider.of<CalculateResultBloc>(context)
                             .add(CalculateTheResultEvent(result));
                         // ignore: use_build_context_synchronously
-                        Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => BrokerCostDetailsScreen(
-                                offer: offer,
-                              ),
-                            ));
                       },
                       child: Padding(
-                        padding: const EdgeInsets.all(8.0),
+                        padding: EdgeInsets.all(8.h),
                         child: Text(
                           "التفاصيل",
                           style: TextStyle(
                               color: AppColor.lightBlue,
-                              fontSize: 17,
+                              fontSize: 17.sp,
                               fontWeight: FontWeight.bold),
                         ),
                       ),
@@ -191,21 +187,21 @@ class OfferDetailsScreen extends StatelessWidget {
                 ),
               ),
             ),
-            const SizedBox(
-              height: 15,
+            SizedBox(
+              height: 15.h,
             ),
-            Container(
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(25),
-                gradient: const LinearGradient(colors: [
-                  Color.fromARGB(255, 229, 215, 94),
-                  Colors.white,
-                  Colors.white,
-                ], begin: Alignment.topCenter, end: Alignment.bottomCenter),
-              ),
+            Card(
+              clipBehavior: Clip.antiAlias,
+              shape: const RoundedRectangleBorder(
+                  borderRadius: BorderRadius.all(
+                Radius.circular(15),
+              )),
+              margin: EdgeInsets.symmetric(horizontal: 10.w),
+              elevation: 1,
+              color: Colors.white,
               child: Padding(
                 padding:
-                    const EdgeInsets.symmetric(horizontal: 15.0, vertical: 7.5),
+                    EdgeInsets.symmetric(horizontal: 15.w, vertical: 7.5.h),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
@@ -224,12 +220,12 @@ class OfferDetailsScreen extends StatelessWidget {
                             ));
                       },
                       child: Padding(
-                        padding: const EdgeInsets.all(8.0),
+                        padding: EdgeInsets.all(8.h),
                         child: Text(
                           "تفاصيل المرفقات",
                           style: TextStyle(
                               color: AppColor.lightBlue,
-                              fontSize: 17,
+                              fontSize: 17.sp,
                               fontWeight: FontWeight.bold),
                         ),
                       ),

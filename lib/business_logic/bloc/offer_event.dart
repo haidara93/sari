@@ -32,8 +32,6 @@ class AddOfferEvent extends OfferEvent {
   final int weight;
   final int price;
   final int taxes;
-  final int trader;
-  final int costumeBroker;
   final int costumeAgency;
   final int costumeState;
   final int origin;
@@ -52,8 +50,6 @@ class AddOfferEvent extends OfferEvent {
       this.weight,
       this.price,
       this.taxes,
-      this.trader,
-      this.costumeBroker,
       this.costumeAgency,
       this.costumeState,
       this.origin,

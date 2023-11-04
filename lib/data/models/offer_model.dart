@@ -58,7 +58,7 @@ class Offer {
     orderStatus = json['order_status'];
     offerType = json['offer_type'];
     trader = json['trader'];
-    costumeBroker = json['costume_broker'] ?? 1;
+    costumeBroker = json['costume_broker'] ?? 0;
     costumeagency = json['costumeagency'] != null
         ? Costumeagency.fromJson(json['costumeagency'])
         : null;
@@ -246,6 +246,110 @@ class Costs {
     data['id'] = id;
     data['description'] = description;
     data['amount'] = amount;
+    return data;
+  }
+}
+
+class OfferResult {
+  int? id;
+  String? orderStatus;
+  String? offerType;
+  int? trader;
+  int? costumeBroker;
+  int? costumeagency;
+  int? costumestate;
+  String? product;
+  int? origin;
+  int? packageType;
+  int? packagesNum;
+  int? tabalehNum;
+  int? rawMaterial;
+  int? industrial;
+  int? weight;
+  int? price;
+  int? taxes;
+  String? expectedArrivalDate;
+  List<int>? attachments;
+  String? notes;
+  String? createdDate;
+
+  OfferResult(
+      {this.id,
+      this.orderStatus,
+      this.offerType,
+      this.trader,
+      this.costumeBroker,
+      this.costumeagency,
+      this.costumestate,
+      this.product,
+      this.origin,
+      this.packageType,
+      this.packagesNum,
+      this.tabalehNum,
+      this.rawMaterial,
+      this.industrial,
+      this.weight,
+      this.price,
+      this.taxes,
+      this.expectedArrivalDate,
+      this.attachments,
+      this.notes,
+      this.createdDate});
+
+  OfferResult.fromJson(Map<String, dynamic> json) {
+    id = json['id'];
+    orderStatus = json['order_status'];
+    offerType = json['offer_type'];
+    trader = json['trader'];
+    costumeBroker = json['costume_broker'];
+    costumeagency = json['costumeagency'];
+    costumestate = json['costumestate'];
+    product = json['product'];
+    origin = json['origin'];
+    packageType = json['package_type'];
+    packagesNum = json['packages_num'];
+    tabalehNum = json['tabaleh_num'];
+    rawMaterial = json['raw_material'];
+    industrial = json['industrial'];
+    weight = json['weight'];
+    price = json['price'];
+    taxes = json['taxes'];
+    expectedArrivalDate = json['expected_arrival_date'];
+    if (json['attachments'] != null) {
+      attachments = <int>[];
+      json['attachments'].forEach((v) {
+        attachments!.add(v);
+      });
+    }
+    notes = json['notes'];
+    createdDate = json['created_date'];
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['id'] = id;
+    data['order_status'] = orderStatus;
+    data['offer_type'] = offerType;
+    data['trader'] = trader;
+    data['costume_broker'] = costumeBroker;
+    data['costumeagency'] = costumeagency;
+    data['costumestate'] = costumestate;
+    data['product'] = product;
+    data['origin'] = origin;
+    data['package_type'] = packageType;
+    data['packages_num'] = packagesNum;
+    data['tabaleh_num'] = tabalehNum;
+    data['raw_material'] = rawMaterial;
+    data['industrial'] = industrial;
+    data['weight'] = weight;
+    data['price'] = price;
+    data['taxes'] = taxes;
+    data['expected_arrival_date'] = expectedArrivalDate;
+    if (attachments != null) {
+      data['attachments'] = attachments!.map((v) => v).toList();
+    }
+    data['notes'] = notes;
+    data['created_date'] = createdDate;
     return data;
   }
 }

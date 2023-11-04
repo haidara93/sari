@@ -473,3 +473,50 @@
                           //           ),
                           //   ],
                           // ),
+
+          //                 BlocBuilder<CurrentStepCubit, CurrentStepInitial>(
+          //   builder: (context, stepstate) {
+          //     return Stepper(
+          //       type: StepperType.horizontal,
+          //       steps: [
+          //         Step(
+          //             isActive: stepstate.value >= 0,
+          //             title: Text(
+          //               "معلومات الشحنة",
+          //               style: TextStyle(fontSize: 12.sp),
+          //             ),
+          //             content: const StepperOrderBrokerScreen()),
+          //         Step(
+          //             isActive: stepstate.value >= 1,
+          //             title: Text(
+          //               "حساب الرسوم",
+          //               style: TextStyle(fontSize: 12.sp),
+          //             ),
+          //             content: const TraderBillReview()),
+          //         Step(
+          //             isActive: stepstate.value >= 2,
+          //             title: Text(
+          //               "المرفقات",
+          //               style: TextStyle(fontSize: 12.sp),
+          //             ),
+          //             content: TraderAttachementScreen()),
+          //       ],
+          //       currentStep: stepstate.value,
+          //       controlsBuilder: (context, details) {
+          //         return const SizedBox.shrink();
+          //       },
+          //       onStepContinue: () => setState(() {
+          //         if (stepstate.value < 2) {
+          //           print(stepstate.value);
+          //           BlocProvider.of<CurrentStepCubit>(context).increament();
+          //         }
+          //       }),
+          //       onStepCancel: () => setState(() {
+          //         if (stepstate.value > 0) {
+          //           print(stepstate.value);
+          //           BlocProvider.of<CurrentStepCubit>(context).decreament();
+          //         }
+          //       }),
+          //     );
+          //   },
+          // ),

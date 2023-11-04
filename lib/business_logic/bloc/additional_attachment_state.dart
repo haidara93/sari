@@ -25,3 +25,10 @@ class AdditionalAttachmentLoadedFailed extends AdditionalAttachmentState {
 
   const AdditionalAttachmentLoadedFailed(this.errortext);
 }
+
+class BrokerAdditionalAttachmentLoadedSuccess
+    extends AdditionalAttachmentState {
+  // final Attachment attachment;
+  // final List<Attachment> attachments;
+  // final List<AttachmentType> attachmentTypes;
+}

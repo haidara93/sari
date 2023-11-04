@@ -15,79 +15,24 @@ class AdditionalAttachmentBloc
   late StateAgencyRepository stateAgencyRepository;
   AdditionalAttachmentBloc({required this.stateAgencyRepository})
       : super(AdditionalAttachmentInitial()) {
-    on<AddAdditionalAttachmentEvent>((event, emit) async {
-      if (state is AdditionalAttachmentInitial) {
-        AdditionalAttachmentInitial currentState =
-            state as AdditionalAttachmentInitial;
+    on<SubmitAdditionalAttachmentEvent>(
+      (event, emit) async {
+        // AdditionalAttachmentLoadedSuccess currentState = state as AdditionalAttachmentLoadedSuccess;
         emit(AdditionalAttachmentLoadingProgress());
         try {
-          var result = await stateAgencyRepository.postAttachment(
-              event.image, event.type);
-          List<Attachment> attachments = [];
-          attachments = [];
-          attachments.add(result!);
-          List<int> newattachments = event.attachments;
-          newattachments.add(result.id!);
-
-          List<int> newaddattachments = [];
-          for (var element in event.additionalattachments) {
-            newaddattachments.add(element.id!);
-          }
-          newaddattachments.remove(event.type);
-
-          var offer =
+          var data =
               await stateAgencyRepository.updateOfferAditionalAttachments(
-                  newattachments, newaddattachments, event.offerId);
-          List<AttachmentType> newAdditional = event.additionalattachments;
-          for (var element in newAdditional) {
-            if (element.id! == event.type) {
-              newAdditional.remove(element);
-              break;
-            }
+                  event.attachments, event.additionalList, event.offerId);
+          if (data) {
+            emit(BrokerAdditionalAttachmentLoadedSuccess());
+          } else {
+            emit(AdditionalAttachmentLoadedFailed("خطأ"));
           }
-          emit(AdditionalAttachmentLoadedSuccess(
-              result, attachments, newAdditional));
         } catch (e) {
+          print('error');
           emit(AdditionalAttachmentLoadedFailed(e.toString()));
         }
-      } else {
-        AdditionalAttachmentLoadedSuccess currentState =
-            state as AdditionalAttachmentLoadedSuccess;
-        emit(AdditionalAttachmentLoadingProgress());
-        try {
-          var result = await stateAgencyRepository.postAttachment(
-              event.image, event.type);
-          List<Attachment> attachments = [];
-          if (currentState != null) {
-            attachments = currentState.attachments;
-          }
-
-          attachments.add(result!);
-          List<int> newattachments = event.attachments;
-          newattachments.add(result.id!);
-
-          List<int> newaddattachments = [];
-          for (var element in event.additionalattachments) {
-            newaddattachments.add(element.id!);
-          }
-          newaddattachments.remove(event.type);
-
-          var offer =
-              await stateAgencyRepository.updateOfferAditionalAttachments(
-                  newattachments, newaddattachments, event.offerId);
-          List<AttachmentType> newAdditional = event.additionalattachments;
-          for (var element in newAdditional) {
-            if (element.id! == event.type) {
-              newAdditional.remove(element);
-              break;
-            }
-          }
-          emit(AdditionalAttachmentLoadedSuccess(
-              result, attachments, newAdditional));
-        } catch (e) {
-          emit(AdditionalAttachmentLoadedFailed(e.toString()));
-        }
-      }
-    });
+      },
+    );
   }
 }

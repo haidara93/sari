@@ -88,11 +88,15 @@ class StateAgencyRepository {
 
   Future<Attachment?> postAttachment(File image, int attachmentTypeId) async {
     var prefs = await SharedPreferences.getInstance();
-    var jwt = prefs.getString("token");
+    var token = prefs.getString("token");
+    var jwt = token!.split(".");
+    var payload =
+        json.decode(ascii.decode(base64.decode(base64.normalize(jwt[1]))));
+
     var request =
         http.MultipartRequest('POST', Uri.parse(ATTACHMENTS_ENDPOINT));
     request.headers.addAll({
-      HttpHeaders.authorizationHeader: "JWT $jwt",
+      HttpHeaders.authorizationHeader: "JWT $token",
       HttpHeaders.contentTypeHeader: "multipart/form-data"
     });
     // for (var img in _imageFileList!) {
@@ -116,13 +120,16 @@ class StateAgencyRepository {
     request.files.add(multipartFile);
 
     request.fields['attachment_type'] = attachmentTypeId.toString();
-    request.fields['user'] = 1.toString();
+    request.fields['user'] = payload["user_id"].toString();
     var response = await request.send();
     if (response.statusCode == 201) {
       final respStr = await response.stream.bytesToString();
       var res = jsonDecode(respStr);
       return Attachment.fromJson(res);
     } else {
+      final respStr = await response.stream.bytesToString();
+      print(respStr);
+      print(response.statusCode);
       return null;
     }
   }
@@ -154,8 +161,6 @@ class StateAgencyRepository {
     int? taxes,
     String? expectedArrivalDate,
     String? notes,
-    int? trader,
-    int? costumeBroker,
     int? costumeagency,
     int? costumestate,
     String? product,
@@ -166,9 +171,18 @@ class StateAgencyRepository {
     int? industrial,
   ) async {
     var prefs = await SharedPreferences.getInstance();
-    var jwt = prefs.getString("token");
-    var response = await HttpHelper.post(OFFERS_ENDPOINT, apiToken: jwt, {
+    var token = prefs.getString("token");
+    var jwt = token!.split(".");
+    var payload =
+        json.decode(ascii.decode(base64.decode(base64.normalize(jwt[1]))));
+    var response = await HttpHelper.post(OFFERS_ENDPOINT, apiToken: token, {
       "offer_type": offerType,
+      "trader": payload["user_id"].toInt(),
+      "costumeagency": costumeagency,
+      "costumestate": costumestate,
+      "product": product,
+      "origin": origin,
+      "package_type": packageType,
       "packages_num": packagesNum,
       "tabaleh_num": tabalehNum,
       "raw_material": rawMaterial,
@@ -177,21 +191,19 @@ class StateAgencyRepository {
       "price": price,
       "taxes": taxes,
       "expected_arrival_date": expectedArrivalDate,
-      "notes": notes,
-      "trader": trader,
-      "costume_broker": null,
-      "costumeagency": costumeagency,
-      "costumestate": costumestate,
-      "product": product,
-      "origin": origin,
-      "package_type": packageType,
-      "attachments": attachments
+      "attachments": attachments,
+      "notes": notes
     });
+    print("object");
 
+    print(response.statusCode);
+    print(response.body);
     var jsonObject = jsonDecode(response.body);
     if (response.statusCode == 201) {
       return Offer.fromJson(jsonObject);
     } else {
+      print(response.statusCode);
+      print(response.body);
       return null;
     }
   }

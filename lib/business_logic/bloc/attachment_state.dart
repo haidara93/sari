@@ -13,9 +13,8 @@ class AttachmentLoadingProgress extends AttachmentState {}
 
 class AttachmentLoadedSuccess extends AttachmentState {
   final Attachment attachment;
-  final List<Attachment> attachments;
 
-  const AttachmentLoadedSuccess(this.attachment, this.attachments);
+  const AttachmentLoadedSuccess(this.attachment);
 }
 
 class AttachmentLoadedFailed extends AttachmentState {

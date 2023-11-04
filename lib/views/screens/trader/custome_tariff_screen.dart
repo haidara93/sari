@@ -1122,11 +1122,11 @@ class _CustomeTariffScreenState extends State<CustomeTariffScreen> {
           body: SingleChildScrollView(
             child: Column(
               children: [
-                const SizedBox(
-                  height: 30,
+                SizedBox(
+                  height: 30.h,
                 ),
                 Padding(
-                  padding: const EdgeInsets.all(8.0),
+                  padding: EdgeInsets.all(8.h),
                   child: BlocConsumer<SectionBloc, SectionState>(
                     listener: (context, state) {
                       // if(state is)
@@ -1141,8 +1141,8 @@ class _CustomeTariffScreenState extends State<CustomeTariffScreen> {
                           itemCount: state.sections.length,
                           itemBuilder: (context, index) {
                             return Container(
-                              margin: const EdgeInsets.symmetric(
-                                  vertical: 4, horizontal: 3),
+                              margin: EdgeInsets.symmetric(
+                                  vertical: 4.h, horizontal: 3.w),
                               clipBehavior: Clip.antiAlias,
                               decoration: BoxDecoration(
                                   color: Colors.white,

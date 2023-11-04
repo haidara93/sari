@@ -57,12 +57,17 @@ class _OrderCostScreenState extends State<OrderCostScreen> {
                   }
                   return null;
                 },
+                onTap: () {
+                  controller.selection = TextSelection(
+                      baseOffset: 0,
+                      extentOffset: controller.value.text.length);
+                },
                 keyboardType: TextInputType.number,
                 decoration: InputDecoration(
-                  label: const Text("أدخل قيمة الرسم"),
+                  label: const Text("  أدخل قيمة الرسم"),
                   border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(15),
-                  ),
+                      borderRadius: BorderRadius.circular(12)),
+                  contentPadding: EdgeInsets.zero,
                 ),
               ),
             ),
@@ -98,11 +103,16 @@ class _OrderCostScreenState extends State<OrderCostScreen> {
                   }
                   return null;
                 },
+                onTap: () {
+                  labelcontroller.selection = TextSelection(
+                      baseOffset: 0,
+                      extentOffset: labelcontroller.value.text.length);
+                },
                 decoration: InputDecoration(
                   label: const Text("أدخل وصف الرسم"),
                   border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(15),
-                  ),
+                      borderRadius: BorderRadius.circular(12)),
+                  contentPadding: EdgeInsets.zero,
                 ),
               ),
             ),
@@ -116,12 +126,17 @@ class _OrderCostScreenState extends State<OrderCostScreen> {
                   }
                   return null;
                 },
+                onTap: () {
+                  controller.selection = TextSelection(
+                      baseOffset: 0,
+                      extentOffset: controller.value.text.length);
+                },
                 keyboardType: TextInputType.number,
                 decoration: InputDecoration(
                   label: const Text("أدخل قيمة الرسم"),
                   border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(15),
-                  ),
+                      borderRadius: BorderRadius.circular(12)),
+                  contentPadding: EdgeInsets.zero,
                 ),
               ),
             ),
@@ -207,7 +222,7 @@ class _OrderCostScreenState extends State<OrderCostScreen> {
                         onTap: () => _noteController.selection = TextSelection(
                             baseOffset: 0,
                             extentOffset: _noteController.value.text.length),
-                        keyboardType: TextInputType.number,
+                        // keyboardType: TextInputType.number,
                         decoration: InputDecoration(
                           labelText: "رد على التاجر",
                           prefixStyle: const TextStyle(color: Colors.black),
@@ -229,17 +244,34 @@ class _OrderCostScreenState extends State<OrderCostScreen> {
                 children: [
                   CustomButton(
                     onTap: () {},
-                    color: AppColor.deepYellow,
                     title: const SizedBox(
                         width: 100, child: Center(child: Text("إلغاء"))),
                   ),
                   BlocConsumer<CostBloc, CostState>(
-                    listener: (context, state) {},
+                    listener: (context, state) {
+                      if (state is CostListLoadedSuccess) {
+                        Navigator.pop(context);
+                        const snackBar = SnackBar(
+                          content: Text('تم إدخال التكاليف بنجاح.'),
+                          duration: Duration(seconds: 4),
+                        );
+
+                        ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                      }
+                      if (state is CostLoadedFailed) {
+                        const snackBar = SnackBar(
+                          content: Text(
+                              'حدث خطأ أثناء إرسال التكاليف الرجاء المحاولة مرة أخرى.\n اذا تكرر هذا الخطأ الرجاء التواصل معنا لحل هذا الخطأ.'),
+                          duration: Duration(seconds: 4),
+                        );
+
+                        ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                      }
+                    },
                     builder: (context, state) {
                       if (state is CostListLoadingProgress) {
                         return CustomButton(
                           onTap: () {},
-                          color: AppColor.deepYellow,
                           title: SizedBox(
                               width: 250.w,
                               child: const Center(
@@ -261,7 +293,6 @@ class _OrderCostScreenState extends State<OrderCostScreen> {
                                   .add(CostSubmitEvent(costs));
                             }
                           },
-                          color: AppColor.deepYellow,
                           title: SizedBox(
                               width: 250.w,
                               child: const Center(

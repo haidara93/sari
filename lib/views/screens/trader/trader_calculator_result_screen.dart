@@ -152,7 +152,6 @@ class TraderCalculatorResultScreen extends StatelessWidget {
                 children: [
                   CustomButton(
                     onTap: () {},
-                    color: AppColor.deepYellow,
                     title: const SizedBox(
                         width: 100, child: Center(child: Text("إلغاء"))),
                   ),
@@ -164,7 +163,6 @@ class TraderCalculatorResultScreen extends StatelessWidget {
                       //       builder: (context) => TraderBillReview(),
                       //     ));
                     },
-                    color: AppColor.deepYellow,
                     title: const SizedBox(
                         width: 100, child: Center(child: Text("حفظ"))),
                   ),
@@ -176,7 +174,6 @@ class TraderCalculatorResultScreen extends StatelessWidget {
                       //       builder: (context) => TraderAttachementScreen(),
                       //     ));
                     },
-                    color: AppColor.deepYellow,
                     title: const SizedBox(
                         width: 100, child: Center(child: Text("طلب مخلص"))),
                   ),

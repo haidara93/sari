@@ -7,15 +7,11 @@ class AdditionalAttachmentEvent extends Equatable {
   List<Object> get props => [];
 }
 
-class AddAdditionalAttachmentEvent extends AdditionalAttachmentEvent {
-  final int type;
-  final File image;
-  final int offerId;
-  final String offerState;
+class SubmitAdditionalAttachmentEvent extends AdditionalAttachmentEvent {
+  final List<int> additionalList;
   final List<int> attachments;
-  final List<AttachmentType> additionalattachments;
-  // final File file;
+  final int offerId;
 
-  const AddAdditionalAttachmentEvent(this.type, this.image, this.offerId,
-      this.offerState, this.attachments, this.additionalattachments);
+  SubmitAdditionalAttachmentEvent(
+      this.attachments, this.additionalList, this.offerId);
 }

@@ -38,6 +38,12 @@ class _TraderOrdersScreenState extends State<TraderOrdersScreen> {
   }
 
   @override
+  void initState() {
+    super.initState();
+    BlocProvider.of<OfferBloc>(context).add(OfferLoadEvent());
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.grey[200],

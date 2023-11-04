@@ -15,11 +15,11 @@ class CalculatorLoadingScreen extends StatelessWidget {
         shrinkWrap: true,
         itemBuilder: (_, __) => Card(
           shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(25.0),
+            borderRadius: BorderRadius.circular(15.0),
           ),
           elevation: 1,
           color: Colors.white,
-          margin: const EdgeInsets.symmetric(vertical: 15),
+          margin: EdgeInsets.symmetric(vertical: 15.h, horizontal: 10.w),
           clipBehavior: Clip.hardEdge,
           child: SizedBox(
             height: 290.h,

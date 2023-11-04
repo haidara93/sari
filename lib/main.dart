@@ -1,4 +1,8 @@
 import 'package:connectivity_plus/connectivity_plus.dart';
+import 'package:custome_mobile/business_logic/bloc/additional_attachment_bloc.dart';
+import 'package:custome_mobile/business_logic/bloc/attachment_bloc.dart';
+import 'package:custome_mobile/business_logic/bloc/attachment_type_bloc.dart';
+import 'package:custome_mobile/business_logic/bloc/attachments_list_bloc.dart';
 import 'package:custome_mobile/business_logic/bloc/auth_bloc.dart';
 import 'package:custome_mobile/business_logic/bloc/calculate_result_bloc.dart';
 import 'package:custome_mobile/business_logic/bloc/calculator_panel_bloc.dart';
@@ -16,6 +20,7 @@ import 'package:custome_mobile/business_logic/bloc/saved_post_bloc.dart';
 import 'package:custome_mobile/business_logic/bloc/section_bloc.dart';
 import 'package:custome_mobile/business_logic/bloc/state_custome_bloc.dart';
 import 'package:custome_mobile/business_logic/bloc/sub_chapter_bloc.dart';
+import 'package:custome_mobile/business_logic/bloc/trader_additional_attachment_bloc.dart';
 import 'package:custome_mobile/business_logic/bloc/trader_log_bloc.dart';
 import 'package:custome_mobile/business_logic/cubit/bottom_nav_bar_cubit.dart';
 import 'package:custome_mobile/business_logic/cubit/internet_cubit.dart';
@@ -160,6 +165,33 @@ class MyApp extends StatelessWidget {
                                 context)),
                   ),
                   BlocProvider(
+                    create: (context) => AttachmentTypeBloc(
+                        stateAgencyRepository:
+                            RepositoryProvider.of<StateAgencyRepository>(
+                                context)),
+                  ),
+                  BlocProvider(
+                    create: (context) => AttachmentBloc(
+                        stateAgencyRepository:
+                            RepositoryProvider.of<StateAgencyRepository>(
+                                context)),
+                  ),
+                  BlocProvider(
+                    create: (context) => AdditionalAttachmentBloc(
+                        stateAgencyRepository:
+                            RepositoryProvider.of<StateAgencyRepository>(
+                                context)),
+                  ),
+                  BlocProvider(
+                    create: (context) => TraderAdditionalAttachmentBloc(
+                        stateAgencyRepository:
+                            RepositoryProvider.of<StateAgencyRepository>(
+                                context)),
+                  ),
+                  BlocProvider(
+                    create: (context) => AttachmentsListBloc(),
+                  ),
+                  BlocProvider(
                     create: (context) => CalculateResultBloc(
                         stateAgencyRepository:
                             RepositoryProvider.of<StateAgencyRepository>(
@@ -185,9 +217,9 @@ class MyApp extends StatelessWidget {
                   ],
                   supportedLocales: const [
                     Locale('en', 'US'), //code
-                    Locale('ar', 'AR'), // arabic, no country code
+                    Locale('ar', 'SY'), // arabic, no country code
                   ],
-                  locale: const Locale("ar", "AR"),
+                  locale: const Locale("ar", "SY"),
                   theme: ThemeData(
                     colorScheme: ColorScheme.fromSwatch().copyWith(
                       primary: AppColor.deepBlue,

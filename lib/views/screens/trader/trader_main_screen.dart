@@ -58,25 +58,46 @@ class _TraderMainScreenState extends State<TraderMainScreen> {
                     itemBuilder: (context, index) {
                       DateTime now = DateTime.now();
                       Duration diff = now.difference(state.posts[index].date!);
-                      return Card(
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(25.0),
-                        ),
-                        elevation: 1,
-                        color: Colors.white,
+                      return Container(
                         margin: const EdgeInsets.symmetric(
                             horizontal: 25, vertical: 15),
-                        clipBehavior: Clip.hardEdge,
+                        decoration: BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.circular(10)),
+                        clipBehavior: Clip.antiAlias,
                         child: Column(
                             mainAxisAlignment: MainAxisAlignment.start,
                             children: [
-                              CachedNetworkImage(
-                                imageUrl: state.posts[index].image!,
-                                height: 185,
+                              Image.network(
+                                state.posts[index].image!,
+                                height: 225.h,
                                 width: double.infinity,
+                                fit: BoxFit.cover,
+                                loadingBuilder:
+                                    (context, child, loadingProgress) {
+                                  if (loadingProgress == null) {
+                                    return child;
+                                  }
+
+                                  return SizedBox(
+                                    height: 225.h,
+                                    child: Center(
+                                      child: CircularProgressIndicator(
+                                        value: loadingProgress
+                                                    .expectedTotalBytes !=
+                                                null
+                                            ? loadingProgress
+                                                    .cumulativeBytesLoaded /
+                                                loadingProgress
+                                                    .expectedTotalBytes!
+                                            : null,
+                                      ),
+                                    ),
+                                  );
+                                },
                               ),
                               SizedBox(
-                                height: 12.h,
+                                height: 7.h,
                               ),
                               Padding(
                                 padding: const EdgeInsets.all(8.0),

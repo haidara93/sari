@@ -21,8 +21,6 @@ class OfferBloc extends Bloc<OfferEvent, OfferState> {
           event.taxes,
           event.expectedDate,
           event.notes,
-          event.trader,
-          event.costumeBroker,
           event.costumeAgency,
           event.costumeState,
           event.product,

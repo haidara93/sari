@@ -1,4 +1,4 @@
-import 'package:custome_mobile/business_logic/bloc/attachment_type_bloc.dart';
+// import 'package:custome_mobile/business_logic/bloc/attachment_type_bloc.dart';
 import 'package:custome_mobile/business_logic/bloc/auth_bloc.dart';
 import 'package:custome_mobile/business_logic/bloc/calculate_result_bloc.dart';
 import 'package:custome_mobile/business_logic/bloc/calculator_panel_bloc.dart';
@@ -441,9 +441,9 @@ class _TraderHomeScreenState extends State<TraderHomeScreen>
                                     indicatorColor: AppColor.activeGreen,
                                     labelColor: AppColor.activeGreen,
                                     unselectedLabelColor: Colors.white,
-                                    labelStyle: const TextStyle(fontSize: 15),
+                                    labelStyle: TextStyle(fontSize: 15.sp),
                                     unselectedLabelStyle:
-                                        const TextStyle(fontSize: 14),
+                                        TextStyle(fontSize: 14.sp),
                                     padding: EdgeInsets.zero,
                                     onTap: (value) {
                                       changeSelectedValue(
@@ -469,7 +469,7 @@ class _TraderHomeScreenState extends State<TraderHomeScreen>
                                                     style: TextStyle(
                                                         color: AppColor
                                                             .activeGreen,
-                                                        fontSize: 15),
+                                                        fontSize: 15.sp),
                                                   )
                                                 ],
                                               )
@@ -509,7 +509,7 @@ class _TraderHomeScreenState extends State<TraderHomeScreen>
                                                     style: TextStyle(
                                                         color: AppColor
                                                             .activeGreen,
-                                                        fontSize: 15),
+                                                        fontSize: 15.sp),
                                                   )
                                                 ],
                                               )
@@ -522,11 +522,11 @@ class _TraderHomeScreenState extends State<TraderHomeScreen>
                                                     width: 30.w,
                                                     height: 30.h,
                                                   ),
-                                                  const Text(
+                                                  Text(
                                                     "الحاسبة",
                                                     style: TextStyle(
                                                         color: Colors.white,
-                                                        fontSize: 15),
+                                                        fontSize: 15.sp),
                                                   )
                                                 ],
                                               ),
@@ -549,7 +549,7 @@ class _TraderHomeScreenState extends State<TraderHomeScreen>
                                                     style: TextStyle(
                                                         color: AppColor
                                                             .activeGreen,
-                                                        fontSize: 15),
+                                                        fontSize: 15.sp),
                                                   )
                                                 ],
                                               )
@@ -562,11 +562,11 @@ class _TraderHomeScreenState extends State<TraderHomeScreen>
                                                     width: 30.w,
                                                     height: 30.h,
                                                   ),
-                                                  const Text(
+                                                  Text(
                                                     "الرئيسية",
                                                     style: TextStyle(
                                                         color: Colors.white,
-                                                        fontSize: 15),
+                                                        fontSize: 15.sp),
                                                   )
                                                 ],
                                               ),
@@ -589,7 +589,7 @@ class _TraderHomeScreenState extends State<TraderHomeScreen>
                                                     style: TextStyle(
                                                         color: AppColor
                                                             .activeGreen,
-                                                        fontSize: 15),
+                                                        fontSize: 15.sp),
                                                   )
                                                 ],
                                               )
@@ -602,11 +602,11 @@ class _TraderHomeScreenState extends State<TraderHomeScreen>
                                                     width: 30.w,
                                                     height: 30.h,
                                                   ),
-                                                  const Text(
+                                                  Text(
                                                     "التعرفة",
                                                     style: TextStyle(
                                                         color: Colors.white,
-                                                        fontSize: 15),
+                                                        fontSize: 15.sp),
                                                   )
                                                 ],
                                               ),
@@ -629,7 +629,7 @@ class _TraderHomeScreenState extends State<TraderHomeScreen>
                                                     style: TextStyle(
                                                         color: AppColor
                                                             .activeGreen,
-                                                        fontSize: 15),
+                                                        fontSize: 15.sp),
                                                   )
                                                 ],
                                               )
@@ -642,11 +642,11 @@ class _TraderHomeScreenState extends State<TraderHomeScreen>
                                                     width: 30.w,
                                                     height: 30.h,
                                                   ),
-                                                  const Text(
+                                                  Text(
                                                     "السجل",
                                                     style: TextStyle(
                                                         color: Colors.white,
-                                                        fontSize: 15),
+                                                        fontSize: 15.sp),
                                                   )
                                                 ],
                                               ),
@@ -1725,7 +1725,6 @@ class _TraderHomeScreenState extends State<TraderHomeScreen>
                         calculateFeeScreen = false;
                       });
                     },
-                    color: AppColor.deepYellow,
                     title: const SizedBox(
                         width: 100, child: Center(child: Text("إلغاء"))),
                   ),
@@ -1737,7 +1736,6 @@ class _TraderHomeScreenState extends State<TraderHomeScreen>
                       //       builder: (context) => TraderBillReview(),
                       //     ));
                     },
-                    color: AppColor.deepYellow,
                     title: const SizedBox(
                         width: 100, child: Center(child: Text("حفظ"))),
                   ),
@@ -1749,7 +1747,6 @@ class _TraderHomeScreenState extends State<TraderHomeScreen>
                       //       builder: (context) => TraderAttachementScreen(),
                       //     ));
                     },
-                    color: AppColor.deepYellow,
                     title: const SizedBox(
                         width: 100, child: Center(child: Text("طلب مخلص"))),
                   ),

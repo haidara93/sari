@@ -40,6 +40,21 @@ class _LogScreenState extends State<LogScreen>
     }
   }
 
+  String getOfferStatus(String offer) {
+    switch (offer) {
+      case "P":
+        return "معلقة";
+      case "R":
+        return "جارية";
+      case "C":
+        return "مكتملة";
+      case "F":
+        return "مرفوضة";
+      default:
+        return "خطأ";
+    }
+  }
+
   String diffText(Duration diff) {
     if (diff.inSeconds < 60) {
       return "منذ ${diff.inSeconds.toString()} ثانية";
@@ -62,16 +77,16 @@ class _LogScreenState extends State<LogScreen>
           mainAxisSize: MainAxisSize.min,
           children: [
             const SizedBox(
-              height: 15,
+              height: 5,
             ),
             Container(
               padding: const EdgeInsets.symmetric(horizontal: 7, vertical: 7),
               decoration: BoxDecoration(
                 color: AppColor.deepBlue,
-                borderRadius: const BorderRadius.only(
-                  topLeft: Radius.circular(27.0),
-                  topRight: Radius.circular(27.0),
-                ),
+                // borderRadius: const BorderRadius.only(
+                //   topLeft: Radius.circular(27.0),
+                //   topRight: Radius.circular(27.0),
+                // ),
               ),
               child: TabBar(
                 controller: _tabController,
@@ -140,6 +155,8 @@ class _LogScreenState extends State<LogScreen>
                                           fontSize: 17,
                                           fontWeight: FontWeight.bold),
                                     ),
+                                    Text(
+                                        'الحالة: ${getOfferStatus(state.offers[index].orderStatus!)}'),
                                     Text(
                                         'نوع العملية: ${getOfferType(state.offers[index].offerType!)}'),
                                     Text(

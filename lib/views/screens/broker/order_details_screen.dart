@@ -2,15 +2,23 @@ import 'package:custome_mobile/business_logic/bloc/offer_bloc.dart';
 import 'package:custome_mobile/data/models/offer_model.dart';
 import 'package:custome_mobile/helpers/color_constants.dart';
 import 'package:custome_mobile/views/screens/broker/order_attachments_screen.dart';
+import 'package:custome_mobile/views/screens/broker/order_cost_screen.dart';
 import 'package:custome_mobile/views/widgets/custom_app_bar.dart';
 import 'package:custome_mobile/views/widgets/custom_botton.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
-class OrderDetailsScreen extends StatelessWidget {
+class OrderDetailsScreen extends StatefulWidget {
   final Offer offer;
-  const OrderDetailsScreen({super.key, required this.offer});
+  OrderDetailsScreen({super.key, required this.offer});
+
+  @override
+  State<OrderDetailsScreen> createState() => _OrderDetailsScreenState();
+}
+
+class _OrderDetailsScreenState extends State<OrderDetailsScreen> {
+  int offerAccept = 0;
 
   String getOfferType(String offer) {
     switch (offer) {
@@ -57,17 +65,19 @@ class OrderDetailsScreen extends StatelessWidget {
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     Text(
-                      'رقم العملية: ${offer.id!}',
+                      'رقم العملية: ${widget.offer.id!}',
                       style: TextStyle(
                           color: AppColor.lightBlue,
                           fontSize: 17,
                           fontWeight: FontWeight.bold),
                     ),
-                    Text('نوع العملية: ${getOfferType(offer.offerType!)}'),
-                    Text('الأمانة الجمركية: ${offer.costumeagency!.name}'),
-                    Text('نوع البضاعة: ${offer.product!.label!}'),
                     Text(
-                      'منشأ البضاعة: ${offer.origin!.label!}',
+                        'نوع العملية: ${getOfferType(widget.offer.offerType!)}'),
+                    Text(
+                        'الأمانة الجمركية: ${widget.offer.costumeagency!.name}'),
+                    Text('نوع البضاعة: ${widget.offer.product!.label!}'),
+                    Text(
+                      'منشأ البضاعة: ${widget.offer.origin!.label!}',
                     ),
                     SizedBox(
                       height: 5.h,
@@ -76,10 +86,10 @@ class OrderDetailsScreen extends StatelessWidget {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Text(
-                          'نوع الطرد: ${offer.packageType!}',
+                          'نوع الطرد: ${widget.offer.packageType!}',
                         ),
                         Text(
-                          'عدد الطرود: ${offer.packagesNum!}',
+                          'عدد الطرود: ${widget.offer.packagesNum!}',
                         ),
                       ],
                     ),
@@ -87,10 +97,10 @@ class OrderDetailsScreen extends StatelessWidget {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Text(
-                          'الوزن: ${offer.weight!}',
+                          'الوزن: ${widget.offer.weight!}',
                         ),
                         Text(
-                          'القيمة: ${offer.price!}',
+                          'القيمة: ${widget.offer.price!}',
                         ),
                       ],
                     ),
@@ -102,43 +112,79 @@ class OrderDetailsScreen extends StatelessWidget {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
-                CustomButton(
-                  onTap: () {},
-                  color: AppColor.deepYellow,
-                  title: const SizedBox(
-                      width: 100, child: Center(child: Text("رفض"))),
-                ),
                 BlocConsumer<OfferBloc, OfferState>(listener: (context, state) {
-                  if (state is OfferListLoadedSuccess) {
+                  if (state is OfferListLoadedSuccess && offerAccept == 2) {
+                    setState(() {
+                      offerAccept = 0;
+                    });
+                    Navigator.pop(context);
+                  }
+                }, builder: (context, state) {
+                  if (state is OfferListLoadingProgress && offerAccept == 2) {
+                    return CustomButton(
+                      onTap: () {},
+                      title: SizedBox(
+                          width: 200.w,
+                          child:
+                              const Center(child: CircularProgressIndicator())),
+                    );
+                  } else {
+                    return CustomButton(
+                      onTap: () {
+                        // setState(() {
+                        //   offerAccept = 2;
+                        // });
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              // builder: (context) => OrderCostScreen(offer: offer),
+                              builder: (context) =>
+                                  OrderAttachmentScreen(offer: widget.offer),
+                            ));
+                        // BlocProvider.of<OfferBloc>(context)
+                        //     .add(OfferStatusUpdateEvent(widget.offer.id!, "F"));
+                      },
+                      title: SizedBox(
+                          width: 200.w,
+                          child: const Center(child: Text("عرض المرفقات"))),
+                    );
+                  }
+                }),
+                BlocConsumer<OfferBloc, OfferState>(listener: (context, state) {
+                  if (state is OfferListLoadedSuccess && offerAccept == 1) {
+                    setState(() {
+                      offerAccept = 0;
+                    });
                     Navigator.push(
                         context,
                         MaterialPageRoute(
                           // builder: (context) => OrderCostScreen(offer: offer),
                           builder: (context) =>
-                              OrderAttachmentScreen(offer: offer),
+                              OrderCostScreen(offer: widget.offer),
                         ));
                   }
                 }, builder: (context, state) {
-                  if (state is OfferListLoadedSuccess) {
+                  if (state is OfferListLoadingProgress && offerAccept == 1) {
                     return CustomButton(
-                      onTap: () {
-                        BlocProvider.of<OfferBloc>(context)
-                            .add(OfferStatusUpdateEvent(offer.id!, "R"));
-                      },
-                      color: AppColor.deepYellow,
+                      onTap: () {},
                       title: SizedBox(
-                          width: 250.w,
-                          child: const Center(
-                              child: Text("موافقة وادخال التكاليف"))),
+                          width: 200.w,
+                          child:
+                              const Center(child: CircularProgressIndicator())),
                     );
                   } else {
                     return CustomButton(
-                      onTap: () {},
-                      color: AppColor.deepYellow,
+                      onTap: () {
+                        setState(() {
+                          offerAccept = 1;
+                        });
+                        BlocProvider.of<OfferBloc>(context)
+                            .add(OfferStatusUpdateEvent(widget.offer.id!, "R"));
+                      },
                       title: SizedBox(
-                          width: 250.w,
-                          child:
-                              const Center(child: CircularProgressIndicator())),
+                          width: 200.w,
+                          child: const Center(
+                              child: Text("موافقة وادخال التكاليف"))),
                     );
                   }
                 }),

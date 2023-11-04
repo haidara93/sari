@@ -15,38 +15,14 @@ class AttachmentBloc extends Bloc<AttachmentEvent, AttachmentState> {
   AttachmentBloc({required this.stateAgencyRepository})
       : super(AttachmentInitial()) {
     on<AddAttachmentEvent>((event, emit) async {
-      if (state is AttachmentInitial) {
-        AttachmentInitial currentState = state as AttachmentInitial;
-        emit(AttachmentLoadingProgress());
-        try {
-          var result = await stateAgencyRepository.postAttachment(
-              event.image, event.type);
-          List<Attachment> attachments = [];
-          if (currentState != null) {
-            attachments = [];
-          }
+      emit(AttachmentLoadingProgress());
+      try {
+        var result =
+            await stateAgencyRepository.postAttachment(event.image, event.type);
 
-          attachments.add(result!);
-          emit(AttachmentLoadedSuccess(result, attachments));
-        } catch (e) {
-          emit(AttachmentLoadedFailed(e.toString()));
-        }
-      } else {
-        AttachmentLoadedSuccess currentState = state as AttachmentLoadedSuccess;
-        emit(AttachmentLoadingProgress());
-        try {
-          var result = await stateAgencyRepository.postAttachment(
-              event.image, event.type);
-          List<Attachment> attachments = [];
-          if (currentState != null) {
-            attachments = currentState.attachments;
-          }
-
-          attachments.add(result!);
-          emit(AttachmentLoadedSuccess(result, attachments));
-        } catch (e) {
-          emit(AttachmentLoadedFailed(e.toString()));
-        }
+        emit(AttachmentLoadedSuccess(result!));
+      } catch (e) {
+        emit(AttachmentLoadedFailed(e.toString()));
       }
     });
   }

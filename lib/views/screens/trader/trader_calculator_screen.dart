@@ -1,5 +1,6 @@
 import 'package:custome_mobile/views/widgets/calculator_widget.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class TraderCalculatorScreen extends StatelessWidget {
   final GlobalKey<FormState> _calformkey = GlobalKey<FormState>();
@@ -45,38 +46,30 @@ class TraderCalculatorScreen extends StatelessWidget {
                     const SizedBox(
                       height: 25,
                     ),
-                    Container(
-                      margin: const EdgeInsets.symmetric(vertical: 7),
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(25),
-                        gradient: const LinearGradient(
-                            colors: [
-                              Color.fromARGB(255, 229, 215, 94),
-                              Colors.white,
-                              Colors.white,
-                              Colors.white,
-                              Colors.white,
-                              Colors.white,
-                              Colors.white,
-                              Colors.white,
-                              Colors.white,
-                              Colors.white,
-                              Colors.white,
-                              Colors.white,
-                              Colors.white,
-                            ],
-                            begin: Alignment.topCenter,
-                            end: Alignment.bottomCenter),
+                    Card(
+                      clipBehavior: Clip.antiAlias,
+                      shape: const RoundedRectangleBorder(
+                          borderRadius: BorderRadius.all(
+                        Radius.circular(15),
+                      )),
+                      margin: EdgeInsets.symmetric(horizontal: 10.w),
+                      elevation: 1,
+                      color: Colors.white,
+                      child: Container(
+                        margin: const EdgeInsets.symmetric(vertical: 7),
+                        width: double.infinity,
+                        padding: const EdgeInsets.all(8.0),
+                        child: CalculatorWidget(
+                            calformkey: _calformkey,
+                            typeAheadController: _typeAheadController,
+                            originController: _originController,
+                            wieghtController: _wieghtController,
+                            valueController: _valueController),
                       ),
-                      width: double.infinity,
-                      padding: const EdgeInsets.all(8.0),
-                      child: CalculatorWidget(
-                          calformkey: _calformkey,
-                          typeAheadController: _typeAheadController,
-                          originController: _originController,
-                          wieghtController: _wieghtController,
-                          valueController: _valueController),
                     ),
+                    SizedBox(
+                      height: 10.h,
+                    )
                   ]),
             ),
           )),

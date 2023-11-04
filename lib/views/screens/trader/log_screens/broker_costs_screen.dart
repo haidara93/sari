@@ -53,82 +53,71 @@ class BrokerCostDetailsScreen extends StatelessWidget {
               SizedBox(
                 height: 20.h,
               ),
-              const Text(
+              Text(
                 "الضرائب والرسوم",
-                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
+                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20.sp),
               ),
               SizedBox(
                 height: 20.h,
               ),
-              Padding(
-                padding: EdgeInsets.symmetric(horizontal: 25.w),
-                child: BlocBuilder<CalculateResultBloc, CalculateResultState>(
-                  builder: (context, state) {
-                    if (state is CalculateResultSuccessed) {
-                      return ItemTaxesWidget(
-                        customsFee: state.result.customsFee!,
-                        spendingFee: state.result.spendingFee!,
-                        conservativeLocality:
-                            state.result.conservativeLocality!,
-                        citiesProtectionFee: state.result.citiesProtectionFee!,
-                        feeSupportingLocalProduction:
-                            state.result.feeSupportingLocalProduction!,
-                        imranLocality: state.result.imranLocality!,
-                        incomeTaxFee: state.result.incomeTaxFee!,
-                        naturalDisasterFee: state.result.naturalDisasterFee!,
-                        finalFee: state.result.finalTotal!,
-                      );
-                    } else {
-                      return const CalculatorLoadingScreen();
-                    }
-                  },
-                ),
+              BlocBuilder<CalculateResultBloc, CalculateResultState>(
+                builder: (context, state) {
+                  if (state is CalculateResultSuccessed) {
+                    return ItemTaxesWidget(
+                      customsFee: state.result.customsFee!,
+                      spendingFee: state.result.spendingFee!,
+                      conservativeLocality: state.result.conservativeLocality!,
+                      citiesProtectionFee: state.result.citiesProtectionFee!,
+                      feeSupportingLocalProduction:
+                          state.result.feeSupportingLocalProduction!,
+                      imranLocality: state.result.imranLocality!,
+                      incomeTaxFee: state.result.incomeTaxFee!,
+                      naturalDisasterFee: state.result.naturalDisasterFee!,
+                      finalFee: state.result.finalTotal!,
+                    );
+                  } else {
+                    return const CalculatorLoadingScreen();
+                  }
+                },
               ),
               const SizedBox(
                 height: 20,
               ),
-              Padding(
-                padding: EdgeInsets.symmetric(horizontal: 25.w),
-                child: BlocBuilder<CalculateResultBloc, CalculateResultState>(
-                  builder: (context, state) {
-                    if (state is CalculateResultSuccessed) {
-                      return PensTaxesWidget(
-                        addedTaxes: state.result.addedTaxes!,
-                        customsCertificate: state.result.customsCertificate!,
-                        billTax: state.result.billTax!,
-                        stampFee: state.result.stampFee!,
-                        provincialLocalTax: state.result.provincialLocalTax!,
-                        advanceIncomeTax: state.result.advanceIncomeTax!,
-                        reconstructionFee: state.result.reconstructionFee!,
-                        finalTaxes: state.result.finalTaxes!,
-                      );
-                    } else {
-                      return const CalculatorLoadingScreen();
-                    }
-                  },
-                ),
+              BlocBuilder<CalculateResultBloc, CalculateResultState>(
+                builder: (context, state) {
+                  if (state is CalculateResultSuccessed) {
+                    return PensTaxesWidget(
+                      addedTaxes: state.result.addedTaxes!,
+                      customsCertificate: state.result.customsCertificate!,
+                      billTax: state.result.billTax!,
+                      stampFee: state.result.stampFee!,
+                      provincialLocalTax: state.result.provincialLocalTax!,
+                      advanceIncomeTax: state.result.advanceIncomeTax!,
+                      reconstructionFee: state.result.reconstructionFee!,
+                      finalTaxes: state.result.finalTaxes!,
+                    );
+                  } else {
+                    return const CalculatorLoadingScreen();
+                  }
+                },
               ),
               const SizedBox(
                 height: 20,
               ),
-              Padding(
-                padding: EdgeInsets.symmetric(horizontal: 25.w),
-                child: BlocBuilder<CalculateResultBloc, CalculateResultState>(
-                  builder: (context, state) {
-                    if (state is CalculateResultSuccessed) {
-                      return Container(
+              BlocBuilder<CalculateResultBloc, CalculateResultState>(
+                builder: (context, state) {
+                  if (state is CalculateResultSuccessed) {
+                    return Card(
+                      clipBehavior: Clip.antiAlias,
+                      shape: const RoundedRectangleBorder(
+                          borderRadius: BorderRadius.all(
+                        Radius.circular(15),
+                      )),
+                      margin: EdgeInsets.symmetric(horizontal: 10.w),
+                      elevation: 1,
+                      color: Colors.white,
+                      child: Padding(
                         padding: EdgeInsets.symmetric(horizontal: 15.w),
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(25),
-                          gradient: const LinearGradient(
-                              colors: [
-                                Color.fromARGB(255, 229, 215, 94),
-                                Colors.white,
-                                Colors.white,
-                              ],
-                              begin: Alignment.topCenter,
-                              end: Alignment.bottomCenter),
-                        ),
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.start,
                           children: [
@@ -160,12 +149,12 @@ class BrokerCostDetailsScreen extends StatelessWidget {
                             ),
                           ],
                         ),
-                      );
-                    } else {
-                      return const CalculatorLoadingScreen();
-                    }
-                  },
-                ),
+                      ),
+                    );
+                  } else {
+                    return const CalculatorLoadingScreen();
+                  }
+                },
               ),
               SizedBox(
                 height: 30.h,
@@ -189,25 +178,20 @@ class BrokerCostDetailsScreen extends StatelessWidget {
               SizedBox(
                 height: 20.h,
               ),
-              Padding(
-                padding: EdgeInsets.symmetric(horizontal: 25.w),
-                child: BlocBuilder<CalculateResultBloc, CalculateResultState>(
-                  builder: (context, state) {
-                    if (state is CalculateResultSuccessed) {
-                      return Container(
+              BlocBuilder<CalculateResultBloc, CalculateResultState>(
+                builder: (context, state) {
+                  if (state is CalculateResultSuccessed) {
+                    return Card(
+                      clipBehavior: Clip.antiAlias,
+                      shape: const RoundedRectangleBorder(
+                          borderRadius: BorderRadius.all(
+                        Radius.circular(15),
+                      )),
+                      margin: EdgeInsets.symmetric(horizontal: 10.w),
+                      elevation: 1,
+                      color: Colors.white,
+                      child: Padding(
                         padding: EdgeInsets.symmetric(horizontal: 15.w),
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(25),
-                          gradient: const LinearGradient(
-                              colors: [
-                                Color.fromARGB(255, 229, 215, 94),
-                                Colors.white,
-                                Colors.white,
-                                Colors.white,
-                              ],
-                              begin: Alignment.topCenter,
-                              end: Alignment.bottomCenter),
-                        ),
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.start,
                           children: [
@@ -260,15 +244,15 @@ class BrokerCostDetailsScreen extends StatelessWidget {
                             ),
                           ],
                         ),
-                      );
-                    } else {
-                      return const CalculatorLoadingScreen();
-                    }
-                  },
-                ),
+                      ),
+                    );
+                  } else {
+                    return const CalculatorLoadingScreen();
+                  }
+                },
               ),
               SizedBox(
-                height: 20.h,
+                height: 10.h,
               ),
               const Divider(),
               SizedBox(
@@ -281,34 +265,30 @@ class BrokerCostDetailsScreen extends StatelessWidget {
               SizedBox(
                 height: 15.h,
               ),
-              Padding(
-                padding: EdgeInsets.symmetric(horizontal: 25.w),
-                child: BlocBuilder<CalculateResultBloc, CalculateResultState>(
-                  builder: (context, state) {
-                    if (state is CalculateResultSuccessed) {
-                      return Container(
+              BlocBuilder<CalculateResultBloc, CalculateResultState>(
+                builder: (context, state) {
+                  if (state is CalculateResultSuccessed) {
+                    return Card(
+                      clipBehavior: Clip.antiAlias,
+                      shape: const RoundedRectangleBorder(
+                          borderRadius: BorderRadius.all(
+                        Radius.circular(15),
+                      )),
+                      margin: EdgeInsets.symmetric(horizontal: 10.w),
+                      elevation: 1,
+                      color: Colors.white,
+                      child: Padding(
                         padding: EdgeInsets.symmetric(horizontal: 15.w),
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(25),
-                          gradient: const LinearGradient(
-                              colors: [
-                                Color.fromARGB(255, 229, 215, 94),
-                                Colors.white,
-                                Colors.white,
-                              ],
-                              begin: Alignment.topCenter,
-                              end: Alignment.bottomCenter),
-                        ),
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.start,
                           children: [
-                            const Text(
+                            Text(
                               "اجمالي التكاليف",
                               style: TextStyle(
-                                  fontWeight: FontWeight.bold, fontSize: 22),
+                                  fontWeight: FontWeight.bold, fontSize: 22.sp),
                             ),
-                            const SizedBox(
-                              height: 7,
+                            SizedBox(
+                              height: 7.h,
                             ),
                             Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -326,17 +306,17 @@ class BrokerCostDetailsScreen extends StatelessWidget {
                                 ),
                               ],
                             ),
-                            const SizedBox(
-                              height: 15,
+                            SizedBox(
+                              height: 15.h,
                             ),
                           ],
                         ),
-                      );
-                    } else {
-                      return const CalculatorLoadingScreen();
-                    }
-                  },
-                ),
+                      ),
+                    );
+                  } else {
+                    return const CalculatorLoadingScreen();
+                  }
+                },
               ),
               SizedBox(
                 height: 50.h,

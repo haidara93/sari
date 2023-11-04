@@ -11,22 +11,20 @@ class AuthRepository {
   Future<dynamic> login(
       {required String username, required String password}) async {
     try {
-      var firebaseToken = "";
+      String? firebaseToken = "";
       FirebaseMessaging messaging = FirebaseMessaging.instance;
-      messaging.getToken().then((value) {
-        firebaseToken = value!;
-        // print(value);
-      });
+      firebaseToken = await messaging.getToken();
       Response response = await HttpHelper.post(LOGIN_ENDPOINT, {
         "username": username,
         "password": password,
-        "fcm_token": firebaseToken
+        "fcm_token": firebaseToken ?? ""
       });
       final Map<String, dynamic> data = <String, dynamic>{};
       data["status"] = response.statusCode;
 
       var jsonObject = jsonDecode(response.body);
-      if (response.statusCode == 401) {
+
+      if (response.statusCode == 401 || response.statusCode == 400) {
         data["details"] = jsonObject["details"];
       } else {
         presisteToken(jsonObject);
