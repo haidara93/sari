@@ -16,7 +16,7 @@ class LogScreen extends StatefulWidget {
 class _LogScreenState extends State<LogScreen>
     with SingleTickerProviderStateMixin {
   late TabController _tabController;
-
+  int tabIndex = 0;
   @override
   void initState() {
     _tabController = TabController(length: 2, vsync: this);
@@ -79,51 +79,114 @@ class _LogScreenState extends State<LogScreen>
             const SizedBox(
               height: 5,
             ),
-            Container(
-              padding: const EdgeInsets.symmetric(horizontal: 7, vertical: 7),
-              decoration: BoxDecoration(
-                color: AppColor.deepBlue,
-                // borderRadius: const BorderRadius.only(
-                //   topLeft: Radius.circular(27.0),
-                //   topRight: Radius.circular(27.0),
-                // ),
-              ),
-              child: TabBar(
-                controller: _tabController,
-                // give the indicator a decoration (color and border radius)
-                indicator: BoxDecoration(
-                  borderRadius: BorderRadius.circular(
-                    25.0,
-                  ),
-                  color: AppColor.activeGreen,
-                ),
-                labelColor: AppColor.deepBlue,
-                unselectedLabelColor: Colors.white,
-                onTap: (value) {
-                  switch (value) {
-                    case 0:
-                      BlocProvider.of<TraderLogBloc>(context)
-                          .add(const TraderLogLoadEvent("R"));
-                      break;
-                    case 1:
-                      BlocProvider.of<TraderLogBloc>(context)
-                          .add(const TraderLogLoadEvent("C"));
-                      break;
-                    default:
-                  }
-                },
-                tabs: const [
-                  // first tab [you can add an icon using the icon property]
-                  Tab(
-                    text: 'العمليات الجارية',
+            Card(
+              clipBehavior: Clip.antiAlias,
+              shape: const RoundedRectangleBorder(
+                  borderRadius: BorderRadius.all(
+                Radius.circular(15),
+              )),
+              margin: EdgeInsets.symmetric(horizontal: 7.w),
+              elevation: 1,
+              color: Colors.white,
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 7, vertical: 7),
+                child: TabBar(
+                  controller: _tabController,
+                  // give the indicator a decoration (color and border radius)
+
+                  indicator: BoxDecoration(
+                    borderRadius: BorderRadius.circular(
+                      25.0,
+                    ),
+
+                    // color: AppColor.activeGreen,
                   ),
 
-                  // second tab [you can add an icon using the icon property]
-                  Tab(
-                    text: 'العمليات المنتهية',
-                  ),
-                ],
+                  labelColor: AppColor.deepBlue,
+                  unselectedLabelColor: Colors.black,
+
+                  onTap: (value) {
+                    switch (value) {
+                      case 0:
+                        BlocProvider.of<TraderLogBloc>(context)
+                            .add(const TraderLogLoadEvent("R"));
+                        break;
+                      case 1:
+                        BlocProvider.of<TraderLogBloc>(context)
+                            .add(const TraderLogLoadEvent("C"));
+                        break;
+                      default:
+                    }
+                    setState(() {
+                      tabIndex = value;
+                    });
+                  },
+                  tabs: [
+                    // first tab [you can add an icon using the icon property]
+                    Tab(
+                      child: Container(
+                        decoration: BoxDecoration(
+                            gradient: tabIndex == 0
+                                ? LinearGradient(
+                                    colors: [
+                                      AppColor.goldenYellow,
+                                      Colors.white,
+                                      AppColor.goldenYellow,
+                                    ],
+                                    begin: Alignment.centerLeft,
+                                    end: Alignment.centerRight,
+                                  )
+                                : null,
+                            borderRadius: BorderRadius.circular(
+                              25.0,
+                            ),
+                            border: tabIndex != 0
+                                ? Border.all(
+                                    color: AppColor.goldenYellow,
+                                    width: 2,
+                                  )
+                                : null
+                            // color: AppColor.activeGreen,
+                            ),
+                        child: const Center(child: Text("العمليات الجارية")),
+                      ),
+                    ),
+
+                    // second tab [you can add an icon using the icon property]
+                    Tab(
+                      child: Container(
+                        decoration: BoxDecoration(
+                            gradient: tabIndex == 1
+                                ? LinearGradient(
+                                    colors: [
+                                      AppColor.goldenYellow,
+                                      Colors.white,
+                                      AppColor.goldenYellow,
+                                    ],
+                                    begin: Alignment.centerLeft,
+                                    end: Alignment.centerRight,
+                                  )
+                                : null,
+                            borderRadius: BorderRadius.circular(
+                              25.0,
+                            ),
+                            border: tabIndex != 1
+                                ? Border.all(
+                                    color: AppColor.goldenYellow,
+                                    width: 2,
+                                  )
+                                : null
+                            // color: AppColor.activeGreen,
+                            ),
+                        child: const Center(child: Text('العمليات المنتهية')),
+                      ),
+                    ),
+                  ],
+                ),
               ),
+            ),
+            SizedBox(
+              height: 15.h,
             ),
             BlocBuilder<TraderLogBloc, TraderLogState>(
               builder: (context, state) {

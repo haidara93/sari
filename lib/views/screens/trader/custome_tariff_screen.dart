@@ -456,7 +456,7 @@ class _CustomeTariffScreenState extends State<CustomeTariffScreen> {
               physics: const NeverScrollableScrollPhysics(),
               itemBuilder: (context, index4) {
                 return Container(
-                  margin: const EdgeInsets.symmetric(horizontal: 4),
+                  // margin: const EdgeInsets.symmetric(horizontal: 4),
                   decoration: BoxDecoration(
                     color: feeselected == index4 ? null : Colors.grey[200],
                     gradient: feeselected == index4
@@ -472,7 +472,7 @@ class _CustomeTariffScreenState extends State<CustomeTariffScreen> {
                             begin: Alignment.topCenter,
                             end: Alignment.bottomCenter)
                         : null,
-                    borderRadius: BorderRadius.circular(10),
+                    borderRadius: BorderRadius.circular(5),
                     border: feeselected == index4
                         ? Border.all(color: Colors.yellow[600]!, width: 2)
                         : null,
@@ -507,7 +507,7 @@ class _CustomeTariffScreenState extends State<CustomeTariffScreen> {
                     title: Row(
                       children: [
                         Container(
-                          margin: const EdgeInsets.symmetric(horizontal: 4),
+                          // margin: const EdgeInsets.symmetric(horizontal: 4),
                           decoration: BoxDecoration(
                             color: subchapterselected == index3
                                 ? null
@@ -521,7 +521,7 @@ class _CustomeTariffScreenState extends State<CustomeTariffScreen> {
                                     begin: Alignment.topCenter,
                                     end: Alignment.bottomCenter)
                                 : null,
-                            borderRadius: BorderRadius.circular(10),
+                            borderRadius: BorderRadius.circular(5),
                           ),
                           child: Center(
                             child: feeselected == index4
@@ -681,43 +681,18 @@ class _CustomeTariffScreenState extends State<CustomeTariffScreen> {
               physics: const NeverScrollableScrollPhysics(),
               itemBuilder: (context, index3) {
                 return Container(
-                  margin: const EdgeInsets.symmetric(horizontal: 4),
+                  // margin: const EdgeInsets.symmetric(horizontal: 4),
                   decoration: BoxDecoration(
                     color: Colors.grey[200],
                     borderRadius: BorderRadius.circular(10),
                   ),
-                  child: ExpansionTile(
-                    key: Key(index3.toString()), //attention
-                    initiallyExpanded: index3 == subchapterselected,
+                  child: Column(
+                    children: [
+                      ExpansionTile(
+                        key: Key(index3.toString()), //attention
+                        initiallyExpanded: index3 == subchapterselected,
 
-                    title: Row(
-                      children: [
-                        Container(
-                          margin: const EdgeInsets.symmetric(horizontal: 4),
-                          decoration: BoxDecoration(
-                            color:
-                                chapterselected == index2 ? null : Colors.white,
-                            gradient: chapterselected == index2
-                                ? const LinearGradient(
-                                    colors: [
-                                        Color.fromARGB(255, 229, 215, 94),
-                                        Colors.white,
-                                      ],
-                                    begin: Alignment.topCenter,
-                                    end: Alignment.bottomCenter)
-                                : null,
-                            borderRadius: BorderRadius.circular(10),
-                          ),
-                          child: Center(
-                            child: subchapterselected == index3
-                                ? const Icon(Icons.remove)
-                                : const Icon(Icons.add),
-                          ),
-                        ),
-                        Flexible(
-                            child: Container(
-                          padding: const EdgeInsets.symmetric(horizontal: 5),
-                          width: double.infinity,
+                        title: Container(
                           decoration: BoxDecoration(
                             color: subchapterselected == index3
                                 ? null
@@ -731,57 +706,96 @@ class _CustomeTariffScreenState extends State<CustomeTariffScreen> {
                                     begin: Alignment.topCenter,
                                     end: Alignment.bottomCenter)
                                 : null,
-                            borderRadius: BorderRadius.circular(10),
+                            borderRadius: BorderRadius.circular(5),
                           ),
-                          child: Text(
-                            "${state.subchapters[index3].id!} ${state.subchapters[index3].label!}",
-                            maxLines: 4,
-                            overflow: TextOverflow.ellipsis,
+                          child: Row(
+                            children: [
+                              Container(
+                                // margin: const EdgeInsets.symmetric(horizontal: 4),
+                                decoration: BoxDecoration(
+                                  color: chapterselected == index2
+                                      ? null
+                                      : Colors.white,
+                                  gradient: chapterselected == index2
+                                      ? const LinearGradient(
+                                          colors: [
+                                              Color.fromARGB(255, 229, 215, 94),
+                                              Colors.white,
+                                            ],
+                                          begin: Alignment.topCenter,
+                                          end: Alignment.bottomCenter)
+                                      : null,
+                                  borderRadius: BorderRadius.circular(5),
+                                ),
+                                child: Center(
+                                  child: subchapterselected == index3
+                                      ? const Icon(Icons.remove)
+                                      : const Icon(Icons.add),
+                                ),
+                              ),
+                              Flexible(
+                                  child: Container(
+                                padding:
+                                    const EdgeInsets.symmetric(horizontal: 5),
+                                width: double.infinity,
+                                child: Text(
+                                  "${state.subchapters[index3].id!} ${state.subchapters[index3].label!}",
+                                  maxLines: 4,
+                                  overflow: TextOverflow.ellipsis,
+                                ),
+                              )),
+                            ],
                           ),
-                        )),
-                      ],
-                    ),
-                    trailing: GestureDetector(
-                      onTap: () {
-                        BlocProvider.of<NoteBloc>(context).add(NoteLoadEvent(
-                            state.subchapters[index3].id!.toString(),
-                            NoteType.SubChapter));
-                        if (!shownote) {
-                          setState(() {
-                            subchapterselected = index3;
-                            shownote = true;
-                            noteType = NoteType.SubChapter;
-                          });
-                        } else {
-                          setState(() {
-                            subchapterselected = -1;
-                            shownote = false;
-                            noteType = NoteType.None;
-                          });
-                        }
-                      },
-                      child: Image.asset(
-                        "assets/icons/expansionTileIcon.png",
-                        width: 20.w,
-                        height: 20.h,
+                        ),
+                        trailing: GestureDetector(
+                          onTap: () {
+                            BlocProvider.of<NoteBloc>(context).add(
+                                NoteLoadEvent(
+                                    state.subchapters[index3].id!.toString(),
+                                    NoteType.SubChapter));
+                            if (!shownote) {
+                              setState(() {
+                                subchapterselected = index3;
+                                shownote = true;
+                                noteType = NoteType.SubChapter;
+                              });
+                            } else {
+                              setState(() {
+                                subchapterselected = -1;
+                                shownote = false;
+                                noteType = NoteType.None;
+                              });
+                            }
+                          },
+                          child: Image.asset(
+                            "assets/icons/expansionTileIcon.png",
+                            width: 20.w,
+                            height: 20.h,
+                          ),
+                        ),
+                        onExpansionChanged: (value) {
+                          if (value) {
+                            BlocProvider.of<FeeBloc>(context).add(
+                                FeeLoadEvent(state.subchapters[index3].id!));
+                            setState(() {
+                              subchapterselected = index3;
+                            });
+                          } else {
+                            setState(() {
+                              subchapterselected = -1;
+                              shownote = false;
+                              noteType = NoteType.None;
+                            });
+                          }
+                        },
+                        children: buildFeesTiles(index3),
                       ),
-                    ),
-                    onExpansionChanged: (value) {
-                      if (value) {
-                        BlocProvider.of<FeeBloc>(context)
-                            .add(FeeLoadEvent(state.subchapters[index3].id!));
-                        setState(() {
-                          subchapterselected = index3;
-                        });
-                      } else {
-                        setState(() {
-                          subchapterselected = -1;
-                          shownote = false;
-                          noteType = NoteType.None;
-                        });
-                      }
-                    },
-                    children: buildFeesTiles(index3),
+                      index3 != state.subchapters.length - 1
+                          ? const Divider(
+                              color: Color.fromARGB(255, 229, 215, 94),
+                            )
+                          : const SizedBox.shrink(),
+                    ],
                   ),
                 );
               },
@@ -944,110 +958,148 @@ class _CustomeTariffScreenState extends State<CustomeTariffScreen> {
                       color: Colors.grey[200],
                       borderRadius: BorderRadius.circular(10),
                     ),
-                    child: ExpansionTile(
-                      title: Row(
-                        children: [
-                          Container(
-                            margin: const EdgeInsets.symmetric(horizontal: 4),
-                            decoration: BoxDecoration(
-                              color: chapterselected == index2
-                                  ? null
-                                  : Colors.white,
-                              gradient: chapterselected == index2
-                                  ? const LinearGradient(
-                                      colors: [
-                                          Color.fromARGB(255, 229, 215, 94),
-                                          Colors.white,
-                                        ],
-                                      begin: Alignment.topCenter,
-                                      end: Alignment.bottomCenter)
-                                  : null,
-                              borderRadius: BorderRadius.circular(10),
+                    child: Column(
+                      children: [
+                        Theme(
+                          data: Theme.of(context)
+                              .copyWith(dividerColor: Colors.transparent),
+                          child: ExpansionTile(
+                            title: Container(
+                              decoration: BoxDecoration(
+                                gradient: chapterselected == index2
+                                    ? subchapterselected == -1
+                                        ? const LinearGradient(
+                                            colors: [
+                                                Color.fromARGB(
+                                                    255, 229, 215, 94),
+                                                Colors.white,
+                                              ],
+                                            begin: Alignment.topCenter,
+                                            end: Alignment.bottomCenter)
+                                        : null
+                                    : null,
+                                borderRadius: BorderRadius.circular(10),
+                              ),
+                              child: Row(
+                                children: [
+                                  Container(
+                                    margin: const EdgeInsets.symmetric(
+                                        horizontal: 4),
+                                    decoration: BoxDecoration(
+                                      // color: chapterselected == index2
+                                      //     ? null
+                                      //     : Colors.white,
+                                      border: chapterselected == index2
+                                          ? subchapterselected == -1
+                                              ? null
+                                              : Border.all(
+                                                  color: const Color.fromARGB(
+                                                      255, 229, 215, 94),
+                                                  width: 1,
+                                                )
+                                          : Border.all(
+                                              color: const Color.fromARGB(
+                                                  255, 229, 215, 94),
+                                              width: 1,
+                                            ),
+                                      borderRadius: BorderRadius.circular(5),
+                                    ),
+                                    child: Center(
+                                      child: chapterselected == index2
+                                          ? const Icon(Icons.remove)
+                                          : const Icon(Icons.add),
+                                    ),
+                                  ),
+                                  Flexible(
+                                      child: Container(
+                                    padding: const EdgeInsets.symmetric(
+                                        horizontal: 5),
+                                    width: double.infinity,
+                                    decoration: BoxDecoration(
+                                      color: chapterselected == index2
+                                          ? subchapterselected == -1
+                                              ? Colors.white
+                                              : null
+                                          : null,
+                                      gradient: chapterselected == index2
+                                          ? subchapterselected == -1
+                                              ? const LinearGradient(
+                                                  colors: [
+                                                      Color.fromARGB(
+                                                          255, 229, 215, 94),
+                                                      Colors.white,
+                                                    ],
+                                                  begin: Alignment.topCenter,
+                                                  end: Alignment.bottomCenter)
+                                              : null
+                                          : null,
+                                      borderRadius: BorderRadius.circular(10),
+                                    ),
+                                    child: Text(
+                                      "${state.chapters[index2].id!} ${state.chapters[index2].label!}",
+                                      maxLines: 4,
+                                      overflow: TextOverflow.ellipsis,
+                                    ),
+                                  )),
+                                ],
+                              ),
                             ),
-                            child: Center(
-                              child: chapterselected == index2
-                                  ? const Icon(Icons.remove)
-                                  : const Icon(Icons.add),
+                            trailing: GestureDetector(
+                              onTap: () {
+                                BlocProvider.of<NoteBloc>(context).add(
+                                    NoteLoadEvent(
+                                        state.chapters[index2].id!.toString(),
+                                        NoteType.Chapter));
+                                if (!shownote) {
+                                  setState(() {
+                                    chapterselected = index2;
+
+                                    subchapterselected = -1;
+                                    shownote = true;
+                                    noteType = NoteType.Chapter;
+                                  });
+                                } else {
+                                  setState(() {
+                                    chapterselected = -1;
+                                    shownote = false;
+                                    noteType = NoteType.None;
+                                  });
+                                }
+                              },
+                              child: Image.asset(
+                                "assets/icons/expansionTileIcon.png",
+                                width: 20.w,
+                                height: 20.h,
+                              ),
                             ),
+                            key: Key(index2.toString()), //attention
+                            initiallyExpanded: index2 == chapterselected,
+
+                            onExpansionChanged: (value) {
+                              if (value) {
+                                BlocProvider.of<SubChapterBloc>(context).add(
+                                    SubChapterLoadEvent(
+                                        state.chapters[index2].id!));
+                                setState(() {
+                                  chapterselected = index2;
+
+                                  subchapterselected = -1;
+                                });
+                              } else {
+                                setState(() {
+                                  chapterselected = -1;
+                                  shownote = false;
+                                  noteType = NoteType.None;
+                                });
+                              }
+                            },
+                            children: buildSubChapterTiles(index2),
                           ),
-                          Flexible(
-                              child: Container(
-                            padding: const EdgeInsets.symmetric(horizontal: 5),
-                            width: double.infinity,
-                            decoration: BoxDecoration(
-                              color: chapterselected == index2
-                                  ? subchapterselected == -1
-                                      ? null
-                                      : Colors.white
-                                  : Colors.white,
-                              gradient: chapterselected == index2
-                                  ? subchapterselected == -1
-                                      ? const LinearGradient(
-                                          colors: [
-                                              Color.fromARGB(255, 229, 215, 94),
-                                              Colors.white,
-                                            ],
-                                          begin: Alignment.topCenter,
-                                          end: Alignment.bottomCenter)
-                                      : null
-                                  : null,
-                              borderRadius: BorderRadius.circular(10),
-                            ),
-                            child: Text(
-                              "${state.chapters[index2].id!} ${state.chapters[index2].label!}",
-                              maxLines: 4,
-                              overflow: TextOverflow.ellipsis,
-                            ),
-                          )),
-                        ],
-                      ),
-                      trailing: GestureDetector(
-                        onTap: () {
-                          BlocProvider.of<NoteBloc>(context).add(NoteLoadEvent(
-                              state.chapters[index2].id!.toString(),
-                              NoteType.Chapter));
-                          if (!shownote) {
-                            setState(() {
-                              chapterselected = index2;
-
-                              subchapterselected = -1;
-                              shownote = true;
-                              noteType = NoteType.Chapter;
-                            });
-                          } else {
-                            setState(() {
-                              chapterselected = -1;
-                              shownote = false;
-                              noteType = NoteType.None;
-                            });
-                          }
-                        },
-                        child: Image.asset(
-                          "assets/icons/expansionTileIcon.png",
-                          width: 20.w,
-                          height: 20.h,
                         ),
-                      ),
-                      key: Key(index2.toString()), //attention
-                      initiallyExpanded: index2 == chapterselected,
-                      onExpansionChanged: (value) {
-                        if (value) {
-                          BlocProvider.of<SubChapterBloc>(context).add(
-                              SubChapterLoadEvent(state.chapters[index2].id!));
-                          setState(() {
-                            chapterselected = index2;
-
-                            subchapterselected = -1;
-                          });
-                        } else {
-                          setState(() {
-                            chapterselected = -1;
-                            shownote = false;
-                            noteType = NoteType.None;
-                          });
-                        }
-                      },
-                      children: buildSubChapterTiles(index2),
+                        const Divider(
+                          color: Color.fromARGB(255, 229, 215, 94),
+                        ),
+                      ],
                     ),
                   );
                 },

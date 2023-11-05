@@ -506,9 +506,9 @@ class _StepperOrderBrokerScreenState extends State<StepperOrderBrokerScreen> {
                     ),
                     padding: const EdgeInsets.all(8.0),
                     child: Column(children: [
-                      Row(
+                      const Row(
                         mainAxisAlignment: MainAxisAlignment.start,
-                        children: const [
+                        children: [
                           Text("اختر نوع العملية",
                               style: TextStyle(
                                 fontSize: 17,
@@ -834,10 +834,10 @@ class _StepperOrderBrokerScreenState extends State<StepperOrderBrokerScreen> {
                                                         selectedStateCustome!
                                                             .id!));
                                               },
-                                              child: Row(
+                                              child: const Row(
                                                 mainAxisAlignment:
                                                     MainAxisAlignment.center,
-                                                children: const [
+                                                children: [
                                                   Text(
                                                     "حدث خطأأثناء تحميل القائمة...  ",
                                                     style: TextStyle(
@@ -865,10 +865,10 @@ class _StepperOrderBrokerScreenState extends State<StepperOrderBrokerScreen> {
                                       BlocProvider.of<StateCustomeBloc>(context)
                                           .add(StateCustomeLoadEvent());
                                     },
-                                    child: Row(
+                                    child: const Row(
                                       mainAxisAlignment:
                                           MainAxisAlignment.center,
-                                      children: const [
+                                      children: [
                                         Text(
                                           "حدث خطأأثناء تحميل القائمة...  ",
                                           style: TextStyle(color: Colors.red),
@@ -937,91 +937,101 @@ class _StepperOrderBrokerScreenState extends State<StepperOrderBrokerScreen> {
                             const SizedBox(
                               height: 15,
                             ),
-                            TypeAheadField(
-                              textFieldConfiguration: TextFieldConfiguration(
-                                // autofocus: true,
-                                keyboardType: TextInputType.multiline,
-                                maxLines: null,
-                                controller: _typeAheadController,
-                                scrollPadding: EdgeInsets.only(
-                                    bottom: MediaQuery.of(context)
-                                            .viewInsets
-                                            .bottom +
-                                        150),
-                                onTap: () {
-                                  setSelectedPanel(2);
-                                  BlocProvider.of<BottomNavBarCubit>(context)
-                                      .emitHide();
-                                  _typeAheadController.selection =
-                                      TextSelection(
-                                          baseOffset: 0,
-                                          extentOffset: _typeAheadController
-                                              .value.text.length);
-                                },
-                                style: DefaultTextStyle.of(context)
-                                    .style
-                                    .copyWith(fontStyle: FontStyle.italic),
-                                decoration: InputDecoration(
-                                    label: const Text("  نوع البضاعة"),
-                                    border: OutlineInputBorder(
-                                        borderRadius:
-                                            BorderRadius.circular(12)),
-                                    contentPadding: EdgeInsets.zero),
-                                onSubmitted: (value) {
+                            Focus(
+                              focusNode: _statenode,
+                              onFocusChange: (bool focus) {
+                                if (!focus) {
                                   BlocProvider.of<BottomNavBarCubit>(context)
                                       .emitShow();
-                                },
-                              ),
-                              loadingBuilder: (context) {
-                                return const Center(
-                                  child: CircularProgressIndicator(),
-                                );
-                              },
-                              suggestionsCallback: (pattern) async {
-                                if (pattern.isNotEmpty && pattern.length > 2) {
-                                  setState(() {
-                                    patternString = pattern;
-                                  });
-                                  return await CalculatorService.getpackages(
-                                      pattern);
-                                } else {
-                                  return [];
                                 }
                               },
-                              itemBuilder: (context, suggestion) {
-                                return Column(
-                                  children: [
-                                    Directionality(
-                                      textDirection: TextDirection.rtl,
-                                      child: ListTile(
-                                        // leading: Icon(Icons.shopping_cart),
-                                        title: HighlightText(
-                                          text: suggestion.label!,
-                                          highlight: patternString,
-                                          ignoreCase: false,
-                                          highlightColor: Colors.orangeAccent,
+                              child: TypeAheadField(
+                                textFieldConfiguration: TextFieldConfiguration(
+                                  // autofocus: true,
+                                  keyboardType: TextInputType.multiline,
+                                  maxLines: null,
+                                  controller: _typeAheadController,
+                                  scrollPadding: EdgeInsets.only(
+                                      bottom: MediaQuery.of(context)
+                                              .viewInsets
+                                              .bottom +
+                                          150),
+                                  onTap: () {
+                                    setSelectedPanel(2);
+                                    BlocProvider.of<BottomNavBarCubit>(context)
+                                        .emitHide();
+                                    _typeAheadController.selection =
+                                        TextSelection(
+                                            baseOffset: 0,
+                                            extentOffset: _typeAheadController
+                                                .value.text.length);
+                                  },
+                                  style: DefaultTextStyle.of(context)
+                                      .style
+                                      .copyWith(fontStyle: FontStyle.italic),
+                                  decoration: InputDecoration(
+                                      label: const Text("  نوع البضاعة"),
+                                      border: OutlineInputBorder(
+                                          borderRadius:
+                                              BorderRadius.circular(12)),
+                                      contentPadding: EdgeInsets.zero),
+                                  onSubmitted: (value) {
+                                    BlocProvider.of<BottomNavBarCubit>(context)
+                                        .emitShow();
+                                  },
+                                ),
+                                loadingBuilder: (context) {
+                                  return const Center(
+                                    child: CircularProgressIndicator(),
+                                  );
+                                },
+                                suggestionsCallback: (pattern) async {
+                                  if (pattern.isNotEmpty &&
+                                      pattern.length > 2) {
+                                    setState(() {
+                                      patternString = pattern;
+                                    });
+                                    return await CalculatorService.getpackages(
+                                        pattern);
+                                  } else {
+                                    return [];
+                                  }
+                                },
+                                itemBuilder: (context, suggestion) {
+                                  return Column(
+                                    children: [
+                                      Directionality(
+                                        textDirection: TextDirection.rtl,
+                                        child: ListTile(
+                                          // leading: Icon(Icons.shopping_cart),
+                                          title: HighlightText(
+                                            text: suggestion.label!,
+                                            highlight: patternString,
+                                            ignoreCase: false,
+                                            highlightColor: Colors.orangeAccent,
+                                          ),
+                                          // subtitle: Text('\$${suggestion['price']}'),
                                         ),
-                                        // subtitle: Text('\$${suggestion['price']}'),
                                       ),
-                                    ),
-                                    const Divider(),
-                                  ],
-                                );
-                              },
-                              onSuggestionSelected: (suggestion) {
-                                setState(() {
-                                  _wieghtController.text = "0.0";
-                                  _valueController.text = "0.0";
-                                  syrianExchangeValue = "0.0";
-                                  syrianTotalValue = "0.0";
-                                  totalValueWithEnsurance = "0.0";
-                                });
-                                selectSuggestion(suggestion);
+                                      const Divider(),
+                                    ],
+                                  );
+                                },
+                                onSuggestionSelected: (suggestion) {
+                                  setState(() {
+                                    _wieghtController.text = "0.0";
+                                    _valueController.text = "0.0";
+                                    syrianExchangeValue = "0.0";
+                                    syrianTotalValue = "0.0";
+                                    totalValueWithEnsurance = "0.0";
+                                  });
+                                  selectSuggestion(suggestion);
 
-                                // Navigator.of(context).push(MaterialPageRoute(
-                                //   builder: (context) => ProductPage(product: suggestion)
-                                // ));
-                              },
+                                  // Navigator.of(context).push(MaterialPageRoute(
+                                  //   builder: (context) => ProductPage(product: suggestion)
+                                  // ));
+                                },
+                              ),
                             ),
                             const SizedBox(
                               height: 24,
@@ -1315,10 +1325,10 @@ class _StepperOrderBrokerScreenState extends State<StepperOrderBrokerScreen> {
                                         BlocProvider.of<FlagsBloc>(context)
                                             .add(FlagsLoadEvent());
                                       },
-                                      child: Row(
+                                      child: const Row(
                                         mainAxisAlignment:
                                             MainAxisAlignment.center,
-                                        children: const [
+                                        children: [
                                           Text(
                                             "حدث خطأأثناء تحميل القائمة...  ",
                                             style: TextStyle(color: Colors.red),
