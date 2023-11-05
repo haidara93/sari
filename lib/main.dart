@@ -1,3 +1,4 @@
+import 'dart:io';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:custome_mobile/business_logic/bloc/additional_attachment_bloc.dart';
 import 'package:custome_mobile/business_logic/bloc/attachment_bloc.dart';
@@ -48,7 +49,7 @@ void main() async {
 
   final prefs = await SharedPreferences.getInstance();
   final showHome = prefs.getBool("showHome") ?? false;
-
+HttpOverrides.global = MyHttpOverrides();
   runApp(MyApp(showHome: showHome));
 }
 
@@ -236,5 +237,13 @@ class MyApp extends StatelessWidget {
             );
           });
     });
+  }
+}
+
+ class MyHttpOverrides extends HttpOverrides{
+  @override
+  HttpClient createHttpClient(SecurityContext? context){
+    return super.createHttpClient(context)
+      ..badCertificateCallback = (X509Certificate cert, String host, int port)=> true;
   }
 }

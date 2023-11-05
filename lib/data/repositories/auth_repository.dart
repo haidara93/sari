@@ -11,17 +11,20 @@ class AuthRepository {
   Future<dynamic> login(
       {required String username, required String password}) async {
     try {
+      print("asd");
       String? firebaseToken = "";
       FirebaseMessaging messaging = FirebaseMessaging.instance;
       firebaseToken = await messaging.getToken();
+      print("asd");
       Response response = await HttpHelper.post(LOGIN_ENDPOINT, {
         "username": username,
         "password": password,
         "fcm_token": firebaseToken ?? ""
       });
+print(response.statusCode);
       final Map<String, dynamic> data = <String, dynamic>{};
       data["status"] = response.statusCode;
-
+print(response.statusCode);
       var jsonObject = jsonDecode(response.body);
 
       if (response.statusCode == 401 || response.statusCode == 400) {
@@ -32,6 +35,7 @@ class AuthRepository {
       }
       return data;
     } catch (e) {
+      print(e.toString());
       throw Exception(e.toString());
     }
   }
