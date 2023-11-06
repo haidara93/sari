@@ -1,4 +1,5 @@
 import 'package:custome_mobile/business_logic/bloc/agency_bloc.dart';
+import 'package:custome_mobile/business_logic/bloc/fee_select_bloc.dart';
 import 'package:custome_mobile/business_logic/cubit/bottom_nav_bar_cubit.dart';
 import 'package:custome_mobile/data/repositories/state_agency_repository.dart';
 import 'package:custome_mobile/views/screens/trader/stepper_order_broker_screen.dart';
@@ -39,7 +40,23 @@ class _OrderBrokerScreenState extends State<OrderBrokerScreen> {
               FocusManager.instance.primaryFocus?.unfocus();
               BlocProvider.of<BottomNavBarCubit>(context).emitShow();
             },
-            child: const StepperOrderBrokerScreen()),
+            child: Stack(
+              children: [
+                const StepperOrderBrokerScreen(),
+                BlocBuilder<FeeSelectBloc, FeeSelectState>(
+                  builder: (context, state) {
+                    if (state is FeeSelectLoadingProgress) {
+                      return Container(
+                        color: Colors.white54,
+                        child: const Center(child: CircularProgressIndicator()),
+                      );
+                    } else {
+                      return const SizedBox.shrink();
+                    }
+                  },
+                )
+              ],
+            )),
       ),
     );
   }

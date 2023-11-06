@@ -11,6 +11,7 @@ import 'package:custome_mobile/business_logic/bloc/chapter_bloc.dart';
 import 'package:custome_mobile/business_logic/bloc/cost_bloc.dart';
 import 'package:custome_mobile/business_logic/bloc/fee_bloc.dart';
 import 'package:custome_mobile/business_logic/bloc/fee_item_bloc.dart';
+import 'package:custome_mobile/business_logic/bloc/fee_select_bloc.dart';
 import 'package:custome_mobile/business_logic/bloc/fee_trade_description_bloc.dart';
 import 'package:custome_mobile/business_logic/bloc/flags_bloc.dart';
 import 'package:custome_mobile/business_logic/bloc/group_bloc.dart';
@@ -49,7 +50,7 @@ void main() async {
 
   final prefs = await SharedPreferences.getInstance();
   final showHome = prefs.getBool("showHome") ?? false;
-HttpOverrides.global = MyHttpOverrides();
+  HttpOverrides.global = MyHttpOverrides();
   runApp(MyApp(showHome: showHome));
 }
 
@@ -207,6 +208,7 @@ class MyApp extends StatelessWidget {
                   BlocProvider(create: (context) => BottomNavBarCubit()),
                   BlocProvider(create: (context) => CalculatorPanelBloc()),
                   BlocProvider(create: (context) => FeeItemBloc()),
+                  BlocProvider(create: (context) => FeeSelectBloc()),
                 ],
                 child: MaterialApp(
                   title: 'التخليص الجمركي',
@@ -240,10 +242,11 @@ class MyApp extends StatelessWidget {
   }
 }
 
- class MyHttpOverrides extends HttpOverrides{
+class MyHttpOverrides extends HttpOverrides {
   @override
-  HttpClient createHttpClient(SecurityContext? context){
+  HttpClient createHttpClient(SecurityContext? context) {
     return super.createHttpClient(context)
-      ..badCertificateCallback = (X509Certificate cert, String host, int port)=> true;
+      ..badCertificateCallback =
+          (X509Certificate cert, String host, int port) => true;
   }
 }

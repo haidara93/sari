@@ -212,7 +212,7 @@ class _LogScreenState extends State<LogScreen>
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     Text(
-                                      'رقم العملية: ${state.offers[index].id!}',
+                                      'رقم العملية: SA-${state.offers[index].id!}',
                                       style: TextStyle(
                                           color: AppColor.lightBlue,
                                           fontSize: 17,

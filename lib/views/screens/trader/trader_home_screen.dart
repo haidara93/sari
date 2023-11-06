@@ -2,16 +2,24 @@
 import 'package:custome_mobile/business_logic/bloc/auth_bloc.dart';
 import 'package:custome_mobile/business_logic/bloc/calculate_result_bloc.dart';
 import 'package:custome_mobile/business_logic/bloc/calculator_panel_bloc.dart';
+import 'package:custome_mobile/business_logic/bloc/chapter_bloc.dart';
+import 'package:custome_mobile/business_logic/bloc/fee_bloc.dart';
 import 'package:custome_mobile/business_logic/bloc/fee_item_bloc.dart';
+import 'package:custome_mobile/business_logic/bloc/fee_select_bloc.dart';
 import 'package:custome_mobile/business_logic/bloc/flags_bloc.dart';
 import 'package:custome_mobile/business_logic/bloc/group_bloc.dart';
+import 'package:custome_mobile/business_logic/bloc/note_bloc.dart';
 import 'package:custome_mobile/business_logic/bloc/package_type_bloc.dart';
 import 'package:custome_mobile/business_logic/bloc/post_bloc.dart';
 import 'package:custome_mobile/business_logic/bloc/section_bloc.dart';
 import 'package:custome_mobile/business_logic/bloc/state_custome_bloc.dart';
+import 'package:custome_mobile/business_logic/bloc/sub_chapter_bloc.dart';
 import 'package:custome_mobile/business_logic/bloc/trader_log_bloc.dart';
 import 'package:custome_mobile/business_logic/cubit/bottom_nav_bar_cubit.dart';
+import 'package:custome_mobile/constants/enums.dart';
+import 'package:custome_mobile/data/models/accurdion_model.dart';
 import 'package:custome_mobile/data/models/package_model.dart';
+import 'package:custome_mobile/data/repositories/accurdion_repository.dart';
 import 'package:custome_mobile/data/services/calculator_service.dart';
 import 'package:custome_mobile/enum/panel_state.dart';
 import 'package:custome_mobile/helpers/color_constants.dart';
@@ -27,9 +35,11 @@ import 'package:custome_mobile/views/widgets/pens_taxes_widget.dart';
 import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_img/flutter_img.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter_typeahead/flutter_typeahead.dart';
+import 'package:shimmer/shimmer.dart';
 
 class TraderHomeScreen extends StatefulWidget {
   const TraderHomeScreen({Key? key}) : super(key: key);
@@ -77,6 +87,8 @@ class _TraderHomeScreenState extends State<TraderHomeScreen>
   void dispose() {
     // Remove the WidgetsBindingObserver when the state is disposed
     WidgetsBinding.instance.removeObserver(this);
+    scroll.dispose();
+
     super.dispose();
   }
 
@@ -685,7 +697,7 @@ class _TraderHomeScreenState extends State<TraderHomeScreen>
   Widget _buildPanelOption(BuildContext context) {
     return BlocConsumer<CalculatorPanelBloc, CalculatorPanelState>(
       listener: (context, state) {
-        if (state is CalculatorPanelOpened) {
+        if (state is CalculatorPanelOpened || state is TariffPanelOpened) {
           setState(() {
             _panelState = PanelState.open;
           });
@@ -702,6 +714,8 @@ class _TraderHomeScreenState extends State<TraderHomeScreen>
           } else {
             return _buildResultPanel(context);
           }
+        } else if (state is TariffPanelOpened) {
+          return _buildTariffPanel(context);
         } else {
           return const SizedBox.shrink();
         }
@@ -1760,5 +1774,553 @@ class _TraderHomeScreenState extends State<TraderHomeScreen>
         ),
       ),
     );
+  }
+
+  int? selected;
+  int? chapterselected;
+  int? subchapterselected;
+  int? feeselected;
+  bool shownote = false;
+  NoteType noteType = NoteType.None;
+  final ScrollController scroll = ScrollController();
+
+  Widget _buildTariffPanel(BuildContext context) {
+    return Directionality(
+      textDirection: TextDirection.rtl,
+      child: Scaffold(
+        backgroundColor: Colors.grey[200],
+        body: SingleChildScrollView(
+          child: Column(
+            children: [
+              SizedBox(
+                height: 30.h,
+              ),
+              Padding(
+                padding: EdgeInsets.all(8.h),
+                child: BlocConsumer<SectionBloc, SectionState>(
+                  listener: (context, state) {
+                    // if(state is)
+                  },
+                  builder: (context, state) {
+                    if (state is SectionLoadedSuccess) {
+                      return ListView.builder(
+                        key: Key('builder ${selected.toString()}'),
+                        shrinkWrap: true,
+                        controller: scroll,
+                        physics: const NeverScrollableScrollPhysics(),
+                        itemCount: state.sections.length,
+                        itemBuilder: (context, index) {
+                          return Container(
+                            margin: EdgeInsets.symmetric(
+                                vertical: 4.h, horizontal: 3.w),
+                            clipBehavior: Clip.antiAlias,
+                            decoration: BoxDecoration(
+                                color: Colors.white,
+                                borderRadius: BorderRadius.circular(10),
+                                border: selected == index
+                                    ? Border.all(
+                                        color: Colors.yellow[600]!, width: 2)
+                                    : null),
+                            child: ExpansionTile(
+                              key: Key(index.toString()), //attention
+                              initiallyExpanded: index == selected,
+
+                              title: Row(
+                                // crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Padding(
+                                    padding: const EdgeInsets.symmetric(
+                                        horizontal: 3),
+                                    child: SizedBox(
+                                      width: 36.w,
+                                      height: 36.h,
+                                      child: Img(
+                                        state.sections[index].image!,
+                                      ),
+                                    ),
+                                  ),
+                                  SizedBox(
+                                    width: 100.w,
+                                    child: Padding(
+                                      padding: const EdgeInsets.symmetric(
+                                          horizontal: 3),
+                                      child: Column(
+                                        children: [
+                                          FittedBox(
+                                            fit: BoxFit.scaleDown,
+                                            child: Text(
+                                              state.sections[index].name!,
+                                              style: const TextStyle(
+                                                  fontWeight: FontWeight.bold),
+                                            ),
+                                          ),
+                                          Text(
+                                            "(${state.sections[index].end!}__${state.sections[index].start!})",
+                                            style:
+                                                const TextStyle(fontSize: 14),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ),
+                                  Flexible(
+                                    child: Text(
+                                      state.sections[index].label!,
+                                      maxLines: 4,
+                                      overflow: TextOverflow.ellipsis,
+                                    ),
+                                  ),
+                                ],
+                              ),
+
+                              onExpansionChanged: (value) {
+                                if (value) {
+                                  BlocProvider.of<ChapterBloc>(context).add(
+                                      ChapterLoadEvent(
+                                          state.sections[index].id!));
+                                  setState(() {
+                                    selected = index;
+                                    chapterselected = -1;
+                                    subchapterselected = -1;
+                                  });
+
+                                  scroll.animateTo(
+                                      index +
+                                          MediaQuery.of(context).size.width / 2,
+                                      duration: const Duration(seconds: 1),
+                                      curve: Curves.easeIn);
+                                } else {
+                                  setState(() {
+                                    selected = -1;
+                                    shownote = false;
+                                    noteType = NoteType.None;
+                                  });
+                                }
+                              },
+                              children: buildChapterTiles(),
+                            ),
+                          );
+                        },
+                      );
+                    } else {
+                      return Shimmer.fromColors(
+                        baseColor: (Colors.grey[300])!,
+                        highlightColor: (Colors.grey[100])!,
+                        enabled: true,
+                        child: ListView.builder(
+                          shrinkWrap: true,
+                          itemBuilder: (_, __) => Container(
+                            margin: const EdgeInsets.symmetric(
+                                vertical: 4, horizontal: 3),
+                            clipBehavior: Clip.antiAlias,
+                            decoration: BoxDecoration(
+                              color: Colors.white,
+                              borderRadius: BorderRadius.circular(10),
+                            ),
+                            child: SizedBox(
+                              height: 90.h,
+                            ),
+                          ),
+                          itemCount: 10,
+                        ),
+                      );
+                    }
+                  },
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  buildFeesTiles(int index3) {
+    List<Widget> list = [];
+    list.add(BlocBuilder<FeeBloc, FeeState>(
+      builder: (context, state) {
+        if (state is FeeLoadedSuccess) {
+          return ListView.builder(
+            key: Key('feebuilder ${feeselected.toString()}'),
+            shrinkWrap: true,
+            itemCount: state.fees.length,
+            physics: const NeverScrollableScrollPhysics(),
+            itemBuilder: (context, index4) {
+              return ExpansionTile(
+                key: Key(index4.toString()),
+                initiallyExpanded: index4 == feeselected,
+                trailing: const SizedBox.shrink(),
+                title: InkWell(
+                  onTap: () {
+                    setState(() {
+                      selected = -1;
+                      chapterselected = -1;
+                      subchapterselected = -1;
+                    });
+                    BlocProvider.of<FeeSelectBloc>(context)
+                        .add(FeeSelectLoadEvent(id: state.fees[index4].id!));
+                    BlocProvider.of<CalculatorPanelBloc>(context)
+                        .add(CalculatorPanelHideEvent());
+                  },
+                  child: Row(
+                    children: [
+                      Flexible(
+                          child: Container(
+                        padding: const EdgeInsets.symmetric(horizontal: 5),
+                        width: double.infinity,
+                        decoration: BoxDecoration(
+                          color:
+                              feeselected == index4 ? null : Colors.grey[200],
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                        child: Text(
+                          "${state.fees[index4].id!} ${state.fees[index4].label!}",
+                          maxLines: 4,
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                      )),
+                    ],
+                  ),
+                ),
+
+                // children: buildfeesChildren(state.fees[index4]),
+              );
+            },
+          );
+        } else {
+          return Shimmer.fromColors(
+            baseColor: (Colors.grey[300])!,
+            highlightColor: (Colors.grey[100])!,
+            enabled: true,
+            child: SizedBox(
+              width: MediaQuery.of(context).size.width * .65,
+              child: ListView.builder(
+                shrinkWrap: true,
+                itemBuilder: (_, __) => Container(
+                  margin:
+                      const EdgeInsets.symmetric(vertical: 4, horizontal: 3),
+                  clipBehavior: Clip.antiAlias,
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                  child: SizedBox(
+                    height: 40.h,
+                  ),
+                ),
+                itemCount: 4,
+              ),
+            ),
+          );
+        }
+      },
+    ));
+    return list;
+  }
+
+  buildSubChapterTiles(int index2) {
+    List<Widget> list = [];
+    list.add(BlocBuilder<SubChapterBloc, SubChapterState>(
+      builder: (context, state) {
+        if (state is SubChapterLoadedSuccess) {
+          return ListView.builder(
+            key: Key('subchapterbuilder ${subchapterselected.toString()}'),
+            shrinkWrap: true,
+            itemCount: state.subchapters.length,
+            physics: const NeverScrollableScrollPhysics(),
+            itemBuilder: (context, index3) {
+              return Container(
+                // margin: const EdgeInsets.symmetric(horizontal: 4),
+                decoration: BoxDecoration(
+                  color: index3 == subchapterselected ? null : Colors.grey[200],
+                  gradient: index3 == subchapterselected
+                      ? const LinearGradient(
+                          colors: [
+                              Color.fromARGB(255, 229, 215, 94),
+                              Colors.white,
+                              Colors.white,
+                              Colors.white,
+                              Colors.white,
+                              Colors.white,
+                            ],
+                          begin: Alignment.topCenter,
+                          end: Alignment.bottomCenter)
+                      : null,
+                  borderRadius: BorderRadius.circular(5),
+                  border: index3 == subchapterselected
+                      ? Border.all(color: Colors.yellow[600]!, width: 2)
+                      : null,
+                ),
+                child: Column(
+                  children: [
+                    ExpansionTile(
+                      key: Key(index3.toString()), //attention
+                      initiallyExpanded: index3 == subchapterselected,
+
+                      title: Row(
+                        children: [
+                          Container(
+                            // margin: const EdgeInsets.symmetric(horizontal: 4),
+                            decoration: BoxDecoration(
+                              color: chapterselected == index2
+                                  ? null
+                                  : Colors.white,
+                              gradient: chapterselected == index2
+                                  ? const LinearGradient(
+                                      colors: [
+                                          Color.fromARGB(255, 229, 215, 94),
+                                          Colors.white,
+                                        ],
+                                      begin: Alignment.topCenter,
+                                      end: Alignment.bottomCenter)
+                                  : null,
+                              borderRadius: BorderRadius.circular(5),
+                            ),
+                            child: Center(
+                              child: subchapterselected == index3
+                                  ? const Icon(Icons.remove)
+                                  : const Icon(Icons.add),
+                            ),
+                          ),
+                          Flexible(
+                              child: Container(
+                            padding: const EdgeInsets.symmetric(horizontal: 5),
+                            width: double.infinity,
+                            child: Text(
+                              "${state.subchapters[index3].id!} ${state.subchapters[index3].label!}",
+                              maxLines: 4,
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                          )),
+                        ],
+                      ),
+
+                      onExpansionChanged: (value) {
+                        if (value) {
+                          BlocProvider.of<FeeBloc>(context)
+                              .add(FeeLoadEvent(state.subchapters[index3].id!));
+                          setState(() {
+                            subchapterselected = index3;
+                          });
+                        } else {
+                          setState(() {
+                            subchapterselected = -1;
+                            shownote = false;
+                            noteType = NoteType.None;
+                          });
+                        }
+                      },
+                      children: buildFeesTiles(index3),
+                    ),
+                    index3 != state.subchapters.length - 1
+                        ? const Divider(
+                            color: Color.fromARGB(255, 229, 215, 94),
+                          )
+                        : const SizedBox.shrink(),
+                  ],
+                ),
+              );
+            },
+          );
+        } else {
+          return Shimmer.fromColors(
+            baseColor: (Colors.grey[300])!,
+            highlightColor: (Colors.grey[100])!,
+            enabled: true,
+            child: SizedBox(
+              width: MediaQuery.of(context).size.width * .7,
+              child: ListView.builder(
+                shrinkWrap: true,
+                itemBuilder: (_, __) => Container(
+                  margin:
+                      const EdgeInsets.symmetric(vertical: 4, horizontal: 3),
+                  clipBehavior: Clip.antiAlias,
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                  child: SizedBox(
+                    height: 40.h,
+                  ),
+                ),
+                itemCount: 4,
+              ),
+            ),
+          );
+        }
+      },
+    ));
+
+    return list;
+  }
+
+  buildChapterTiles() {
+    // _CustomeTariffScreenState? stateobject =
+    //     context.findAncestorStateOfType<_CustomeTariffScreenState>();
+    List<Widget> list = [];
+    list.add(BlocBuilder<ChapterBloc, ChapterState>(
+      builder: (context, state) {
+        if (state is ChapterLoadedSuccess) {
+          return Container(
+            color: Colors.grey[200],
+            padding: const EdgeInsets.all(5.0),
+            child: ListView.builder(
+              key: Key('chapterbuilder ${chapterselected.toString()}'),
+              shrinkWrap: true,
+              itemCount: state.chapters.length,
+              physics: const NeverScrollableScrollPhysics(),
+              itemBuilder: (context, index2) {
+                return Container(
+                  margin:
+                      const EdgeInsets.symmetric(vertical: 1, horizontal: 4),
+                  decoration: BoxDecoration(
+                    color: Colors.grey[200],
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                  child: Column(
+                    children: [
+                      Theme(
+                        data: Theme.of(context)
+                            .copyWith(dividerColor: Colors.transparent),
+                        child: ExpansionTile(
+                          title: Container(
+                            decoration: BoxDecoration(
+                              gradient: chapterselected == index2
+                                  ? subchapterselected == -1
+                                      ? const LinearGradient(
+                                          colors: [
+                                              Color.fromARGB(255, 229, 215, 94),
+                                              Colors.white,
+                                            ],
+                                          begin: Alignment.topCenter,
+                                          end: Alignment.bottomCenter)
+                                      : null
+                                  : null,
+                              borderRadius: BorderRadius.circular(10),
+                            ),
+                            child: Row(
+                              children: [
+                                Container(
+                                  margin:
+                                      const EdgeInsets.symmetric(horizontal: 4),
+                                  decoration: BoxDecoration(
+                                    border: chapterselected == index2
+                                        ? subchapterselected == -1
+                                            ? null
+                                            : Border.all(
+                                                color: const Color.fromARGB(
+                                                    255, 229, 215, 94),
+                                                width: 1,
+                                              )
+                                        : Border.all(
+                                            color: const Color.fromARGB(
+                                                255, 229, 215, 94),
+                                            width: 1,
+                                          ),
+                                    borderRadius: BorderRadius.circular(5),
+                                  ),
+                                  child: Center(
+                                    child: chapterselected == index2
+                                        ? const Icon(Icons.remove)
+                                        : const Icon(Icons.add),
+                                  ),
+                                ),
+                                Flexible(
+                                    child: Container(
+                                  padding:
+                                      const EdgeInsets.symmetric(horizontal: 5),
+                                  width: double.infinity,
+                                  decoration: BoxDecoration(
+                                    color: chapterselected == index2
+                                        ? subchapterselected == -1
+                                            ? Colors.white
+                                            : null
+                                        : null,
+                                    gradient: chapterselected == index2
+                                        ? subchapterselected == -1
+                                            ? const LinearGradient(
+                                                colors: [
+                                                    Color.fromARGB(
+                                                        255, 229, 215, 94),
+                                                    Colors.white,
+                                                  ],
+                                                begin: Alignment.topCenter,
+                                                end: Alignment.bottomCenter)
+                                            : null
+                                        : null,
+                                    borderRadius: BorderRadius.circular(10),
+                                  ),
+                                  child: Text(
+                                    "${state.chapters[index2].id!} ${state.chapters[index2].label!}",
+                                    maxLines: 4,
+                                    overflow: TextOverflow.ellipsis,
+                                  ),
+                                )),
+                              ],
+                            ),
+                          ),
+                          key: Key(index2.toString()), //attention
+                          initiallyExpanded: index2 == chapterselected,
+
+                          onExpansionChanged: (value) {
+                            if (value) {
+                              BlocProvider.of<SubChapterBloc>(context).add(
+                                  SubChapterLoadEvent(
+                                      state.chapters[index2].id!));
+                              setState(() {
+                                chapterselected = index2;
+
+                                subchapterselected = -1;
+                              });
+                            } else {
+                              setState(() {
+                                chapterselected = -1;
+                                shownote = false;
+                                noteType = NoteType.None;
+                              });
+                            }
+                          },
+                          children: buildSubChapterTiles(index2),
+                        ),
+                      ),
+                      const Divider(
+                        color: Color.fromARGB(255, 229, 215, 94),
+                      ),
+                    ],
+                  ),
+                );
+              },
+            ),
+          );
+        } else {
+          return Shimmer.fromColors(
+            baseColor: (Colors.grey[300])!,
+            highlightColor: (Colors.grey[100])!,
+            enabled: true,
+            child: SizedBox(
+              width: MediaQuery.of(context).size.width * .75,
+              child: ListView.builder(
+                shrinkWrap: true,
+                itemBuilder: (_, __) => Container(
+                  margin:
+                      const EdgeInsets.symmetric(vertical: 4, horizontal: 3),
+                  clipBehavior: Clip.antiAlias,
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                  child: SizedBox(
+                    height: 40.h,
+                  ),
+                ),
+                itemCount: 4,
+              ),
+            ),
+          );
+        }
+      },
+    ));
+
+    return list;
   }
 }

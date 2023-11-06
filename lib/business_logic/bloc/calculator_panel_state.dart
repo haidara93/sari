@@ -10,3 +10,5 @@ class CalculatorPanelState extends Equatable {
 class CalculatorPanelHidden extends CalculatorPanelState {}
 
 class CalculatorPanelOpened extends CalculatorPanelState {}
+
+class TariffPanelOpened extends CalculatorPanelState {}
