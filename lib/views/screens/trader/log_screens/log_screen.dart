@@ -205,68 +205,72 @@ class _LogScreenState extends State<LogScreen>
                                 .difference(state.offers[index].createdDate!);
                             return Card(
                               child: Padding(
-                                padding: const EdgeInsets.symmetric(
-                                    horizontal: 15.0, vertical: 7.5),
-                                child: Column(
-                                  mainAxisAlignment: MainAxisAlignment.start,
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Text(
-                                      'رقم العملية: SA-${state.offers[index].id!}',
-                                      style: TextStyle(
-                                          color: AppColor.lightBlue,
-                                          fontSize: 17,
-                                          fontWeight: FontWeight.bold),
-                                    ),
-                                    Text(
-                                        'الحالة: ${getOfferStatus(state.offers[index].orderStatus!)}'),
-                                    Text(
-                                        'نوع العملية: ${getOfferType(state.offers[index].offerType!)}'),
-                                    Text(
-                                        'الأمانة الجمركية: ${state.offers[index].costumeagency!.name}'),
-                                    Text(
-                                        'نوع البضاعة: ${state.offers[index].product!.label!}'),
-                                    SizedBox(
-                                      height: 5.h,
-                                    ),
-                                    Row(
+                                  padding: EdgeInsets.symmetric(vertical: 5.h),
+                                  child: ListTile(
+                                    onTap: () {
+                                      Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                            builder: (context) =>
+                                                OfferDetailsScreen(
+                                                    offer: state.offers[index]),
+                                          ));
+                                    },
+                                    leading: Container(
+                                        height: 75.h,
+                                        width: 75.w,
+                                        decoration: BoxDecoration(
+                                            color: AppColor.lightGoldenYellow,
+                                            borderRadius:
+                                                BorderRadius.circular(5)),
+                                        child: Center(
+                                            child: Image.asset(
+                                          "assets/images/naval_shipping.png",
+                                          height: 45.h,
+                                          width: 45.w,
+                                          fit: BoxFit.fill,
+                                        ))),
+                                    title: Column(
                                       mainAxisAlignment:
-                                          MainAxisAlignment.spaceBetween,
+                                          MainAxisAlignment.start,
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
                                       children: [
                                         Text(
-                                          diffText(diff),
+                                          'رقم العملية: SA-${state.offers[index].id!}',
                                           style: TextStyle(
-                                            color: AppColor.lightBlue,
-                                            fontSize: 15,
-                                          ),
+                                              // color: AppColor.lightBlue,
+                                              fontSize: 15.sp,
+                                              fontWeight: FontWeight.bold),
                                         ),
-                                        GestureDetector(
-                                          onTap: () {
-                                            Navigator.push(
-                                                context,
-                                                MaterialPageRoute(
-                                                  builder: (context) =>
-                                                      OfferDetailsScreen(
-                                                          offer: state
-                                                              .offers[index]),
-                                                ));
-                                          },
-                                          child: Padding(
-                                            padding: const EdgeInsets.all(8.0),
-                                            child: Text(
-                                              "التفاصيل",
-                                              style: TextStyle(
-                                                  color: AppColor.lightBlue,
-                                                  fontSize: 17,
-                                                  fontWeight: FontWeight.bold),
-                                            ),
-                                          ),
-                                        ),
+                                        Text(
+                                            'نوع العملية: ${getOfferType(state.offers[index].offerType!)}'),
+                                        Text(
+                                            '${state.offers[index].origin!.label!}  --->  ${state.offers[index].costumestate!.name}'),
+                                        // Text(
+                                        //     'نوع البضاعة: ${state.offers[index].product!.label!}'),
                                       ],
                                     ),
-                                  ],
-                                ),
-                              ),
+                                    trailing: GestureDetector(
+                                      onTap: () {
+                                        Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                              builder: (context) =>
+                                                  OfferDetailsScreen(
+                                                      offer:
+                                                          state.offers[index]),
+                                            ));
+                                      },
+                                      child: Padding(
+                                        padding: const EdgeInsets.all(8.0),
+                                        child: Icon(
+                                          Icons.more_vert,
+                                          color: AppColor.goldenYellow,
+                                        ),
+                                      ),
+                                    ),
+                                  )),
                             );
                           });
                 } else {

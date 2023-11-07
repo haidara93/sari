@@ -1,3 +1,4 @@
+import 'package:awesome_snackbar_content/awesome_snackbar_content.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:custome_mobile/business_logic/bloc/agency_bloc.dart';
 import 'package:custome_mobile/business_logic/bloc/attachment_type_bloc.dart';
@@ -456,10 +457,25 @@ class _StepperOrderBrokerScreenState extends State<StepperOrderBrokerScreen> {
                         isActive: false,
                         title: GestureDetector(
                           onTap: () {
-                            const snackBar = SnackBar(
-                              content: Text(
-                                  'لا يمكن الانتقال إلى هذه الشاشة إلا من خلال اكمال التفاصيل والضغط على زر حساب الرسوم.'),
-                              duration: Duration(seconds: 2),
+                            var snackBar = SnackBar(
+                              elevation: 0,
+                              duration: const Duration(seconds: 4),
+                              backgroundColor: Colors.transparent,
+                              content: Column(
+                                children: [
+                                  AwesomeSnackbarContent(
+                                    title: 'تنبيه',
+                                    message:
+                                        'لا يمكن الانتقال إلى هذه الشاشة إلا من خلال اكمال التفاصيل والضغط على زر حساب الرسوم.',
+
+                                    /// change contentType to ContentType.success, ContentType.warning or ContentType.help for variants
+                                    contentType: ContentType.warning,
+                                  ),
+                                  SizedBox(
+                                    height: 90.h,
+                                  ),
+                                ],
+                              ),
                             );
 
                             ScaffoldMessenger.of(context)
@@ -475,10 +491,25 @@ class _StepperOrderBrokerScreenState extends State<StepperOrderBrokerScreen> {
                         isActive: false,
                         title: GestureDetector(
                           onTap: () {
-                            const snackBar = SnackBar(
-                              content: Text(
-                                  'لا يمكن الانتقال إلى هذه الشاشة إلا بعد حساب الرسوم.'),
-                              duration: Duration(seconds: 2),
+                            var snackBar = SnackBar(
+                              elevation: 0,
+                              duration: const Duration(seconds: 4),
+                              backgroundColor: Colors.transparent,
+                              content: Column(
+                                children: [
+                                  AwesomeSnackbarContent(
+                                    title: 'تنبيه',
+                                    message:
+                                        'لا يمكن الانتقال إلى هذه الشاشة إلا بعد حساب الرسوم.',
+
+                                    /// change contentType to ContentType.success, ContentType.warning or ContentType.help for variants
+                                    contentType: ContentType.warning,
+                                  ),
+                                  SizedBox(
+                                    height: 90.h,
+                                  ),
+                                ],
+                              ),
                             );
 
                             ScaffoldMessenger.of(context)

@@ -1,3 +1,4 @@
+import 'package:awesome_snackbar_content/awesome_snackbar_content.dart';
 import 'package:custome_mobile/business_logic/bloc/cost_bloc.dart';
 import 'package:custome_mobile/constants/text_constants.dart';
 import 'package:custome_mobile/data/models/offer_model.dart';
@@ -251,18 +252,49 @@ class _OrderCostScreenState extends State<OrderCostScreen> {
                     listener: (context, state) {
                       if (state is CostListLoadedSuccess) {
                         Navigator.pop(context);
-                        const snackBar = SnackBar(
-                          content: Text('تم إدخال التكاليف بنجاح.'),
-                          duration: Duration(seconds: 4),
+
+                        var snackBar = SnackBar(
+                          elevation: 0,
+                          duration: const Duration(seconds: 4),
+                          backgroundColor: Colors.transparent,
+                          content: Column(
+                            children: [
+                              AwesomeSnackbarContent(
+                                title: 'تم',
+                                message: 'تم إدخال التكاليف بنجاح.',
+
+                                /// change contentType to ContentType.success, ContentType.warning or ContentType.help for variants
+                                contentType: ContentType.success,
+                              ),
+                              SizedBox(
+                                height: 90.h,
+                              ),
+                            ],
+                          ),
                         );
 
                         ScaffoldMessenger.of(context).showSnackBar(snackBar);
                       }
                       if (state is CostLoadedFailed) {
-                        const snackBar = SnackBar(
-                          content: Text(
-                              'حدث خطأ أثناء إرسال التكاليف الرجاء المحاولة مرة أخرى.\n اذا تكرر هذا الخطأ الرجاء التواصل معنا لحل هذا الخطأ.'),
-                          duration: Duration(seconds: 4),
+                        var snackBar = SnackBar(
+                          elevation: 0,
+                          duration: const Duration(seconds: 4),
+                          backgroundColor: Colors.transparent,
+                          content: Column(
+                            children: [
+                              AwesomeSnackbarContent(
+                                title: 'خطأ',
+                                message:
+                                    'حدث خطأ أثناء إرسال التكاليف الرجاء المحاولة مرة أخرى.\n اذا تكرر هذا الخطأ الرجاء التواصل معنا لحل هذا الخطأ.',
+
+                                /// change contentType to ContentType.success, ContentType.warning or ContentType.help for variants
+                                contentType: ContentType.failure,
+                              ),
+                              SizedBox(
+                                height: 90.h,
+                              ),
+                            ],
+                          ),
                         );
 
                         ScaffoldMessenger.of(context).showSnackBar(snackBar);

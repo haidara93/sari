@@ -284,7 +284,7 @@ class _TraderHomeScreenState extends State<TraderHomeScreen>
                               mainAxisAlignment: MainAxisAlignment.spaceAround,
                               children: [
                                 CircleAvatar(
-                                  backgroundColor: Colors.yellow,
+                                  backgroundColor: AppColor.goldenYellow,
                                   radius: 35.h,
                                 ),
                                 Text(
@@ -311,8 +311,24 @@ class _TraderHomeScreenState extends State<TraderHomeScreen>
                                 "الملف الشخصي",
                                 style: TextStyle(
                                     color: Colors.white,
-                                    fontSize: 16.sp,
+                                    fontSize: 14.sp,
                                     fontWeight: FontWeight.bold),
+                              ),
+                              trailing: Container(
+                                width: 35.w,
+                                height: 20.h,
+                                decoration: BoxDecoration(
+                                    color: AppColor.goldenYellow,
+                                    borderRadius: BorderRadius.circular(2)),
+                                child: Center(
+                                  child: Text(
+                                    "soon",
+                                    style: TextStyle(
+                                      color: Colors.white,
+                                      fontSize: 12.sp,
+                                    ),
+                                  ),
+                                ),
                               ),
                             ),
                             ListTile(
@@ -327,6 +343,22 @@ class _TraderHomeScreenState extends State<TraderHomeScreen>
                                     fontSize: 16.sp,
                                     fontWeight: FontWeight.bold),
                               ),
+                              trailing: Container(
+                                width: 35.w,
+                                height: 20.h,
+                                decoration: BoxDecoration(
+                                    color: AppColor.goldenYellow,
+                                    borderRadius: BorderRadius.circular(2)),
+                                child: Center(
+                                  child: Text(
+                                    "soon",
+                                    style: TextStyle(
+                                      color: Colors.white,
+                                      fontSize: 12.sp,
+                                    ),
+                                  ),
+                                ),
+                              ),
                             ),
                             ListTile(
                               leading: Image.asset(
@@ -339,6 +371,22 @@ class _TraderHomeScreenState extends State<TraderHomeScreen>
                                     color: Colors.white,
                                     fontSize: 16.sp,
                                     fontWeight: FontWeight.bold),
+                              ),
+                              trailing: Container(
+                                width: 35.w,
+                                height: 20.h,
+                                decoration: BoxDecoration(
+                                    color: AppColor.goldenYellow,
+                                    borderRadius: BorderRadius.circular(2)),
+                                child: Center(
+                                  child: Text(
+                                    "soon",
+                                    style: TextStyle(
+                                      color: Colors.white,
+                                      fontSize: 12.sp,
+                                    ),
+                                  ),
+                                ),
                               ),
                             ),
                             ListTile(
@@ -353,6 +401,22 @@ class _TraderHomeScreenState extends State<TraderHomeScreen>
                                     fontSize: 16.sp,
                                     fontWeight: FontWeight.bold),
                               ),
+                              trailing: Container(
+                                width: 35.w,
+                                height: 20.h,
+                                decoration: BoxDecoration(
+                                    color: AppColor.goldenYellow,
+                                    borderRadius: BorderRadius.circular(2)),
+                                child: Center(
+                                  child: Text(
+                                    "soon",
+                                    style: TextStyle(
+                                      color: Colors.white,
+                                      fontSize: 12.sp,
+                                    ),
+                                  ),
+                                ),
+                              ),
                             ),
                             ListTile(
                               leading: SvgPicture.asset(
@@ -365,6 +429,22 @@ class _TraderHomeScreenState extends State<TraderHomeScreen>
                                     color: Colors.white,
                                     fontSize: 16.sp,
                                     fontWeight: FontWeight.bold),
+                              ),
+                              trailing: Container(
+                                width: 35.w,
+                                height: 20.h,
+                                decoration: BoxDecoration(
+                                    color: AppColor.goldenYellow,
+                                    borderRadius: BorderRadius.circular(2)),
+                                child: Center(
+                                  child: Text(
+                                    "soon",
+                                    style: TextStyle(
+                                      color: Colors.white,
+                                      fontSize: 12.sp,
+                                    ),
+                                  ),
+                                ),
                               ),
                             ),
                             const Divider(

@@ -1,5 +1,6 @@
 // import 'dart:io';
 
+import 'package:awesome_snackbar_content/awesome_snackbar_content.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:custome_mobile/business_logic/bloc/additional_attachment_bloc.dart';
 import 'package:custome_mobile/business_logic/bloc/attachment_bloc.dart';
@@ -301,9 +302,25 @@ class _OrderAttachmentScreenState extends State<OrderAttachmentScreen> {
                         AdditionalAttachmentState>(
                       listener: (context, state) {
                         Navigator.pop(context);
-                        const snackBar = SnackBar(
-                          content: Text('تم إرسال المرفقات الإضافية بنجاح.'),
-                          duration: Duration(seconds: 4),
+
+                        var snackBar = SnackBar(
+                          elevation: 0,
+                          duration: const Duration(seconds: 4),
+                          backgroundColor: Colors.transparent,
+                          content: Column(
+                            children: [
+                              AwesomeSnackbarContent(
+                                title: 'تم',
+                                message: 'تم إرسال المرفقات الإضافية بنجاح.',
+
+                                /// change contentType to ContentType.success, ContentType.warning or ContentType.help for variants
+                                contentType: ContentType.success,
+                              ),
+                              SizedBox(
+                                height: 90.h,
+                              ),
+                            ],
+                          ),
                         );
 
                         ScaffoldMessenger.of(context).showSnackBar(snackBar);

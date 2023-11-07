@@ -5,6 +5,7 @@ import 'package:custome_mobile/data/services/calculator_service.dart';
 import 'package:custome_mobile/helpers/color_constants.dart';
 import 'package:custome_mobile/views/screens/trader/log_screens/broker_attachments_screen.dart';
 import 'package:custome_mobile/views/screens/trader/log_screens/broker_costs_screen.dart';
+import 'package:custome_mobile/views/screens/trader/log_screens/order_tracking_screen.dart';
 import 'package:custome_mobile/views/widgets/custom_app_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -234,52 +235,66 @@ class OfferDetailsScreen extends StatelessWidget {
                 ),
               ),
             ),
-            const Spacer(),
-            // Row(
-            //   mainAxisAlignment: MainAxisAlignment.spaceAround,
-            //   children: [
-            //     CustomButton(
-            //       onTap: () {},
-            //       color: AppColor.deepYellow,
-            //       title: const SizedBox(
-            //           width: 100, child: Center(child: Text("رفض"))),
-            //     ),
-            //     BlocConsumer<OfferBloc, OfferState>(listener: (context, state) {
-            //       if (state is OfferListLoadedSuccess) {
-            //         Navigator.push(
-            //             context,
-            //             MaterialPageRoute(
-            //               // builder: (context) => OrderCostScreen(offer: offer),
-            //               builder: (context) =>
-            //                   OrderAttachmentScreen(offer: offer),
-            //             ));
-            //       }
-            //     }, builder: (context, state) {
-            //       if (state is OfferListLoadedSuccess) {
-            //         return CustomButton(
-            //           onTap: () {
-            //             BlocProvider.of<OfferBloc>(context)
-            //                 .add(OfferStatusUpdateEvent(offer.id!, "R"));
-            //           },
-            //           color: AppColor.deepYellow,
-            //           title: SizedBox(
-            //               width: 250.w,
-            //               child: const Center(
-            //                   child: Text("موافقة وادخال التكاليف"))),
-            //         );
-            //       } else {
-            //         return CustomButton(
-            //           onTap: () {},
-            //           color: AppColor.deepYellow,
-            //           title: SizedBox(
-            //               width: 250.w,
-            //               child:
-            //                   const Center(child: CircularProgressIndicator())),
-            //         );
-            //       }
-            //     }),
-            //   ],
-            // ),
+            SizedBox(
+              height: 15.h,
+            ),
+            Card(
+              clipBehavior: Clip.antiAlias,
+              shape: const RoundedRectangleBorder(
+                  borderRadius: BorderRadius.all(
+                Radius.circular(15),
+              )),
+              margin: EdgeInsets.symmetric(horizontal: 10.w),
+              elevation: 1,
+              color: Colors.white,
+              child: Padding(
+                padding:
+                    EdgeInsets.symmetric(horizontal: 15.w, vertical: 7.5.h),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    const Text("تتبع العملية:"),
+                    GestureDetector(
+                      onTap: () {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => BrokerAttachmentsScreen(
+                                  attachments: offer.attachments!,
+                                  additionalAttachments:
+                                      offer.additional_attachments!,
+                                  offerId: offer.id!,
+                                  offerState: offer.orderStatus!),
+                            ));
+                      },
+                      child: Padding(
+                        padding: EdgeInsets.all(8.h),
+                        child: const Text(
+                          "تقديم البيان الجمركي",
+                        ),
+                      ),
+                    ),
+                    GestureDetector(
+                      onTap: () {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) =>
+                                  OrderTrackingScreen(offernum: offer.id!),
+                            ));
+                      },
+                      child: Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Icon(
+                          Icons.more_vert,
+                          color: AppColor.goldenYellow,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
             SizedBox(
               height: 30.h,
             ),

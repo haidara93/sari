@@ -1,6 +1,6 @@
 import 'dart:math';
 
-import 'package:cached_network_image/cached_network_image.dart';
+import 'package:awesome_snackbar_content/awesome_snackbar_content.dart';
 import 'package:custome_mobile/business_logic/bloc/group_bloc.dart';
 import 'package:custome_mobile/business_logic/bloc/post_bloc.dart';
 import 'package:custome_mobile/views/widgets/calculator_loading_screen.dart';
@@ -124,9 +124,21 @@ class _TraderMainScreenState extends State<TraderMainScreen> {
                                           listener: (context, state3) {
                                             if (state3
                                                 is PostUnsavedSuccessfully) {
-                                              const snackBar = SnackBar(
-                                                content: Text(
-                                                    'تم حذف المنشور من المحفوظات'),
+                                              var snackBar = SnackBar(
+                                                elevation: 0,
+                                                duration:
+                                                    const Duration(seconds: 4),
+                                                backgroundColor:
+                                                    Colors.transparent,
+                                                content: AwesomeSnackbarContent(
+                                                  title: 'تم',
+                                                  message:
+                                                      'تم إزالة المنشور من المحفوظات!',
+
+                                                  /// change contentType to ContentType.success, ContentType.warning or ContentType.help for variants
+                                                  contentType:
+                                                      ContentType.success,
+                                                ),
                                               );
                                               BlocProvider.of<PostBloc>(context)
                                                   .add(PostSaveEvent(
@@ -175,10 +187,33 @@ class _TraderMainScreenState extends State<TraderMainScreen> {
                                                                   if ((state2
                                                                           is GroupListLoadedSuccess) &
                                                                       savepost) {
-                                                                    const snackBar =
+                                                                    var snackBar =
                                                                         SnackBar(
-                                                                      content: Text(
-                                                                          'تم حفظ المنشور في المحفوظات'),
+                                                                      elevation:
+                                                                          0,
+                                                                      duration: const Duration(
+                                                                          seconds:
+                                                                              4),
+                                                                      backgroundColor:
+                                                                          Colors
+                                                                              .transparent,
+                                                                      content:
+                                                                          Column(
+                                                                        children: [
+                                                                          AwesomeSnackbarContent(
+                                                                            title:
+                                                                                'تم',
+                                                                            message:
+                                                                                'تم حفظ المنشور في المحفوظات!',
+                                                                            contentType:
+                                                                                ContentType.success,
+                                                                          ),
+                                                                          SizedBox(
+                                                                            height:
+                                                                                90.h,
+                                                                          ),
+                                                                        ],
+                                                                      ),
                                                                     );
                                                                     BlocProvider.of<PostBloc>(context).add(PostSaveEvent(
                                                                         state

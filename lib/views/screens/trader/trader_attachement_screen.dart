@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:awesome_snackbar_content/awesome_snackbar_content.dart';
 import 'package:custome_mobile/business_logic/bloc/attachment_bloc.dart';
 import 'package:custome_mobile/business_logic/bloc/attachment_type_bloc.dart';
 import 'package:custome_mobile/business_logic/bloc/attachments_list_bloc.dart';
@@ -481,15 +482,28 @@ class _TraderAttachementScreenState extends State<TraderAttachementScreen> {
               }
               if (state is AttachmentLoadedFailed) {
                 Navigator.pop(context);
-                const snackBar = SnackBar(
-                  content:
-                      Text('حدث خطأ أثناء تحميل المرفق سنحاول حل المشكلة.'),
-                  duration: Duration(seconds: 2),
-                );
 
+                var snackBar = SnackBar(
+                  elevation: 0,
+                  duration: const Duration(seconds: 4),
+                  backgroundColor: Colors.transparent,
+                  content: Column(
+                    children: [
+                      AwesomeSnackbarContent(
+                        title: 'خطأ',
+                        message:
+                            'حدث خطأ أثناء تحميل المرفق سنحاول حل المشكلة.',
+
+                        /// change contentType to ContentType.success, ContentType.warning or ContentType.help for variants
+                        contentType: ContentType.failure,
+                      ),
+                      SizedBox(
+                        height: 90.h,
+                      ),
+                    ],
+                  ),
+                );
                 ScaffoldMessenger.of(context).showSnackBar(snackBar);
-                print(state.errortext);
-                print(state.errortext);
               }
             },
             child: GestureDetector(
@@ -697,23 +711,51 @@ class _TraderAttachementScreenState extends State<TraderAttachementScreen> {
                                     MaterialPageRoute(
                                       builder: (context) => const ControlView(),
                                     ));
-                                const snackBar = SnackBar(
-                                  content: Text(
-                                      'تم اضافة الطلب بنجاح سيتم ارساله للمخلص المختص.'),
-                                  duration: Duration(seconds: 4),
-                                );
 
+                                var snackBar = SnackBar(
+                                  elevation: 0,
+                                  duration: const Duration(seconds: 4),
+                                  backgroundColor: Colors.transparent,
+                                  content: Column(
+                                    children: [
+                                      AwesomeSnackbarContent(
+                                        title: 'تم',
+                                        message:
+                                            'تم اضافة الطلب بنجاح سيتم ارساله للمخلص المختص.',
+
+                                        /// change contentType to ContentType.success, ContentType.warning or ContentType.help for variants
+                                        contentType: ContentType.success,
+                                      ),
+                                      SizedBox(
+                                        height: 90.h,
+                                      ),
+                                    ],
+                                  ),
+                                );
                                 ScaffoldMessenger.of(context)
                                     .showSnackBar(snackBar);
                               }
                               if (offerstate is OfferLoadedFailed) {
-                                print(offerstate.errortext);
-                                const snackBar = SnackBar(
-                                  content: Text(
-                                      'حدث خطأ أثناء معالجة الطلب الرجاء المحاولة مرة أخرى.'),
-                                  duration: Duration(seconds: 4),
-                                );
+                                var snackBar = SnackBar(
+                                  elevation: 0,
+                                  duration: const Duration(seconds: 4),
+                                  backgroundColor: Colors.transparent,
+                                  content: Column(
+                                    children: [
+                                      AwesomeSnackbarContent(
+                                        title: 'تنبيه',
+                                        message:
+                                            'حدث خطأ أثناء معالجة الطلب الرجاء المحاولة مرة أخرى.',
 
+                                        /// change contentType to ContentType.success, ContentType.warning or ContentType.help for variants
+                                        contentType: ContentType.warning,
+                                      ),
+                                      SizedBox(
+                                        height: 90.h,
+                                      ),
+                                    ],
+                                  ),
+                                );
                                 ScaffoldMessenger.of(context)
                                     .showSnackBar(snackBar);
                               }
