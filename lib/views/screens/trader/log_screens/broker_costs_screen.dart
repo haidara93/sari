@@ -206,6 +206,7 @@ class BrokerCostDetailsScreen extends StatelessWidget {
                             ListView.builder(
                               shrinkWrap: true,
                               itemCount: offer.costs!.length,
+                              physics: const NeverScrollableScrollPhysics(),
                               itemBuilder: (context, index) {
                                 return Row(
                                   mainAxisAlignment:

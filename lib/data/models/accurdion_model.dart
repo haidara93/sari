@@ -238,9 +238,9 @@ class FeeSet {
     id = json['id'];
     label = json['label'];
     export = json['export'];
-    restrictionExport = json['restriction_export'];
-    review = json['review'];
-    reviewValue = json['review_value'];
+    restrictionExport = json['restriction_export'] ?? "";
+    review = json['review'] ?? "";
+    reviewValue = json['review_value'] ?? "";
     idParent3 = json['id_parent_3'];
     if (json['import_fees'] != null) {
       importFees = <ImportFee>[];

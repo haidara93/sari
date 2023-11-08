@@ -33,12 +33,13 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
       child: Padding(
         padding: EdgeInsets.symmetric(horizontal: 12.w),
         child: Column(children: [
-          const Spacer(),
-          // SizedBox(
-          //   height: 20.h,
-          // ),
+          // const Spacer(),
+          SizedBox(
+            height: 20.h,
+          ),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Row(
                 children: [
@@ -47,15 +48,18 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
                           onTap: () {
                             Navigator.pop(context);
                           },
-                          child: SizedBox(
-                            // margin:
-                            //     EdgeInsets.symmetric(vertical: 13.h, horizontal: 3.w),
-                            height: 35.h,
-                            width: 35.w,
+                          child: Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: SizedBox(
+                              // margin:
+                              //     EdgeInsets.symmetric(vertical: 13.h, horizontal: 3.w),
+                              height: 35.h,
+                              width: 35.w,
 
-                            child: Center(
-                              child: Image.asset(
-                                  "assets/icons/ios_back_arrow.png"),
+                              child: Center(
+                                child: Image.asset(
+                                    "assets/icons/ios_back_arrow.png"),
+                              ),
                             ),
                           ),
                         )
@@ -63,15 +67,18 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
                           onTap: () {
                             scaffoldKey!.currentState!.openDrawer();
                           },
-                          child: SizedBox(
-                            // margin:
-                            //     EdgeInsets.symmetric(vertical: 13.h, horizontal: 3.w),
-                            height: 35.h,
-                            width: 35.w,
+                          child: Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: SizedBox(
+                              // margin:
+                              //     EdgeInsets.symmetric(vertical: 13.h, horizontal: 3.w),
+                              height: 35.h,
+                              width: 35.w,
 
-                            child: Center(
-                              child:
-                                  Image.asset("assets/icons/drawer_icon.png"),
+                              child: Center(
+                                child:
+                                    Image.asset("assets/icons/drawer_icon.png"),
+                              ),
                             ),
                           ),
                         ),
@@ -95,27 +102,27 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
                   ),
                 ],
               ),
+              SizedBox(
+                height: 95.h,
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    Text(
+                      title,
+                      style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 28.sp,
+                          fontWeight: FontWeight.bold),
+                    ),
+                  ],
+                ),
+              ),
               Image.asset(
                 "assets/images/sari_white_logo.png",
                 height: 35.h,
               ),
             ],
           ),
-          SizedBox(
-            height: 7.h,
-          ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Text(
-                title,
-                style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 28.sp,
-                    fontWeight: FontWeight.bold),
-              ),
-            ],
-          )
         ]),
       ),
     );

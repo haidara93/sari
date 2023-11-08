@@ -1039,30 +1039,16 @@ class _StepperOrderBrokerScreenState extends State<StepperOrderBrokerScreen> {
                                       contentPadding: EdgeInsets.zero,
                                       suffixIcon: GestureDetector(
                                         onTap: () {
-                                          // BlocProvider.of<NoteBloc>(context).add(
-                                          //     NoteLoadEvent(
-                                          //         state.chapters[index2].id!.toString(),
-                                          //         NoteType.Chapter));
-                                          // if (!shownote) {
-                                          //   setState(() {
-                                          //     chapterselected = index2;
-
-                                          //     subchapterselected = -1;
-                                          //     shownote = true;
-                                          //     noteType = NoteType.Chapter;
-                                          //   });
-                                          // } else {
-                                          //   setState(() {
-                                          //     chapterselected = -1;
-                                          //     shownote = false;
-                                          //     noteType = NoteType.None;
-                                          //   });
-                                          // }
                                           BlocProvider.of<CalculatorPanelBloc>(
                                                   context)
                                               .add(TariffPanelOpenEvent());
                                           BlocProvider.of<SectionBloc>(context)
                                               .add(SectionLoadEvent());
+                                          FocusManager.instance.primaryFocus
+                                              ?.unfocus();
+                                          BlocProvider.of<BottomNavBarCubit>(
+                                                  context)
+                                              .emitShow();
                                         },
                                         child: Image.asset(
                                           "assets/icons/expansionTileIcon.png",
@@ -1394,7 +1380,10 @@ class _StepperOrderBrokerScreenState extends State<StepperOrderBrokerScreen> {
                                           ),
                                           dropdownStyleData: DropdownStyleData(
                                             width: double.infinity,
-                                            maxHeight: 750.h,
+                                            maxHeight: MediaQuery.of(context)
+                                                    .size
+                                                    .height -
+                                                142.h,
                                             padding: const EdgeInsets.all(8.0),
                                             decoration: BoxDecoration(
                                               borderRadius:
@@ -2063,7 +2052,7 @@ class _StepperOrderBrokerScreenState extends State<StepperOrderBrokerScreen> {
                     ),
                   ),
                   SizedBox(
-                    height: 20.h,
+                    height: 7.h,
                   ),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -2082,7 +2071,7 @@ class _StepperOrderBrokerScreenState extends State<StepperOrderBrokerScreen> {
                           if (state is CalculateResultLoading) {
                             return CustomButton(
                                 title: SizedBox(
-                                    width: 150.w,
+                                    width: 250.w,
                                     child: const Center(
                                         child: CircularProgressIndicator())),
                                 // color: AppColor.deepYellow,
@@ -2093,8 +2082,9 @@ class _StepperOrderBrokerScreenState extends State<StepperOrderBrokerScreen> {
                           } else {
                             return CustomButton(
                                 title: SizedBox(
-                                    width: 150.w,
-                                    child: const Center(child: Text("الرسوم"))),
+                                    width: 250.w,
+                                    child: const Center(
+                                        child: Text("حساب الرسوم"))),
                                 // color: AppColor.deepYellow,
                                 onTap: () {
                                   result.insurance =
@@ -2153,7 +2143,7 @@ class _StepperOrderBrokerScreenState extends State<StepperOrderBrokerScreen> {
                     ],
                   ),
                   SizedBox(
-                    height: 20.h,
+                    height: 7.h,
                   ),
                 ]),
               ),

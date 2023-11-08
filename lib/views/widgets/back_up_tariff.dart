@@ -152,252 +152,229 @@ class _CustomeTariffScreenState extends State<CustomeTariffScreen> {
         },
       ));
     } else {
-      list.add(Container(
-        color: Colors.white,
-        child: ListView(
-          shrinkWrap: true,
-          physics: const NeverScrollableScrollPhysics(),
-          children: [
-            ExpansionTile(
-              title: Directionality(
-                textDirection: TextDirection.rtl,
-                child: Row(
-                  children: [
-                    Container(
-                      margin: const EdgeInsets.symmetric(horizontal: 4),
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.circular(10),
-                      ),
-                      child: Center(
-                        child:
-                            Image.asset("assets/icons/trade_description.png"),
-                      ),
-                    ),
-                    Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 5),
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.circular(10),
-                      ),
-                      child: const Text(
-                        "الوصف التجاري",
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-              onExpansionChanged: (value) {
-                if (value) {
-                  BlocProvider.of<FeeTradeDescriptionBloc>(context)
-                      .add(FeeTradeDescriptionLoadEvent(fe.id!));
-                } else {}
-              },
-              children: buildFeesTradeDescription(),
-            ),
-            ExpansionTile(
-              title: Directionality(
-                textDirection: TextDirection.rtl,
-                child: Row(
-                  children: [
-                    Container(
-                      margin: const EdgeInsets.symmetric(horizontal: 4),
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.circular(10),
-                      ),
-                      child: Center(
-                        child:
-                            Image.asset("assets/icons/import_conditions.png"),
-                      ),
-                    ),
-                    Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 5),
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.circular(10),
-                      ),
-                      child: const Text(
-                        "شروط الاستيراد",
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-
-              // onExpansionChanged: (value) {
-              //   if (value) {
-              //     // BlocProvider.of<FeeBloc>(context)
-              //     //     .add(FeeLoadEvent(state.subchapters[index].id!));
-              //     setState(() {
-              //       feeselected = index4;
-              //     });
-              //   } else {
-              //     setState(() {
-              //       feeselected = -1;
-              //     });
-              //   }
-              // },
-              children: const [],
-            ),
-            ExpansionTile(
-              title: Directionality(
-                textDirection: TextDirection.rtl,
-                child: Row(
-                  children: [
-                    Container(
-                      margin: const EdgeInsets.symmetric(horizontal: 4),
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.circular(10),
-                      ),
-                      child: Center(
-                        child:
-                            Image.asset("assets/icons/export_conditions.png"),
-                      ),
-                    ),
-                    Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 5),
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.circular(10),
-                      ),
-                      child: const Text(
-                        "شروط التصدير",
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-
-              // onExpansionChanged: (value) {
-              //   if (value) {
-              //     // BlocProvider.of<FeeBloc>(context)
-              //     //     .add(FeeLoadEvent(state.subchapters[index].id!));
-              //     setState(() {
-              //       feeselected = index4;
-              //     });
-              //   } else {
-              //     setState(() {
-              //       feeselected = -1;
-              //     });
-              //   }
-              // },
+      list.add(ListView(
+        shrinkWrap: true,
+        physics: const NeverScrollableScrollPhysics(),
+        children: [
+          ExpansionTile(
+            title: Row(
               children: [
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 20),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    children: [
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        children: [
-                          Image.asset("assets/icons/export_restrection.png"),
-                          const Text("شروط التصدير:"),
-                          fe.export! == "مسموح التصدير"
-                              ? const Icon(
-                                  Icons.check,
-                                  color: Colors.green,
-                                )
-                              : const Icon(
-                                  Icons.close,
-                                  color: Colors.red,
-                                ),
-                          Text(fe.export!),
-                        ],
-                      ),
-                      Text(
-                        fe.restrictionExport!,
-                        textAlign: TextAlign.start,
-                      ),
-                    ],
+                Container(
+                  margin: const EdgeInsets.symmetric(horizontal: 4),
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                  child: Center(
+                    child: Image.asset("assets/icons/trade_description.png"),
+                  ),
+                ),
+                Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 5),
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                  child: const Text(
+                    "الوصف التجاري",
                   ),
                 ),
               ],
             ),
-            ExpansionTile(
-              title: Directionality(
-                textDirection: TextDirection.rtl,
-                child: Row(
-                  children: [
-                    Container(
-                      margin: const EdgeInsets.symmetric(horizontal: 4),
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.circular(10),
-                      ),
-                      child: Center(
-                        child: Image.asset("assets/icons/calculate_fees.png"),
-                      ),
-                    ),
-                    Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 5),
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.circular(10),
-                      ),
-                      child: const Text(
-                        "حساب الرسوم",
-                      ),
-                    ),
-                  ],
+            onExpansionChanged: (value) {
+              if (value) {
+                BlocProvider.of<FeeTradeDescriptionBloc>(context)
+                    .add(FeeTradeDescriptionLoadEvent(fe.id!));
+              } else {}
+            },
+            children: buildFeesTradeDescription(),
+          ),
+          ExpansionTile(
+            title: Row(
+              children: [
+                Container(
+                  margin: const EdgeInsets.symmetric(horizontal: 4),
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                  child: Center(
+                    child: Image.asset("assets/icons/import_conditions.png"),
+                  ),
                 ),
-              ),
-              onExpansionChanged: (value) {
-                BlocProvider.of<CalculatorPanelBloc>(context)
-                    .add(CalculatorPanelOpenEvent());
-                BlocProvider.of<FeeItemBloc>(context)
-                    .add(FeeItemLoadEvent(fe.id!));
-              },
-              trailing: const SizedBox.shrink(),
+                Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 5),
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                  child: const Text(
+                    "شروط الاستيراد",
+                  ),
+                ),
+              ],
             ),
-            ExpansionTile(
-              title: Directionality(
-                textDirection: TextDirection.rtl,
-                child: Row(
-                  children: [
-                    Container(
-                      margin: const EdgeInsets.symmetric(horizontal: 4),
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.circular(10),
-                      ),
-                      child: Center(
-                        child: Image.asset("assets/icons/share_fee.png"),
-                      ),
-                    ),
-                    Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 5),
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.circular(10),
-                      ),
-                      child: const Text(
-                        "مشاركة",
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-              trailing: const SizedBox.shrink(),
 
-              // onExpansionChanged: (value) {
-              //   if (value) {
-              //     // BlocProvider.of<FeeBloc>(context)
-              //     //     .add(FeeLoadEvent(state.subchapters[index].id!));
-              //     setState(() {
-              //       feeselected = index4;
-              //     });
-              //   } else {
-              //     setState(() {
-              //       feeselected = -1;
-              //     });
-              //   }
-              // },
-              // children: buildFeesTiles(),
+            // onExpansionChanged: (value) {
+            //   if (value) {
+            //     // BlocProvider.of<FeeBloc>(context)
+            //     //     .add(FeeLoadEvent(state.subchapters[index].id!));
+            //     setState(() {
+            //       feeselected = index4;
+            //     });
+            //   } else {
+            //     setState(() {
+            //       feeselected = -1;
+            //     });
+            //   }
+            // },
+            children: const [],
+          ),
+          ExpansionTile(
+            title: Row(
+              children: [
+                Container(
+                  margin: const EdgeInsets.symmetric(horizontal: 4),
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                  child: Center(
+                    child: Image.asset("assets/icons/export_conditions.png"),
+                  ),
+                ),
+                Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 5),
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                  child: const Text(
+                    "شروط التصدير",
+                  ),
+                ),
+              ],
             ),
-          ],
-        ),
+
+            // onExpansionChanged: (value) {
+            //   if (value) {
+            //     // BlocProvider.of<FeeBloc>(context)
+            //     //     .add(FeeLoadEvent(state.subchapters[index].id!));
+            //     setState(() {
+            //       feeselected = index4;
+            //     });
+            //   } else {
+            //     setState(() {
+            //       feeselected = -1;
+            //     });
+            //   }
+            // },
+            children: [
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 20),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: [
+                        Image.asset("assets/icons/export_restrection.png"),
+                        const Text("شروط التصدير:"),
+                        fe.export! == "مسموح التصدير"
+                            ? const Icon(
+                                Icons.check,
+                                color: Colors.green,
+                              )
+                            : const Icon(
+                                Icons.close,
+                                color: Colors.red,
+                              ),
+                        Text(fe.export!),
+                      ],
+                    ),
+                    Text(
+                      fe.restrictionExport!,
+                      textAlign: TextAlign.start,
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+          GestureDetector(
+            onTap: () {
+              BlocProvider.of<CalculatorPanelBloc>(context)
+                  .add(CalculatorPanelOpenEvent());
+              BlocProvider.of<FeeItemBloc>(context)
+                  .add(FeeItemLoadEvent(fe.id!));
+            },
+            child: Row(
+              children: [
+                Container(
+                  margin: const EdgeInsets.symmetric(horizontal: 4),
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                  child: Center(
+                    child: Image.asset("assets/icons/calculate_fees.png"),
+                  ),
+                ),
+                Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 5),
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                  child: const Text(
+                    "حساب الرسوم",
+                  ),
+                ),
+              ],
+            ),
+          ),
+          ExpansionTile(
+            title: Row(
+              children: [
+                Container(
+                  margin: const EdgeInsets.symmetric(horizontal: 4),
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                  child: Center(
+                    child: Image.asset("assets/icons/share_fee.png"),
+                  ),
+                ),
+                Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 5),
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                  child: const Text(
+                    "مشاركة",
+                  ),
+                ),
+              ],
+            ),
+
+            // onExpansionChanged: (value) {
+            //   if (value) {
+            //     // BlocProvider.of<FeeBloc>(context)
+            //     //     .add(FeeLoadEvent(state.subchapters[index].id!));
+            //     setState(() {
+            //       feeselected = index4;
+            //     });
+            //   } else {
+            //     setState(() {
+            //       feeselected = -1;
+            //     });
+            //   }
+            // },
+            // children: buildFeesTiles(),
+          ),
+        ],
       ));
     }
     return list;
@@ -472,105 +449,121 @@ class _CustomeTariffScreenState extends State<CustomeTariffScreen> {
       list.add(BlocBuilder<FeeBloc, FeeState>(
         builder: (context, state) {
           if (state is FeeLoadedSuccess) {
-            return Container(
-              color: Colors.grey[200],
-              padding: const EdgeInsets.all(3.0),
-              child: ListView.builder(
-                key: Key('feebuilder ${feeselected.toString()}'),
-                shrinkWrap: true,
-                itemCount: state.fees.length,
-                physics: const NeverScrollableScrollPhysics(),
-                itemBuilder: (context, index4) {
-                  return Container(
-                    // margin: const EdgeInsets.symmetric(horizontal: 4),
-                    decoration: BoxDecoration(
-                      color: feeselected == index4 ? Colors.white : null,
-                      borderRadius: BorderRadius.circular(5),
-                      border: feeselected == index4
-                          ? Border.all(color: Colors.yellow[600]!, width: 2)
-                          : null,
-                    ),
-                    child: Column(
-                      children: [
-                        ExpansionTile(
-                          key: Key(index4.toString()),
-                          tilePadding: EdgeInsets.zero,
-                          initiallyExpanded: index4 == feeselected,
-                          title: Directionality(
-                            textDirection: TextDirection.rtl,
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Flexible(
-                                  child: Container(
-                                    padding: const EdgeInsets.symmetric(
-                                        horizontal: 5),
-                                    width: double.infinity,
-                                    child: Text(
-                                      "${state.fees[index4].id!} ${state.fees[index4].label!}",
-                                      maxLines: 4,
-                                      overflow: TextOverflow.ellipsis,
-                                    ),
-                                  ),
-                                ),
-                                GestureDetector(
-                                  onTap: () {
-                                    BlocProvider.of<NoteBloc>(context).add(
-                                        NoteLoadEvent(
-                                            state.fees[index4].id!.toString(),
-                                            NoteType.Fee));
-                                    if (!shownote) {
-                                      setState(() {
-                                        feeselected = index4;
-                                        shownote = true;
-                                        noteType = NoteType.Fee;
-                                      });
-                                    } else {
-                                      setState(() {
-                                        feeselected = -1;
-                                        shownote = false;
-                                        noteType = NoteType.None;
-                                      });
-                                    }
-                                  },
-                                  child: Padding(
-                                    padding: const EdgeInsets.all(8.0),
-                                    child: Icon(
-                                      Icons.info_outline,
-                                      color: Colors.cyan[200],
-                                      size: 35.sp,
-                                    ),
-                                  ),
-                                ),
+            return ListView.builder(
+              key: Key('feebuilder ${feeselected.toString()}'),
+              shrinkWrap: true,
+              itemCount: state.fees.length,
+              physics: const NeverScrollableScrollPhysics(),
+              itemBuilder: (context, index4) {
+                return Container(
+                  // margin: const EdgeInsets.symmetric(horizontal: 4),
+                  decoration: BoxDecoration(
+                    color: feeselected == index4 ? null : Colors.grey[200],
+                    gradient: feeselected == index4
+                        ? const LinearGradient(
+                            colors: [
+                                Color.fromARGB(255, 229, 215, 94),
+                                Colors.white,
+                                Colors.white,
+                                Colors.white,
+                                Colors.white,
+                                Colors.white,
                               ],
-                            ),
+                            begin: Alignment.topCenter,
+                            end: Alignment.bottomCenter)
+                        : null,
+                    borderRadius: BorderRadius.circular(5),
+                    border: feeselected == index4
+                        ? Border.all(color: Colors.yellow[600]!, width: 2)
+                        : null,
+                  ),
+                  child: ExpansionTile(
+                    key: Key(index4.toString()),
+                    initiallyExpanded: index4 == feeselected,
+                    trailing: GestureDetector(
+                      onTap: () {
+                        BlocProvider.of<NoteBloc>(context).add(NoteLoadEvent(
+                            state.fees[index4].id!.toString(), NoteType.Fee));
+                        if (!shownote) {
+                          setState(() {
+                            feeselected = index4;
+                            shownote = true;
+                            noteType = NoteType.Fee;
+                          });
+                        } else {
+                          setState(() {
+                            feeselected = -1;
+                            shownote = false;
+                            noteType = NoteType.None;
+                          });
+                        }
+                      },
+                      child: Image.asset(
+                        "assets/icons/expansionTileIcon.png",
+                        width: 20.w,
+                        height: 20.h,
+                      ),
+                    ),
+                    title: Row(
+                      children: [
+                        Container(
+                          // margin: const EdgeInsets.symmetric(horizontal: 4),
+                          decoration: BoxDecoration(
+                            color: subchapterselected == index3
+                                ? null
+                                : Colors.white,
+                            gradient: subchapterselected == index3
+                                ? const LinearGradient(
+                                    colors: [
+                                        Color.fromARGB(255, 229, 215, 94),
+                                        Colors.white,
+                                      ],
+                                    begin: Alignment.topCenter,
+                                    end: Alignment.bottomCenter)
+                                : null,
+                            borderRadius: BorderRadius.circular(5),
                           ),
-                          onExpansionChanged: (value) {
-                            if (value) {
-                              setState(() {
-                                feeselected = index4;
-                              });
-                            } else {
-                              setState(() {
-                                feeselected = -1;
-
-                                shownote = false;
-                                noteType = NoteType.None;
-                              });
-                            }
-                          },
-                          children: buildfeesChildren(state.fees[index4]),
+                          child: Center(
+                            child: feeselected == index4
+                                ? const Icon(Icons.remove)
+                                : const Icon(Icons.add),
+                          ),
                         ),
-                        index4 != state.fees.length - 1
-                            ? const Divider(
-                                color: Color.fromARGB(255, 229, 215, 94),
-                              )
-                            : const SizedBox.shrink(),
+                        Flexible(
+                            child: Container(
+                          padding: const EdgeInsets.symmetric(horizontal: 5),
+                          width: double.infinity,
+                          decoration: BoxDecoration(
+                            color:
+                                feeselected == index4 ? null : Colors.grey[200],
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+                          child: Text(
+                            "${state.fees[index4].id!} ${state.fees[index4].label!}",
+                            maxLines: 4,
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                        )),
                       ],
                     ),
-                  );
-                },
-              ),
+                    onExpansionChanged: (value) {
+                      if (value) {
+                        setState(() {
+                          feeselected = index4;
+                        });
+                      } else {
+                        setState(() {
+                          feeselected = -1;
+
+                          shownote = false;
+                          noteType = NoteType.None;
+                        });
+                      }
+                    },
+                    children: buildfeesChildren(state.fees[index4]),
+                  ),
+                );
+              },
             );
           } else {
             return Row(
@@ -681,87 +674,90 @@ class _CustomeTariffScreenState extends State<CustomeTariffScreen> {
       list.add(BlocBuilder<SubChapterBloc, SubChapterState>(
         builder: (context, state) {
           if (state is SubChapterLoadedSuccess) {
-            return Container(
-              color: Colors.grey[200],
-              padding: const EdgeInsets.all(3.0),
-              child: ListView.builder(
-                key: Key('subchapterbuilder ${subchapterselected.toString()}'),
-                shrinkWrap: true,
-                itemCount: state.subchapters.length,
-                physics: const NeverScrollableScrollPhysics(),
-                itemBuilder: (context, index3) {
-                  return Container(
-                    // margin: const EdgeInsets.symmetric(horizontal: 4),
-                    decoration: BoxDecoration(
-                      color: subchapterselected == index3 ? Colors.white : null,
-                      border: subchapterselected == index3
-                          ? Border.all(color: Colors.yellow[600]!, width: 2)
-                          : null,
-                      borderRadius: BorderRadius.circular(10),
-                    ),
-                    child: Column(
-                      children: [
-                        ExpansionTile(
-                          key: Key(index3.toString()), //attention
-                          initiallyExpanded: index3 == subchapterselected,
-                          tilePadding: EdgeInsets.zero,
-                          childrenPadding: EdgeInsets.zero,
-                          title: Directionality(
-                            textDirection: TextDirection.rtl,
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Flexible(
-                                  child: Container(
-                                    padding: const EdgeInsets.symmetric(
-                                        horizontal: 5),
-                                    width: double.infinity,
-                                    child: Text(
-                                      "${state.subchapters[index3].id!} ${state.subchapters[index3].label!}",
-                                      maxLines: 4,
-                                      overflow: TextOverflow.ellipsis,
-                                    ),
-                                  ),
-                                ),
-                                GestureDetector(
-                                  onTap: () {
-                                    BlocProvider.of<NoteBloc>(context).add(
-                                        NoteLoadEvent(
-                                            state.subchapters[index3].id!
-                                                .toString(),
-                                            NoteType.SubChapter));
-                                    if (!shownote) {
-                                      setState(() {
-                                        subchapterselected = index3;
-                                        shownote = true;
-                                        noteType = NoteType.SubChapter;
-                                      });
-                                    } else {
-                                      setState(() {
-                                        subchapterselected = -1;
-                                        shownote = false;
-                                        noteType = NoteType.None;
-                                      });
-                                    }
-                                  },
-                                  child: Padding(
-                                    padding: const EdgeInsets.all(8.0),
-                                    child: Icon(
-                                      Icons.info_outline,
-                                      color: Colors.cyan[200],
-                                      size: 35.sp,
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ),
+            return ListView.builder(
+              key: Key('subchapterbuilder ${subchapterselected.toString()}'),
+              shrinkWrap: true,
+              itemCount: state.subchapters.length,
+              physics: const NeverScrollableScrollPhysics(),
+              itemBuilder: (context, index3) {
+                return Container(
+                  // margin: const EdgeInsets.symmetric(horizontal: 4),
+                  decoration: BoxDecoration(
+                    color: Colors.grey[200],
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                  child: Column(
+                    children: [
+                      ExpansionTile(
+                        key: Key(index3.toString()), //attention
+                        initiallyExpanded: index3 == subchapterselected,
+
+                        title: Container(
+                          decoration: BoxDecoration(
+                            color: subchapterselected == index3
+                                ? null
+                                : Colors.grey[200],
+                            gradient: subchapterselected == index3
+                                ? const LinearGradient(
+                                    colors: [
+                                        Color.fromARGB(255, 229, 215, 94),
+                                        Colors.white,
+                                      ],
+                                    begin: Alignment.topCenter,
+                                    end: Alignment.bottomCenter)
+                                : null,
+                            borderRadius: BorderRadius.circular(5),
                           ),
-                          onExpansionChanged: (value) {
-                            if (value) {
-                              BlocProvider.of<FeeBloc>(context).add(
-                                  FeeLoadEvent(state.subchapters[index3].id!));
+                          child: Row(
+                            children: [
+                              Container(
+                                // margin: const EdgeInsets.symmetric(horizontal: 4),
+                                decoration: BoxDecoration(
+                                  color: chapterselected == index2
+                                      ? null
+                                      : Colors.white,
+                                  gradient: chapterselected == index2
+                                      ? const LinearGradient(
+                                          colors: [
+                                              Color.fromARGB(255, 229, 215, 94),
+                                              Colors.white,
+                                            ],
+                                          begin: Alignment.topCenter,
+                                          end: Alignment.bottomCenter)
+                                      : null,
+                                  borderRadius: BorderRadius.circular(5),
+                                ),
+                                child: Center(
+                                  child: subchapterselected == index3
+                                      ? const Icon(Icons.remove)
+                                      : const Icon(Icons.add),
+                                ),
+                              ),
+                              Flexible(
+                                  child: Container(
+                                padding:
+                                    const EdgeInsets.symmetric(horizontal: 5),
+                                width: double.infinity,
+                                child: Text(
+                                  "${state.subchapters[index3].id!} ${state.subchapters[index3].label!}",
+                                  maxLines: 4,
+                                  overflow: TextOverflow.ellipsis,
+                                ),
+                              )),
+                            ],
+                          ),
+                        ),
+                        trailing: GestureDetector(
+                          onTap: () {
+                            BlocProvider.of<NoteBloc>(context).add(
+                                NoteLoadEvent(
+                                    state.subchapters[index3].id!.toString(),
+                                    NoteType.SubChapter));
+                            if (!shownote) {
                               setState(() {
                                 subchapterselected = index3;
+                                shownote = true;
+                                noteType = NoteType.SubChapter;
                               });
                             } else {
                               setState(() {
@@ -771,18 +767,38 @@ class _CustomeTariffScreenState extends State<CustomeTariffScreen> {
                               });
                             }
                           },
-                          children: buildFeesTiles(index3),
+                          child: Image.asset(
+                            "assets/icons/expansionTileIcon.png",
+                            width: 20.w,
+                            height: 20.h,
+                          ),
                         ),
-                        index3 != state.subchapters.length - 1
-                            ? const Divider(
-                                color: Color.fromARGB(255, 229, 215, 94),
-                              )
-                            : const SizedBox.shrink(),
-                      ],
-                    ),
-                  );
-                },
-              ),
+                        onExpansionChanged: (value) {
+                          if (value) {
+                            BlocProvider.of<FeeBloc>(context).add(
+                                FeeLoadEvent(state.subchapters[index3].id!));
+                            setState(() {
+                              subchapterselected = index3;
+                            });
+                          } else {
+                            setState(() {
+                              subchapterselected = -1;
+                              shownote = false;
+                              noteType = NoteType.None;
+                            });
+                          }
+                        },
+                        children: buildFeesTiles(index3),
+                      ),
+                      index3 != state.subchapters.length - 1
+                          ? const Divider(
+                              color: Color.fromARGB(255, 229, 215, 94),
+                            )
+                          : const SizedBox.shrink(),
+                    ],
+                  ),
+                );
+              },
             );
           } else {
             return Row(
@@ -926,125 +942,121 @@ class _CustomeTariffScreenState extends State<CustomeTariffScreen> {
       list.add(BlocBuilder<ChapterBloc, ChapterState>(
         builder: (context, state) {
           if (state is ChapterLoadedSuccess) {
-            return Directionality(
-              textDirection: TextDirection.ltr,
-              child: Container(
-                color: Colors.grey[200],
-                padding: const EdgeInsets.all(3.0),
-                child: ListView.builder(
-                  key: Key('chapterbuilder ${chapterselected.toString()}'),
-                  shrinkWrap: true,
-                  itemCount: state.chapters.length,
-                  physics: const NeverScrollableScrollPhysics(),
-                  itemBuilder: (context, index2) {
-                    return Container(
-                      margin: const EdgeInsets.symmetric(vertical: 3),
-                      decoration: BoxDecoration(
-                        color: chapterselected == index2
-                            ? subchapterselected == -1
-                                ? Colors.white
-                                : null
-                            : null,
-                        border: chapterselected == index2
-                            ? Border.all(color: Colors.yellow[600]!, width: 2)
-                            : null,
-                        borderRadius: BorderRadius.circular(10),
-                      ),
-                      child: Column(
-                        children: [
-                          Theme(
-                            data: Theme.of(context)
-                                .copyWith(dividerColor: Colors.transparent),
-                            child: ExpansionTile(
-                              tilePadding: EdgeInsets.zero,
-                              title: Directionality(
-                                textDirection: TextDirection.rtl,
-                                child: Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    Flexible(
-                                      child: Container(
-                                        padding: const EdgeInsets.symmetric(
-                                            horizontal: 5),
-                                        width: double.infinity,
-                                        // decoration: BoxDecoration(
-                                        //   color: chapterselected == index2
-                                        //       ? subchapterselected == -1
-                                        //           ? Colors.white
-                                        //           : null
-                                        //       : null,
-                                        //   gradient: chapterselected == index2
-                                        //       ? subchapterselected == -1
-                                        //           ? const LinearGradient(
-                                        //               colors: [
-                                        //                   Color.fromARGB(255,
-                                        //                       229, 215, 94),
-                                        //                   Colors.white,
-                                        //                 ],
-                                        //               begin:
-                                        //                   Alignment.topCenter,
-                                        //               end: Alignment
-                                        //                   .bottomCenter)
-                                        //           : null
-                                        //       : null,
-                                        //   borderRadius:
-                                        //       BorderRadius.circular(10),
-                                        // ),
-                                        child: Text(
-                                          "${state.chapters[index2].id!} ${state.chapters[index2].label!}",
-                                          maxLines: 4,
-                                          overflow: TextOverflow.ellipsis,
-                                        ),
-                                      ),
-                                    ),
-                                    GestureDetector(
-                                      onTap: () {
-                                        BlocProvider.of<NoteBloc>(context).add(
-                                            NoteLoadEvent(
-                                                state.chapters[index2].id!
-                                                    .toString(),
-                                                NoteType.Chapter));
-                                        if (!shownote) {
-                                          setState(() {
-                                            chapterselected = index2;
-
-                                            subchapterselected = -1;
-                                            shownote = true;
-                                            noteType = NoteType.Chapter;
-                                          });
-                                        } else {
-                                          setState(() {
-                                            chapterselected = -1;
-                                            shownote = false;
-                                            noteType = NoteType.None;
-                                          });
-                                        }
-                                      },
-                                      child: Padding(
-                                        padding: const EdgeInsets.all(8.0),
-                                        child: Icon(
-                                          Icons.info_outline,
-                                          color: Colors.cyan[200],
-                                          size: 35.sp,
-                                        ),
-                                      ),
-                                    ),
-                                  ],
-                                ),
+            return Container(
+              color: Colors.grey[200],
+              padding: const EdgeInsets.all(5.0),
+              child: ListView.builder(
+                key: Key('chapterbuilder ${chapterselected.toString()}'),
+                shrinkWrap: true,
+                itemCount: state.chapters.length,
+                physics: const NeverScrollableScrollPhysics(),
+                itemBuilder: (context, index2) {
+                  return Container(
+                    margin:
+                        const EdgeInsets.symmetric(vertical: 1, horizontal: 4),
+                    decoration: BoxDecoration(
+                      color: Colors.grey[200],
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                    child: Column(
+                      children: [
+                        Theme(
+                          data: Theme.of(context)
+                              .copyWith(dividerColor: Colors.transparent),
+                          child: ExpansionTile(
+                            title: Container(
+                              decoration: BoxDecoration(
+                                gradient: chapterselected == index2
+                                    ? subchapterselected == -1
+                                        ? const LinearGradient(
+                                            colors: [
+                                                Color.fromARGB(
+                                                    255, 229, 215, 94),
+                                                Colors.white,
+                                              ],
+                                            begin: Alignment.topCenter,
+                                            end: Alignment.bottomCenter)
+                                        : null
+                                    : null,
+                                borderRadius: BorderRadius.circular(10),
                               ),
-                              key: Key(index2.toString()), //attention
-                              initiallyExpanded: index2 == chapterselected,
-
-                              onExpansionChanged: (value) {
-                                if (value) {
-                                  BlocProvider.of<SubChapterBloc>(context).add(
-                                      SubChapterLoadEvent(
-                                          state.chapters[index2].id!));
+                              child: Row(
+                                children: [
+                                  Container(
+                                    margin: const EdgeInsets.symmetric(
+                                        horizontal: 4),
+                                    decoration: BoxDecoration(
+                                      // color: chapterselected == index2
+                                      //     ? null
+                                      //     : Colors.white,
+                                      border: chapterselected == index2
+                                          ? subchapterselected == -1
+                                              ? null
+                                              : Border.all(
+                                                  color: const Color.fromARGB(
+                                                      255, 229, 215, 94),
+                                                  width: 1,
+                                                )
+                                          : Border.all(
+                                              color: const Color.fromARGB(
+                                                  255, 229, 215, 94),
+                                              width: 1,
+                                            ),
+                                      borderRadius: BorderRadius.circular(5),
+                                    ),
+                                    child: Center(
+                                      child: chapterselected == index2
+                                          ? const Icon(Icons.remove)
+                                          : const Icon(Icons.add),
+                                    ),
+                                  ),
+                                  Flexible(
+                                      child: Container(
+                                    padding: const EdgeInsets.symmetric(
+                                        horizontal: 5),
+                                    width: double.infinity,
+                                    decoration: BoxDecoration(
+                                      color: chapterselected == index2
+                                          ? subchapterselected == -1
+                                              ? Colors.white
+                                              : null
+                                          : null,
+                                      gradient: chapterselected == index2
+                                          ? subchapterselected == -1
+                                              ? const LinearGradient(
+                                                  colors: [
+                                                      Color.fromARGB(
+                                                          255, 229, 215, 94),
+                                                      Colors.white,
+                                                    ],
+                                                  begin: Alignment.topCenter,
+                                                  end: Alignment.bottomCenter)
+                                              : null
+                                          : null,
+                                      borderRadius: BorderRadius.circular(10),
+                                    ),
+                                    child: Text(
+                                      "${state.chapters[index2].id!} ${state.chapters[index2].label!}",
+                                      maxLines: 4,
+                                      overflow: TextOverflow.ellipsis,
+                                    ),
+                                  )),
+                                ],
+                              ),
+                            ),
+                            trailing: GestureDetector(
+                              onTap: () {
+                                BlocProvider.of<NoteBloc>(context).add(
+                                    NoteLoadEvent(
+                                        state.chapters[index2].id!.toString(),
+                                        NoteType.Chapter));
+                                if (!shownote) {
                                   setState(() {
                                     chapterselected = index2;
 
                                     subchapterselected = -1;
+                                    shownote = true;
+                                    noteType = NoteType.Chapter;
                                   });
                                 } else {
                                   setState(() {
@@ -1054,17 +1066,43 @@ class _CustomeTariffScreenState extends State<CustomeTariffScreen> {
                                   });
                                 }
                               },
-                              children: buildSubChapterTiles(index2),
+                              child: Image.asset(
+                                "assets/icons/expansionTileIcon.png",
+                                width: 20.w,
+                                height: 20.h,
+                              ),
                             ),
+                            key: Key(index2.toString()), //attention
+                            initiallyExpanded: index2 == chapterselected,
+
+                            onExpansionChanged: (value) {
+                              if (value) {
+                                BlocProvider.of<SubChapterBloc>(context).add(
+                                    SubChapterLoadEvent(
+                                        state.chapters[index2].id!));
+                                setState(() {
+                                  chapterselected = index2;
+
+                                  subchapterselected = -1;
+                                });
+                              } else {
+                                setState(() {
+                                  chapterselected = -1;
+                                  shownote = false;
+                                  noteType = NoteType.None;
+                                });
+                              }
+                            },
+                            children: buildSubChapterTiles(index2),
                           ),
-                          const Divider(
-                            color: Color.fromARGB(255, 229, 215, 94),
-                          ),
-                        ],
-                      ),
-                    );
-                  },
-                ),
+                        ),
+                        const Divider(
+                          color: Color.fromARGB(255, 229, 215, 94),
+                        ),
+                      ],
+                    ),
+                  );
+                },
               ),
             );
           } else {
@@ -1159,17 +1197,16 @@ class _CustomeTariffScreenState extends State<CustomeTariffScreen> {
                                   vertical: 4.h, horizontal: 3.w),
                               clipBehavior: Clip.antiAlias,
                               decoration: BoxDecoration(
-                                color: Colors.white,
-                                borderRadius: BorderRadius.circular(10),
-                                border: selected == index
-                                    ? Border.all(
-                                        color: Colors.yellow[600]!, width: 2)
-                                    : null,
-                              ),
+                                  color: Colors.white,
+                                  borderRadius: BorderRadius.circular(10),
+                                  border: selected == index
+                                      ? Border.all(
+                                          color: Colors.yellow[600]!, width: 2)
+                                      : null),
                               child: ExpansionTile(
                                 key: Key(index.toString()), //attention
                                 initiallyExpanded: index == selected,
-                                tilePadding: EdgeInsets.zero,
+
                                 trailing: GestureDetector(
                                   onTap: () {
                                     BlocProvider.of<NoteBloc>(context).add(
@@ -1202,19 +1239,26 @@ class _CustomeTariffScreenState extends State<CustomeTariffScreen> {
                                       });
                                     }
                                   },
-                                  child: Padding(
-                                    padding: const EdgeInsets.all(8.0),
-                                    child: Icon(
-                                      Icons.info_outline,
-                                      color: Colors.cyan[200],
-                                      size: 35.sp,
-                                    ),
+                                  child: Image.asset(
+                                    "assets/icons/expansionTileIcon.png",
+                                    width: 20.w,
+                                    height: 20.h,
                                   ),
                                 ),
                                 title: Row(
-                                  // mainAxisSize: MainAxisSize.max,
                                   // crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
+                                    Padding(
+                                      padding: const EdgeInsets.symmetric(
+                                          horizontal: 3),
+                                      child: SizedBox(
+                                        width: 36.w,
+                                        height: 36.h,
+                                        child: Img(
+                                          state.sections[index].image!,
+                                        ),
+                                      ),
+                                    ),
                                     SizedBox(
                                       width: 100.w,
                                       child: Padding(
@@ -1231,18 +1275,6 @@ class _CustomeTariffScreenState extends State<CustomeTariffScreen> {
                                                         FontWeight.bold),
                                               ),
                                             ),
-                                            Padding(
-                                              padding:
-                                                  const EdgeInsets.symmetric(
-                                                      horizontal: 3),
-                                              child: SizedBox(
-                                                width: 36.w,
-                                                height: 36.h,
-                                                child: Img(
-                                                  state.sections[index].image!,
-                                                ),
-                                              ),
-                                            ),
                                             Text(
                                               "(${state.sections[index].end!}__${state.sections[index].start!})",
                                               style:
@@ -1252,13 +1284,10 @@ class _CustomeTariffScreenState extends State<CustomeTariffScreen> {
                                         ),
                                       ),
                                     ),
-                                    SizedBox(
-                                      height: 5.w,
-                                    ),
                                     Flexible(
                                       child: Text(
                                         state.sections[index].label!,
-                                        maxLines: selected == index ? 10 : 4,
+                                        maxLines: 4,
                                         overflow: TextOverflow.ellipsis,
                                       ),
                                     ),
@@ -1268,9 +1297,8 @@ class _CustomeTariffScreenState extends State<CustomeTariffScreen> {
                                 onExpansionChanged: (value) {
                                   if (value) {
                                     BlocProvider.of<ChapterBloc>(context).add(
-                                      ChapterLoadEvent(
-                                          state.sections[index].id!),
-                                    );
+                                        ChapterLoadEvent(
+                                            state.sections[index].id!));
                                     setState(() {
                                       selected = index;
                                       chapterselected = -1;
@@ -1278,11 +1306,11 @@ class _CustomeTariffScreenState extends State<CustomeTariffScreen> {
                                     });
 
                                     scroll.animateTo(
-                                      index +
-                                          MediaQuery.of(context).size.width / 2,
-                                      duration: const Duration(seconds: 1),
-                                      curve: Curves.easeIn,
-                                    );
+                                        index +
+                                            MediaQuery.of(context).size.width /
+                                                2,
+                                        duration: const Duration(seconds: 1),
+                                        curve: Curves.easeIn);
                                   } else {
                                     setState(() {
                                       selected = -1;

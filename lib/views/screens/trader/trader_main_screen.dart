@@ -130,14 +130,21 @@ class _TraderMainScreenState extends State<TraderMainScreen> {
                                                     const Duration(seconds: 4),
                                                 backgroundColor:
                                                     Colors.transparent,
-                                                content: AwesomeSnackbarContent(
-                                                  title: 'تم',
-                                                  message:
-                                                      'تم إزالة المنشور من المحفوظات!',
+                                                content: Column(
+                                                  children: [
+                                                    AwesomeSnackbarContent(
+                                                      title: 'تم',
+                                                      message:
+                                                          'تم إزالة المنشور من المحفوظات!',
 
-                                                  /// change contentType to ContentType.success, ContentType.warning or ContentType.help for variants
-                                                  contentType:
-                                                      ContentType.success,
+                                                      /// change contentType to ContentType.success, ContentType.warning or ContentType.help for variants
+                                                      contentType:
+                                                          ContentType.success,
+                                                    ),
+                                                    SizedBox(
+                                                      height: 90.h,
+                                                    ),
+                                                  ],
                                                 ),
                                               );
                                               BlocProvider.of<PostBloc>(context)
