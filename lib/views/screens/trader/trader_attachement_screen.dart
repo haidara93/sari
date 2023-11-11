@@ -103,15 +103,27 @@ class _TraderAttachementScreenState extends State<TraderAttachementScreen> {
                 },
               ),
             ),
-            SizedBox(
-              width: 150.w,
-              child: CustomButton(
-                title: const Center(child: Text("تم")),
-                onTap: () {
-                  Navigator.pop(context);
-                },
-              ),
-            )
+            // InkWell(
+            //   onTap: () => Navigator.pop(context),
+            //   child: Container(
+            //     height: 44,
+            //     width: 150.w,
+            //     decoration: BoxDecoration(
+            //       color: Colors.white,
+            //       // color: isEnabled ? color : Colors.white,
+            //       borderRadius: BorderRadius.circular(100),
+            //       border: Border(
+            //         top: BorderSide(width: 1, color: AppColor.activeGreen),
+            //         right: BorderSide(width: 1, color: AppColor.activeGreen),
+            //         left: BorderSide(width: 1, color: AppColor.activeGreen),
+            //         bottom: BorderSide(width: 1, color: AppColor.activeGreen),
+            //       ),
+            //     ),
+            //     child: Center(
+            //       child: Text("تم"),
+            //     ),
+            //   ),
+            // )
           ],
         ),
       ),
@@ -706,11 +718,13 @@ class _TraderAttachementScreenState extends State<TraderAttachementScreen> {
                               if (offerstate is OfferLoadedSuccess) {
                                 BlocProvider.of<AttachmentsListBloc>(context)
                                     .add(ClearAttachmentToListEvent());
-                                Navigator.pushReplacement(
-                                    context,
-                                    MaterialPageRoute(
-                                      builder: (context) => const ControlView(),
-                                    ));
+                                Navigator.pushAndRemoveUntil(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => const ControlView(),
+                                  ),
+                                  (route) => false,
+                                );
 
                                 var snackBar = SnackBar(
                                   elevation: 0,

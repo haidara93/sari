@@ -4,103 +4,65 @@ import 'package:custome_mobile/views/widgets/custom_botton.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
-class TraderMessageScreen extends StatelessWidget {
-  final focusNode = FocusNode();
+class TraderMessageScreen extends StatefulWidget {
+  @override
+  State<TraderMessageScreen> createState() => _TraderMessageScreenState();
+}
 
-  TraderMessageScreen({Key? key}) : super(key: key);
+class _TraderMessageScreenState extends State<TraderMessageScreen> {
+  final ScrollController _scrollController = ScrollController();
+
+  void _scrollToSelectedContent(
+      bool isExpanded, double previousOffset, int index, GlobalKey myKey) {
+    final keyContext = myKey.currentContext;
+
+    if (keyContext != null) {
+      // make sure that your widget is visible
+      final box = keyContext.findRenderObject() as RenderBox;
+      _scrollController.animateTo(
+          isExpanded ? (box.size.height * index) : previousOffset,
+          duration: Duration(milliseconds: 500),
+          curve: Curves.linear);
+    }
+  }
+
+  List<Widget> _buildExpansionTileChildren() => [
+        FlutterLogo(
+          size: 50.0,
+        ),
+        Text(
+          'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse vulputate arcu interdum lacus pulvinar aliquam. Donec ut nunc eleifend, volutpat tellus vel, volutpat libero. Vestibulum et eros lorem. Nam ut lacus sagittis, varius risus faucibus, lobortis arcu. Nullam tempor vehicula nibh et ornare. Etiam interdum tellus ut metus faucibus semper. Aliquam quis ullamcorper urna, non semper purus. Mauris luctus quam enim, ut ornare magna vestibulum vel. Donec consectetur, quam a mattis tincidunt, augue nisi bibendum est, quis viverra risus odio ac ligula. Nullam vitae urna malesuada magna imperdiet faucibus non et nunc. Integer magna nisi, dictum a tempus in, bibendum quis nisi. Aliquam imperdiet metus id metus rutrum scelerisque. Morbi at nisi nec risus accumsan tempus. Curabitur non sem sit amet tellus eleifend tincidunt. Pellentesque sed lacus orci.',
+          textAlign: TextAlign.justify,
+        ),
+      ];
+
+  ExpansionTile _buildExpansionTile(int index) {
+    final GlobalKey expansionTileKey = GlobalKey();
+    double previousOffset = 0.0;
+
+    return ExpansionTile(
+      key: expansionTileKey,
+      onExpansionChanged: (isExpanded) {
+        if (isExpanded) previousOffset = _scrollController.offset;
+        _scrollToSelectedContent(
+            isExpanded, previousOffset, index, expansionTileKey);
+      },
+      title: Text('My expansion tile $index'),
+      children: _buildExpansionTileChildren(),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color.fromRGBO(13, 52, 83, 1),
-      body: Column(
-        children: [
-          SizedBox(
-            height: 191.h,
-          ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
-            children: [
-              Image.asset(
-                "assets/images/trader_checked.png",
-                height: 85,
-              ),
-            ],
-          ),
-          SizedBox(
-            height: 31.h,
-          ),
-          Text(
-            "ادخل الكود المكون من 6 أرقام",
-            style: TextStyle(
-              color: Colors.white,
-              fontSize: 19.sp,
-              fontWeight: FontWeight.bold,
-            ),
-          ),
-          SizedBox(
-            height: 37.h,
-          ),
-          Container(
-            height: 246.h,
-            width: double.infinity,
-            decoration: BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.circular(42),
-            ),
-            margin: EdgeInsets.symmetric(horizontal: 21.w),
-            padding: EdgeInsets.symmetric(vertical: 50.h),
-            child: Column(
-              children: [
-                SizedBox(
-                  width: 304.w,
-                  child: TextFormField(
-                    focusNode: focusNode,
-                    keyboardType: TextInputType.phone,
-                    // initialValue: widget.initialValue,
-                    // validator: widget.validatorFn,
-                    // onSaved: widget.onSavedFn,
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 16.sp,
-                    ),
-                    decoration: const InputDecoration(
-                      hintText: "",
-                      hintStyle: TextStyle(
-                        color: Color.fromARGB(255, 7, 3, 3),
-                        fontSize: 16,
-                      ),
-                      filled: true,
-                      fillColor: Colors.white,
-                    ),
-                  ),
-                ),
-                const SizedBox(
-                  height: 34,
-                ),
-                SizedBox(
-                    width: 304.w,
-                    child: CustomButton(
-                      title: Text(
-                        "التالي",
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 19.sp,
-                        ),
-                      ),
-                      color: AppColor.deepYellow,
-                      onTap: () {
-                        Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => const TraderConfirmScreen(),
-                            ));
-                      },
-                    )),
-              ],
-            ),
-          )
-        ],
+      appBar: AppBar(
+        title: Text('MyScrollView'),
+      ),
+      body: ListView.builder(
+        controller: _scrollController,
+        itemCount: 100,
+        itemBuilder: (BuildContext context, int index) =>
+            _buildExpansionTile(index),
       ),
     );
   }

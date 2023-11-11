@@ -23,14 +23,14 @@ class CustomButton extends StatelessWidget {
       child: Container(
         height: hieght,
         decoration: BoxDecoration(
-          color: Colors.white,
+          color: color ?? Colors.white,
           // color: isEnabled ? color : Colors.white,
           borderRadius: BorderRadius.circular(100),
           border: Border(
-            top: BorderSide(width: 1, color: AppColor.activeGreen),
-            right: BorderSide(width: 1, color: AppColor.activeGreen),
-            left: BorderSide(width: 1, color: AppColor.activeGreen),
-            bottom: BorderSide(width: 1, color: AppColor.activeGreen),
+            top: BorderSide(width: 1, color: color ?? AppColor.activeGreen),
+            right: BorderSide(width: 1, color: color ?? AppColor.activeGreen),
+            left: BorderSide(width: 1, color: color ?? AppColor.activeGreen),
+            bottom: BorderSide(width: 1, color: color ?? AppColor.activeGreen),
           ),
         ),
         child: Center(

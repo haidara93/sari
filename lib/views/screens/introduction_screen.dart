@@ -66,153 +66,162 @@ class _IntroductionViewState extends State<IntroductionView> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: SafeArea(
-        child: Container(
-          padding: const EdgeInsets.only(bottom: 80),
-          child: PageView(
-            controller: controller,
-            onPageChanged: (value) {
-              setState(() {
-                isLastPage = value == 3;
-              });
-            },
-            children: [
-              builfPage(
-                color: Colors.white,
-                urlImage: "assets/images/intro1.png",
-                title: Text(
-                  "أهلا وسهلا بك",
-                  style: TextStyle(color: AppColor.deepBlue, fontSize: 24.sp),
-                ),
-                subtitle: Text.rich(
-                  TextSpan(
-                      text: "في التطبيق الأول",
-                      style:
-                          TextStyle(fontSize: 24.sp, color: AppColor.deepBlue),
-                      children: [
-                        TextSpan(
-                            text: " للتخليص الجمركي",
-                            style: TextStyle(color: AppColor.deepYellow))
-                      ]),
-                ),
-              ),
-              builfPage(
+    return Directionality(
+      textDirection: TextDirection.ltr,
+      child: Scaffold(
+        body: SafeArea(
+          child: Container(
+            padding: const EdgeInsets.only(bottom: 80),
+            child: PageView(
+              controller: controller,
+              onPageChanged: (value) {
+                setState(() {
+                  isLastPage = value == 3;
+                });
+              },
+              children: [
+                builfPage(
                   color: Colors.white,
-                  urlImage: "assets/images/intro2.png",
-                  title: Text.rich(
-                    TextSpan(
-                        text: "اطلع على",
-                        style: TextStyle(
-                            fontSize: 24.sp, color: AppColor.deepBlue),
-                        children: [
-                          TextSpan(
-                              text: " إجراءات التخليص واللوائح",
-                              style: TextStyle(
-                                  fontSize: 24.sp, color: AppColor.deepYellow))
-                        ]),
-                  ),
-                  subtitle: Text(
-                    "الجمركية المطبقة على نوع بضاعتك",
-                    style: TextStyle(color: AppColor.deepBlue, fontSize: 24.sp),
-                  )),
-              builfPage(
-                  color: Colors.white,
-                  urlImage: "assets/images/intro3.png",
+                  urlImage: "assets/images/intro1.png",
                   title: Text(
-                    "احسب الرسوم الجمركية المفروضة على",
+                    "أهلا وسهلا بك",
                     style: TextStyle(color: AppColor.deepBlue, fontSize: 24.sp),
                   ),
                   subtitle: Text.rich(
                     TextSpan(
-                        text: "بضائعك قبل البدء",
+                        text: "في التطبيق الأول",
                         style: TextStyle(
                             fontSize: 24.sp, color: AppColor.deepBlue),
                         children: [
                           TextSpan(
-                              text: " بعملية الاستيراد",
-                              style: TextStyle(
-                                  fontSize: 24.sp, color: AppColor.deepYellow))
+                              text: " للتخليص الجمركي",
+                              style: TextStyle(color: AppColor.deepYellow))
                         ]),
-                  )),
-              builfPage(
-                  color: Colors.white,
-                  urlImage: "assets/images/intro4.png",
-                  title: Text(
-                    "المخلص الجمركي المختص",
-                    style: TextStyle(color: AppColor.deepBlue, fontSize: 24.sp),
                   ),
-                  subtitle: Text(
-                    "",
-                    style: TextStyle(color: AppColor.deepBlue, fontSize: 24.sp),
-                  )),
-            ],
+                ),
+                builfPage(
+                    color: Colors.white,
+                    urlImage: "assets/images/intro2.png",
+                    title: Text.rich(
+                      TextSpan(
+                          text: "اطلع على",
+                          style: TextStyle(
+                              fontSize: 24.sp, color: AppColor.deepBlue),
+                          children: [
+                            TextSpan(
+                                text: " إجراءات التخليص واللوائح",
+                                style: TextStyle(
+                                    fontSize: 24.sp,
+                                    color: AppColor.deepYellow))
+                          ]),
+                    ),
+                    subtitle: Text(
+                      "الجمركية المطبقة على نوع بضاعتك",
+                      style:
+                          TextStyle(color: AppColor.deepBlue, fontSize: 24.sp),
+                    )),
+                builfPage(
+                    color: Colors.white,
+                    urlImage: "assets/images/intro3.png",
+                    title: Text(
+                      "احسب الرسوم الجمركية المفروضة على",
+                      style:
+                          TextStyle(color: AppColor.deepBlue, fontSize: 24.sp),
+                    ),
+                    subtitle: Text.rich(
+                      TextSpan(
+                          text: "بضائعك قبل البدء",
+                          style: TextStyle(
+                              fontSize: 24.sp, color: AppColor.deepBlue),
+                          children: [
+                            TextSpan(
+                                text: " بعملية الاستيراد",
+                                style: TextStyle(
+                                    fontSize: 24.sp,
+                                    color: AppColor.deepYellow))
+                          ]),
+                    )),
+                builfPage(
+                    color: Colors.white,
+                    urlImage: "assets/images/intro4.png",
+                    title: Text(
+                      "المخلص الجمركي المختص",
+                      style:
+                          TextStyle(color: AppColor.deepBlue, fontSize: 24.sp),
+                    ),
+                    subtitle: Text(
+                      "",
+                      style:
+                          TextStyle(color: AppColor.deepBlue, fontSize: 24.sp),
+                    )),
+              ],
+            ),
           ),
         ),
-      ),
-      bottomSheet: isLastPage
-          ? TextButton(
-              style: TextButton.styleFrom(
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(5),
-                  ),
-                  foregroundColor: Colors.white,
-                  minimumSize: Size.fromHeight(80.h)),
-              onPressed: () async {
-                final prefs = await SharedPreferences.getInstance();
-                prefs.setBool("showHome", true);
-                // ignore: use_build_context_synchronously
-                Navigator.pushReplacement(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => const ControlView(),
-                    ));
-              },
-              child: Text(
-                'ابدأ الأن',
-                style: TextStyle(fontSize: 24.sp, color: AppColor.deepYellow),
-              ))
-          : Container(
-              color: Colors.white,
-              padding: EdgeInsets.symmetric(horizontal: 15.w),
-              height: 80.h,
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  TextButton(
-                      onPressed: () {
-                        controller.jumpToPage(3);
-                      },
-                      child: Text(
-                        'تخطى',
-                        style: TextStyle(color: AppColor.deepYellow),
-                      )),
-                  Center(
-                    child: SmoothPageIndicator(
-                      controller: controller,
-                      count: 4,
-                      effect: WormEffect(
-                          spacing: 14.w,
-                          dotColor: AppColor.lightYellow,
-                          activeDotColor: AppColor.deepYellow),
-                      onDotClicked: (index) => controller.animateToPage(index,
-                          duration: const Duration(milliseconds: 500),
-                          curve: Curves.easeInOut),
+        bottomSheet: isLastPage
+            ? TextButton(
+                style: TextButton.styleFrom(
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(5),
                     ),
-                  ),
-                  TextButton(
-                      onPressed: () {
-                        controller.nextPage(
+                    foregroundColor: Colors.white,
+                    minimumSize: Size.fromHeight(80.h)),
+                onPressed: () async {
+                  final prefs = await SharedPreferences.getInstance();
+                  prefs.setBool("showHome", true);
+                  // ignore: use_build_context_synchronously
+                  Navigator.pushReplacement(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => const ControlView(),
+                      ));
+                },
+                child: Text(
+                  'ابدأ الأن',
+                  style: TextStyle(fontSize: 24.sp, color: AppColor.deepYellow),
+                ))
+            : Container(
+                color: Colors.white,
+                padding: EdgeInsets.symmetric(horizontal: 15.w),
+                height: 80.h,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    TextButton(
+                        onPressed: () {
+                          controller.jumpToPage(3);
+                        },
+                        child: Text(
+                          'تخطى',
+                          style: TextStyle(color: AppColor.deepYellow),
+                        )),
+                    Center(
+                      child: SmoothPageIndicator(
+                        controller: controller,
+                        count: 4,
+                        effect: WormEffect(
+                            spacing: 14.w,
+                            dotColor: AppColor.lightYellow,
+                            activeDotColor: AppColor.deepYellow),
+                        onDotClicked: (index) => controller.animateToPage(index,
                             duration: const Duration(milliseconds: 500),
-                            curve: Curves.easeInOut);
-                      },
-                      child: Text(
-                        'التالي',
-                        style: TextStyle(color: AppColor.deepYellow),
-                      )),
-                ],
+                            curve: Curves.easeInOut),
+                      ),
+                    ),
+                    TextButton(
+                        onPressed: () {
+                          controller.nextPage(
+                              duration: const Duration(milliseconds: 500),
+                              curve: Curves.easeInOut);
+                        },
+                        child: Text(
+                          'التالي',
+                          style: TextStyle(color: AppColor.deepYellow),
+                        )),
+                  ],
+                ),
               ),
-            ),
+      ),
     );
   }
 }

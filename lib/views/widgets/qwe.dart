@@ -791,7 +791,6 @@ class _CustomeTariffScreenState extends State<CustomeTariffScreen> {
                                   FeeLoadEvent(state.subchapters[index3].id!));
                               setState(() {
                                 subchapterselected = index3;
-                                feeselected = -1;
                               });
                             } else {
                               setState(() {
@@ -1076,7 +1075,6 @@ class _CustomeTariffScreenState extends State<CustomeTariffScreen> {
                                   chapterselected = index2;
 
                                   subchapterselected = -1;
-                                  feeselected = -1;
                                 });
                               } else {
                                 setState(() {

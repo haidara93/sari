@@ -228,7 +228,7 @@ class MyApp extends StatelessWidget {
                       primary: AppColor.deepBlue,
                       secondary: AppColor.lightAppBarBlue,
                     ),
-                    textTheme: GoogleFonts.changaTextTheme(
+                    textTheme: GoogleFonts.notoNaskhArabicTextTheme(
                       Theme.of(context).textTheme,
                     ),
                   ),

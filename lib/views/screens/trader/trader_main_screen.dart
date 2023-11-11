@@ -120,74 +120,123 @@ class _TraderMainScreenState extends State<TraderMainScreen> {
                                       mainAxisAlignment:
                                           MainAxisAlignment.spaceBetween,
                                       children: [
-                                        BlocListener<GroupBloc, GroupState>(
-                                          listener: (context, state3) {
-                                            if (state3
-                                                is PostUnsavedSuccessfully) {
-                                              var snackBar = SnackBar(
-                                                elevation: 0,
-                                                duration:
-                                                    const Duration(seconds: 4),
-                                                backgroundColor:
-                                                    Colors.transparent,
-                                                content: Column(
-                                                  children: [
-                                                    AwesomeSnackbarContent(
-                                                      title: 'تم',
-                                                      message:
-                                                          'تم إزالة المنشور من المحفوظات!',
+                                        GestureDetector(
+                                          onTap: () {
+                                            state.posts[index].is_saved!
+                                                ? showModalBottomSheet(
+                                                    context: context,
+                                                    shape:
+                                                        const RoundedRectangleBorder(
+                                                      borderRadius:
+                                                          BorderRadius.vertical(
+                                                        top:
+                                                            Radius.circular(20),
+                                                      ),
+                                                    ),
+                                                    builder: (context) =>
+                                                        StatefulBuilder(
+                                                      builder:
+                                                          (context, setState) {
+                                                        (BlocProvider.of<
+                                                                    GroupBloc>(
+                                                                context)
+                                                            .add(UnSavePostEvent(
+                                                                state
+                                                                    .posts[
+                                                                        index]
+                                                                    .id!)));
+                                                        return BlocListener<
+                                                            GroupBloc,
+                                                            GroupState>(
+                                                          listener: (context,
+                                                              state3) {
+                                                            if (state3
+                                                                is PostUnsavedSuccessfully) {
+                                                              var snackBar =
+                                                                  SnackBar(
+                                                                elevation: 0,
+                                                                duration:
+                                                                    const Duration(
+                                                                        seconds:
+                                                                            4),
+                                                                backgroundColor:
+                                                                    Colors
+                                                                        .transparent,
+                                                                content: Column(
+                                                                  children: [
+                                                                    AwesomeSnackbarContent(
+                                                                      title:
+                                                                          'تم',
+                                                                      message:
+                                                                          'تم إزالة المنشور من المحفوظات!',
 
-                                                      /// change contentType to ContentType.success, ContentType.warning or ContentType.help for variants
-                                                      contentType:
-                                                          ContentType.success,
+                                                                      /// change contentType to ContentType.success, ContentType.warning or ContentType.help for variants
+                                                                      contentType:
+                                                                          ContentType
+                                                                              .success,
+                                                                    ),
+                                                                    SizedBox(
+                                                                      height:
+                                                                          90.h,
+                                                                    ),
+                                                                  ],
+                                                                ),
+                                                              );
+                                                              BlocProvider.of<
+                                                                          PostBloc>(
+                                                                      context)
+                                                                  .add(PostSaveEvent(
+                                                                      state
+                                                                          .posts[
+                                                                              index]
+                                                                          .id!,
+                                                                      false));
+                                                              Navigator.pop(
+                                                                  context);
+                                                              ScaffoldMessenger
+                                                                      .of(
+                                                                          context)
+                                                                  .showSnackBar(
+                                                                      snackBar);
+                                                            }
+                                                          },
+                                                          child: SizedBox(
+                                                            height: 100.h,
+                                                            child: const Center(
+                                                              child:
+                                                                  CircularProgressIndicator(),
+                                                            ),
+                                                          ),
+                                                        );
+                                                      },
                                                     ),
-                                                    SizedBox(
-                                                      height: 90.h,
+                                                  )
+                                                : showModalBottomSheet(
+                                                    context: context,
+                                                    shape:
+                                                        const RoundedRectangleBorder(
+                                                      borderRadius:
+                                                          BorderRadius.vertical(
+                                                        top:
+                                                            Radius.circular(20),
+                                                      ),
                                                     ),
-                                                  ],
-                                                ),
-                                              );
-                                              BlocProvider.of<PostBloc>(context)
-                                                  .add(PostSaveEvent(
-                                                      state.posts[index].id!,
-                                                      false));
-                                              ScaffoldMessenger.of(context)
-                                                  .showSnackBar(snackBar);
-                                            }
-                                          },
-                                          child: GestureDetector(
-                                              onTap: () {
-                                                state.posts[index].is_saved!
-                                                    ? (BlocProvider.of<
-                                                            GroupBloc>(context)
-                                                        .add(UnSavePostEvent(
-                                                            state.posts[index]
-                                                                .id!)))
-                                                    : showModalBottomSheet(
-                                                        context: context,
-                                                        shape: const RoundedRectangleBorder(
-                                                            borderRadius:
-                                                                BorderRadius.vertical(
-                                                                    top: Radius
-                                                                        .circular(
-                                                                            20))),
-                                                        builder: (context) =>
-                                                            StatefulBuilder(builder:
-                                                                (BuildContext
-                                                                        context,
-                                                                    setStte) {
-                                                          return Directionality(
-                                                            textDirection:
-                                                                TextDirection
-                                                                    .rtl,
-                                                            child: Padding(
-                                                              padding:
-                                                                  const EdgeInsets
-                                                                      .all(8.0),
-                                                              child: Center(
-                                                                  child: BlocConsumer<
-                                                                      GroupBloc,
-                                                                      GroupState>(
+                                                    builder: (context) =>
+                                                        StatefulBuilder(
+                                                      builder:
+                                                          (BuildContext context,
+                                                              setStte) {
+                                                        return Directionality(
+                                                          textDirection:
+                                                              TextDirection.rtl,
+                                                          child: Padding(
+                                                            padding:
+                                                                const EdgeInsets
+                                                                    .all(8.0),
+                                                            child: Center(
+                                                              child: BlocConsumer<
+                                                                  GroupBloc,
+                                                                  GroupState>(
                                                                 listener:
                                                                     (context,
                                                                         state2) {
@@ -258,10 +307,9 @@ class _TraderMainScreenState extends State<TraderMainScreen> {
                                                                                 key: _groupform,
                                                                                 child: TextFormField(
                                                                                   decoration: InputDecoration(
-                                                                                    labelText: "اسم المجموعة",
-                                                                                    border: OutlineInputBorder(
-                                                                                      borderRadius: BorderRadius.circular(5),
-                                                                                    ),
+                                                                                    labelText: "  اسم المجموعة",
+                                                                                    border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
+                                                                                    contentPadding: EdgeInsets.zero,
                                                                                   ),
                                                                                   validator: (value) {
                                                                                     if (value!.isEmpty) {
@@ -324,13 +372,18 @@ class _TraderMainScreenState extends State<TraderMainScreen> {
                                                                                           addgroup = true;
                                                                                         });
                                                                                       },
-                                                                                      child: Row(
-                                                                                        children: const [
+                                                                                      child: const Row(
+                                                                                        children: [
                                                                                           Text(
                                                                                             "اضافة مجموعة جديدة",
-                                                                                            style: TextStyle(color: Colors.greenAccent),
+                                                                                            style: TextStyle(
+                                                                                              color: Colors.greenAccent,
+                                                                                            ),
                                                                                           ),
-                                                                                          Icon(Icons.add_circle_outline_rounded, color: Colors.greenAccent),
+                                                                                          Icon(
+                                                                                            Icons.add_circle_outline_rounded,
+                                                                                            color: Colors.greenAccent,
+                                                                                          ),
                                                                                         ],
                                                                                       ),
                                                                                     ),
@@ -344,18 +397,19 @@ class _TraderMainScreenState extends State<TraderMainScreen> {
                                                                                 itemBuilder: (context, index2) {
                                                                                   return Padding(
                                                                                     padding: const EdgeInsets.all(8.0),
-                                                                                    child: GestureDetector(
-                                                                                      onTap: () {
-                                                                                        setStte(() {
-                                                                                          savepost = true;
-                                                                                        });
-                                                                                        BlocProvider.of<GroupBloc>(context).add(SavePostEvent(state.posts[index].id!, groupstate.groups[index2].id!));
-                                                                                      },
-                                                                                      child: SizedBox(
-                                                                                        height: 65.h,
-                                                                                        child: Column(
-                                                                                          children: [
-                                                                                            Row(
+                                                                                    child: SizedBox(
+                                                                                      height: 65.h,
+                                                                                      child: Column(
+                                                                                        children: [
+                                                                                          GestureDetector(
+                                                                                            onTap: () {
+                                                                                              setStte(() {
+                                                                                                savepost = true;
+                                                                                              });
+                                                                                              BlocProvider.of<GroupBloc>(context).add(SavePostEvent(state.posts[index].id!, groupstate.groups[index2].id!));
+                                                                                            },
+                                                                                            behavior: HitTestBehavior.opaque,
+                                                                                            child: Row(
                                                                                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                                                                               children: [
                                                                                                 Row(
@@ -366,8 +420,8 @@ class _TraderMainScreenState extends State<TraderMainScreen> {
                                                                                                       decoration: BoxDecoration(borderRadius: BorderRadius.circular(5), color: colors[Random().nextInt(5)]),
                                                                                                       child: Center(child: Text(groupstate.groups[index2].name![0])),
                                                                                                     ),
-                                                                                                    const SizedBox(
-                                                                                                      width: 5,
+                                                                                                    SizedBox(
+                                                                                                      width: 13.w,
                                                                                                     ),
                                                                                                     Text(groupstate.groups[index2].name!),
                                                                                                   ],
@@ -375,9 +429,9 @@ class _TraderMainScreenState extends State<TraderMainScreen> {
                                                                                                 const Icon(Icons.add_circle_outline_rounded, color: Colors.greenAccent),
                                                                                               ],
                                                                                             ),
-                                                                                            const Divider()
-                                                                                          ],
-                                                                                        ),
+                                                                                          ),
+                                                                                          const Divider()
+                                                                                        ],
                                                                                       ),
                                                                                     ),
                                                                                   );
@@ -396,10 +450,10 @@ class _TraderMainScreenState extends State<TraderMainScreen> {
                                                                               .add(GroupLoadEvent());
                                                                         },
                                                                         child:
-                                                                            Row(
+                                                                            const Row(
                                                                           mainAxisAlignment:
                                                                               MainAxisAlignment.center,
-                                                                          children: const [
+                                                                          children: [
                                                                             Text(
                                                                               "حدث خطأأثناء تحميل القائمة...  ",
                                                                               style: TextStyle(color: Colors.red),
@@ -416,17 +470,18 @@ class _TraderMainScreenState extends State<TraderMainScreen> {
                                                                     return const CircularProgressIndicator();
                                                                   }
                                                                 },
-                                                              )),
+                                                              ),
                                                             ),
-                                                          );
-                                                        }),
-                                                      );
-                                              },
-                                              child: state
-                                                      .posts[index].is_saved!
-                                                  ? const Icon(Icons.bookmark)
-                                                  : const Icon(
-                                                      Icons.bookmark_border)),
+                                                          ),
+                                                        );
+                                                      },
+                                                    ),
+                                                  );
+                                          },
+                                          child: state.posts[index].is_saved!
+                                              ? const Icon(Icons.bookmark)
+                                              : const Icon(
+                                                  Icons.bookmark_border),
                                         ),
                                         GestureDetector(
                                             onTap: () {
@@ -456,9 +511,9 @@ class _TraderMainScreenState extends State<TraderMainScreen> {
                       onTap: () {
                         BlocProvider.of<PostBloc>(context).add(PostLoadEvent());
                       },
-                      child: Row(
+                      child: const Row(
                         mainAxisAlignment: MainAxisAlignment.center,
-                        children: const [
+                        children: [
                           Text(
                             "حدث خطأأثناء التحميل...  ",
                             style: TextStyle(color: Colors.red),

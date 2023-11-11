@@ -126,17 +126,18 @@ class _LogScreenState extends State<LogScreen>
                     Tab(
                       child: Container(
                         decoration: BoxDecoration(
-                            gradient: tabIndex == 0
-                                ? LinearGradient(
-                                    colors: [
-                                      AppColor.goldenYellow,
-                                      Colors.white,
-                                      AppColor.goldenYellow,
-                                    ],
-                                    begin: Alignment.centerLeft,
-                                    end: Alignment.centerRight,
-                                  )
-                                : null,
+                            // gradient: tabIndex == 0
+                            //     ? LinearGradient(
+                            //         colors: [
+                            //           AppColor.goldenYellow,
+                            //           Colors.white,
+                            //           AppColor.goldenYellow,
+                            //         ],
+                            //         begin: Alignment.topLeft,
+                            //         end: Alignment.bottomRight,
+                            //       )
+                            //     : null,
+                            color: tabIndex == 0 ? AppColor.goldenYellow : null,
                             borderRadius: BorderRadius.circular(
                               25.0,
                             ),
@@ -156,17 +157,18 @@ class _LogScreenState extends State<LogScreen>
                     Tab(
                       child: Container(
                         decoration: BoxDecoration(
-                            gradient: tabIndex == 1
-                                ? LinearGradient(
-                                    colors: [
-                                      AppColor.goldenYellow,
-                                      Colors.white,
-                                      AppColor.goldenYellow,
-                                    ],
-                                    begin: Alignment.centerLeft,
-                                    end: Alignment.centerRight,
-                                  )
-                                : null,
+                            // gradient: tabIndex == 1
+                            //     ? LinearGradient(
+                            //         colors: [
+                            //           AppColor.goldenYellow,
+                            //           Colors.white,
+                            //           AppColor.goldenYellow,
+                            //         ],
+                            //         begin: Alignment.centerLeft,
+                            //         end: Alignment.centerRight,
+                            //       )
+                            //     : null,
+                            color: tabIndex == 1 ? AppColor.goldenYellow : null,
                             borderRadius: BorderRadius.circular(
                               25.0,
                             ),

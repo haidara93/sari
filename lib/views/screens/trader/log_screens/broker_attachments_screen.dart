@@ -84,42 +84,41 @@ class _BrokerAttachmentsScreenState extends State<BrokerAttachmentsScreen> {
         margin: const EdgeInsets.all(7),
         padding: const EdgeInsets.all(7),
         decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(25),
-          border: Border(
-            left: BorderSide(
-              color: AppColor.deepAppBarBlue,
-              width: 1.0,
-            ),
-            right: BorderSide(
-              color: AppColor.deepAppBarBlue,
-              width: 1.0,
-            ),
-            top: BorderSide(
-              color: AppColor.deepAppBarBlue,
-              width: 1.0,
-            ),
-            bottom: BorderSide(
-              color: AppColor.deepAppBarBlue,
-              width: 1.0,
-            ),
+          borderRadius: BorderRadius.circular(12),
+          border: Border.all(
+            color: AppColor.deepAppBarBlue,
+            width: 1.0,
           ),
         ),
         height: 150.h,
         width: 130.w,
         child: Column(
           children: [
-            const SizedBox(
-              height: 5,
+            SizedBox(
+              height: 2.h,
             ),
-            Text(attachmentName(element.attachmentType!)),
-            const SizedBox(
-              height: 7,
+            Text(
+              attachmentName(element.attachmentType!),
+              style: TextStyle(
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            SizedBox(
+              height: 7.h,
             ),
             Image.network(
               element.image!,
               fit: BoxFit.cover,
-              height: 75.h,
-              width: 75.w,
+              height: 90.h,
+              width: 90.w,
+              errorBuilder: (context, error, stackTrace) {
+                return Container(
+                  height: 90.h,
+                  width: 90.w,
+                  color: Colors.grey[300],
+                  child: const Center(child: Text("not loaded")),
+                );
+              },
               loadingBuilder: (context, child, loadingProgress) {
                 if (loadingProgress == null) {
                   return child;
@@ -205,9 +204,9 @@ class _BrokerAttachmentsScreenState extends State<BrokerAttachmentsScreen> {
                             builder: (context, state) {
                               if (state
                                   is TraderAdditionalAttachmentLoadingProgress) {
-                                return Row(
+                                return const Row(
                                   mainAxisAlignment: MainAxisAlignment.center,
-                                  children: const [
+                                  children: [
                                     Center(child: CircularProgressIndicator()),
                                   ],
                                 );
@@ -277,42 +276,36 @@ class _BrokerAttachmentsScreenState extends State<BrokerAttachmentsScreen> {
         margin: const EdgeInsets.all(7),
         padding: const EdgeInsets.all(7),
         decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(25),
-          border: Border(
-            left: BorderSide(
-              color: AppColor.deepAppBarBlue,
-              width: 1.0,
-            ),
-            right: BorderSide(
-              color: AppColor.deepAppBarBlue,
-              width: 1.0,
-            ),
-            top: BorderSide(
-              color: AppColor.deepAppBarBlue,
-              width: 1.0,
-            ),
-            bottom: BorderSide(
-              color: AppColor.deepAppBarBlue,
-              width: 1.0,
-            ),
+          borderRadius: BorderRadius.circular(12),
+          border: Border.all(
+            color: AppColor.deepAppBarBlue,
+            width: 1.0,
           ),
         ),
         height: 150.h,
         width: 130.w,
         child: Column(
           children: [
-            const SizedBox(
-              height: 5,
+            SizedBox(
+              height: 3.h,
             ),
             Text(attachmentName(element.attachmentType!)),
-            const SizedBox(
-              height: 7,
+            SizedBox(
+              height: 7.h,
             ),
             Image.network(
               element.image!,
               fit: BoxFit.cover,
-              height: 75.h,
-              width: 75.w,
+              height: 90.h,
+              width: 90.w,
+              errorBuilder: (context, error, stackTrace) {
+                return Container(
+                  height: 90.h,
+                  width: 90.w,
+                  color: Colors.grey[300],
+                  child: const Center(child: Text("not loaded")),
+                );
+              },
               loadingBuilder: (context, child, loadingProgress) {
                 if (loadingProgress == null) {
                   return child;
@@ -352,179 +345,205 @@ class _BrokerAttachmentsScreenState extends State<BrokerAttachmentsScreen> {
     }
     return Directionality(
       textDirection: TextDirection.rtl,
-      child: Scaffold(
-        appBar: CustomAppBar(title: "تفاصيل المرفقات"),
-        backgroundColor: Colors.grey[200],
-        body: SingleChildScrollView(
-          child: BlocListener<TraderAdditionalAttachmentBloc,
-              TraderAdditionalAttachmentState>(
-            listener: (context, state) {
-              if (state is TraderAdditionalAttachmentLoadedSuccess &&
-                  additionalattachmentsucees) {
-                Navigator.pop(context);
-                additionalattachmentsucees = false;
-                setState(() {
-                  attachmentsId.add(state.attachment.id!);
-                  attachments.add(state.attachment);
-                });
-              }
-            },
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                SizedBox(
-                  height: 10.h,
-                ),
-                Card(
-                  clipBehavior: Clip.antiAlias,
-                  shape: const RoundedRectangleBorder(
-                      borderRadius: BorderRadius.all(
-                    Radius.circular(15),
-                  )),
-                  margin: EdgeInsets.symmetric(horizontal: 10.w),
-                  elevation: 1,
-                  color: Colors.white,
-                  child: Container(
-                    margin: const EdgeInsets.symmetric(vertical: 7),
-                    width: double.infinity,
-                    padding: const EdgeInsets.all(8.0),
-                    child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          const Text("الأوراق المحملة"),
-                          const SizedBox(
-                            height: 5,
-                          ),
-                          widget.attachments.isEmpty
-                              ? Center(
-                                  child: Text("لم يتم تحميل أية مرفقات."),
-                                )
-                              : Wrap(
-                                  children: _buildAttachmentslist(
-                                      widget.attachments)),
-                        ]),
+      child: SafeArea(
+        child: Scaffold(
+          appBar: CustomAppBar(title: "تفاصيل المرفقات"),
+          backgroundColor: Colors.grey[200],
+          body: SingleChildScrollView(
+            child: BlocListener<TraderAdditionalAttachmentBloc,
+                TraderAdditionalAttachmentState>(
+              listener: (context, state) {
+                if (state is TraderAdditionalAttachmentLoadedSuccess &&
+                    additionalattachmentsucees) {
+                  Navigator.pop(context);
+                  additionalattachmentsucees = false;
+                  setState(() {
+                    attachmentsId.add(state.attachment.id!);
+                    attachments.add(state.attachment);
+                  });
+                }
+              },
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  SizedBox(
+                    height: 10.h,
                   ),
-                ),
-                SizedBox(
-                  height: 10.h,
-                ),
-                Card(
-                  clipBehavior: Clip.antiAlias,
-                  shape: const RoundedRectangleBorder(
-                      borderRadius: BorderRadius.all(
-                    Radius.circular(15),
-                  )),
-                  margin: EdgeInsets.symmetric(horizontal: 10.w),
-                  elevation: 1,
-                  color: Colors.white,
-                  child: Container(
-                    margin: const EdgeInsets.symmetric(vertical: 7),
-                    width: double.infinity,
-                    padding: const EdgeInsets.all(8.0),
-                    child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          const Text("الأوراق الاضافية المطلوبة"),
-                          const SizedBox(
-                            height: 5,
-                          ),
-                          BlocBuilder<AttachmentTypeBloc, AttachmentTypeState>(
-                            builder: (context, state) {
-                              if (state is AttachmentTypeLoadedSuccess) {
-                                return Wrap(
-                                    children: _buildAttachmentsTypelist(
-                                        state.attachmentTypes, context));
-                              } else if (state is AttachmentTypeInitial) {
-                                return widget.additionalAttachments.isEmpty
-                                    ? const Center(
-                                        child: Text("لا يوجدأية مرفقات إضافية"),
-                                      )
-                                    : Wrap(
-                                        children: _buildAttachmentsTypelist(
-                                            widget.additionalAttachments,
-                                            context));
-                              } else {
-                                return const Center(
-                                  child: Text("لا يوجدأية مرفقات إضافية"),
-                                );
-                              }
-                            },
-                          ),
-                        ]),
+                  Card(
+                    clipBehavior: Clip.antiAlias,
+                    shape: const RoundedRectangleBorder(
+                        borderRadius: BorderRadius.all(
+                      Radius.circular(15),
+                    )),
+                    margin: EdgeInsets.symmetric(horizontal: 10.w),
+                    elevation: 1,
+                    color: Colors.white,
+                    child: Container(
+                      margin: const EdgeInsets.symmetric(vertical: 7),
+                      width: double.infinity,
+                      padding: const EdgeInsets.all(8.0),
+                      child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            const Text(
+                              "الأوراق المحملة",
+                              style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                fontSize: 18,
+                              ),
+                            ),
+                            const SizedBox(
+                              height: 5,
+                            ),
+                            widget.attachments.isEmpty
+                                ? const Center(
+                                    child: Text("لم يتم تحميل أية مرفقات."),
+                                  )
+                                : Wrap(
+                                    children: _buildAttachmentslist(
+                                        widget.attachments)),
+                          ]),
+                    ),
                   ),
-                ),
-                SizedBox(
-                  height: 10.h,
-                ),
-                Card(
-                  clipBehavior: Clip.antiAlias,
-                  shape: const RoundedRectangleBorder(
-                      borderRadius: BorderRadius.all(
-                    Radius.circular(15),
-                  )),
-                  margin: EdgeInsets.symmetric(horizontal: 10.w),
-                  elevation: 1,
-                  color: Colors.white,
-                  child: Container(
-                    margin: const EdgeInsets.symmetric(vertical: 7),
-                    width: double.infinity,
-                    padding: const EdgeInsets.all(8.0),
-                    child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          const Text("الأوراق الاضافية التي تم تحميلها"),
-                          const SizedBox(
-                            height: 5,
-                          ),
-                          BlocBuilder<TraderAdditionalAttachmentBloc,
-                              TraderAdditionalAttachmentState>(
-                            builder: (context, state) {
-                              if (state
-                                  is TraderAdditionalAttachmentLoadedSuccess) {
-                                return Wrap(
-                                    children: _buildAddionalAttachmentslist(
-                                        state.attachments));
-                              } else {
-                                return const Center(
-                                  child: Text("لم يتم تحميل أية مرفقات إضافية"),
-                                );
-                              }
-                            },
-                          ),
-                        ]),
+                  SizedBox(
+                    height: 10.h,
                   ),
-                ),
-                const SizedBox(
-                  height: 25,
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceAround,
-                  children: [
-                    // CustomButton(
-                    //   onTap: () {},
-                    //   color: AppColor.deepYellow,
-                    //   title: const SizedBox(
-                    //       width: 100, child: Center(child: Text("إلغاء"))),
-                    // ),
-                    CustomButton(
-                      onTap: () {
-                        Navigator.pushReplacement(
+                  Card(
+                    clipBehavior: Clip.antiAlias,
+                    shape: const RoundedRectangleBorder(
+                        borderRadius: BorderRadius.all(
+                      Radius.circular(15),
+                    )),
+                    margin: EdgeInsets.symmetric(horizontal: 10.w),
+                    elevation: 1,
+                    color: Colors.white,
+                    child: Container(
+                      margin: const EdgeInsets.symmetric(vertical: 7),
+                      width: double.infinity,
+                      padding: const EdgeInsets.all(8.0),
+                      child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            const Text(
+                              "الأوراق الاضافية المطلوبة",
+                              style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                fontSize: 18,
+                              ),
+                            ),
+                            const SizedBox(
+                              height: 5,
+                            ),
+                            BlocBuilder<AttachmentTypeBloc,
+                                AttachmentTypeState>(
+                              builder: (context, state) {
+                                if (state is AttachmentTypeLoadedSuccess) {
+                                  return Wrap(
+                                      children: _buildAttachmentsTypelist(
+                                          state.attachmentTypes, context));
+                                } else if (state is AttachmentTypeInitial) {
+                                  return widget.additionalAttachments.isEmpty
+                                      ? const Center(
+                                          child:
+                                              Text("لا يوجدأية مرفقات إضافية"),
+                                        )
+                                      : Wrap(
+                                          children: _buildAttachmentsTypelist(
+                                              widget.additionalAttachments,
+                                              context));
+                                } else {
+                                  return const Center(
+                                    child: Text("لا يوجدأية مرفقات إضافية"),
+                                  );
+                                }
+                              },
+                            ),
+                          ]),
+                    ),
+                  ),
+                  SizedBox(
+                    height: 10.h,
+                  ),
+                  Card(
+                    clipBehavior: Clip.antiAlias,
+                    shape: const RoundedRectangleBorder(
+                        borderRadius: BorderRadius.all(
+                      Radius.circular(15),
+                    )),
+                    margin: EdgeInsets.symmetric(horizontal: 10.w),
+                    elevation: 1,
+                    color: Colors.white,
+                    child: Container(
+                      margin: const EdgeInsets.symmetric(vertical: 7),
+                      width: double.infinity,
+                      padding: const EdgeInsets.all(8.0),
+                      child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            const Text(
+                              "الأوراق الاضافية التي تم تحميلها",
+                              style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                fontSize: 18,
+                              ),
+                            ),
+                            const SizedBox(
+                              height: 5,
+                            ),
+                            BlocBuilder<TraderAdditionalAttachmentBloc,
+                                TraderAdditionalAttachmentState>(
+                              builder: (context, state) {
+                                if (state
+                                    is TraderAdditionalAttachmentLoadedSuccess) {
+                                  return Wrap(
+                                      children: _buildAddionalAttachmentslist(
+                                          state.attachments));
+                                } else {
+                                  return const Center(
+                                    child:
+                                        Text("لم يتم تحميل أية مرفقات إضافية"),
+                                  );
+                                }
+                              },
+                            ),
+                          ]),
+                    ),
+                  ),
+                  const SizedBox(
+                    height: 25,
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    children: [
+                      // CustomButton(
+                      //   onTap: () {},
+                      //   color: AppColor.deepYellow,
+                      //   title: const SizedBox(
+                      //       width: 100, child: Center(child: Text("إلغاء"))),
+                      // ),
+                      CustomButton(
+                        onTap: () {
+                          Navigator.pushAndRemoveUntil(
                             context,
                             MaterialPageRoute(
-                              builder: (context) => ControlView(),
-                            ));
-                        BlocProvider.of<TraderAdditionalAttachmentBloc>(context)
-                            .add(ClearAdditionalAttachmentEvent());
-                      },
-                      title: SizedBox(
-                          width: 180.w,
-                          child: const Center(
-                              child: Text("الرجوع للقائمة الرئيسية"))),
-                    ),
-                  ],
-                ),
-              ],
+                              builder: (context) => const ControlView(),
+                            ),
+                            (Route<dynamic> route) => false,
+                          );
+                          BlocProvider.of<TraderAdditionalAttachmentBloc>(
+                                  context)
+                              .add(ClearAdditionalAttachmentEvent());
+                        },
+                        title: SizedBox(
+                            width: 180.w,
+                            child: const Center(
+                                child: Text("الرجوع للقائمة الرئيسية"))),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
             ),
           ),
         ),

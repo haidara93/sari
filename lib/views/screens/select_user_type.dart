@@ -47,9 +47,10 @@ class SelectUserType extends StatelessWidget {
                 elevation: 3,
                 clipBehavior: Clip.antiAlias,
                 shape: const RoundedRectangleBorder(
-                    borderRadius: BorderRadius.all(
-                  Radius.circular(40),
-                )),
+                  borderRadius: BorderRadius.all(
+                    Radius.circular(40),
+                  ),
+                ),
                 margin: const EdgeInsets.symmetric(horizontal: 20),
                 child: Padding(
                   padding: const EdgeInsets.symmetric(vertical: 35),
@@ -65,7 +66,7 @@ class SelectUserType extends StatelessWidget {
                               fontSize: 19.sp,
                             ),
                           ),
-                          color: AppColor.deepYellow,
+                          color: AppColor.lightYellow,
                           onTap: () async {
                             Navigator.push(
                                 context,

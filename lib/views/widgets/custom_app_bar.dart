@@ -117,9 +117,12 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
                   ],
                 ),
               ),
-              Image.asset(
-                "assets/images/sari_white_logo.png",
-                height: 35.h,
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Image.asset(
+                  "assets/images/sari_white_logo.png",
+                  height: 35.h,
+                ),
               ),
             ],
           ),

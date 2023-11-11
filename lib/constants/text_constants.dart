@@ -9,15 +9,15 @@ class TextConstants {
 
   static const String firstname = "الاسم الأول";
   static const String firstNamePlaceholder = "اسمك الأول";
-  static const String firstnameErrorText = 'يجيب ادخال النص';
+  static const String firstnameErrorText = 'يجب ادخال النص';
 
   static const String lastname = "الاسم الأخير";
   static const String lastNamePlaceholder = "اسمك الأخير";
-  static const String lastnameErrorText = 'يجيب ادخال النص';
+  static const String lastnameErrorText = 'يجب ادخال النص';
 
   static const String username = "اسم المستخدم";
   static const String userNamePlaceholder = "اسم المستخدم الخاص بك";
-  static const String usernameErrorText = 'يجيب ادخال النص';
+  static const String usernameErrorText = 'يجب ادخال اسم المستخدم';
 
   static const String email = "البريد الالكتروني";
   static const String emailPlaceholder = "example@mail.com";
