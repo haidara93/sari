@@ -212,13 +212,13 @@ class _TraderAttachementScreenState extends State<TraderAttachementScreen> {
                       });
                     },
                   ),
-                  const SizedBox(
-                    height: 7,
-                  ),
-                  CustomButton(
-                      title: const Text("رفع ملف"),
-                      color: AppColor.deepYellow,
-                      onTap: () {}),
+                  // const SizedBox(
+                  //   height: 7,
+                  // ),
+                  // CustomButton(
+                  //     title: const Text("رفع ملف"),
+                  //     color: AppColor.deepYellow,
+                  //     onTap: () {}),
                   const SizedBox(
                     height: 15,
                   ),
