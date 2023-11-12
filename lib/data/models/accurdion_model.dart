@@ -322,7 +322,7 @@ class StoneFarming {
 }
 
 class ImportFee {
-  String? id;
+  int? id;
   String? id_importfee;
   String? restriction_import;
   String? document_import;
@@ -460,7 +460,7 @@ class SectionNote {
   });
 
   SectionNote.fromJson(Map<String, dynamic> json) {
-    id = json['id'];
+    id = json['id'].toString();
     noteA = json['note_a'];
     noteB = json['note_b'] ?? "";
     noteC = json['note_c'] ?? "";

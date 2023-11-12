@@ -73,6 +73,16 @@ class _TraderMainScreenState extends State<TraderMainScreen> {
                                 height: 225.h,
                                 width: double.infinity,
                                 fit: BoxFit.cover,
+                                errorBuilder: (context, error, stackTrace) {
+                                  return Container(
+                                    height: 225.h,
+                                    width: double.infinity,
+                                    color: Colors.grey[300],
+                                    child: const Center(
+                                      child: Text("error on loading "),
+                                    ),
+                                  );
+                                },
                                 loadingBuilder:
                                     (context, child, loadingProgress) {
                                   if (loadingProgress == null) {

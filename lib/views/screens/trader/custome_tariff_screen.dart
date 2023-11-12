@@ -71,9 +71,20 @@ class _CustomeTariffScreenState extends State<CustomeTariffScreen> {
                       //   color: Colors.white,
                       //   borderRadius: BorderRadius.circular(10),
                       // ),
-                      child: CachedNetworkImage(
-                          imageUrl: state.tradeDescription
-                              .imageDescriptions![index4].image!),
+                      child: Image.network(
+                        state
+                            .tradeDescription.imageDescriptions![index4].image!,
+                        height: 35.h,
+                        width: 35.w,
+                        errorBuilder: (context, error, stackTrace) {
+                          return Container(
+                            height: 35.h,
+                            width: 35.w,
+                            color: Colors.grey[300],
+                            child: const Center(child: Text("error")),
+                          );
+                        },
+                      ),
                     );
                   },
                 ),
@@ -135,16 +146,18 @@ class _CustomeTariffScreenState extends State<CustomeTariffScreen> {
                           color: Colors.white,
                           borderRadius: BorderRadius.circular(10),
                         ),
-                        child: Column(children: [
-                          Text(
-                            state.notes[index2].noteNum!,
-                            style: const TextStyle(
-                                color: Colors.yellow,
-                                fontSize: 16,
-                                fontWeight: FontWeight.bold),
-                          ),
-                          Text("  ${state.notes[index2].noteA!}"),
-                        ]),
+                        child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                state.notes[index2].noteNum!,
+                                style: const TextStyle(
+                                    color: Colors.yellow,
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.bold),
+                              ),
+                              Text("  ${state.notes[index2].noteA!}"),
+                            ]),
                       );
                     },
                   );
@@ -421,16 +434,18 @@ class _CustomeTariffScreenState extends State<CustomeTariffScreen> {
                           color: Colors.white,
                           borderRadius: BorderRadius.circular(10),
                         ),
-                        child: Column(children: [
-                          Text(
-                            state.notes[index2].noteNum!,
-                            style: const TextStyle(
-                                color: Colors.yellow,
-                                fontSize: 16,
-                                fontWeight: FontWeight.bold),
-                          ),
-                          Text("  ${state.notes[index2].noteA!}"),
-                        ]),
+                        child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                state.notes[index2].noteNum!,
+                                style: const TextStyle(
+                                    color: Colors.yellow,
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.bold),
+                              ),
+                              Text("  ${state.notes[index2].noteA!}"),
+                            ]),
                       );
                     },
                   );
@@ -510,47 +525,39 @@ class _CustomeTariffScreenState extends State<CustomeTariffScreen> {
                                 ? const Icon(Icons.remove)
                                 : const Icon(Icons.add),
                           ),
-                          title: Flexible(
-                            child: Container(
-                              padding:
-                                  const EdgeInsets.symmetric(horizontal: 5),
-                              width: double.infinity,
-                              child: Text.rich(
-                                maxLines: 10,
-                                overflow: TextOverflow.ellipsis,
-                                TextSpan(
-                                    text:
-                                        "${state.fees[index4].id!} ${state.fees[index4].label!}",
-                                    style: const TextStyle(height: 1.3),
-                                    children: [
-                                      WidgetSpan(
-                                        child: GestureDetector(
-                                          onTap: () {
-                                            BlocProvider.of<NoteBloc>(context)
-                                                .add(NoteLoadEvent(
-                                                    state.fees[index4].id!
-                                                        .toString(),
-                                                    NoteType.Fee));
-                                            if (!shownote) {
-                                              setState(() {
-                                                feeselected = index4;
-                                                shownote = true;
-                                                noteType = NoteType.Fee;
-                                              });
-                                            } else {
-                                              setState(() {
-                                                feeselected = -1;
-                                                shownote = false;
-                                                noteType = NoteType.None;
-                                              });
-                                            }
-                                          },
-                                          child: const TariffInfoIcon(),
-                                        ),
-                                      ),
-                                    ]),
+                          title: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              Flexible(
+                                child: Text(
+                                  "${state.fees[index4].id!} ${state.fees[index4].label!}",
+                                  style: const TextStyle(height: 1.3),
+                                ),
                               ),
-                            ),
+                              GestureDetector(
+                                onTap: () {
+                                  BlocProvider.of<NoteBloc>(context).add(
+                                      NoteLoadEvent(
+                                          state.fees[index4].id!.toString(),
+                                          NoteType.Fee));
+                                  if (!shownote) {
+                                    setState(() {
+                                      feeselected = index4;
+                                      shownote = true;
+                                      noteType = NoteType.Fee;
+                                    });
+                                  } else {
+                                    setState(() {
+                                      feeselected = -1;
+                                      shownote = false;
+                                      noteType = NoteType.None;
+                                    });
+                                  }
+                                },
+                                child: const TariffInfoIcon(),
+                              ),
+                            ],
                           ),
                           onExpansionChanged: (value) {
                             if (value) {
@@ -588,24 +595,29 @@ class _CustomeTariffScreenState extends State<CustomeTariffScreen> {
                   baseColor: (Colors.grey[300])!,
                   highlightColor: (Colors.grey[100])!,
                   enabled: true,
-                  child: SizedBox(
-                    width: MediaQuery.of(context).size.width * .65,
-                    child: ListView.builder(
-                      shrinkWrap: true,
-                      itemBuilder: (_, __) => Container(
-                        margin: const EdgeInsets.symmetric(
-                            vertical: 4, horizontal: 3),
-                        clipBehavior: Clip.antiAlias,
-                        decoration: BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: BorderRadius.circular(10),
-                        ),
-                        child: SizedBox(
-                          height: 40.h,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      SizedBox(
+                        width: MediaQuery.of(context).size.width * .85,
+                        child: ListView.builder(
+                          shrinkWrap: true,
+                          itemBuilder: (_, __) => Container(
+                            margin: const EdgeInsets.symmetric(
+                                vertical: 4, horizontal: 3),
+                            clipBehavior: Clip.antiAlias,
+                            decoration: BoxDecoration(
+                              color: Colors.white,
+                              borderRadius: BorderRadius.circular(10),
+                            ),
+                            child: SizedBox(
+                              height: 40.h,
+                            ),
+                          ),
+                          itemCount: 4,
                         ),
                       ),
-                      itemCount: 4,
-                    ),
+                    ],
                   ),
                 ),
                 SizedBox(
@@ -644,16 +656,18 @@ class _CustomeTariffScreenState extends State<CustomeTariffScreen> {
                           color: Colors.white,
                           borderRadius: BorderRadius.circular(10),
                         ),
-                        child: Column(children: [
-                          Text(
-                            state.notes[index2].noteNum!,
-                            style: const TextStyle(
-                                color: Colors.yellow,
-                                fontSize: 16,
-                                fontWeight: FontWeight.bold),
-                          ),
-                          Text("  ${state.notes[index2].noteA!}"),
-                        ]),
+                        child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                state.notes[index2].noteNum!,
+                                style: const TextStyle(
+                                    color: Colors.yellow,
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.bold),
+                              ),
+                              Text("  ${state.notes[index2].noteA!}"),
+                            ]),
                       );
                     },
                   );
@@ -742,51 +756,46 @@ class _CustomeTariffScreenState extends State<CustomeTariffScreen> {
                                 ? const Icon(Icons.remove)
                                 : const Icon(Icons.add),
                           ),
-                          title: Flexible(
-                            child: Container(
-                              padding:
-                                  const EdgeInsets.symmetric(horizontal: 5),
-                              width: double.infinity,
-                              child: Text.rich(
-                                maxLines: 10,
-                                overflow: TextOverflow.ellipsis,
-                                TextSpan(
-                                    text:
-                                        "${state.subchapters[index3].id!} ${state.subchapters[index3].label!}",
-                                    style: const TextStyle(height: 1.3),
-                                    children: [
-                                      WidgetSpan(
-                                        child: GestureDetector(
-                                          onTap: () {
-                                            BlocProvider.of<NoteBloc>(context)
-                                                .add(NoteLoadEvent(
-                                                    state
-                                                        .subchapters[index3].id!
-                                                        .toString(),
-                                                    NoteType.SubChapter));
-                                            if (!shownote) {
-                                              setState(() {
-                                                subchapterselected = index3;
-                                                shownote = true;
-                                                noteType = NoteType.SubChapter;
-                                              });
-                                            } else {
-                                              setState(() {
-                                                subchapterselected = -1;
-                                                shownote = false;
-                                                noteType = NoteType.None;
-                                              });
-                                            }
-                                          },
-                                          child: const TariffInfoIcon(),
-                                        ),
-                                      ),
-                                    ]),
+                          title: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              Flexible(
+                                child: Text(
+                                  "${state.subchapters[index3].id!} ${state.subchapters[index3].label!}",
+                                  style: const TextStyle(height: 1.3),
+                                  maxLines: 10,
+                                  overflow: TextOverflow.ellipsis,
+                                ),
                               ),
-                            ),
+                              GestureDetector(
+                                onTap: () {
+                                  BlocProvider.of<NoteBloc>(context).add(
+                                      NoteLoadEvent(
+                                          state.subchapters[index3].id!
+                                              .toString(),
+                                          NoteType.SubChapter));
+                                  if (!shownote) {
+                                    setState(() {
+                                      subchapterselected = index3;
+                                      shownote = true;
+                                      noteType = NoteType.SubChapter;
+                                    });
+                                  } else {
+                                    setState(() {
+                                      subchapterselected = -1;
+                                      shownote = false;
+                                      noteType = NoteType.None;
+                                    });
+                                  }
+                                },
+                                child: const TariffInfoIcon(),
+                              ),
+                            ],
                           ),
                           onExpansionChanged: (value) {
                             if (value) {
+                              print(state.subchapters[index3].id!);
                               BlocProvider.of<FeeBloc>(context).add(
                                   FeeLoadEvent(state.subchapters[index3].id!));
                               setState(() {
@@ -823,24 +832,29 @@ class _CustomeTariffScreenState extends State<CustomeTariffScreen> {
                   baseColor: (Colors.grey[300])!,
                   highlightColor: (Colors.grey[100])!,
                   enabled: true,
-                  child: SizedBox(
-                    width: MediaQuery.of(context).size.width * .7,
-                    child: ListView.builder(
-                      shrinkWrap: true,
-                      itemBuilder: (_, __) => Container(
-                        margin: const EdgeInsets.symmetric(
-                            vertical: 4, horizontal: 3),
-                        clipBehavior: Clip.antiAlias,
-                        decoration: BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: BorderRadius.circular(10),
-                        ),
-                        child: SizedBox(
-                          height: 40.h,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      SizedBox(
+                        width: MediaQuery.of(context).size.width * .85,
+                        child: ListView.builder(
+                          shrinkWrap: true,
+                          itemBuilder: (_, __) => Container(
+                            margin: const EdgeInsets.symmetric(
+                                vertical: 4, horizontal: 3),
+                            clipBehavior: Clip.antiAlias,
+                            decoration: BoxDecoration(
+                              color: Colors.white,
+                              borderRadius: BorderRadius.circular(10),
+                            ),
+                            child: SizedBox(
+                              height: 40.h,
+                            ),
+                          ),
+                          itemCount: 4,
                         ),
                       ),
-                      itemCount: 4,
-                    ),
+                    ],
                   ),
                 ),
                 SizedBox(
@@ -935,24 +949,29 @@ class _CustomeTariffScreenState extends State<CustomeTariffScreen> {
               baseColor: (Colors.grey[300])!,
               highlightColor: (Colors.grey[100])!,
               enabled: true,
-              child: SizedBox(
-                // width: MediaQuery.of(context).size.width * .7,
-                child: ListView.builder(
-                  shrinkWrap: true,
-                  itemBuilder: (_, __) => Container(
-                    margin:
-                        const EdgeInsets.symmetric(vertical: 4, horizontal: 3),
-                    clipBehavior: Clip.antiAlias,
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.circular(10),
-                    ),
-                    child: SizedBox(
-                      height: 180.h,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  SizedBox(
+                    width: MediaQuery.of(context).size.width * .85,
+                    child: ListView.builder(
+                      shrinkWrap: true,
+                      itemBuilder: (_, __) => Container(
+                        margin: const EdgeInsets.symmetric(
+                            vertical: 4, horizontal: 3),
+                        clipBehavior: Clip.antiAlias,
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                        child: SizedBox(
+                          height: 180.h,
+                        ),
+                      ),
+                      itemCount: 1,
                     ),
                   ),
-                  itemCount: 1,
-                ),
+                ],
               ),
             );
           }
@@ -1020,49 +1039,44 @@ class _CustomeTariffScreenState extends State<CustomeTariffScreen> {
                                   ? const Icon(Icons.remove)
                                   : const Icon(Icons.add),
                             ),
-                            title: Flexible(
-                              child: Container(
-                                padding:
-                                    const EdgeInsets.symmetric(horizontal: 5),
-                                width: double.infinity,
-                                child: Text.rich(
-                                  maxLines: 10,
-                                  overflow: TextOverflow.ellipsis,
-                                  TextSpan(
-                                      text:
-                                          "${state.chapters[index2].id!} ${state.chapters[index2].label!}",
-                                      style: const TextStyle(height: 1.3),
-                                      children: [
-                                        WidgetSpan(
-                                          child: GestureDetector(
-                                            onTap: () {
-                                              BlocProvider.of<NoteBloc>(context)
-                                                  .add(NoteLoadEvent(
-                                                      state.chapters[index2].id!
-                                                          .toString(),
-                                                      NoteType.Chapter));
-                                              if (!shownote) {
-                                                setState(() {
-                                                  chapterselected = index2;
-
-                                                  subchapterselected = -1;
-                                                  shownote = true;
-                                                  noteType = NoteType.Chapter;
-                                                });
-                                              } else {
-                                                setState(() {
-                                                  chapterselected = -1;
-                                                  shownote = false;
-                                                  noteType = NoteType.None;
-                                                });
-                                              }
-                                            },
-                                            child: const TariffInfoIcon(),
-                                          ),
-                                        ),
-                                      ]),
+                            title: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: [
+                                Flexible(
+                                  child: Text(
+                                    "${state.chapters[index2].id!} ${state.chapters[index2].label!}",
+                                    style: const TextStyle(height: 1.3),
+                                    maxLines: 10,
+                                    overflow: TextOverflow.ellipsis,
+                                  ),
                                 ),
-                              ),
+                                GestureDetector(
+                                  onTap: () {
+                                    BlocProvider.of<NoteBloc>(context).add(
+                                        NoteLoadEvent(
+                                            state.chapters[index2].id!
+                                                .toString(),
+                                            NoteType.Chapter));
+                                    if (!shownote) {
+                                      setState(() {
+                                        chapterselected = index2;
+
+                                        subchapterselected = -1;
+                                        shownote = true;
+                                        noteType = NoteType.Chapter;
+                                      });
+                                    } else {
+                                      setState(() {
+                                        chapterselected = -1;
+                                        shownote = false;
+                                        noteType = NoteType.None;
+                                      });
+                                    }
+                                  },
+                                  child: const TariffInfoIcon(),
+                                ),
+                              ],
                             ),
                             key: Key(index2.toString()), //attention
                             initiallyExpanded: index2 == chapterselected,
@@ -1103,14 +1117,14 @@ class _CustomeTariffScreenState extends State<CustomeTariffScreen> {
             );
           } else {
             return Row(
-              mainAxisAlignment: MainAxisAlignment.end,
+              mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Shimmer.fromColors(
                   baseColor: (Colors.grey[300])!,
                   highlightColor: (Colors.grey[100])!,
                   enabled: true,
                   child: SizedBox(
-                    width: MediaQuery.of(context).size.width * .75,
+                    width: MediaQuery.of(context).size.width * .85,
                     child: ListView.builder(
                       shrinkWrap: true,
                       itemBuilder: (_, __) => Container(
@@ -1128,9 +1142,6 @@ class _CustomeTariffScreenState extends State<CustomeTariffScreen> {
                       itemCount: 4,
                     ),
                   ),
-                ),
-                SizedBox(
-                  width: MediaQuery.of(context).size.width * .05,
                 ),
               ],
             );
@@ -1156,18 +1167,6 @@ class _CustomeTariffScreenState extends State<CustomeTariffScreen> {
   int? feeselected;
   bool shownote = false;
   NoteType noteType = NoteType.None;
-
-  void _scrollToSelectedContent(
-      bool isExpanded, double previousOffset, int index, GlobalKey myKey) {
-    final keyContext = myKey.currentContext;
-
-    if (keyContext != null) {
-      // make sure that your widget is visible
-      final box = keyContext.findRenderObject() as RenderBox;
-      scroll.animateTo(isExpanded ? (box.size.height * index) : previousOffset,
-          duration: Duration(milliseconds: 500), curve: Curves.linear);
-    }
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -1197,7 +1196,6 @@ class _CustomeTariffScreenState extends State<CustomeTariffScreen> {
                         return ListView.builder(
                           key: Key('builder ${selected.toString()}'),
                           shrinkWrap: true,
-                          controller: scroll,
                           physics: const NeverScrollableScrollPhysics(),
                           itemCount: state.sections.length,
                           itemBuilder: (context, index) {
@@ -1229,7 +1227,7 @@ class _CustomeTariffScreenState extends State<CustomeTariffScreen> {
                                 data: Theme.of(context)
                                     .copyWith(dividerColor: Colors.transparent),
                                 child: ExpansionTile(
-                                  key: expansionTileKey, //attention
+                                  key: Key(index.toString()), //attention
                                   initiallyExpanded: index == selected,
                                   tilePadding: EdgeInsets.zero,
                                   controlAffinity:
@@ -1260,65 +1258,56 @@ class _CustomeTariffScreenState extends State<CustomeTariffScreen> {
                                           ]),
                                     ),
                                   ),
-                                  title: Flexible(
-                                    child: Container(
-                                      constraints: BoxConstraints(
-                                        minHeight: 80.h,
+                                  title: Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.center,
+                                    children: [
+                                      Flexible(
+                                        child: Text(
+                                          state.sections[index].label!,
+                                          style: const TextStyle(height: 1.3),
+                                          maxLines: 10,
+                                          overflow: TextOverflow.ellipsis,
+                                        ),
                                       ),
-                                      child: Text.rich(
-                                        maxLines: 10,
-                                        overflow: TextOverflow.ellipsis,
-                                        TextSpan(
-                                            text: state.sections[index].label!,
-                                            style: const TextStyle(height: 1.3),
-                                            children: [
-                                              WidgetSpan(
-                                                child: GestureDetector(
-                                                  onTap: () {
-                                                    BlocProvider.of<NoteBloc>(
-                                                            context)
-                                                        .add(NoteLoadEvent(
-                                                            state
-                                                                .sections[index]
-                                                                .id!
-                                                                .toString(),
-                                                            NoteType.Section));
-                                                    if (!shownote) {
-                                                      setState(() {
-                                                        selected = index;
-                                                        chapterselected = -1;
-                                                        subchapterselected = -1;
-                                                        shownote = true;
-                                                        noteType =
-                                                            NoteType.Section;
-                                                      });
+                                      GestureDetector(
+                                        onTap: () {
+                                          BlocProvider.of<NoteBloc>(context)
+                                              .add(NoteLoadEvent(
+                                                  state.sections[index].id!
+                                                      .toString(),
+                                                  NoteType.Section));
+                                          if (!shownote) {
+                                            setState(() {
+                                              selected = index;
+                                              chapterselected = -1;
+                                              subchapterselected = -1;
+                                              shownote = true;
+                                              noteType = NoteType.Section;
+                                            });
 
-                                                      scroll.animateTo(
-                                                          index +
-                                                              MediaQuery.of(
-                                                                          context)
-                                                                      .size
-                                                                      .width /
-                                                                  2,
-                                                          duration:
-                                                              const Duration(
-                                                                  seconds: 1),
-                                                          curve: Curves.easeIn);
-                                                    } else {
-                                                      setState(() {
-                                                        selected = -1;
-                                                        shownote = false;
-                                                        noteType =
-                                                            NoteType.None;
-                                                      });
-                                                    }
-                                                  },
-                                                  child: const TariffInfoIcon(),
-                                                ),
-                                              ),
-                                            ]),
+                                            scroll.animateTo(
+                                                index +
+                                                    MediaQuery.of(context)
+                                                            .size
+                                                            .width /
+                                                        2,
+                                                duration:
+                                                    const Duration(seconds: 1),
+                                                curve: Curves.easeIn);
+                                          } else {
+                                            setState(() {
+                                              selected = -1;
+                                              shownote = false;
+                                              noteType = NoteType.None;
+                                            });
+                                          }
+                                        },
+                                        child: const TariffInfoIcon(),
                                       ),
-                                    ),
+                                    ],
                                   ),
 
                                   onExpansionChanged: (value) {
@@ -1333,8 +1322,6 @@ class _CustomeTariffScreenState extends State<CustomeTariffScreen> {
                                         subchapterselected = -1;
                                         feeselected = -1;
                                       });
-
-                                      previousOffset = scroll.offset;
                                     } else {
                                       setState(() {
                                         selected = -1;
@@ -1342,11 +1329,6 @@ class _CustomeTariffScreenState extends State<CustomeTariffScreen> {
                                         noteType = NoteType.None;
                                       });
                                     }
-                                    _scrollToSelectedContent(
-                                        value,
-                                        previousOffset,
-                                        index,
-                                        expansionTileKey);
                                   },
                                   children: buildChapterTiles(),
                                 ),
