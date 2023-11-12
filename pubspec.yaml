@@ -33,8 +33,8 @@ dependencies:
   intl: ^0.18.1
   hexcolor: ^2.0.7
   like_button: ^2.0.5
-  firebase_core: ^2.21.0
-  firebase_messaging: ^14.7.3
+  # firebase_core: ^2.21.0
+  # firebase_messaging: ^14.7.3
   cached_network_image: ^3.2.3
   flutter_img: ^0.1.5+111
   awesome_snackbar_content: ^0.1.3

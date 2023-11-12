@@ -1,7 +1,7 @@
 import 'dart:convert';
 
 import 'package:custome_mobile/helpers/http_helper.dart';
-import 'package:firebase_messaging/firebase_messaging.dart';
+// import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:http/http.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -12,8 +12,8 @@ class AuthRepository {
       {required String username, required String password}) async {
     try {
       String? firebaseToken = "";
-      FirebaseMessaging messaging = FirebaseMessaging.instance;
-      firebaseToken = await messaging.getToken();
+      // FirebaseMessaging messaging = FirebaseMessaging.instance;
+      // firebaseToken = await messaging.getToken();
       Response response = await HttpHelper.post(LOGIN_ENDPOINT, {
         "username": username,
         "password": password,

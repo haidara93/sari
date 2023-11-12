@@ -30,10 +30,10 @@ import 'package:custome_mobile/data/repositories/accurdion_repository.dart';
 import 'package:custome_mobile/data/repositories/auth_repository.dart';
 import 'package:custome_mobile/data/repositories/post_repository.dart';
 import 'package:custome_mobile/data/repositories/state_agency_repository.dart';
-import 'package:custome_mobile/firebase_options.dart';
+// import 'package:custome_mobile/firebase_options.dart';
 import 'package:custome_mobile/helpers/color_constants.dart';
 import 'package:custome_mobile/views/control_view.dart';
-import 'package:firebase_core/firebase_core.dart';
+// import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -44,9 +44,9 @@ import 'views/screens/introduction_screen.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp(
-    options: DefaultFirebaseOptions.currentPlatform,
-  );
+  // await Firebase.initializeApp(
+  //   options: DefaultFirebaseOptions.currentPlatform,
+  // );
 
   final prefs = await SharedPreferences.getInstance();
   final showHome = prefs.getBool("showHome") ?? false;
