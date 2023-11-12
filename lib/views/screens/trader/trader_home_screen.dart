@@ -273,9 +273,9 @@ class _TraderHomeScreenState extends State<TraderHomeScreen>
                       drawer: Drawer(
                         backgroundColor: AppColor.deepBlue,
                         elevation: 1,
-                        width: 250,
+                        width: 250.w,
                         child: Padding(
-                          padding: EdgeInsets.symmetric(horizontal: 15.w),
+                          padding: EdgeInsets.symmetric(horizontal: 12.w),
                           child: ListView(children: [
                             SizedBox(
                               height: 35.h,
@@ -288,7 +288,7 @@ class _TraderHomeScreenState extends State<TraderHomeScreen>
                                   radius: 35.h,
                                 ),
                                 Text(
-                                  "Haidra",
+                                  "Haidara",
                                   style: TextStyle(
                                       color: Colors.white,
                                       fontSize: 26.sp,

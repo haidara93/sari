@@ -2,6 +2,7 @@ import 'package:custome_mobile/helpers/color_constants.dart';
 import 'package:custome_mobile/views/control_view.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 
@@ -33,14 +34,19 @@ class _IntroductionViewState extends State<IntroductionView> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             SizedBox(
-              height: 120.h,
+              height: 200.h,
             ),
             Padding(
               padding: EdgeInsets.symmetric(horizontal: 15.w),
-              child: Image.asset(
+              child: SvgPicture.asset(
                 urlImage,
                 fit: BoxFit.cover,
-                width: double.infinity,
+                width: 275.w,
+                height: 290.w,
+                placeholderBuilder: (context) => SizedBox(
+                  width: 275.w,
+                  height: 290.w,
+                ),
               ),
             ),
             SizedBox(
@@ -82,7 +88,7 @@ class _IntroductionViewState extends State<IntroductionView> {
               children: [
                 builfPage(
                   color: Colors.white,
-                  urlImage: "assets/images/intro1.png",
+                  urlImage: "assets/images/intro1.svg",
                   title: Text(
                     "أهلا وسهلا بك",
                     style: TextStyle(color: AppColor.deepBlue, fontSize: 24.sp),
@@ -101,7 +107,7 @@ class _IntroductionViewState extends State<IntroductionView> {
                 ),
                 builfPage(
                     color: Colors.white,
-                    urlImage: "assets/images/intro2.png",
+                    urlImage: "assets/images/intro2.svg",
                     title: Text.rich(
                       TextSpan(
                           text: "اطلع على",
@@ -122,7 +128,7 @@ class _IntroductionViewState extends State<IntroductionView> {
                     )),
                 builfPage(
                     color: Colors.white,
-                    urlImage: "assets/images/intro3.png",
+                    urlImage: "assets/images/intro3.svg",
                     title: Text(
                       "احسب الرسوم الجمركية المفروضة على",
                       style:
@@ -143,7 +149,7 @@ class _IntroductionViewState extends State<IntroductionView> {
                     )),
                 builfPage(
                     color: Colors.white,
-                    urlImage: "assets/images/intro4.png",
+                    urlImage: "assets/images/intro4.svg",
                     title: Text(
                       "المخلص الجمركي المختص",
                       style:
@@ -178,7 +184,7 @@ class _IntroductionViewState extends State<IntroductionView> {
                 },
                 child: Text(
                   'ابدأ الأن',
-                  style: TextStyle(fontSize: 24.sp, color: AppColor.deepYellow),
+                  style: TextStyle(fontSize: 26.sp, color: AppColor.deepYellow),
                 ))
             : Container(
                 color: Colors.white,
@@ -192,8 +198,11 @@ class _IntroductionViewState extends State<IntroductionView> {
                           controller.jumpToPage(3);
                         },
                         child: Text(
-                          'تخطى',
-                          style: TextStyle(color: AppColor.deepYellow),
+                          'تخطي',
+                          style: TextStyle(
+                            color: AppColor.deepYellow,
+                            fontSize: 24.sp,
+                          ),
                         )),
                     Center(
                       child: SmoothPageIndicator(
@@ -201,6 +210,8 @@ class _IntroductionViewState extends State<IntroductionView> {
                         count: 4,
                         effect: WormEffect(
                             spacing: 14.w,
+                            dotHeight: 15.h,
+                            dotWidth: 15.w,
                             dotColor: AppColor.lightYellow,
                             activeDotColor: AppColor.deepYellow),
                         onDotClicked: (index) => controller.animateToPage(index,
@@ -216,7 +227,10 @@ class _IntroductionViewState extends State<IntroductionView> {
                         },
                         child: Text(
                           'التالي',
-                          style: TextStyle(color: AppColor.deepYellow),
+                          style: TextStyle(
+                            color: AppColor.deepYellow,
+                            fontSize: 24.sp,
+                          ),
                         )),
                   ],
                 ),

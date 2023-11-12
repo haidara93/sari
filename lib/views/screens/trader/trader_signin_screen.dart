@@ -1,3 +1,4 @@
+import 'package:awesome_snackbar_content/awesome_snackbar_content.dart';
 import 'package:custome_mobile/business_logic/bloc/auth_bloc.dart';
 import 'package:custome_mobile/constants/text_constants.dart';
 import 'package:custome_mobile/helpers/color_constants.dart';
@@ -6,6 +7,7 @@ import 'package:custome_mobile/views/widgets/custom_botton.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 
 class TraderSigninScreen extends StatefulWidget {
   const TraderSigninScreen({Key? key}) : super(key: key);
@@ -25,8 +27,8 @@ class _TraderSigninScreenState extends State<TraderSigninScreen> {
 
   Future<void> _login() async {
     _postData(context);
-    _usernameController.text = '';
-    _passwordController.text = '';
+    // _usernameController.text = '';
+    // _passwordController.text = '';
   }
 
   void _postData(context) {
@@ -41,6 +43,11 @@ class _TraderSigninScreenState extends State<TraderSigninScreen> {
     return Directionality(
       textDirection: TextDirection.rtl,
       child: Scaffold(
+        appBar: AppBar(
+          backgroundColor: Colors.white,
+          elevation: 0,
+          iconTheme: IconThemeData(color: AppColor.deepBlue),
+        ),
         backgroundColor: Colors.white,
         body: GestureDetector(
           onTap: () {
@@ -50,16 +57,24 @@ class _TraderSigninScreenState extends State<TraderSigninScreen> {
             child: Column(
               children: [
                 SizedBox(
-                  height: 120.h,
+                  height: 60.h,
                 ),
                 Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 15.w),
-                  child: Image.asset(
-                    "assets/images/963.png",
-                    fit: BoxFit.cover,
-                    width: double.infinity,
-                  ),
-                ),
+                    padding: EdgeInsets.symmetric(horizontal: 15.w),
+                    child: SvgPicture.asset(
+                      "assets/images/963.svg",
+                      width: 315,
+                      height: 210,
+                      placeholderBuilder: (context) =>
+                          const SizedBox(height: 210, width: 315),
+                      fit: BoxFit.cover,
+                    )
+                    //  Image.asset(
+                    //   "assets/images/963.png",
+                    //   fit: BoxFit.cover,
+                    //   width: double.infinity,
+                    // ),
+                    ),
                 SizedBox(
                   height: 20.h,
                 ),
@@ -132,6 +147,12 @@ class _TraderSigninScreenState extends State<TraderSigninScreen> {
                                       color: Color.fromRGBO(13, 52, 83, 1),
                                     ),
                                   ),
+                                  errorBorder: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(42),
+                                    borderSide: const BorderSide(
+                                      color: Colors.red,
+                                    ),
+                                  ),
                                   focusedBorder: OutlineInputBorder(
                                     borderRadius: BorderRadius.circular(42),
                                     borderSide: const BorderSide(
@@ -187,6 +208,12 @@ class _TraderSigninScreenState extends State<TraderSigninScreen> {
                                       color: Color.fromRGBO(13, 52, 83, 1),
                                     ),
                                   ),
+                                  errorBorder: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(42),
+                                    borderSide: const BorderSide(
+                                      color: Colors.red,
+                                    ),
+                                  ),
                                   focusedBorder: OutlineInputBorder(
                                     borderRadius: BorderRadius.circular(42),
                                     borderSide: const BorderSide(
@@ -210,6 +237,30 @@ class _TraderSigninScreenState extends State<TraderSigninScreen> {
                             BlocConsumer<AuthBloc, AuthState>(
                               listener: (context, state) {
                                 if (state is AuthTraderSuccessState) {
+                                  var snackBar = SnackBar(
+                                    elevation: 0,
+                                    duration: const Duration(seconds: 3),
+                                    backgroundColor: Colors.transparent,
+                                    content: Column(
+                                      children: [
+                                        AwesomeSnackbarContent(
+                                          title: 'تم',
+                                          message:
+                                              'تم تسجيل الدخول بنجاح! أهلا بك.',
+                                          contentType: ContentType.success,
+                                        ),
+                                        SizedBox(
+                                          height: 90.h,
+                                        ),
+                                      ],
+                                    ),
+                                  );
+                                  ScaffoldMessenger.of(context)
+                                      .showSnackBar(snackBar);
+
+                                  _usernameController.text = '';
+                                  _passwordController.text = '';
+
                                   Navigator.push(
                                       context,
                                       MaterialPageRoute(
@@ -218,12 +269,79 @@ class _TraderSigninScreenState extends State<TraderSigninScreen> {
                                       ));
                                 }
                                 if (state is AuthBrokerSuccessState) {
+                                  var snackBar = SnackBar(
+                                    elevation: 0,
+                                    duration: const Duration(seconds: 3),
+                                    backgroundColor: Colors.transparent,
+                                    content: Column(
+                                      children: [
+                                        AwesomeSnackbarContent(
+                                          title: 'تم',
+                                          message:
+                                              'تم تسجيل الدخول بنجاح! أهلا بك.',
+                                          contentType: ContentType.success,
+                                        ),
+                                        SizedBox(
+                                          height: 90.h,
+                                        ),
+                                      ],
+                                    ),
+                                  );
+                                  ScaffoldMessenger.of(context)
+                                      .showSnackBar(snackBar);
+
+                                  _usernameController.text = '';
+                                  _passwordController.text = '';
                                   Navigator.push(
                                       context,
                                       MaterialPageRoute(
                                         builder: (context) =>
                                             const TraderConfirmScreen(),
                                       ));
+                                }
+                                if (state is AuthLoginErrorState) {
+                                  var snackBar = SnackBar(
+                                    elevation: 0,
+                                    duration: const Duration(seconds: 3),
+                                    backgroundColor: Colors.transparent,
+                                    content: Column(
+                                      children: [
+                                        AwesomeSnackbarContent(
+                                          title: 'خطأ',
+                                          message:
+                                              "لا يوجد حساب فعال وفقا للبيانات المدخلة.",
+                                          contentType: ContentType.failure,
+                                        ),
+                                        SizedBox(
+                                          height: 90.h,
+                                        ),
+                                      ],
+                                    ),
+                                  );
+                                  print(state.error!);
+                                  ScaffoldMessenger.of(context)
+                                      .showSnackBar(snackBar);
+                                }
+                                if (state is AuthFailureState) {
+                                  var snackBar = SnackBar(
+                                    elevation: 0,
+                                    duration: const Duration(seconds: 3),
+                                    backgroundColor: Colors.transparent,
+                                    content: Column(
+                                      children: [
+                                        AwesomeSnackbarContent(
+                                          title: 'خطأ',
+                                          message: state.errorMessage,
+                                          contentType: ContentType.failure,
+                                        ),
+                                        SizedBox(
+                                          height: 90.h,
+                                        ),
+                                      ],
+                                    ),
+                                  );
+                                  ScaffoldMessenger.of(context)
+                                      .showSnackBar(snackBar);
                                 }
                               },
                               builder: (context, state) {

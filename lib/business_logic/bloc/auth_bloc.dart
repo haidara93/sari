@@ -60,7 +60,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
               break;
 
             default:
-              emit(const AuthFailureState("user info has error"));
+              emit(const AuthFailureState("حدث خطأ الرجاء المحاولة مرة أخرى."));
           }
         } else if (data["status"] == 401) {
           String? details = "";
@@ -69,7 +69,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
           }
           emit(AuthLoginErrorState(details));
         } else {
-          emit(const AuthFailureState("error"));
+          emit(const AuthFailureState("حدث خطأ الرجاء المحاولة مرة أخرى."));
         }
       } catch (e) {
         emit(AuthFailureState(e.toString()));

@@ -4,6 +4,7 @@ import 'package:custome_mobile/views/screens/trader/trader_signin_screen.dart';
 import 'package:custome_mobile/views/widgets/custom_botton.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 // ignore: must_be_immutable
@@ -23,14 +24,21 @@ class SelectUserType extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               SizedBox(
-                height: 120.h,
+                height: 180.h,
               ),
               Padding(
                 padding: EdgeInsets.symmetric(horizontal: 15.w),
-                child: Image.asset(
-                  "assets/images/select_user.png",
+                child: SvgPicture.asset(
+                  placeholderBuilder: (context) {
+                    return SizedBox(
+                      height: 230.h,
+                      width: 230.w,
+                    );
+                  },
+                  "assets/images/select_user.svg",
                   fit: BoxFit.cover,
-                  width: double.infinity,
+                  height: 230.h,
+                  width: 230.w,
                 ),
               ),
               SizedBox(
