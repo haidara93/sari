@@ -8,7 +8,7 @@ abstract class ChapterEvent extends Equatable {
 }
 
 class ChapterLoadEvent extends ChapterEvent {
-  final int sectionId;
+  final String sectionId;
 
   const ChapterLoadEvent(this.sectionId);
 }

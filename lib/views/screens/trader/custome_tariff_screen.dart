@@ -16,6 +16,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_img/flutter_img.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:shimmer/shimmer.dart';
 
 class CustomeTariffScreen extends StatefulWidget {
@@ -140,24 +141,27 @@ class _CustomeTariffScreenState extends State<CustomeTariffScreen> {
                     itemCount: state.notes.length,
                     physics: const NeverScrollableScrollPhysics(),
                     itemBuilder: (context, index2) {
-                      return Container(
-                        margin: const EdgeInsets.symmetric(horizontal: 4),
-                        decoration: BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: BorderRadius.circular(10),
+                      return Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Container(
+                          margin: const EdgeInsets.symmetric(horizontal: 4),
+                          decoration: BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+                          child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  state.notes[index2].noteNum!,
+                                  style: TextStyle(
+                                      color: AppColor.deepBlue,
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.bold),
+                                ),
+                                Text("  ${state.notes[index2].noteA!}"),
+                              ]),
                         ),
-                        child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                state.notes[index2].noteNum!,
-                                style: const TextStyle(
-                                    color: Colors.yellow,
-                                    fontSize: 16,
-                                    fontWeight: FontWeight.bold),
-                              ),
-                              Text("  ${state.notes[index2].noteA!}"),
-                            ]),
                       );
                     },
                   );
@@ -428,24 +432,27 @@ class _CustomeTariffScreenState extends State<CustomeTariffScreen> {
                     itemCount: state.notes.length,
                     physics: const NeverScrollableScrollPhysics(),
                     itemBuilder: (context, index2) {
-                      return Container(
-                        margin: const EdgeInsets.symmetric(horizontal: 4),
-                        decoration: BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: BorderRadius.circular(10),
+                      return Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Container(
+                          margin: const EdgeInsets.symmetric(horizontal: 4),
+                          decoration: BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+                          child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  state.notes[index2].noteNum!,
+                                  style: TextStyle(
+                                      color: AppColor.deepBlue,
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.bold),
+                                ),
+                                Text("  ${state.notes[index2].noteA!}"),
+                              ]),
                         ),
-                        child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                state.notes[index2].noteNum!,
-                                style: const TextStyle(
-                                    color: Colors.yellow,
-                                    fontSize: 16,
-                                    fontWeight: FontWeight.bold),
-                              ),
-                              Text("  ${state.notes[index2].noteA!}"),
-                            ]),
                       );
                     },
                   );
@@ -530,9 +537,28 @@ class _CustomeTariffScreenState extends State<CustomeTariffScreen> {
                             crossAxisAlignment: CrossAxisAlignment.center,
                             children: [
                               Flexible(
-                                child: Text(
-                                  "${state.fees[index4].id!} ${state.fees[index4].label!}",
-                                  style: const TextStyle(height: 1.3),
+                                child: Row(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      state.fees[index4].id!,
+                                      style: const TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
+                                    SizedBox(
+                                      width: 5.w,
+                                    ),
+                                    Flexible(
+                                      child: Text(
+                                        state.fees[index4].label!,
+                                        style: const TextStyle(height: 1.3),
+                                      ),
+                                    ),
+                                    SizedBox(
+                                      width: 5.w,
+                                    ),
+                                  ],
                                 ),
                               ),
                               GestureDetector(
@@ -656,18 +682,21 @@ class _CustomeTariffScreenState extends State<CustomeTariffScreen> {
                           color: Colors.white,
                           borderRadius: BorderRadius.circular(10),
                         ),
-                        child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                state.notes[index2].noteNum!,
-                                style: const TextStyle(
-                                    color: Colors.yellow,
-                                    fontSize: 16,
-                                    fontWeight: FontWeight.bold),
-                              ),
-                              Text("  ${state.notes[index2].noteA!}"),
-                            ]),
+                        child: Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  state.notes[index2].noteNum!,
+                                  style: TextStyle(
+                                      color: AppColor.deepBlue,
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.bold),
+                                ),
+                                Text("  ${state.notes[index2].noteA!}"),
+                              ]),
+                        ),
                       );
                     },
                   );
@@ -704,7 +733,7 @@ class _CustomeTariffScreenState extends State<CustomeTariffScreen> {
         builder: (context, state) {
           if (state is SubChapterLoadedSuccess) {
             return Container(
-              color: Colors.grey[200],
+              color: Colors.white,
               padding: const EdgeInsets.only(top: 0.0),
               child: ListView.builder(
                 key: Key('subchapterbuilder ${subchapterselected.toString()}'),
@@ -717,7 +746,6 @@ class _CustomeTariffScreenState extends State<CustomeTariffScreen> {
                       Card(
                         margin: const EdgeInsets.all(2),
                         clipBehavior: Clip.antiAlias,
-
                         // decoration: BoxDecoration(
                         //   color: subchapterselected == index3
                         //       ? Colors.white
@@ -733,21 +761,22 @@ class _CustomeTariffScreenState extends State<CustomeTariffScreen> {
                         elevation: subchapterselected == index3 ? 1 : 0,
                         color: subchapterselected == index3
                             ? Colors.white
-                            : Colors.grey[200],
+                            : Colors.white,
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(10),
                           side: BorderSide(
                               color: subchapterselected == index3
                                   ? feeselected == -1
                                       ? AppColor.goldenYellow
-                                      : Colors.grey[200]!
-                                  : Colors.grey[200]!,
+                                      : Colors.white
+                                  : Colors.white,
                               width: 2),
                         ),
                         child: ExpansionTile(
                           key: Key(index3.toString()), //attention
                           initiallyExpanded: index3 == subchapterselected,
                           tilePadding: EdgeInsets.zero,
+
                           controlAffinity: ListTileControlAffinity.leading,
                           childrenPadding: EdgeInsets.zero,
                           leading: Container(
@@ -761,11 +790,30 @@ class _CustomeTariffScreenState extends State<CustomeTariffScreen> {
                             crossAxisAlignment: CrossAxisAlignment.center,
                             children: [
                               Flexible(
-                                child: Text(
-                                  "${state.subchapters[index3].id!} ${state.subchapters[index3].label!}",
-                                  style: const TextStyle(height: 1.3),
-                                  maxLines: 10,
-                                  overflow: TextOverflow.ellipsis,
+                                child: Row(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      state.subchapters[index3].id!,
+                                      style: const TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
+                                    SizedBox(
+                                      width: 5.w,
+                                    ),
+                                    Flexible(
+                                      child: Text(
+                                        state.subchapters[index3].label!,
+                                        style: const TextStyle(height: 1.3),
+                                        maxLines: 10,
+                                        overflow: TextOverflow.ellipsis,
+                                      ),
+                                    ),
+                                    SizedBox(
+                                      width: 5.w,
+                                    ),
+                                  ],
                                 ),
                               ),
                               GestureDetector(
@@ -922,16 +970,8 @@ class _CustomeTariffScreenState extends State<CustomeTariffScreen> {
                                     children: [
                                       Text(
                                         state.notes[index2].noteNum!,
-                                        style: const TextStyle(
-                                            color: Colors.yellow,
-                                            fontSize: 16,
-                                            fontWeight: FontWeight.bold),
-                                      ),
-                                      Text("  ${state.notes[index2].noteA!}"),
-                                      Text(
-                                        state.notes[index2].noteNum!,
-                                        style: const TextStyle(
-                                            color: Colors.yellow,
+                                        style: TextStyle(
+                                            color: AppColor.deepBlue,
                                             fontSize: 16,
                                             fontWeight: FontWeight.bold),
                                       ),
@@ -1011,7 +1051,7 @@ class _CustomeTariffScreenState extends State<CustomeTariffScreen> {
                         // ),
                         elevation: chapterselected == index2 ? 1 : 0,
                         color: chapterselected == index2
-                            ? Colors.white
+                            ? Colors.grey[200]
                             : Colors.grey[200],
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(10),
@@ -1032,7 +1072,7 @@ class _CustomeTariffScreenState extends State<CustomeTariffScreen> {
                           child: ExpansionTile(
                             tilePadding: EdgeInsets.zero,
                             controlAffinity: ListTileControlAffinity.leading,
-
+                            childrenPadding: EdgeInsets.zero,
                             leading: Container(
                               margin: EdgeInsets.symmetric(horizontal: 7),
                               child: chapterselected == index2
@@ -1044,11 +1084,28 @@ class _CustomeTariffScreenState extends State<CustomeTariffScreen> {
                               crossAxisAlignment: CrossAxisAlignment.center,
                               children: [
                                 Flexible(
-                                  child: Text(
-                                    "${state.chapters[index2].id!} ${state.chapters[index2].label!}",
-                                    style: const TextStyle(height: 1.3),
-                                    maxLines: 10,
-                                    overflow: TextOverflow.ellipsis,
+                                  child: Row(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        state.chapters[index2].id!,
+                                        style: const TextStyle(
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                      ),
+                                      SizedBox(
+                                        width: 5.w,
+                                      ),
+                                      Flexible(
+                                        child: Text(
+                                          state.chapters[index2].label!,
+                                          style: const TextStyle(height: 1.3),
+                                          maxLines: 10,
+                                          overflow: TextOverflow.ellipsis,
+                                        ),
+                                      ),
+                                    ],
                                   ),
                                 ),
                                 GestureDetector(
@@ -1229,83 +1286,82 @@ class _CustomeTariffScreenState extends State<CustomeTariffScreen> {
                                 child: ExpansionTile(
                                   key: Key(index.toString()), //attention
                                   initiallyExpanded: index == selected,
-                                  tilePadding: EdgeInsets.zero,
-                                  controlAffinity:
-                                      ListTileControlAffinity.leading,
-                                  leading: SizedBox(
-                                    width: 60.w,
-                                    child: Text.rich(
-                                      textAlign: TextAlign.center,
-                                      maxLines: 10,
-                                      overflow: TextOverflow.ellipsis,
-                                      TextSpan(
-                                          text: state.sections[index].id! < 10
-                                              ? "0${state.sections[index].id!}"
-                                              : state.sections[index].id!
+                                  tilePadding: EdgeInsets.all(5),
+                                  // controlAffinity:
+                                  //     ListTileControlAffinity.leading,
+                                  trailing: GestureDetector(
+                                    onTap: () {
+                                      BlocProvider.of<NoteBloc>(context).add(
+                                          NoteLoadEvent(
+                                              state.sections[index].id!
                                                   .toString(),
-                                          style: const TextStyle(
-                                            height: 1.3,
-                                            fontSize: 32,
-                                            fontWeight: FontWeight.bold,
-                                          ),
-                                          children: [
-                                            TextSpan(
-                                              text:
-                                                  "\n(${state.sections[index].end!}__${state.sections[index].start!})",
-                                              style:
-                                                  const TextStyle(fontSize: 14),
-                                            ),
-                                          ]),
-                                    ),
+                                              NoteType.Section));
+                                      if (!shownote) {
+                                        setState(() {
+                                          selected = index;
+                                          chapterselected = -1;
+                                          subchapterselected = -1;
+                                          shownote = true;
+                                          noteType = NoteType.Section;
+                                        });
+
+                                        scroll.animateTo(
+                                            index +
+                                                MediaQuery.of(context)
+                                                        .size
+                                                        .width /
+                                                    2,
+                                            duration:
+                                                const Duration(seconds: 1),
+                                            curve: Curves.easeIn);
+                                      } else {
+                                        setState(() {
+                                          selected = -1;
+                                          shownote = false;
+                                          noteType = NoteType.None;
+                                        });
+                                      }
+                                    },
+                                    child: const TariffInfoIcon(),
                                   ),
+
                                   title: Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
                                     crossAxisAlignment:
                                         CrossAxisAlignment.center,
                                     children: [
+                                      SizedBox(
+                                        width: 65.w,
+                                        child: Column(
+                                          children: [
+                                            SizedBox(
+                                              width: 36.w,
+                                              height: 36.h,
+                                              child: SvgPicture.network(
+                                                state.sections[index].image!,
+                                              ),
+                                            ),
+                                            Text(
+                                              "(${state.sections[index].end!}__${state.sections[index].start!})",
+                                              style:
+                                                  const TextStyle(fontSize: 14),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                      SizedBox(
+                                        height: 5.w,
+                                      ),
                                       Flexible(
                                         child: Text(
                                           state.sections[index].label!,
-                                          style: const TextStyle(height: 1.3),
+                                          style: const TextStyle(
+                                            height: 1.3,
+                                            fontSize: 17,
+                                            fontWeight: FontWeight.bold,
+                                          ),
                                           maxLines: 10,
                                           overflow: TextOverflow.ellipsis,
                                         ),
-                                      ),
-                                      GestureDetector(
-                                        onTap: () {
-                                          BlocProvider.of<NoteBloc>(context)
-                                              .add(NoteLoadEvent(
-                                                  state.sections[index].id!
-                                                      .toString(),
-                                                  NoteType.Section));
-                                          if (!shownote) {
-                                            setState(() {
-                                              selected = index;
-                                              chapterselected = -1;
-                                              subchapterselected = -1;
-                                              shownote = true;
-                                              noteType = NoteType.Section;
-                                            });
-
-                                            scroll.animateTo(
-                                                index +
-                                                    MediaQuery.of(context)
-                                                            .size
-                                                            .width /
-                                                        2,
-                                                duration:
-                                                    const Duration(seconds: 1),
-                                                curve: Curves.easeIn);
-                                          } else {
-                                            setState(() {
-                                              selected = -1;
-                                              shownote = false;
-                                              noteType = NoteType.None;
-                                            });
-                                          }
-                                        },
-                                        child: const TariffInfoIcon(),
                                       ),
                                     ],
                                   ),

@@ -30,7 +30,7 @@ class AccordionRepository {
     return sections;
   }
 
-  Future<List<Chapter>> getChapters(int sectionId) async {
+  Future<List<Chapter>> getChapters(String sectionId) async {
     prefs = await SharedPreferences.getInstance();
     var jwt = prefs.getString("token");
 

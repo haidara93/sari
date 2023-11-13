@@ -458,8 +458,8 @@ class _CalculatorWidgetState extends State<CalculatorWidget> {
                               },
                               child: Image.asset(
                                 "assets/icons/expansionTileIcon.png",
-                                width: 20.w,
-                                height: 20.h,
+                                width: 30.w,
+                                height: 30.h,
                               ),
                             )
                           : null,

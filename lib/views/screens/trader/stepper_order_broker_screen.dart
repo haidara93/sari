@@ -17,6 +17,7 @@ import 'package:custome_mobile/helpers/color_constants.dart';
 import 'package:custome_mobile/views/screens/trader/trader_bill_review.dart';
 import 'package:custome_mobile/views/widgets/custom_botton.dart';
 import 'package:custome_mobile/views/widgets/highlight_text.dart';
+import 'package:custome_mobile/views/widgets/tariff_info_icon.dart';
 import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -424,6 +425,7 @@ class _StepperOrderBrokerScreenState extends State<StepperOrderBrokerScreen> {
       child: BlocListener<FeeSelectBloc, FeeSelectState>(
         listener: (context, state) {
           if (state is FeeSelectSuccess) {
+            print("asd");
             setState(() {
               _wieghtController.text = "0.0";
               _valueController.text = "0.0";
@@ -432,6 +434,8 @@ class _StepperOrderBrokerScreenState extends State<StepperOrderBrokerScreen> {
               totalValueWithEnsurance = "0.0";
             });
             selectSuggestion(state.package);
+          } else {
+            print("ghjhgjgh");
           }
         },
         child: GestureDetector(
@@ -1050,11 +1054,7 @@ class _StepperOrderBrokerScreenState extends State<StepperOrderBrokerScreen> {
                                                   context)
                                               .emitShow();
                                         },
-                                        child: Image.asset(
-                                          "assets/icons/expansionTileIcon.png",
-                                          width: 20.w,
-                                          height: 20.h,
-                                        ),
+                                        child: const TariffInfoIcon(),
                                       ),
                                     ),
                                     onSubmitted: (value) {

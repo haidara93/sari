@@ -81,6 +81,8 @@ class CalculatorService {
       HttpHeaders.acceptHeader: 'application/json',
       HttpHeaders.authorizationHeader: 'JWT $jwt'
     });
+    print(response.statusCode);
+    print('https://across-mena.com/Fee_calculator/fees/$id/');
     var myDataString = utf8.decode(response.bodyBytes);
 
     var json = convert.jsonDecode(myDataString);

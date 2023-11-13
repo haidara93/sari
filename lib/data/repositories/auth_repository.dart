@@ -14,15 +14,12 @@ class AuthRepository {
       String? firebaseToken = "";
       // FirebaseMessaging messaging = FirebaseMessaging.instance;
       // firebaseToken = await messaging.getToken();
-      Response response = await HttpHelper.post(LOGIN_ENDPOINT, {
-        "username": username,
-        "password": password,
-        "fcm_token": firebaseToken ?? ""
-      });
+      Response response = await HttpHelper.post(LOGIN_ENDPOINT,
+          {"username": username, "password": password, "fcm_token": "asd"});
       print(response.statusCode);
       final Map<String, dynamic> data = <String, dynamic>{};
       data["status"] = response.statusCode;
-      print(response.statusCode);
+      print(response.body);
       var jsonObject = jsonDecode(response.body);
 
       if (response.statusCode == 401 || response.statusCode == 400) {

@@ -6,6 +6,7 @@ class CustomButton extends StatelessWidget {
   final bool isEnabled;
   final double hieght;
   final Color? color;
+  final Color? bordercolor;
   final Function() onTap;
 
   const CustomButton(
@@ -14,7 +15,8 @@ class CustomButton extends StatelessWidget {
       this.isEnabled = true,
       this.hieght = 44,
       required this.onTap,
-      this.color});
+      this.color,
+      this.bordercolor});
 
   @override
   Widget build(BuildContext context) {
@@ -29,10 +31,14 @@ class CustomButton extends StatelessWidget {
           // color: isEnabled ? color : Colors.white,
           borderRadius: BorderRadius.circular(45),
           border: Border(
-            top: BorderSide(width: 1, color: color ?? AppColor.activeGreen),
-            right: BorderSide(width: 1, color: color ?? AppColor.activeGreen),
-            left: BorderSide(width: 1, color: color ?? AppColor.activeGreen),
-            bottom: BorderSide(width: 1, color: color ?? AppColor.activeGreen),
+            top: BorderSide(
+                width: 1, color: bordercolor ?? AppColor.activeGreen),
+            right: BorderSide(
+                width: 1, color: bordercolor ?? AppColor.activeGreen),
+            left: BorderSide(
+                width: 1, color: bordercolor ?? AppColor.activeGreen),
+            bottom: BorderSide(
+                width: 1, color: bordercolor ?? AppColor.activeGreen),
           ),
         ),
         child: Center(

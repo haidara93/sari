@@ -1144,6 +1144,11 @@ class _TraderHomeScreenState extends State<TraderHomeScreen>
     return Scaffold(
       resizeToAvoidBottomInset: false,
       backgroundColor: Colors.grey[200],
+      appBar: AppBar(
+        backgroundColor: Colors.grey[200],
+        iconTheme: IconThemeData(color: AppColor.deepBlue),
+        elevation: 0,
+      ),
       body: SafeArea(
           child: SingleChildScrollView(
         child: Padding(
@@ -1166,8 +1171,8 @@ class _TraderHomeScreenState extends State<TraderHomeScreen>
                 return Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      const SizedBox(
-                        height: 35,
+                      SizedBox(
+                        height: 5.h,
                       ),
                       Text(
                         "حاسبة الرسوم الجمركية",
@@ -1176,16 +1181,12 @@ class _TraderHomeScreenState extends State<TraderHomeScreen>
                             fontSize: 20,
                             fontWeight: FontWeight.bold),
                       ),
-                      const Text(
-                        "تتيح أداة حاسبة الرسوم الجمركية تقدير التكلفة الإجمالية لاستيراد البضائع وفقاً للتعرفة الجمركية والقوانين الضريبية في الجمهورية العربية السورية، وتوفر مجموعة واسعة من المعلومات المفصلة حول الرسوم الجمركية بما في ذلك الأحكام والشروط والأسعار الاسترشادية المتوفرة.",
-                        maxLines: 10,
-                      ),
                       const SizedBox(
                         height: 25,
                       ),
                       Container(
                         padding: const EdgeInsets.symmetric(
-                            vertical: 10, horizontal: 15),
+                            vertical: 25, horizontal: 15),
                         decoration: BoxDecoration(
                             color: Colors.white,
                             borderRadius: BorderRadius.circular(20)),
@@ -1197,24 +1198,31 @@ class _TraderHomeScreenState extends State<TraderHomeScreen>
                               TextFormField(
                                 controller: _typeAheadController,
                                 enabled: false,
+                                maxLines: null,
                                 decoration: InputDecoration(
                                   labelText: "نوع البضاعة",
                                   prefixStyle:
                                       const TextStyle(color: Colors.black),
+                                  contentPadding:
+                                      EdgeInsets.symmetric(horizontal: 5.w),
                                   border: OutlineInputBorder(
-                                    borderRadius: BorderRadius.circular(5),
+                                    borderRadius: BorderRadius.circular(12),
                                   ),
                                 ),
                               ),
                               const SizedBox(
                                 height: 12,
                               ),
-                              const Visibility(
-                                  // visible: allowexport,
-                                  child: Text(
-                                "هذا البند ممنوع من الاستيراد",
-                                style: TextStyle(color: Colors.red),
-                              )),
+                              Visibility(
+                                visible: allowexport,
+                                child: const Text(
+                                  "هذا البند ممنوع من الاستيراد",
+                                  style: TextStyle(
+                                    color: Colors.red,
+                                    fontSize: 13,
+                                  ),
+                                ),
+                              ),
                               const SizedBox(
                                 height: 12,
                               ),
@@ -1234,10 +1242,21 @@ class _TraderHomeScreenState extends State<TraderHomeScreen>
                                         .map((Extras item) =>
                                             DropdownMenuItem<Extras>(
                                               value: item,
-                                              child: Text(
-                                                item.label!,
-                                                style: const TextStyle(
-                                                  fontSize: 14,
+                                              child: Container(
+                                                width: double.infinity,
+                                                decoration: BoxDecoration(
+                                                  border: Border(
+                                                    bottom: BorderSide(
+                                                        color: AppColor
+                                                            .goldenYellow,
+                                                        width: 1),
+                                                  ),
+                                                ),
+                                                child: Text(
+                                                  item.label!,
+                                                  style: const TextStyle(
+                                                    fontSize: 14,
+                                                  ),
                                                 ),
                                               ),
                                             ))
@@ -1287,14 +1306,40 @@ class _TraderHomeScreenState extends State<TraderHomeScreen>
                                         selectedValue = value;
                                       });
                                     },
-                                    buttonStyleData: const ButtonStyleData(
-                                      padding:
-                                          EdgeInsets.symmetric(horizontal: 16),
-                                      height: 40,
-                                      width: 140,
+                                    buttonStyleData: ButtonStyleData(
+                                      height: 50,
+                                      width: double.infinity,
+
+                                      padding: const EdgeInsets.only(
+                                          left: 14, right: 14),
+                                      decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.circular(12),
+                                        border: Border.all(
+                                          color: Colors.black26,
+                                        ),
+                                        color: Colors.white,
+                                      ),
+                                      // elevation: 2,
                                     ),
-                                    menuItemStyleData: const MenuItemStyleData(
-                                      height: 40,
+                                    iconStyleData: const IconStyleData(
+                                      icon: Icon(
+                                        Icons.keyboard_arrow_down_sharp,
+                                      ),
+                                      iconSize: 20,
+                                      iconEnabledColor: AppColor.AccentBlue,
+                                      iconDisabledColor: Colors.grey,
+                                    ),
+                                    dropdownStyleData: DropdownStyleData(
+                                      decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.circular(14),
+                                        color: Colors.white,
+                                      ),
+                                      scrollbarTheme: ScrollbarThemeData(
+                                        radius: const Radius.circular(40),
+                                        thickness: MaterialStateProperty.all(6),
+                                        thumbVisibility:
+                                            MaterialStateProperty.all(true),
+                                      ),
                                     ),
                                   ),
                                 ),
@@ -1316,8 +1361,10 @@ class _TraderHomeScreenState extends State<TraderHomeScreen>
                                   prefixText: showunit ? wieghtUnit : "",
                                   prefixStyle:
                                       const TextStyle(color: Colors.black),
+                                  contentPadding:
+                                      EdgeInsets.symmetric(horizontal: 5.w),
                                   border: OutlineInputBorder(
-                                    borderRadius: BorderRadius.circular(5),
+                                    borderRadius: BorderRadius.circular(12),
                                   ),
                                 ),
                                 onChanged: (value) {
@@ -1342,63 +1389,198 @@ class _TraderHomeScreenState extends State<TraderHomeScreen>
                               const SizedBox(
                                 height: 12,
                               ),
-                              TypeAheadField(
-                                textFieldConfiguration: TextFieldConfiguration(
-                                  // autofocus: true,
-                                  onTap: () => _originController.selection =
-                                      TextSelection(
-                                          baseOffset: 0,
-                                          extentOffset: _originController
-                                              .value.text.length),
-                                  controller: _originController,
-                                  style: DefaultTextStyle.of(context)
-                                      .style
-                                      .copyWith(fontStyle: FontStyle.italic),
-                                  decoration: InputDecoration(
-                                      label: const Text("المنشأ"),
-                                      border: const OutlineInputBorder(),
-                                      prefixIcon:
-                                          _originController.text.isNotEmpty
-                                              ? SvgPicture.network(
-                                                  selectedOrigin!.imageURL!,
-                                                  height: 25,
-                                                  // semanticsLabel: 'A shark?!',
-                                                  placeholderBuilder: (BuildContext
-                                                          context) =>
-                                                      const CircularProgressIndicator(),
-                                                )
-                                              : null),
-                                ),
-                                suggestionsCallback: (pattern) async {
-                                  if (pattern.isNotEmpty) {
-                                    return await CalculatorService.getorigins(
-                                        pattern);
-                                  } else {
-                                    return [];
-                                  }
-                                },
-                                itemBuilder: (context, suggestion) {
-                                  return Directionality(
-                                    textDirection: TextDirection.rtl,
-                                    child: ListTile(
-                                      leading: SvgPicture.network(
-                                        suggestion.imageURL,
-                                        height: 35,
-                                        // semanticsLabel: 'A shark?!',
-                                        placeholderBuilder: (BuildContext
-                                                context) =>
-                                            const CircularProgressIndicator(),
+                              BlocBuilder<FlagsBloc, FlagsState>(
+                                builder: (context, flagstate) {
+                                  if (flagstate is FlagsLoadedSuccess) {
+                                    return DropdownButtonHideUnderline(
+                                      child: DropdownButton2<Origin>(
+                                        isExpanded: true,
+                                        hint: Text(
+                                          " اختر المنشأ",
+                                          style: TextStyle(
+                                            fontSize: 15,
+                                            color: Theme.of(context).hintColor,
+                                          ),
+                                        ),
+                                        items: flagstate.origins
+                                            .map((Origin item) =>
+                                                DropdownMenuItem<Origin>(
+                                                  value: item,
+                                                  child: SizedBox(
+                                                    // width: 200,
+                                                    child: Row(
+                                                      children: [
+                                                        SvgPicture.network(
+                                                          item.imageURL!,
+                                                          height: 35,
+                                                          // semanticsLabel: 'A shark?!',
+                                                          placeholderBuilder:
+                                                              (BuildContext
+                                                                      context) =>
+                                                                  const CircularProgressIndicator(),
+                                                        ),
+                                                        const SizedBox(
+                                                            width: 7),
+                                                        Container(
+                                                          constraints:
+                                                              BoxConstraints(
+                                                            maxWidth: 280.w,
+                                                          ),
+                                                          child: Text(
+                                                            item.label!,
+                                                            overflow:
+                                                                TextOverflow
+                                                                    .ellipsis,
+                                                            // maxLines: 2,
+                                                          ),
+                                                        ),
+                                                      ],
+                                                      // subtitle: Text('\$${suggestion['price']}'),
+                                                    ),
+                                                  ),
+                                                ))
+                                            .toList(),
+                                        value: selectedOrigin,
+                                        onChanged: (Origin? value) {
+                                          // setState(() {
+                                          //   selectedOrigin = value;
+                                          // });
+                                          selectOrigin(value!);
+                                        },
+                                        dropdownSearchData: DropdownSearchData(
+                                          searchController: _originController,
+                                          searchInnerWidgetHeight: 60,
+                                          searchInnerWidget: Container(
+                                            height: 60,
+                                            padding: const EdgeInsets.only(
+                                              top: 8,
+                                              bottom: 4,
+                                              right: 8,
+                                              left: 8,
+                                            ),
+                                            child: TextFormField(
+                                              expands: true,
+                                              maxLines: null,
+                                              controller: _originController,
+                                              onTap: () {
+                                                _originController.selection =
+                                                    TextSelection(
+                                                        baseOffset: 0,
+                                                        extentOffset:
+                                                            _originController
+                                                                .value
+                                                                .text
+                                                                .length);
+                                              },
+                                              decoration: InputDecoration(
+                                                isDense: true,
+                                                contentPadding:
+                                                    const EdgeInsets.symmetric(
+                                                  horizontal: 10,
+                                                  vertical: 8,
+                                                ),
+                                                hintText: 'اختر المنشأ',
+                                                hintStyle: const TextStyle(
+                                                    fontSize: 12),
+                                                border: OutlineInputBorder(
+                                                  borderRadius:
+                                                      BorderRadius.circular(8),
+                                                ),
+                                              ),
+                                            ),
+                                          ),
+                                          searchMatchFn: (item, searchValue) {
+                                            return item.value!.label!
+                                                .contains(searchValue);
+                                          },
+                                        ),
+                                        onMenuStateChange: (isOpen) {
+                                          if (isOpen) {
+                                            setState(() {
+                                              _originController.clear();
+                                            });
+                                          }
+                                        },
+                                        buttonStyleData: ButtonStyleData(
+                                          height: 50,
+                                          width: double.infinity,
+                                          padding: const EdgeInsets.only(
+                                              left: 14, right: 14),
+
+                                          decoration: BoxDecoration(
+                                            borderRadius:
+                                                BorderRadius.circular(12),
+                                            border: Border.all(
+                                              color: Colors.black26,
+                                            ),
+                                            color: Colors.white,
+                                          ),
+                                          // elevation: 2,
+                                        ),
+                                        iconStyleData: const IconStyleData(
+                                          icon: Icon(
+                                            Icons.keyboard_arrow_down_sharp,
+                                          ),
+                                          iconSize: 20,
+                                          iconEnabledColor: AppColor.AccentBlue,
+                                          iconDisabledColor: Colors.grey,
+                                        ),
+                                        dropdownStyleData: DropdownStyleData(
+                                          width: double.infinity,
+                                          maxHeight: MediaQuery.of(context)
+                                                  .size
+                                                  .height -
+                                              142.h,
+                                          padding: const EdgeInsets.all(8.0),
+                                          decoration: BoxDecoration(
+                                            borderRadius:
+                                                BorderRadius.circular(14),
+                                            color: Colors.white,
+                                          ),
+                                          scrollbarTheme: ScrollbarThemeData(
+                                            radius: const Radius.circular(40),
+                                            thickness:
+                                                MaterialStateProperty.all(6),
+                                            thumbVisibility:
+                                                MaterialStateProperty.all(true),
+                                          ),
+                                        ),
+                                        menuItemStyleData:
+                                            const MenuItemStyleData(
+                                          height: 40,
+                                        ),
                                       ),
-                                      title: Text(suggestion.label!),
-                                      // subtitle: Text('\$${suggestion['price']}'),
-                                    ),
-                                  );
-                                },
-                                onSuggestionSelected: (suggestion) {
-                                  selectOrigin(suggestion);
-                                  // Navigator.of(context).push(MaterialPageRoute(
-                                  //   builder: (context) => ProductPage(product: suggestion)
-                                  // ));
+                                    );
+                                  } else if (flagstate
+                                      is FlagsLoadingProgressState) {
+                                    return const Center(
+                                      child: LinearProgressIndicator(),
+                                    );
+                                  } else {
+                                    return Center(
+                                      child: GestureDetector(
+                                        onTap: () {
+                                          BlocProvider.of<FlagsBloc>(context)
+                                              .add(FlagsLoadEvent());
+                                        },
+                                        child: const Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.center,
+                                          children: [
+                                            Text(
+                                              "حدث خطأأثناء تحميل القائمة...  ",
+                                              style:
+                                                  TextStyle(color: Colors.red),
+                                            ),
+                                            Icon(
+                                              Icons.refresh,
+                                              color: Colors.grey,
+                                            )
+                                          ],
+                                        ),
+                                      ),
+                                    );
+                                  }
                                 },
                               ),
                               const SizedBox(
@@ -1410,8 +1592,11 @@ class _TraderHomeScreenState extends State<TraderHomeScreen>
                                     "الرجاء اختيار المنشأ",
                                     style: TextStyle(color: Colors.red),
                                   )),
-                              const SizedBox(
-                                height: 12,
+                              Visibility(
+                                visible: originerror,
+                                child: const SizedBox(
+                                  height: 12,
+                                ),
                               ),
                               const SizedBox(
                                 height: 12,
@@ -1429,8 +1614,10 @@ class _TraderHomeScreenState extends State<TraderHomeScreen>
                                   labelText: valueEnabled
                                       ? "قيمة البضاعة الاجمالية بالدولار"
                                       : "سعر الواحدة لدى الجمارك",
+                                  contentPadding:
+                                      EdgeInsets.symmetric(horizontal: 5.w),
                                   border: OutlineInputBorder(
-                                    borderRadius: BorderRadius.circular(5),
+                                    borderRadius: BorderRadius.circular(12),
                                   ),
                                 ),
                                 onChanged: (value) {
@@ -1859,7 +2046,8 @@ class _TraderHomeScreenState extends State<TraderHomeScreen>
   int? selected;
   int? chapterselected;
   int? subchapterselected;
-  int? feeselected;
+  int? feeselected = -1;
+  String? feeselectedId;
   bool shownote = false;
   NoteType noteType = NoteType.None;
   final ScrollController scroll = ScrollController();
@@ -1869,147 +2057,228 @@ class _TraderHomeScreenState extends State<TraderHomeScreen>
       textDirection: TextDirection.rtl,
       child: Scaffold(
         backgroundColor: Colors.grey[200],
-        body: SingleChildScrollView(
-          child: Column(
-            children: [
-              SizedBox(
-                height: 30.h,
-              ),
-              Padding(
-                padding: EdgeInsets.all(8.h),
-                child: BlocConsumer<SectionBloc, SectionState>(
-                  listener: (context, state) {
-                    // if(state is)
-                  },
-                  builder: (context, state) {
-                    if (state is SectionLoadedSuccess) {
-                      return ListView.builder(
-                        key: Key('builder ${selected.toString()}'),
-                        shrinkWrap: true,
-                        controller: scroll,
-                        physics: const NeverScrollableScrollPhysics(),
-                        itemCount: state.sections.length,
-                        itemBuilder: (context, index) {
-                          return Container(
-                            margin: EdgeInsets.symmetric(
-                                vertical: 4.h, horizontal: 3.w),
-                            clipBehavior: Clip.antiAlias,
-                            decoration: BoxDecoration(
-                                color: Colors.white,
-                                borderRadius: BorderRadius.circular(10),
-                                border: selected == index
-                                    ? Border.all(
-                                        color: Colors.yellow[600]!, width: 2)
-                                    : null),
-                            child: ExpansionTile(
-                              key: Key(index.toString()), //attention
-                              initiallyExpanded: index == selected,
-
-                              title: Row(
-                                // crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Padding(
-                                    padding: const EdgeInsets.symmetric(
-                                        horizontal: 3),
-                                    child: SizedBox(
-                                      width: 36.w,
-                                      height: 36.h,
-                                      child: Img(
-                                        state.sections[index].image!,
-                                      ),
-                                    ),
+        appBar: AppBar(
+          backgroundColor: AppColor.deepBlue,
+          title: const Text(
+            "اختر البند الجمركي",
+            style: TextStyle(color: Colors.white),
+          ),
+          centerTitle: true,
+          leading: GestureDetector(
+              onTap: () {
+                setState(() {
+                  selected = -1;
+                  chapterselected = -1;
+                  subchapterselected = -1;
+                  feeselected = -1;
+                });
+                BlocProvider.of<CalculatorPanelBloc>(context)
+                    .add(CalculatorPanelHideEvent());
+              },
+              child: const Icon(Icons.arrow_back, color: Colors.white)),
+          elevation: 0,
+        ),
+        body: Stack(
+          children: [
+            SingleChildScrollView(
+              child: Column(
+                children: [
+                  Padding(
+                    padding: EdgeInsets.all(8.h),
+                    child: BlocConsumer<SectionBloc, SectionState>(
+                      listener: (context, state) {
+                        // if(state is)
+                      },
+                      builder: (context, state) {
+                        if (state is SectionLoadedSuccess) {
+                          return ListView.builder(
+                            key: Key('builder ${selected.toString()}'),
+                            shrinkWrap: true,
+                            controller: scroll,
+                            physics: const NeverScrollableScrollPhysics(),
+                            itemCount: state.sections.length,
+                            itemBuilder: (context, index) {
+                              return Card(
+                                margin: EdgeInsets.symmetric(
+                                    vertical: 4.h, horizontal: 3.w),
+                                clipBehavior: Clip.none,
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: const BorderRadius.all(
+                                    Radius.circular(10),
                                   ),
-                                  SizedBox(
-                                    width: 100.w,
-                                    child: Padding(
-                                      padding: const EdgeInsets.symmetric(
-                                          horizontal: 3),
-                                      child: Column(
-                                        children: [
-                                          FittedBox(
-                                            fit: BoxFit.scaleDown,
-                                            child: Text(
-                                              state.sections[index].name!,
-                                              style: const TextStyle(
-                                                  fontWeight: FontWeight.bold),
+                                  side: BorderSide(
+                                      color: AppColor.goldenYellow, width: 2),
+                                ),
+                                color: Colors.white,
+                                child: Theme(
+                                  data: Theme.of(context).copyWith(
+                                      dividerColor: Colors.transparent),
+                                  child: ExpansionTile(
+                                    key: Key(index.toString()), //attention
+                                    initiallyExpanded: index == selected,
+                                    tilePadding:
+                                        EdgeInsets.symmetric(horizontal: 5.w),
+                                    title: Row(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.center,
+                                      children: [
+                                        // Padding(
+                                        //   padding: const EdgeInsets.symmetric(
+                                        //       horizontal: 3),
+                                        //   child: SizedBox(
+                                        //     width: 36.w,
+                                        //     height: 36.h,
+                                        //     child: Img(
+                                        //       state.sections[index].image!,
+                                        //     ),
+                                        //   ),
+                                        // ),
+                                        SizedBox(
+                                          width: 65.w,
+                                          child: Column(
+                                            children: [
+                                              SizedBox(
+                                                width: 36.w,
+                                                height: 36.h,
+                                                child: SvgPicture.network(
+                                                  state.sections[index].image!,
+                                                ),
+                                              ),
+                                              Text(
+                                                "(${state.sections[index].end!}__${state.sections[index].start!})",
+                                                style: const TextStyle(
+                                                    fontSize: 14),
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                        SizedBox(
+                                          height: 5.w,
+                                        ),
+                                        Flexible(
+                                          child: Text(
+                                            state.sections[index].label!,
+                                            maxLines: 10,
+                                            overflow: TextOverflow.ellipsis,
+                                            style: const TextStyle(
+                                              fontWeight: FontWeight.bold,
                                             ),
                                           ),
-                                          Text(
-                                            "(${state.sections[index].end!}__${state.sections[index].start!})",
-                                            style:
-                                                const TextStyle(fontSize: 14),
-                                          ),
-                                        ],
-                                      ),
+                                        ),
+                                      ],
                                     ),
+
+                                    onExpansionChanged: (value) {
+                                      if (value) {
+                                        BlocProvider.of<ChapterBloc>(context)
+                                            .add(ChapterLoadEvent(
+                                                state.sections[index].id!));
+                                        setState(() {
+                                          selected = index;
+                                          chapterselected = -1;
+                                          subchapterselected = -1;
+                                        });
+
+                                        scroll.animateTo(
+                                            index +
+                                                MediaQuery.of(context)
+                                                        .size
+                                                        .width /
+                                                    2,
+                                            duration:
+                                                const Duration(seconds: 1),
+                                            curve: Curves.easeIn);
+                                      } else {
+                                        setState(() {
+                                          selected = -1;
+                                          shownote = false;
+                                          noteType = NoteType.None;
+                                        });
+                                      }
+                                    },
+                                    children: buildChapterTiles(),
                                   ),
-                                  Flexible(
-                                    child: Text(
-                                      state.sections[index].label!,
-                                      maxLines: 4,
-                                      overflow: TextOverflow.ellipsis,
-                                    ),
-                                  ),
-                                ],
+                                ),
+                              );
+                            },
+                          );
+                        } else {
+                          return Shimmer.fromColors(
+                            baseColor: (Colors.grey[300])!,
+                            highlightColor: (Colors.grey[100])!,
+                            enabled: true,
+                            child: ListView.builder(
+                              shrinkWrap: true,
+                              itemBuilder: (_, __) => Container(
+                                margin: const EdgeInsets.symmetric(
+                                    vertical: 4, horizontal: 3),
+                                clipBehavior: Clip.antiAlias,
+                                decoration: BoxDecoration(
+                                  color: Colors.white,
+                                  borderRadius: BorderRadius.circular(10),
+                                ),
+                                child: SizedBox(
+                                  height: 90.h,
+                                ),
                               ),
-
-                              onExpansionChanged: (value) {
-                                if (value) {
-                                  BlocProvider.of<ChapterBloc>(context).add(
-                                      ChapterLoadEvent(
-                                          state.sections[index].id!));
-                                  setState(() {
-                                    selected = index;
-                                    chapterselected = -1;
-                                    subchapterselected = -1;
-                                  });
-
-                                  scroll.animateTo(
-                                      index +
-                                          MediaQuery.of(context).size.width / 2,
-                                      duration: const Duration(seconds: 1),
-                                      curve: Curves.easeIn);
-                                } else {
-                                  setState(() {
-                                    selected = -1;
-                                    shownote = false;
-                                    noteType = NoteType.None;
-                                  });
-                                }
-                              },
-                              children: buildChapterTiles(),
+                              itemCount: 10,
                             ),
                           );
+                        }
+                      },
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            Visibility(
+              visible: feeselected != -1,
+              child: Positioned(
+                bottom: 0.h,
+                child: Container(
+                  padding: const EdgeInsets.all(8),
+                  color: AppColor.deepBlue,
+                  width: MediaQuery.of(context).size.width,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    children: [
+                      CustomButton(
+                        onTap: () {
+                          setState(() {
+                            feeselected = -1;
+                            feeselectedId = "";
+                          });
                         },
-                      );
-                    } else {
-                      return Shimmer.fromColors(
-                        baseColor: (Colors.grey[300])!,
-                        highlightColor: (Colors.grey[100])!,
-                        enabled: true,
-                        child: ListView.builder(
-                          shrinkWrap: true,
-                          itemBuilder: (_, __) => Container(
-                            margin: const EdgeInsets.symmetric(
-                                vertical: 4, horizontal: 3),
-                            clipBehavior: Clip.antiAlias,
-                            decoration: BoxDecoration(
-                              color: Colors.white,
-                              borderRadius: BorderRadius.circular(10),
-                            ),
-                            child: SizedBox(
-                              height: 90.h,
-                            ),
-                          ),
-                          itemCount: 10,
-                        ),
-                      );
-                    }
-                  },
+                        color: Colors.white,
+                        bordercolor: Colors.red,
+                        title: const SizedBox(
+                            width: 100, child: Center(child: Text("إلغاء"))),
+                      ),
+                      CustomButton(
+                        onTap: () {
+                          setState(() {
+                            selected = -1;
+                            chapterselected = -1;
+                            subchapterselected = -1;
+                            feeselected = -1;
+                          });
+                          BlocProvider.of<FeeSelectBloc>(context)
+                              .add(FeeSelectLoadEvent(id: feeselectedId!));
+                          BlocProvider.of<CalculatorPanelBloc>(context)
+                              .add(CalculatorPanelHideEvent());
+                        },
+                        color: Colors.white,
+                        bordercolor: Colors.green,
+                        title: SizedBox(
+                            width: 100.w,
+                            child: const Center(child: Text("موافق"))),
+                      ),
+                    ],
+                  ),
                 ),
               ),
-            ],
-          ),
+            )
+          ],
         ),
       ),
     );
@@ -2020,52 +2289,76 @@ class _TraderHomeScreenState extends State<TraderHomeScreen>
     list.add(BlocBuilder<FeeBloc, FeeState>(
       builder: (context, state) {
         if (state is FeeLoadedSuccess) {
-          return ListView.builder(
-            key: Key('feebuilder ${feeselected.toString()}'),
-            shrinkWrap: true,
-            itemCount: state.fees.length,
-            physics: const NeverScrollableScrollPhysics(),
-            itemBuilder: (context, index4) {
-              return ExpansionTile(
-                key: Key(index4.toString()),
-                initiallyExpanded: index4 == feeselected,
-                trailing: const SizedBox.shrink(),
-                title: InkWell(
-                  onTap: () {
-                    setState(() {
-                      selected = -1;
-                      chapterselected = -1;
-                      subchapterselected = -1;
-                    });
-                    BlocProvider.of<FeeSelectBloc>(context)
-                        .add(FeeSelectLoadEvent(id: state.fees[index4].id!));
-                    BlocProvider.of<CalculatorPanelBloc>(context)
-                        .add(CalculatorPanelHideEvent());
-                  },
-                  child: Row(
+          return Container(
+            color: Colors.grey[200],
+            child: ListView.builder(
+              key: Key('feebuilder ${feeselected.toString()}'),
+              shrinkWrap: true,
+              itemCount: state.fees.length,
+              physics: const NeverScrollableScrollPhysics(),
+              itemBuilder: (context, index4) {
+                return Container(
+                  margin: const EdgeInsets.all(8),
+                  child: Column(
                     children: [
-                      Flexible(
-                          child: Container(
-                        padding: const EdgeInsets.symmetric(horizontal: 5),
-                        width: double.infinity,
-                        decoration: BoxDecoration(
-                          color:
-                              feeselected == index4 ? null : Colors.grey[200],
-                          borderRadius: BorderRadius.circular(10),
+                      InkWell(
+                        onTap: () {
+                          if (feeselected == index4) {
+                            setState(() {
+                              feeselected = -1;
+                              feeselectedId = "";
+                            });
+                          } else {
+                            setState(() {
+                              feeselected = index4;
+                              feeselectedId = state.fees[index4].id!;
+                            });
+                          }
+                        },
+                        child: Row(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(state.fees[index4].id!),
+                            Flexible(
+                                child: Container(
+                              padding:
+                                  const EdgeInsets.symmetric(horizontal: 5),
+                              width: double.infinity,
+                              decoration: BoxDecoration(
+                                color: feeselected == index4
+                                    ? null
+                                    : Colors.grey[200],
+                                borderRadius: BorderRadius.circular(10),
+                              ),
+                              child: Text(
+                                state.fees[index4].label!,
+                                maxLines: 4,
+                                overflow: TextOverflow.ellipsis,
+                              ),
+                            )),
+                            feeselected == index4
+                                ? const Icon(
+                                    Icons.check_box_outlined,
+                                    color: Colors.green,
+                                  )
+                                : Icon(
+                                    Icons.check_box_outline_blank,
+                                    color: AppColor.deepBlue,
+                                  )
+                          ],
                         ),
-                        child: Text(
-                          "${state.fees[index4].id!} ${state.fees[index4].label!}",
-                          maxLines: 4,
-                          overflow: TextOverflow.ellipsis,
-                        ),
-                      )),
+                      ),
+                      index4 != (state.fees.length - 1)
+                          ? const Divider(
+                              height: 1,
+                              color: Color.fromARGB(255, 229, 215, 94),
+                            )
+                          : const SizedBox.shrink(),
                     ],
                   ),
-                ),
-
-                // children: buildfeesChildren(state.fees[index4]),
-              );
-            },
+                );
+              },
+            ),
           );
         } else {
           return Shimmer.fromColors(
@@ -2103,104 +2396,96 @@ class _TraderHomeScreenState extends State<TraderHomeScreen>
     list.add(BlocBuilder<SubChapterBloc, SubChapterState>(
       builder: (context, state) {
         if (state is SubChapterLoadedSuccess) {
-          return ListView.builder(
-            key: Key('subchapterbuilder ${subchapterselected.toString()}'),
-            shrinkWrap: true,
-            itemCount: state.subchapters.length,
-            physics: const NeverScrollableScrollPhysics(),
-            itemBuilder: (context, index3) {
-              return Container(
-                // margin: const EdgeInsets.symmetric(horizontal: 4),
-                decoration: BoxDecoration(
-                  color: index3 == subchapterselected ? null : Colors.grey[200],
-                  gradient: index3 == subchapterselected
-                      ? const LinearGradient(
-                          colors: [
-                              Color.fromARGB(255, 229, 215, 94),
-                              Colors.white,
-                              Colors.white,
-                              Colors.white,
-                              Colors.white,
-                              Colors.white,
-                            ],
-                          begin: Alignment.topCenter,
-                          end: Alignment.bottomCenter)
-                      : null,
-                  borderRadius: BorderRadius.circular(5),
-                  border: index3 == subchapterselected
-                      ? Border.all(color: Colors.yellow[600]!, width: 2)
-                      : null,
-                ),
-                child: Column(
+          return Container(
+            color: Colors.white,
+            child: ListView.builder(
+              key: Key('subchapterbuilder ${subchapterselected.toString()}'),
+              shrinkWrap: true,
+              itemCount: state.subchapters.length,
+              physics: const NeverScrollableScrollPhysics(),
+              itemBuilder: (context, index3) {
+                return Column(
                   children: [
-                    ExpansionTile(
-                      key: Key(index3.toString()), //attention
-                      initiallyExpanded: index3 == subchapterselected,
-
-                      title: Row(
-                        children: [
-                          Container(
-                            // margin: const EdgeInsets.symmetric(horizontal: 4),
-                            decoration: BoxDecoration(
-                              color: chapterselected == index2
-                                  ? null
-                                  : Colors.white,
-                              gradient: chapterselected == index2
-                                  ? const LinearGradient(
-                                      colors: [
-                                          Color.fromARGB(255, 229, 215, 94),
-                                          Colors.white,
-                                        ],
-                                      begin: Alignment.topCenter,
-                                      end: Alignment.bottomCenter)
-                                  : null,
-                              borderRadius: BorderRadius.circular(5),
-                            ),
-                            child: Center(
-                              child: subchapterselected == index3
-                                  ? const Icon(Icons.remove)
-                                  : const Icon(Icons.add),
-                            ),
-                          ),
-                          Flexible(
-                              child: Container(
-                            padding: const EdgeInsets.symmetric(horizontal: 5),
-                            width: double.infinity,
-                            child: Text(
-                              "${state.subchapters[index3].id!} ${state.subchapters[index3].label!}",
-                              maxLines: 4,
-                              overflow: TextOverflow.ellipsis,
-                            ),
-                          )),
-                        ],
+                    Card(
+                      margin: const EdgeInsets.all(2),
+                      clipBehavior: Clip.antiAlias,
+                      // decoration: BoxDecoration(
+                      //   color: subchapterselected == index3
+                      //       ? Colors.white
+                      //       : null,
+                      //   border: subchapterselected == index3
+                      //       ? feeselected == -1
+                      //           ? Border.all(
+                      //               color: AppColor.goldenYellow, width: 2)
+                      //           : null
+                      //       : null,
+                      //   borderRadius: BorderRadius.circular(10),
+                      // ),
+                      elevation: subchapterselected == index3 ? 1 : 0,
+                      color: subchapterselected == index3
+                          ? Colors.white
+                          : Colors.white,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10),
+                        side: BorderSide(
+                            color: subchapterselected == index3
+                                ? feeselected == -1
+                                    ? AppColor.goldenYellow
+                                    : Colors.white
+                                : Colors.white,
+                            width: 2),
                       ),
+                      child: ExpansionTile(
+                        key: Key(index3.toString()), //attention
+                        initiallyExpanded: index3 == subchapterselected,
+                        tilePadding: EdgeInsets.zero,
+                        childrenPadding: EdgeInsets.zero,
+                        title: Row(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(state.subchapters[index3].id!),
+                            Flexible(
+                                child: Container(
+                              padding:
+                                  const EdgeInsets.symmetric(horizontal: 5),
+                              width: double.infinity,
+                              child: Text(
+                                state.subchapters[index3].label!,
+                                maxLines: 10,
+                                overflow: TextOverflow.ellipsis,
+                              ),
+                            )),
+                          ],
+                        ),
 
-                      onExpansionChanged: (value) {
-                        if (value) {
-                          BlocProvider.of<FeeBloc>(context)
-                              .add(FeeLoadEvent(state.subchapters[index3].id!));
-                          setState(() {
-                            subchapterselected = index3;
-                          });
-                        } else {
-                          setState(() {
-                            subchapterselected = -1;
-                            shownote = false;
-                            noteType = NoteType.None;
-                          });
-                        }
-                      },
-                      children: buildFeesTiles(index3),
+                        onExpansionChanged: (value) {
+                          if (value) {
+                            BlocProvider.of<FeeBloc>(context).add(
+                                FeeLoadEvent(state.subchapters[index3].id!));
+                            setState(() {
+                              subchapterselected = index3;
+                            });
+                          } else {
+                            setState(() {
+                              subchapterselected = -1;
+                              shownote = false;
+                              noteType = NoteType.None;
+                            });
+                          }
+                        },
+                        children: buildFeesTiles(index3),
+                      ),
                     ),
                     index3 != state.subchapters.length - 1
                         ? const Divider(
+                            height: 1,
                             color: Color.fromARGB(255, 229, 215, 94),
                           )
                         : const SizedBox.shrink(),
                   ],
-                ),
-              );
-            },
+                );
+              },
+            ),
           );
         } else {
           return Shimmer.fromColors(
@@ -2243,101 +2528,57 @@ class _TraderHomeScreenState extends State<TraderHomeScreen>
         if (state is ChapterLoadedSuccess) {
           return Container(
             color: Colors.grey[200],
-            padding: const EdgeInsets.all(5.0),
+            padding: const EdgeInsets.only(top: 3.0),
             child: ListView.builder(
               key: Key('chapterbuilder ${chapterselected.toString()}'),
               shrinkWrap: true,
               itemCount: state.chapters.length,
               physics: const NeverScrollableScrollPhysics(),
               itemBuilder: (context, index2) {
-                return Container(
-                  margin:
-                      const EdgeInsets.symmetric(vertical: 1, horizontal: 4),
-                  decoration: BoxDecoration(
-                    color: Colors.grey[200],
-                    borderRadius: BorderRadius.circular(10),
-                  ),
-                  child: Column(
-                    children: [
-                      Theme(
-                        data: Theme.of(context)
-                            .copyWith(dividerColor: Colors.transparent),
+                return Column(
+                  children: [
+                    Card(
+                      margin: const EdgeInsets.all(2),
+                      clipBehavior: Clip.antiAlias,
+                      elevation: chapterselected == index2 ? 1 : 0,
+                      color: chapterselected == index2
+                          ? Colors.grey[200]
+                          : Colors.grey[200],
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10),
+                        side: BorderSide(
+                            color: chapterselected == index2
+                                ? subchapterselected == -1
+                                    ? AppColor.goldenYellow
+                                    : Colors.grey[200]!
+                                : Colors.grey[200]!,
+                            width: 2),
+                      ),
+                      child: ListTileTheme(
+                        contentPadding: EdgeInsets.symmetric(horizontal: 9.w),
+                        dense: true,
+                        horizontalTitleGap: 0.0,
+                        minLeadingWidth: 0,
                         child: ExpansionTile(
-                          title: Container(
-                            decoration: BoxDecoration(
-                              gradient: chapterselected == index2
-                                  ? subchapterselected == -1
-                                      ? const LinearGradient(
-                                          colors: [
-                                              Color.fromARGB(255, 229, 215, 94),
-                                              Colors.white,
-                                            ],
-                                          begin: Alignment.topCenter,
-                                          end: Alignment.bottomCenter)
-                                      : null
-                                  : null,
-                              borderRadius: BorderRadius.circular(10),
-                            ),
-                            child: Row(
-                              children: [
-                                Container(
-                                  margin:
-                                      const EdgeInsets.symmetric(horizontal: 4),
-                                  decoration: BoxDecoration(
-                                    border: chapterselected == index2
-                                        ? subchapterselected == -1
-                                            ? null
-                                            : Border.all(
-                                                color: const Color.fromARGB(
-                                                    255, 229, 215, 94),
-                                                width: 1,
-                                              )
-                                        : Border.all(
-                                            color: const Color.fromARGB(
-                                                255, 229, 215, 94),
-                                            width: 1,
-                                          ),
-                                    borderRadius: BorderRadius.circular(5),
-                                  ),
-                                  child: Center(
-                                    child: chapterselected == index2
-                                        ? const Icon(Icons.remove)
-                                        : const Icon(Icons.add),
-                                  ),
+                          title: Row(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(state.chapters[index2].id!),
+                              Flexible(
+                                  child: Container(
+                                padding:
+                                    const EdgeInsets.symmetric(horizontal: 5),
+                                width: double.infinity,
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(10),
                                 ),
-                                Flexible(
-                                    child: Container(
-                                  padding:
-                                      const EdgeInsets.symmetric(horizontal: 5),
-                                  width: double.infinity,
-                                  decoration: BoxDecoration(
-                                    color: chapterselected == index2
-                                        ? subchapterselected == -1
-                                            ? Colors.white
-                                            : null
-                                        : null,
-                                    gradient: chapterselected == index2
-                                        ? subchapterselected == -1
-                                            ? const LinearGradient(
-                                                colors: [
-                                                    Color.fromARGB(
-                                                        255, 229, 215, 94),
-                                                    Colors.white,
-                                                  ],
-                                                begin: Alignment.topCenter,
-                                                end: Alignment.bottomCenter)
-                                            : null
-                                        : null,
-                                    borderRadius: BorderRadius.circular(10),
-                                  ),
-                                  child: Text(
-                                    "${state.chapters[index2].id!} ${state.chapters[index2].label!}",
-                                    maxLines: 4,
-                                    overflow: TextOverflow.ellipsis,
-                                  ),
-                                )),
-                              ],
-                            ),
+                                child: Text(
+                                  state.chapters[index2].label!,
+                                  maxLines: 10,
+                                  overflow: TextOverflow.ellipsis,
+                                ),
+                              )),
+                            ],
                           ),
                           key: Key(index2.toString()), //attention
                           initiallyExpanded: index2 == chapterselected,
@@ -2363,11 +2604,14 @@ class _TraderHomeScreenState extends State<TraderHomeScreen>
                           children: buildSubChapterTiles(index2),
                         ),
                       ),
-                      const Divider(
-                        color: Color.fromARGB(255, 229, 215, 94),
-                      ),
-                    ],
-                  ),
+                    ),
+                    index2 != (state.chapters.length - 1)
+                        ? const Divider(
+                            height: 1,
+                            color: Color.fromARGB(255, 229, 215, 94),
+                          )
+                        : const SizedBox.shrink(),
+                  ],
                 );
               },
             ),

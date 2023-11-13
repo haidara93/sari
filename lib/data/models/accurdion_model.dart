@@ -1,7 +1,7 @@
 // ignore_for_file: non_constant_identifier_names
 
 class Section {
-  int? id;
+  String? id;
   String? label;
   String? name;
   String? image;
@@ -131,7 +131,7 @@ class SubChapterSet {
 class Chapter {
   String? id;
   String? label;
-  int? idParent1;
+  String? idParent1;
   List<SubChapter>? subchapters;
 
   Chapter({this.id, this.label, this.idParent1});

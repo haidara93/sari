@@ -1239,7 +1239,9 @@ class _CustomeTariffScreenState extends State<CustomeTariffScreen> {
                                       maxLines: 10,
                                       overflow: TextOverflow.ellipsis,
                                       TextSpan(
-                                          text: state.sections[index].id! < 10
+                                          text: int.parse(state
+                                                      .sections[index].id!) <
+                                                  10
                                               ? "0${state.sections[index].id!}"
                                               : state.sections[index].id!
                                                   .toString(),
