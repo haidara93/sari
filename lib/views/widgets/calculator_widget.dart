@@ -456,10 +456,21 @@ class _CalculatorWidgetState extends State<CalculatorWidget> {
                                 BlocProvider.of<BottomNavBarCubit>(context)
                                     .emitShow();
                               },
-                              child: Image.asset(
-                                "assets/icons/expansionTileIcon.png",
-                                width: 30.w,
-                                height: 30.h,
+                              child: SizedBox(
+                                width: 85.w,
+                                child: Column(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Text(
+                                      "التعرفة الجمركية",
+                                      textAlign: TextAlign.center,
+                                      style: TextStyle(
+                                          color: AppColor.deepYellow,
+                                          fontSize: 12,
+                                          fontWeight: FontWeight.bold),
+                                    ),
+                                  ],
+                                ),
                               ),
                             )
                           : null,

@@ -62,7 +62,11 @@ class _IntroductionViewState extends State<IntroductionView> {
               height: 20,
             ),
             const Spacer(),
-            Image.asset("assets/images/sari_intro.png"),
+            SvgPicture.asset(
+              "assets/images/sari_white.svg",
+              height: 65.h,
+              width: 120.w,
+            ),
             SizedBox(
               height: 10.h,
             ),

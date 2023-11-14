@@ -1,6 +1,7 @@
 import 'package:custome_mobile/business_logic/bloc/trader_log_bloc.dart';
 import 'package:custome_mobile/helpers/color_constants.dart';
 import 'package:custome_mobile/views/screens/trader/log_screens/offer_details_screen.dart';
+import 'package:custome_mobile/views/screens/trader/log_screens/order_tracking_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -207,72 +208,113 @@ class _LogScreenState extends State<LogScreen>
                                 .difference(state.offers[index].createdDate!);
                             return Card(
                               child: Padding(
-                                  padding: EdgeInsets.symmetric(vertical: 5.h),
-                                  child: ListTile(
-                                    onTap: () {
-                                      Navigator.push(
-                                          context,
-                                          MaterialPageRoute(
-                                            builder: (context) =>
-                                                OfferDetailsScreen(
-                                                    offer: state.offers[index]),
-                                          ));
-                                    },
-                                    leading: Container(
-                                        height: 75.h,
-                                        width: 75.w,
-                                        decoration: BoxDecoration(
-                                            color: AppColor.lightGoldenYellow,
-                                            borderRadius:
-                                                BorderRadius.circular(5)),
-                                        child: Center(
-                                            child: Image.asset(
-                                          "assets/images/naval_shipping.png",
-                                          height: 45.h,
-                                          width: 45.w,
-                                          fit: BoxFit.fill,
-                                        ))),
-                                    title: Column(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.start,
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        Text(
-                                          'رقم العملية: SA-${state.offers[index].id!}',
-                                          style: TextStyle(
-                                              // color: AppColor.lightBlue,
-                                              fontSize: 15.sp,
-                                              fontWeight: FontWeight.bold),
-                                        ),
-                                        Text(
-                                            'نوع العملية: ${getOfferType(state.offers[index].offerType!)}'),
-                                        Text(
-                                            '${state.offers[index].origin!.label!}  --->  ${state.offers[index].costumestate!.name}'),
-                                        // Text(
-                                        //     'نوع البضاعة: ${state.offers[index].product!.label!}'),
-                                      ],
-                                    ),
-                                    trailing: GestureDetector(
-                                      onTap: () {
-                                        Navigator.push(
-                                            context,
-                                            MaterialPageRoute(
-                                              builder: (context) =>
-                                                  OfferDetailsScreen(
-                                                      offer:
-                                                          state.offers[index]),
-                                            ));
-                                      },
-                                      child: Padding(
-                                        padding: const EdgeInsets.all(8.0),
-                                        child: Icon(
-                                          Icons.more_vert,
-                                          color: AppColor.goldenYellow,
+                                padding: EdgeInsets.symmetric(vertical: 5.h),
+                                child: ListTile(
+                                  contentPadding:
+                                      EdgeInsets.symmetric(horizontal: 5.w),
+                                  onTap: () {
+                                    Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                          builder: (context) =>
+                                              OfferDetailsScreen(
+                                                  offer: state.offers[index]),
+                                        ));
+                                  },
+                                  leading: Container(
+                                      height: 75.h,
+                                      width: 75.w,
+                                      decoration: BoxDecoration(
+                                          color: AppColor.lightGoldenYellow,
+                                          borderRadius:
+                                              BorderRadius.circular(5)),
+                                      child: Center(
+                                          child: Image.asset(
+                                        "assets/images/naval_shipping.png",
+                                        height: 45.h,
+                                        width: 45.w,
+                                        fit: BoxFit.fill,
+                                      ))),
+                                  title: Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Column(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.start,
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          Text(
+                                            'رقم العملية: SA-${state.offers[index].id!}',
+                                            style: TextStyle(
+                                                // color: AppColor.lightBlue,
+                                                fontSize: 15.sp,
+                                                fontWeight: FontWeight.bold),
+                                          ),
+                                          Text(
+                                              'نوع العملية: ${getOfferType(state.offers[index].offerType!)}'),
+                                          Text(
+                                              '${state.offers[index].origin!.label!}  --->  ${state.offers[index].costumestate!.name}'),
+                                          // Text(
+                                          //     'نوع البضاعة: ${state.offers[index].product!.label!}'),
+                                        ],
+                                      ),
+                                      SizedBox(
+                                        height: 80.h,
+                                        child: Column(
+                                          mainAxisSize: MainAxisSize.min,
+                                          children: [
+                                            GestureDetector(
+                                              onTap: () {
+                                                Navigator.push(
+                                                    context,
+                                                    MaterialPageRoute(
+                                                      builder: (context) =>
+                                                          OfferDetailsScreen(
+                                                              offer:
+                                                                  state.offers[
+                                                                      index]),
+                                                    ));
+                                              },
+                                              child: Padding(
+                                                padding:
+                                                    const EdgeInsets.all(3.0),
+                                                child: Icon(
+                                                  Icons.more_vert,
+                                                  color: AppColor.goldenYellow,
+                                                ),
+                                              ),
+                                            ),
+                                            GestureDetector(
+                                              onTap: () {
+                                                Navigator.push(
+                                                    context,
+                                                    MaterialPageRoute(
+                                                      builder: (context) =>
+                                                          OrderTrackingScreen(
+                                                              offernum: state
+                                                                  .offers[index]
+                                                                  .id!),
+                                                    ));
+                                              },
+                                              child: Padding(
+                                                padding:
+                                                    const EdgeInsets.all(3.0),
+                                                child: Icon(
+                                                  Icons.track_changes,
+                                                  color: AppColor.goldenYellow,
+                                                ),
+                                              ),
+                                            ),
+                                          ],
                                         ),
                                       ),
-                                    ),
-                                  )),
+                                    ],
+                                  ),
+                                  dense: false,
+                                ),
+                              ),
                             );
                           });
                 } else {

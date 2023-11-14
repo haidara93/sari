@@ -63,7 +63,7 @@ class _CustomeTariffScreenState extends State<CustomeTariffScreen> {
                 child: ListView.builder(
                   shrinkWrap: true,
                   itemCount: state.tradeDescription.imageDescriptions!.length,
-                  physics: const NeverScrollableScrollPhysics(),
+                  // physics: const NeverScrollableScrollPhysics(),
                   scrollDirection: Axis.horizontal,
                   itemBuilder: (context, index4) {
                     return Container(
@@ -75,12 +75,30 @@ class _CustomeTariffScreenState extends State<CustomeTariffScreen> {
                       child: Image.network(
                         state
                             .tradeDescription.imageDescriptions![index4].image!,
-                        height: 35.h,
-                        width: 35.w,
+                        height: 70.h,
+                        width: 70.w,
+                        loadingBuilder: (context, child, loadingProgress) {
+                          if (loadingProgress == null) {
+                            return child;
+                          }
+
+                          return Container(
+                            height: 70.h,
+                            width: 70.w,
+                            color: Colors.grey[200],
+                            child: Center(
+                                child: CircularProgressIndicator(
+                              value: loadingProgress.expectedTotalBytes != null
+                                  ? loadingProgress.cumulativeBytesLoaded /
+                                      loadingProgress.expectedTotalBytes!
+                                  : null,
+                            )),
+                          );
+                        },
                         errorBuilder: (context, error, stackTrace) {
                           return Container(
-                            height: 35.h,
-                            width: 35.w,
+                            height: 70.h,
+                            width: 70.w,
                             color: Colors.grey[300],
                             child: const Center(child: Text("error")),
                           );
@@ -90,6 +108,9 @@ class _CustomeTariffScreenState extends State<CustomeTariffScreen> {
                   },
                 ),
               ),
+              const SizedBox(
+                height: 7,
+              )
             ],
           );
         } else {
@@ -251,7 +272,20 @@ class _CustomeTariffScreenState extends State<CustomeTariffScreen> {
                   ],
                 ),
               ),
-              children: const [],
+              children: const [
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 20),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: [
+                      Text(
+                        " لا يوجد أية شروط للاستيراد.",
+                        textAlign: TextAlign.start,
+                      ),
+                    ],
+                  ),
+                ),
+              ],
             ),
             Divider(
               height: 1,
@@ -296,6 +330,9 @@ class _CustomeTariffScreenState extends State<CustomeTariffScreen> {
                         mainAxisAlignment: MainAxisAlignment.start,
                         children: [
                           Image.asset("assets/icons/export_restrection.png"),
+                          SizedBox(
+                            width: 5.w,
+                          ),
                           const Text("شروط التصدير:"),
                           fe.export! == "مسموح التصدير"
                               ? const Icon(
@@ -526,16 +563,14 @@ class _CustomeTariffScreenState extends State<CustomeTariffScreen> {
                           tilePadding: EdgeInsets.zero,
                           initiallyExpanded: index4 == feeselected,
                           controlAffinity: ListTileControlAffinity.leading,
-                          leading: Container(
-                            margin: EdgeInsets.symmetric(horizontal: 7),
-                            child: feeselected == index4
-                                ? const Icon(Icons.remove)
-                                : const Icon(Icons.add),
-                          ),
+                          leading: SizedBox.shrink(),
                           title: Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             crossAxisAlignment: CrossAxisAlignment.center,
                             children: [
+                              SizedBox(
+                                width: 13.w,
+                              ),
                               Flexible(
                                 child: Row(
                                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -552,7 +587,10 @@ class _CustomeTariffScreenState extends State<CustomeTariffScreen> {
                                     Flexible(
                                       child: Text(
                                         state.fees[index4].label!,
-                                        style: const TextStyle(height: 1.3),
+                                        style: const TextStyle(
+                                          height: 1.3,
+                                          fontSize: 17,
+                                        ),
                                       ),
                                     ),
                                     SizedBox(
@@ -779,16 +817,20 @@ class _CustomeTariffScreenState extends State<CustomeTariffScreen> {
 
                           controlAffinity: ListTileControlAffinity.leading,
                           childrenPadding: EdgeInsets.zero,
-                          leading: Container(
-                            margin: EdgeInsets.symmetric(horizontal: 7),
-                            child: subchapterselected == index3
-                                ? const Icon(Icons.remove)
-                                : const Icon(Icons.add),
-                          ),
+                          // leading: Container(
+                          //   margin: EdgeInsets.symmetric(horizontal: 7),
+                          //   child: subchapterselected == index3
+                          //       ? const Icon(Icons.remove)
+                          //       : const Icon(Icons.add),
+                          // ),
+                          leading: SizedBox.shrink(),
                           title: Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             crossAxisAlignment: CrossAxisAlignment.center,
                             children: [
+                              SizedBox(
+                                width: 15.w,
+                              ),
                               Flexible(
                                 child: Row(
                                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -805,7 +847,10 @@ class _CustomeTariffScreenState extends State<CustomeTariffScreen> {
                                     Flexible(
                                       child: Text(
                                         state.subchapters[index3].label!,
-                                        style: const TextStyle(height: 1.3),
+                                        style: const TextStyle(
+                                          height: 1.3,
+                                          fontSize: 17,
+                                        ),
                                         maxLines: 10,
                                         overflow: TextOverflow.ellipsis,
                                       ),
@@ -1073,16 +1118,20 @@ class _CustomeTariffScreenState extends State<CustomeTariffScreen> {
                             tilePadding: EdgeInsets.zero,
                             controlAffinity: ListTileControlAffinity.leading,
                             childrenPadding: EdgeInsets.zero,
-                            leading: Container(
-                              margin: EdgeInsets.symmetric(horizontal: 7),
-                              child: chapterselected == index2
-                                  ? const Icon(Icons.remove)
-                                  : const Icon(Icons.add),
-                            ),
+                            leading: SizedBox.shrink(),
+                            // leading: Container(
+                            //   margin: EdgeInsets.symmetric(horizontal: 7),
+                            //   child: chapterselected == index2
+                            //       ? const Icon(Icons.remove)
+                            //       : const Icon(Icons.add),
+                            // ),
                             title: Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               crossAxisAlignment: CrossAxisAlignment.center,
                               children: [
+                                SizedBox(
+                                  width: 17.w,
+                                ),
                                 Flexible(
                                   child: Row(
                                     crossAxisAlignment:
@@ -1100,7 +1149,10 @@ class _CustomeTariffScreenState extends State<CustomeTariffScreen> {
                                       Flexible(
                                         child: Text(
                                           state.chapters[index2].label!,
-                                          style: const TextStyle(height: 1.3),
+                                          style: const TextStyle(
+                                            height: 1.3,
+                                            fontSize: 17,
+                                          ),
                                           maxLines: 10,
                                           overflow: TextOverflow.ellipsis,
                                         ),

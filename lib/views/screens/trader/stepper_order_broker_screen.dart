@@ -1032,9 +1032,6 @@ class _StepperOrderBrokerScreenState extends State<StepperOrderBrokerScreen> {
                                                   .value.text.length);
                                     },
 
-                                    style: DefaultTextStyle.of(context)
-                                        .style
-                                        .copyWith(fontStyle: FontStyle.italic),
                                     decoration: InputDecoration(
                                       label: const Text("  نوع البضاعة"),
                                       border: OutlineInputBorder(
@@ -1054,7 +1051,24 @@ class _StepperOrderBrokerScreenState extends State<StepperOrderBrokerScreen> {
                                                   context)
                                               .emitShow();
                                         },
-                                        child: const TariffInfoIcon(),
+                                        child: SizedBox(
+                                          width: 85.w,
+                                          child: Column(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.center,
+                                            children: [
+                                              Text(
+                                                "التعرفة الجمركية",
+                                                textAlign: TextAlign.center,
+                                                style: TextStyle(
+                                                    color: AppColor.deepYellow,
+                                                    fontSize: 12,
+                                                    fontWeight:
+                                                        FontWeight.bold),
+                                              ),
+                                            ],
+                                          ),
+                                        ),
                                       ),
                                     ),
                                     onSubmitted: (value) {

@@ -8,7 +8,6 @@ import 'package:custome_mobile/business_logic/bloc/fee_item_bloc.dart';
 import 'package:custome_mobile/business_logic/bloc/fee_select_bloc.dart';
 import 'package:custome_mobile/business_logic/bloc/flags_bloc.dart';
 import 'package:custome_mobile/business_logic/bloc/group_bloc.dart';
-import 'package:custome_mobile/business_logic/bloc/note_bloc.dart';
 import 'package:custome_mobile/business_logic/bloc/package_type_bloc.dart';
 import 'package:custome_mobile/business_logic/bloc/post_bloc.dart';
 import 'package:custome_mobile/business_logic/bloc/section_bloc.dart';
@@ -17,10 +16,7 @@ import 'package:custome_mobile/business_logic/bloc/sub_chapter_bloc.dart';
 import 'package:custome_mobile/business_logic/bloc/trader_log_bloc.dart';
 import 'package:custome_mobile/business_logic/cubit/bottom_nav_bar_cubit.dart';
 import 'package:custome_mobile/constants/enums.dart';
-import 'package:custome_mobile/data/models/accurdion_model.dart';
 import 'package:custome_mobile/data/models/package_model.dart';
-import 'package:custome_mobile/data/repositories/accurdion_repository.dart';
-import 'package:custome_mobile/data/services/calculator_service.dart';
 import 'package:custome_mobile/enum/panel_state.dart';
 import 'package:custome_mobile/helpers/color_constants.dart';
 import 'package:custome_mobile/views/screens/trader/custome_tariff_screen.dart';
@@ -35,10 +31,8 @@ import 'package:custome_mobile/views/widgets/pens_taxes_widget.dart';
 import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_img/flutter_img.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:flutter_typeahead/flutter_typeahead.dart';
 import 'package:shimmer/shimmer.dart';
 
 class TraderHomeScreen extends StatefulWidget {
@@ -530,8 +524,8 @@ class _TraderHomeScreenState extends State<TraderHomeScreen>
                                 child: TabBar(
                                     labelPadding: EdgeInsets.zero,
                                     controller: _tabController,
-                                    indicatorColor: AppColor.activeGreen,
-                                    labelColor: AppColor.activeGreen,
+                                    indicatorColor: AppColor.goldenYellow,
+                                    labelColor: AppColor.goldenYellow,
                                     unselectedLabelColor: Colors.white,
                                     labelStyle: TextStyle(fontSize: 15.sp),
                                     unselectedLabelStyle:
@@ -560,7 +554,7 @@ class _TraderHomeScreenState extends State<TraderHomeScreen>
                                                     "طلب مخلص",
                                                     style: TextStyle(
                                                         color: AppColor
-                                                            .activeGreen,
+                                                            .goldenYellow,
                                                         fontSize: 15.sp),
                                                   )
                                                 ],
@@ -600,7 +594,7 @@ class _TraderHomeScreenState extends State<TraderHomeScreen>
                                                     "الحاسبة",
                                                     style: TextStyle(
                                                         color: AppColor
-                                                            .activeGreen,
+                                                            .goldenYellow,
                                                         fontSize: 15.sp),
                                                   )
                                                 ],
@@ -640,7 +634,7 @@ class _TraderHomeScreenState extends State<TraderHomeScreen>
                                                     "الرئيسية",
                                                     style: TextStyle(
                                                         color: AppColor
-                                                            .activeGreen,
+                                                            .goldenYellow,
                                                         fontSize: 15.sp),
                                                   )
                                                 ],
@@ -680,7 +674,7 @@ class _TraderHomeScreenState extends State<TraderHomeScreen>
                                                     "التعرفة",
                                                     style: TextStyle(
                                                         color: AppColor
-                                                            .activeGreen,
+                                                            .goldenYellow,
                                                         fontSize: 15.sp),
                                                   )
                                                 ],
@@ -720,7 +714,7 @@ class _TraderHomeScreenState extends State<TraderHomeScreen>
                                                     "السجل",
                                                     style: TextStyle(
                                                         color: AppColor
-                                                            .activeGreen,
+                                                            .goldenYellow,
                                                         fontSize: 15.sp),
                                                   )
                                                 ],
@@ -2318,7 +2312,15 @@ class _TraderHomeScreenState extends State<TraderHomeScreen>
                         child: Row(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Text(state.fees[index4].id!),
+                            SizedBox(
+                              width: 2.w,
+                            ),
+                            Text(
+                              state.fees[index4].id!,
+                              style: const TextStyle(
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
                             Flexible(
                                 child: Container(
                               padding:
@@ -2332,6 +2334,10 @@ class _TraderHomeScreenState extends State<TraderHomeScreen>
                               ),
                               child: Text(
                                 state.fees[index4].label!,
+                                style: const TextStyle(
+                                  height: 1.3,
+                                  fontSize: 17,
+                                ),
                                 maxLines: 4,
                                 overflow: TextOverflow.ellipsis,
                               ),
@@ -2443,7 +2449,15 @@ class _TraderHomeScreenState extends State<TraderHomeScreen>
                         title: Row(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Text(state.subchapters[index3].id!),
+                            SizedBox(
+                              width: 11.w,
+                            ),
+                            Text(
+                              state.subchapters[index3].id!,
+                              style: const TextStyle(
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
                             Flexible(
                                 child: Container(
                               padding:
@@ -2452,6 +2466,10 @@ class _TraderHomeScreenState extends State<TraderHomeScreen>
                               child: Text(
                                 state.subchapters[index3].label!,
                                 maxLines: 10,
+                                style: const TextStyle(
+                                  height: 1.3,
+                                  fontSize: 17,
+                                ),
                                 overflow: TextOverflow.ellipsis,
                               ),
                             )),
@@ -2563,7 +2581,15 @@ class _TraderHomeScreenState extends State<TraderHomeScreen>
                           title: Row(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              Text(state.chapters[index2].id!),
+                              SizedBox(
+                                width: 6.w,
+                              ),
+                              Text(
+                                state.chapters[index2].id!,
+                                style: const TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
                               Flexible(
                                   child: Container(
                                 padding:
@@ -2574,6 +2600,10 @@ class _TraderHomeScreenState extends State<TraderHomeScreen>
                                 ),
                                 child: Text(
                                   state.chapters[index2].label!,
+                                  style: const TextStyle(
+                                    height: 1.3,
+                                    fontSize: 17,
+                                  ),
                                   maxLines: 10,
                                   overflow: TextOverflow.ellipsis,
                                 ),

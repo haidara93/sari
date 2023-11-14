@@ -235,7 +235,7 @@ class MyApp extends StatelessWidget {
                   ),
                   home: EasySplashScreen(
                       logoWidth: 120,
-                      logo: Image.asset('assets/images/sari_splash.png'),
+                      logo: Image.asset('assets/images/sari_white.png'),
                       backgroundColor: Colors.white,
                       showLoader: false,
                       loaderColor: const Color.fromRGBO(255, 152, 0, 1),
