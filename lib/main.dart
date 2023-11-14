@@ -33,6 +33,7 @@ import 'package:custome_mobile/data/repositories/state_agency_repository.dart';
 // import 'package:custome_mobile/firebase_options.dart';
 import 'package:custome_mobile/helpers/color_constants.dart';
 import 'package:custome_mobile/views/control_view.dart';
+import 'package:easy_splash_screen/easy_splash_screen.dart';
 // import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -232,8 +233,16 @@ class MyApp extends StatelessWidget {
                       Theme.of(context).textTheme,
                     ),
                   ),
-                  home:
-                      showHome ? const ControlView() : const IntroductionView(),
+                  home: EasySplashScreen(
+                      logoWidth: 120,
+                      logo: Image.asset('assets/images/sari_splash.png'),
+                      backgroundColor: Colors.white,
+                      showLoader: false,
+                      loaderColor: const Color.fromRGBO(255, 152, 0, 1),
+                      durationInSeconds: 5,
+                      navigator: showHome
+                          ? const ControlView()
+                          : const IntroductionView()),
                 ),
               ),
             );
