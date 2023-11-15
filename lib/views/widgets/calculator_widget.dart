@@ -7,6 +7,7 @@ import 'package:custome_mobile/business_logic/cubit/bottom_nav_bar_cubit.dart';
 import 'package:custome_mobile/data/models/package_model.dart';
 import 'package:custome_mobile/data/services/calculator_service.dart';
 import 'package:custome_mobile/helpers/color_constants.dart';
+import 'package:custome_mobile/helpers/formatter.dart';
 import 'package:custome_mobile/views/screens/trader/trader_calculator_result_screen.dart';
 import 'package:custome_mobile/views/widgets/custom_botton.dart';
 import 'package:custome_mobile/views/widgets/highlight_text.dart';
@@ -16,6 +17,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter_typeahead/flutter_typeahead.dart';
+import 'package:intl/intl.dart';
 
 // ignore: must_be_immutable
 class CalculatorWidget extends StatefulWidget {
@@ -29,26 +31,29 @@ class CalculatorWidget extends StatefulWidget {
 
   TextEditingController? valueController;
   bool? tariffButton;
-  CalculatorWidget(
-      {Key? key,
-      required this.calformkey,
-      required this.typeAheadController,
-      required this.wieghtController,
-      required this.originController,
-      required this.valueController,
-      required this.tariffButton})
-      : super(key: key);
+  final Function()? unfocus;
+
+  CalculatorWidget({
+    Key? key,
+    required this.calformkey,
+    required this.typeAheadController,
+    required this.wieghtController,
+    required this.originController,
+    required this.valueController,
+    required this.tariffButton,
+    this.unfocus,
+  }) : super(key: key);
 
   @override
   State<CalculatorWidget> createState() => _CalculatorWidgetState();
 }
 
 class _CalculatorWidgetState extends State<CalculatorWidget> {
-  String syrianExchangeValue = "0.0";
+  String syrianExchangeValue = "6565";
 
-  String syrianTotalValue = "0.0";
+  String syrianTotalValue = "0";
 
-  String totalValueWithEnsurance = "0.0";
+  String totalValueWithEnsurance = "0";
 
   Package? selectedPackage;
   Origin? selectedOrigin;
@@ -57,8 +62,9 @@ class _CalculatorWidgetState extends State<CalculatorWidget> {
   String wieghtLabel = "الوزن";
 
   double usTosp = 6565;
-  double basePrice = 0.0;
-  double wieghtValue = 0.0;
+  double basePrice = 0;
+  double wieghtValue = 0;
+  var f = NumberFormat("#,###", "en_US");
 
   bool valueEnabled = true;
   bool allowexport = false;
@@ -398,7 +404,7 @@ class _CalculatorWidgetState extends State<CalculatorWidget> {
       },
       child: GestureDetector(
         onTap: () {
-          BlocProvider.of<BottomNavBarCubit>(context).emitShow();
+          widget.unfocus;
         },
         child: Form(
           key: widget.calformkey,
@@ -417,7 +423,7 @@ class _CalculatorWidgetState extends State<CalculatorWidget> {
                 focusNode: _statenode,
                 onFocusChange: (bool focus) {
                   if (!focus) {
-                    BlocProvider.of<BottomNavBarCubit>(context).emitShow();
+                    widget.unfocus;
                   }
                 },
                 child: TypeAheadField(
@@ -437,11 +443,9 @@ class _CalculatorWidgetState extends State<CalculatorWidget> {
                               widget.typeAheadController!.value.text.length);
                     },
 
-                    style: DefaultTextStyle.of(context)
-                        .style
-                        .copyWith(fontStyle: FontStyle.italic),
                     decoration: InputDecoration(
-                      label: const Text("  نوع البضاعة"),
+                      labelStyle: const TextStyle(fontSize: 18),
+                      labelText: "  نوع البضاعة",
                       border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(12)),
                       contentPadding: EdgeInsets.zero,
@@ -450,11 +454,9 @@ class _CalculatorWidgetState extends State<CalculatorWidget> {
                               onTap: () {
                                 BlocProvider.of<CalculatorPanelBloc>(context)
                                     .add(TariffPanelOpenEvent());
-                                BlocProvider.of<SectionBloc>(context)
-                                    .add(SectionLoadEvent());
-                                FocusManager.instance.primaryFocus?.unfocus();
-                                BlocProvider.of<BottomNavBarCubit>(context)
-                                    .emitShow();
+                                // BlocProvider.of<SectionBloc>(context)
+                                //     .add(SectionLoadEvent());
+                                widget.unfocus;
                               },
                               child: SizedBox(
                                 width: 85.w,
@@ -476,7 +478,7 @@ class _CalculatorWidgetState extends State<CalculatorWidget> {
                           : null,
                     ),
                     onSubmitted: (value) {
-                      BlocProvider.of<BottomNavBarCubit>(context).emitShow();
+                      widget.unfocus;
                     },
                   ),
                   loadingBuilder: (context) {
@@ -497,18 +499,15 @@ class _CalculatorWidgetState extends State<CalculatorWidget> {
                   itemBuilder: (context, suggestion) {
                     return Column(
                       children: [
-                        Directionality(
-                          textDirection: TextDirection.rtl,
-                          child: ListTile(
-                            // leading: Icon(Icons.shopping_cart),
-                            title: HighlightText(
-                              text: suggestion.label!,
-                              highlight: patternString,
-                              ignoreCase: false,
-                              highlightColor: Colors.orangeAccent,
-                            ),
-                            // subtitle: Text('\$${suggestion['price']}'),
+                        ListTile(
+                          // leading: Icon(Icons.shopping_cart),
+                          title: HighlightText(
+                            text: suggestion.label!,
+                            highlight: patternString,
+                            ignoreCase: false,
+                            highlightColor: Colors.orangeAccent,
                           ),
+                          // subtitle: Text('\$${suggestion['price']}'),
                         ),
                         const Divider(),
                       ],
@@ -523,10 +522,6 @@ class _CalculatorWidgetState extends State<CalculatorWidget> {
                       totalValueWithEnsurance = "0.0";
                     });
                     selectSuggestion(suggestion);
-
-                    // Navigator.of(context).push(MaterialPageRoute(
-                    //   builder: (context) => ProductPage(product: suggestion)
-                    // ));
                   },
                 ),
               ),
@@ -724,8 +719,7 @@ class _CalculatorWidgetState extends State<CalculatorWidget> {
                                 ),
                               ),
                               onFieldSubmitted: (value) {
-                                BlocProvider.of<BottomNavBarCubit>(context)
-                                    .emitShow();
+                                widget.unfocus;
                               },
                             ),
                           ),
@@ -826,94 +820,118 @@ class _CalculatorWidgetState extends State<CalculatorWidget> {
                   height: 24,
                 ),
               ),
-              TextFormField(
-                controller: widget.wieghtController!,
-                onTap: () {
-                  BlocProvider.of<BottomNavBarCubit>(context).emitHide();
-                  widget.wieghtController!.selection = TextSelection(
-                      baseOffset: 0,
-                      extentOffset: widget.wieghtController!.value.text.length);
-                },
-                enabled: !valueEnabled,
-                scrollPadding: EdgeInsets.only(
-                    bottom: MediaQuery.of(context).viewInsets.bottom + 50),
-                keyboardType: TextInputType.number,
-                decoration: InputDecoration(
-                  labelText: wieghtLabel,
-                  prefixText: showunit ? wieghtUnit : "",
-                  prefixStyle: const TextStyle(color: Colors.black),
-                  border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(12)),
-                  contentPadding: EdgeInsets.zero,
-                ),
-                onChanged: (value) {
-                  if (widget.originController!.text.isNotEmpty) {
-                    setState(() {
-                      originerror = false;
-                    });
-                    if (value.isNotEmpty) {
-                      // calculateTotalValueWithPrice(value);
-                      wieghtValue = double.parse(value);
-                    } else {
-                      wieghtValue = 0.0;
-                    }
-                    evaluatePrice();
-                  } else {
-                    setState(() {
-                      originerror = true;
-                    });
+              Focus(
+                focusNode: _statenode,
+                onFocusChange: (bool focus) {
+                  if (!focus) {
+                    widget.unfocus;
                   }
                 },
-                onFieldSubmitted: (value) {
-                  BlocProvider.of<BottomNavBarCubit>(context).emitShow();
-                },
+                child: TextFormField(
+                  controller: widget.wieghtController!,
+                  onTap: () {
+                    BlocProvider.of<BottomNavBarCubit>(context).emitHide();
+                    widget.wieghtController!.selection = TextSelection(
+                        baseOffset: 0,
+                        extentOffset:
+                            widget.wieghtController!.value.text.length);
+                  },
+                  enabled: !valueEnabled,
+                  scrollPadding: EdgeInsets.only(
+                      bottom: MediaQuery.of(context).viewInsets.bottom + 50),
+                  keyboardType:
+                      const TextInputType.numberWithOptions(decimal: true),
+                  inputFormatters: [DecimalFormatter()],
+                  decoration: InputDecoration(
+                    labelStyle: const TextStyle(fontSize: 20),
+                    labelText: wieghtLabel,
+                    suffixText: showunit ? wieghtUnit : "",
+                    suffixStyle: const TextStyle(color: Colors.black),
+                    border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(12)),
+                    contentPadding: EdgeInsets.zero,
+                  ),
+                  onChanged: (value) {
+                    if (widget.originController!.text.isNotEmpty) {
+                      setState(() {
+                        originerror = false;
+                      });
+                      if (value.isNotEmpty) {
+                        // calculateTotalValueWithPrice(value);
+                        wieghtValue = double.parse(value);
+                      } else {
+                        wieghtValue = 0.0;
+                      }
+                      evaluatePrice();
+                    } else {
+                      setState(() {
+                        originerror = true;
+                      });
+                    }
+                  },
+                  onFieldSubmitted: (value) {
+                    widget.unfocus;
+                  },
+                ),
               ),
 
               const SizedBox(
                 height: 24,
               ),
-              TextFormField(
-                controller: widget.valueController!,
-                onTap: () {
-                  BlocProvider.of<BottomNavBarCubit>(context).emitHide();
-                  widget.valueController!.selection = TextSelection(
-                      baseOffset: 0,
-                      extentOffset: widget.valueController!.value.text.length);
-                },
-                enabled: valueEnabled,
-                keyboardType: TextInputType.number,
-                scrollPadding: EdgeInsets.only(
-                    bottom: MediaQuery.of(context).viewInsets.bottom + 50),
-                decoration: InputDecoration(
-                  labelText: valueEnabled
-                      ? "  قيمة البضاعة الاجمالية بالدولار"
-                      : "  سعر الواحدة لدى الجمارك",
-                  border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(12)),
-                  contentPadding: EdgeInsets.zero,
-                ),
-                onChanged: (value) {
-                  if (widget.originController!.text.isNotEmpty) {
-                    setState(() {
-                      originerror = false;
-                    });
-                    if (value.isNotEmpty) {
-                      basePrice = double.parse(value);
-                      // calculateTotalValue();
-                    } else {
-                      basePrice = 0.0;
-                      // calculateTotalValue();
-                    }
-                    evaluatePrice();
-                  } else {
-                    setState(() {
-                      originerror = true;
-                    });
+              Focus(
+                focusNode: _statenode,
+                onFocusChange: (bool focus) {
+                  if (!focus) {
+                    widget.unfocus;
                   }
                 },
-                onFieldSubmitted: (value) {
-                  BlocProvider.of<BottomNavBarCubit>(context).emitShow();
-                },
+                child: TextFormField(
+                  controller: widget.valueController!,
+                  onTap: () {
+                    BlocProvider.of<BottomNavBarCubit>(context).emitHide();
+                    widget.valueController!.selection = TextSelection(
+                        baseOffset: 0,
+                        extentOffset:
+                            widget.valueController!.value.text.length);
+                  },
+                  enabled: valueEnabled,
+                  keyboardType:
+                      const TextInputType.numberWithOptions(decimal: true),
+                  inputFormatters: [DecimalFormatter()],
+                  scrollPadding: EdgeInsets.only(
+                      bottom: MediaQuery.of(context).viewInsets.bottom + 50),
+                  decoration: InputDecoration(
+                    labelStyle: const TextStyle(fontSize: 18),
+                    labelText: valueEnabled
+                        ? "  قيمة البضاعة الاجمالية بالدولار"
+                        : "  سعر الواحدة لدى الجمارك",
+                    border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(12)),
+                    contentPadding: EdgeInsets.zero,
+                  ),
+                  onChanged: (value) {
+                    if (widget.originController!.text.isNotEmpty) {
+                      setState(() {
+                        originerror = false;
+                      });
+                      if (value.isNotEmpty) {
+                        basePrice = double.parse(value);
+                        // calculateTotalValue();
+                      } else {
+                        basePrice = 0.0;
+                        // calculateTotalValue();
+                      }
+                      evaluatePrice();
+                    } else {
+                      setState(() {
+                        originerror = true;
+                      });
+                    }
+                  },
+                  onFieldSubmitted: (value) {
+                    widget.unfocus;
+                  },
+                ),
               ),
               const SizedBox(
                 height: 12,
@@ -1035,7 +1053,6 @@ class _CalculatorWidgetState extends State<CalculatorWidget> {
               const SizedBox(
                 height: 12,
               ),
-
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
@@ -1057,8 +1074,7 @@ class _CalculatorWidgetState extends State<CalculatorWidget> {
                       } else {
                         return CustomButton(
                             onTap: () {
-                              BlocProvider.of<BottomNavBarCubit>(context)
-                                  .emitShow();
+                              widget.unfocus;
                               result.insurance =
                                   int.parse(totalValueWithEnsurance);
                               result.fee = selectedPackage!.fee!;
@@ -1087,9 +1103,16 @@ class _CalculatorWidgetState extends State<CalculatorWidget> {
                                   ));
                             },
                             title: SizedBox(
-                                width: 250.w,
-                                child: const Center(
-                                    child: Text("احسب الرسم الجمركي"))));
+                              width: 250.w,
+                              child: const Center(
+                                child: Text(
+                                  "احسب الرسم الجمركي",
+                                  style: TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                              ),
+                            ));
                       }
                     },
                   ),

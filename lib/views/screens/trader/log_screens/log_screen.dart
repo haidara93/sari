@@ -5,6 +5,7 @@ import 'package:custome_mobile/views/screens/trader/log_screens/order_tracking_s
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:shimmer/shimmer.dart';
 
 class LogScreen extends StatefulWidget {
@@ -222,19 +223,20 @@ class _LogScreenState extends State<LogScreen>
                                         ));
                                   },
                                   leading: Container(
-                                      height: 75.h,
-                                      width: 75.w,
-                                      decoration: BoxDecoration(
-                                          color: AppColor.lightGoldenYellow,
-                                          borderRadius:
-                                              BorderRadius.circular(5)),
-                                      child: Center(
-                                          child: Image.asset(
-                                        "assets/images/naval_shipping.png",
-                                        height: 45.h,
-                                        width: 45.w,
+                                    height: 75.h,
+                                    width: 75.w,
+                                    decoration: BoxDecoration(
+                                        // color: AppColor.lightGoldenYellow,
+                                        borderRadius: BorderRadius.circular(5)),
+                                    child: Center(
+                                      child: SvgPicture.asset(
+                                        "assets/icons/naval_shipping.svg",
+                                        height: 55.h,
+                                        width: 55.w,
                                         fit: BoxFit.fill,
-                                      ))),
+                                      ),
+                                    ),
+                                  ),
                                   title: Row(
                                     mainAxisAlignment:
                                         MainAxisAlignment.spaceBetween,
@@ -262,52 +264,36 @@ class _LogScreenState extends State<LogScreen>
                                       ),
                                       SizedBox(
                                         height: 80.h,
-                                        child: Column(
-                                          mainAxisSize: MainAxisSize.min,
-                                          children: [
-                                            GestureDetector(
-                                              onTap: () {
-                                                Navigator.push(
-                                                    context,
-                                                    MaterialPageRoute(
-                                                      builder: (context) =>
-                                                          OfferDetailsScreen(
-                                                              offer:
-                                                                  state.offers[
-                                                                      index]),
-                                                    ));
-                                              },
-                                              child: Padding(
-                                                padding:
-                                                    const EdgeInsets.all(3.0),
-                                                child: Icon(
-                                                  Icons.more_vert,
-                                                  color: AppColor.goldenYellow,
-                                                ),
-                                              ),
+                                        child: GestureDetector(
+                                          onTap: () {
+                                            Navigator.push(
+                                                context,
+                                                MaterialPageRoute(
+                                                  builder: (context) =>
+                                                      OrderTrackingScreen(
+                                                          offernum: state
+                                                              .offers[index]
+                                                              .id!),
+                                                ));
+                                          },
+                                          child: Padding(
+                                            padding: const EdgeInsets.symmetric(
+                                                vertical: 6.0, horizontal: 3.0),
+                                            child: Column(
+                                              mainAxisSize: MainAxisSize.min,
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.center,
+                                              children: [
+                                                Text(
+                                                  "تتبع العملية",
+                                                  style: TextStyle(
+                                                    color: AppColor.lightBlue,
+                                                    fontWeight: FontWeight.bold,
+                                                  ),
+                                                )
+                                              ],
                                             ),
-                                            GestureDetector(
-                                              onTap: () {
-                                                Navigator.push(
-                                                    context,
-                                                    MaterialPageRoute(
-                                                      builder: (context) =>
-                                                          OrderTrackingScreen(
-                                                              offernum: state
-                                                                  .offers[index]
-                                                                  .id!),
-                                                    ));
-                                              },
-                                              child: Padding(
-                                                padding:
-                                                    const EdgeInsets.all(3.0),
-                                                child: Icon(
-                                                  Icons.track_changes,
-                                                  color: AppColor.goldenYellow,
-                                                ),
-                                              ),
-                                            ),
-                                          ],
+                                          ),
                                         ),
                                       ),
                                     ],

@@ -36,83 +36,93 @@ class _CustomeTariffScreenState extends State<CustomeTariffScreen> {
     list.add(BlocBuilder<FeeTradeDescriptionBloc, FeeTradeDescriptionState>(
       builder: (context, state) {
         if (state is FeeTradeDescriptionLoadedSuccess) {
-          return Column(
-            children: [
-              ListView.builder(
-                shrinkWrap: true,
-                itemCount:
-                    state.tradeDescription.commercialDescriptions!.length,
-                physics: const NeverScrollableScrollPhysics(),
-                itemBuilder: (context, index4) {
-                  return Container(
-                    margin: const EdgeInsets.symmetric(horizontal: 4),
-                    // decoration: BoxDecoration(
-                    //   color: Colors.white,
-                    //   borderRadius: BorderRadius.circular(10),
-                    // ),
-                    child: Text(state.tradeDescription
-                        .commercialDescriptions![index4].secondDescription!),
-                  );
-                },
-              ),
-              const SizedBox(
-                height: 15,
-              ),
-              SizedBox(
-                height: 50,
-                child: ListView.builder(
-                  shrinkWrap: true,
-                  itemCount: state.tradeDescription.imageDescriptions!.length,
-                  // physics: const NeverScrollableScrollPhysics(),
-                  scrollDirection: Axis.horizontal,
-                  itemBuilder: (context, index4) {
-                    return Container(
-                      margin: const EdgeInsets.symmetric(horizontal: 4),
-                      // decoration: BoxDecoration(
-                      //   color: Colors.white,
-                      //   borderRadius: BorderRadius.circular(10),
-                      // ),
-                      child: Image.network(
-                        state
-                            .tradeDescription.imageDescriptions![index4].image!,
-                        height: 70.h,
-                        width: 70.w,
-                        loadingBuilder: (context, child, loadingProgress) {
-                          if (loadingProgress == null) {
-                            return child;
-                          }
+          return state.tradeDescription.commercialDescriptions!.isEmpty
+              ? const Center(
+                  child: Text("لا يوجد وصف تجاري لهذا البند"),
+                )
+              : Column(
+                  children: [
+                    ListView.builder(
+                      shrinkWrap: true,
+                      itemCount:
+                          state.tradeDescription.commercialDescriptions!.length,
+                      physics: const NeverScrollableScrollPhysics(),
+                      itemBuilder: (context, index4) {
+                        return Container(
+                          margin: const EdgeInsets.symmetric(horizontal: 4),
+                          // decoration: BoxDecoration(
+                          //   color: Colors.white,
+                          //   borderRadius: BorderRadius.circular(10),
+                          // ),
+                          child: Text(state
+                              .tradeDescription
+                              .commercialDescriptions![index4]
+                              .secondDescription!),
+                        );
+                      },
+                    ),
+                    const SizedBox(
+                      height: 15,
+                    ),
+                    SizedBox(
+                      height: 50,
+                      child: ListView.builder(
+                        shrinkWrap: true,
+                        itemCount:
+                            state.tradeDescription.imageDescriptions!.length,
+                        // physics: const NeverScrollableScrollPhysics(),
+                        scrollDirection: Axis.horizontal,
+                        itemBuilder: (context, index4) {
+                          return Container(
+                            margin: const EdgeInsets.symmetric(horizontal: 4),
+                            // decoration: BoxDecoration(
+                            //   color: Colors.white,
+                            //   borderRadius: BorderRadius.circular(10),
+                            // ),
+                            child: Image.network(
+                              state.tradeDescription.imageDescriptions![index4]
+                                  .image!,
+                              height: 70.h,
+                              width: 70.w,
+                              loadingBuilder:
+                                  (context, child, loadingProgress) {
+                                if (loadingProgress == null) {
+                                  return child;
+                                }
 
-                          return Container(
-                            height: 70.h,
-                            width: 70.w,
-                            color: Colors.grey[200],
-                            child: Center(
-                                child: CircularProgressIndicator(
-                              value: loadingProgress.expectedTotalBytes != null
-                                  ? loadingProgress.cumulativeBytesLoaded /
-                                      loadingProgress.expectedTotalBytes!
-                                  : null,
-                            )),
-                          );
-                        },
-                        errorBuilder: (context, error, stackTrace) {
-                          return Container(
-                            height: 70.h,
-                            width: 70.w,
-                            color: Colors.grey[300],
-                            child: const Center(child: Text("error")),
+                                return Container(
+                                  height: 70.h,
+                                  width: 70.w,
+                                  color: Colors.grey[200],
+                                  child: Center(
+                                      child: CircularProgressIndicator(
+                                    value: loadingProgress.expectedTotalBytes !=
+                                            null
+                                        ? loadingProgress
+                                                .cumulativeBytesLoaded /
+                                            loadingProgress.expectedTotalBytes!
+                                        : null,
+                                  )),
+                                );
+                              },
+                              errorBuilder: (context, error, stackTrace) {
+                                return Container(
+                                  height: 70.h,
+                                  width: 70.w,
+                                  color: Colors.grey[300],
+                                  child: const Center(child: Text("error")),
+                                );
+                              },
+                            ),
                           );
                         },
                       ),
-                    );
-                  },
-                ),
-              ),
-              const SizedBox(
-                height: 7,
-              )
-            ],
-          );
+                    ),
+                    const SizedBox(
+                      height: 7,
+                    )
+                  ],
+                );
         } else {
           return Shimmer.fromColors(
             baseColor: (Colors.grey[300])!,
@@ -141,6 +151,79 @@ class _CustomeTariffScreenState extends State<CustomeTariffScreen> {
         }
       },
     ));
+    return list;
+  }
+
+  List<Widget> buildimportfees(FeeSet fee) {
+    List<Widget> list = [];
+    list.add(
+      Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 20),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+                Image.asset("assets/icons/export_restrection.png"),
+                SizedBox(
+                  width: 5.w,
+                ),
+                const Text("شروط الاستيراد:"),
+                const Icon(
+                  Icons.check,
+                  color: Colors.green,
+                ),
+                const Text("مسموح الاستيراد"),
+              ],
+            ),
+          ],
+        ),
+      ),
+    );
+    for (var element in fee.importFees!) {
+      list.add(
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 20),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  Text(element.restriction_import!),
+                ],
+              ),
+            ],
+          ),
+        ),
+      );
+    }
+    if (fee.stoneFarming!.isNotEmpty) {
+      for (var element in fee.stoneFarming!) {
+        list.add(
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 20),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    Image.asset("assets/icons/stone_farming.png"),
+                    SizedBox(
+                      width: 5.w,
+                    ),
+                    const Text("الحجر الزراعي للاستيراد:"),
+                    Text(element.stonImportNotes!),
+                  ],
+                ),
+              ],
+            ),
+          ),
+        );
+      }
+    }
     return list;
   }
 
@@ -272,20 +355,34 @@ class _CustomeTariffScreenState extends State<CustomeTariffScreen> {
                   ],
                 ),
               ),
-              children: const [
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 20),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    children: [
-                      Text(
-                        " لا يوجد أية شروط للاستيراد.",
-                        textAlign: TextAlign.start,
+              children: fe.importFees!.isEmpty
+                  ? [
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 20),
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          children: [
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              children: [
+                                Image.asset(
+                                    "assets/icons/export_restrection.png"),
+                                SizedBox(
+                                  width: 5.w,
+                                ),
+                                const Text("شروط الاستيراد:"),
+                                const Icon(
+                                  Icons.close,
+                                  color: Colors.red,
+                                ),
+                                const Text("ممنوع الاستيراد"),
+                              ],
+                            ),
+                          ],
+                        ),
                       ),
-                    ],
-                  ),
-                ),
-              ],
+                    ]
+                  : buildimportfees(fe),
             ),
             Divider(
               height: 1,
@@ -563,7 +660,7 @@ class _CustomeTariffScreenState extends State<CustomeTariffScreen> {
                           tilePadding: EdgeInsets.zero,
                           initiallyExpanded: index4 == feeselected,
                           controlAffinity: ListTileControlAffinity.leading,
-                          leading: SizedBox.shrink(),
+                          leading: const SizedBox.shrink(),
                           title: Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             crossAxisAlignment: CrossAxisAlignment.center,
@@ -591,6 +688,8 @@ class _CustomeTariffScreenState extends State<CustomeTariffScreen> {
                                           height: 1.3,
                                           fontSize: 17,
                                         ),
+                                        maxLines: 10,
+                                        overflow: TextOverflow.ellipsis,
                                       ),
                                     ),
                                     SizedBox(
@@ -823,7 +922,7 @@ class _CustomeTariffScreenState extends State<CustomeTariffScreen> {
                           //       ? const Icon(Icons.remove)
                           //       : const Icon(Icons.add),
                           // ),
-                          leading: SizedBox.shrink(),
+                          leading: const SizedBox.shrink(),
                           title: Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             crossAxisAlignment: CrossAxisAlignment.center,
@@ -1110,7 +1209,7 @@ class _CustomeTariffScreenState extends State<CustomeTariffScreen> {
                         ),
 
                         child: ListTileTheme(
-                          contentPadding: EdgeInsets.all(0),
+                          contentPadding: const EdgeInsets.all(0),
                           dense: true,
                           horizontalTitleGap: 0.0,
                           minLeadingWidth: 0,
@@ -1118,7 +1217,7 @@ class _CustomeTariffScreenState extends State<CustomeTariffScreen> {
                             tilePadding: EdgeInsets.zero,
                             controlAffinity: ListTileControlAffinity.leading,
                             childrenPadding: EdgeInsets.zero,
-                            leading: SizedBox.shrink(),
+                            leading: const SizedBox.shrink(),
                             // leading: Container(
                             //   margin: EdgeInsets.symmetric(horizontal: 7),
                             //   child: chapterselected == index2
@@ -1338,7 +1437,7 @@ class _CustomeTariffScreenState extends State<CustomeTariffScreen> {
                                 child: ExpansionTile(
                                   key: Key(index.toString()), //attention
                                   initiallyExpanded: index == selected,
-                                  tilePadding: EdgeInsets.all(5),
+                                  tilePadding: const EdgeInsets.all(5),
                                   // controlAffinity:
                                   //     ListTileControlAffinity.leading,
                                   trailing: GestureDetector(
@@ -1444,7 +1543,7 @@ class _CustomeTariffScreenState extends State<CustomeTariffScreen> {
                             );
                           },
                         );
-                      } else {
+                      } else if (state is SectionLoadingProgress) {
                         return Shimmer.fromColors(
                           baseColor: (Colors.grey[300])!,
                           highlightColor: (Colors.grey[100])!,
@@ -1464,6 +1563,28 @@ class _CustomeTariffScreenState extends State<CustomeTariffScreen> {
                               ),
                             ),
                             itemCount: 10,
+                          ),
+                        );
+                      } else {
+                        return Center(
+                          child: GestureDetector(
+                            onTap: () {
+                              BlocProvider.of<SectionBloc>(context)
+                                  .add(SectionLoadEvent());
+                            },
+                            child: const Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Text(
+                                  "حدث خطأأثناء تحميل القائمة...  ",
+                                  style: TextStyle(color: Colors.red),
+                                ),
+                                Icon(
+                                  Icons.refresh,
+                                  color: Colors.grey,
+                                )
+                              ],
+                            ),
                           ),
                         );
                       }

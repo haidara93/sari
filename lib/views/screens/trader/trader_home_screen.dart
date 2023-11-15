@@ -19,11 +19,13 @@ import 'package:custome_mobile/constants/enums.dart';
 import 'package:custome_mobile/data/models/package_model.dart';
 import 'package:custome_mobile/enum/panel_state.dart';
 import 'package:custome_mobile/helpers/color_constants.dart';
+import 'package:custome_mobile/helpers/formatter.dart';
 import 'package:custome_mobile/views/screens/trader/custome_tariff_screen.dart';
 import 'package:custome_mobile/views/screens/trader/log_screens/log_screen.dart';
 import 'package:custome_mobile/views/screens/trader/order_broker_screen.dart';
 import 'package:custome_mobile/views/screens/trader/trader_calculator_screen.dart';
 import 'package:custome_mobile/views/screens/trader/trader_main_screen.dart';
+import 'package:custome_mobile/views/widgets/calculator_loading_screen.dart';
 import 'package:custome_mobile/views/widgets/custom_app_bar.dart';
 import 'package:custome_mobile/views/widgets/custom_botton.dart';
 import 'package:custome_mobile/views/widgets/item_taxes_widget.dart';
@@ -63,6 +65,8 @@ class _TraderHomeScreenState extends State<TraderHomeScreen>
     BlocProvider.of<PostBloc>(context).add(PostLoadEvent());
     BlocProvider.of<FlagsBloc>(context).add(FlagsLoadEvent());
     BlocProvider.of<GroupBloc>(context).add(GroupLoadEvent());
+    BlocProvider.of<SectionBloc>(context).add(SectionLoadEvent());
+
     _tabController = TabController(
       initialIndex: 2,
       length: 5,
@@ -138,7 +142,6 @@ class _TraderHomeScreenState extends State<TraderHomeScreen>
         {
           setState(() {
             title = "التعرفة الجمركية";
-            BlocProvider.of<SectionBloc>(context).add(SectionLoadEvent());
 
             currentScreen = const CustomeTariffScreen();
           });
@@ -841,6 +844,7 @@ class _TraderHomeScreenState extends State<TraderHomeScreen>
   String _placeholder = "";
 
   CalculateObject result = CalculateObject();
+  final FocusNode _statenode = FocusNode();
 
   List<Extras> items = [];
   Extras? selectedValue;
@@ -1025,7 +1029,7 @@ class _TraderHomeScreenState extends State<TraderHomeScreen>
       });
     }
 
-    if (suggestion.placeholder != null) {
+    if (suggestion.placeholder != "") {
       setState(() {
         _placeholder = suggestion.placeholder!;
         isdropdwonVisible = false;
@@ -1139,703 +1143,766 @@ class _TraderHomeScreenState extends State<TraderHomeScreen>
       resizeToAvoidBottomInset: false,
       backgroundColor: Colors.grey[200],
       appBar: AppBar(
-        backgroundColor: Colors.grey[200],
-        iconTheme: IconThemeData(color: AppColor.deepBlue),
+        backgroundColor: AppColor.deepBlue,
+        title: const Text(
+          "احسب الرسوم",
+          style: TextStyle(
+            color: Colors.white,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+        centerTitle: true,
+        leading: GestureDetector(
+            onTap: () {
+              setState(() {
+                selected = -1;
+                chapterselected = -1;
+                subchapterselected = -1;
+                feeselected = -1;
+              });
+              BlocProvider.of<CalculatorPanelBloc>(context)
+                  .add(CalculatorPanelHideEvent());
+            },
+            child: const Icon(Icons.arrow_back, color: Colors.white)),
         elevation: 0,
       ),
       body: SafeArea(
           child: SingleChildScrollView(
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 8),
-          child: BlocConsumer<FeeItemBloc, FeeItemState>(
-            listener: (context, state) {
-              if (state is FeeItemLoadedSuccess) {
-                setState(() {
-                  _wieghtController.text = "0.0";
-                  _valueController.text = "0.0";
-                  syrianExchangeValue = "0.0";
-                  syrianTotalValue = "0.0";
-                  totalValueWithEnsurance = "0.0";
-                });
-                selectSuggestion(state.fee);
-              }
-            },
-            builder: (context, state) {
-              if (state is FeeItemLoadedSuccess) {
-                return Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      SizedBox(
-                        height: 5.h,
-                      ),
-                      Text(
-                        "حاسبة الرسوم الجمركية",
-                        style: TextStyle(
-                            color: Colors.yellow[700],
-                            fontSize: 20,
-                            fontWeight: FontWeight.bold),
-                      ),
-                      const SizedBox(
-                        height: 25,
-                      ),
-                      Container(
-                        padding: const EdgeInsets.symmetric(
-                            vertical: 25, horizontal: 15),
-                        decoration: BoxDecoration(
-                            color: Colors.white,
-                            borderRadius: BorderRadius.circular(20)),
-                        child: Form(
-                          key: _calculatorformkey,
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              TextFormField(
-                                controller: _typeAheadController,
-                                enabled: false,
-                                maxLines: null,
-                                decoration: InputDecoration(
-                                  labelText: "نوع البضاعة",
-                                  prefixStyle:
-                                      const TextStyle(color: Colors.black),
-                                  contentPadding:
-                                      EdgeInsets.symmetric(horizontal: 5.w),
-                                  border: OutlineInputBorder(
-                                    borderRadius: BorderRadius.circular(12),
-                                  ),
-                                ),
-                              ),
-                              const SizedBox(
-                                height: 12,
-                              ),
-                              Visibility(
-                                visible: allowexport,
-                                child: const Text(
-                                  "هذا البند ممنوع من الاستيراد",
-                                  style: TextStyle(
-                                    color: Colors.red,
-                                    fontSize: 13,
-                                  ),
-                                ),
-                              ),
-                              const SizedBox(
-                                height: 12,
-                              ),
-                              Visibility(
-                                visible: isdropdwonVisible,
-                                child: DropdownButtonHideUnderline(
-                                  child: DropdownButton2<Extras>(
-                                    isExpanded: true,
-                                    hint: Text(
-                                      _placeholder,
-                                      style: TextStyle(
-                                        fontSize: 14,
-                                        color: Theme.of(context).hintColor,
-                                      ),
+        child: GestureDetector(
+          onTap: () {
+            FocusManager.instance.primaryFocus?.unfocus();
+            BlocProvider.of<BottomNavBarCubit>(context).emitShow();
+          },
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 8),
+            child: BlocConsumer<FeeItemBloc, FeeItemState>(
+              listener: (context, state) {
+                if (state is FeeItemLoadedSuccess) {
+                  setState(() {
+                    _wieghtController.text = "0.0";
+                    _valueController.text = "0.0";
+                    syrianExchangeValue = "0.0";
+                    syrianTotalValue = "0.0";
+                    totalValueWithEnsurance = "0.0";
+                  });
+                  selectSuggestion(state.fee);
+                }
+              },
+              builder: (context, state) {
+                if (state is FeeItemLoadedSuccess) {
+                  return Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        const SizedBox(
+                          height: 25,
+                        ),
+                        Container(
+                          padding: const EdgeInsets.symmetric(
+                              vertical: 35, horizontal: 15),
+                          decoration: BoxDecoration(
+                              color: Colors.white,
+                              borderRadius: BorderRadius.circular(20)),
+                          child: Form(
+                            key: _calculatorformkey,
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                TextFormField(
+                                  controller: _typeAheadController,
+                                  enabled: false,
+                                  maxLines: null,
+                                  decoration: InputDecoration(
+                                    labelText: "نوع البضاعة",
+                                    prefixStyle:
+                                        const TextStyle(color: Colors.black),
+                                    contentPadding:
+                                        EdgeInsets.symmetric(horizontal: 5.w),
+                                    border: OutlineInputBorder(
+                                      borderRadius: BorderRadius.circular(12),
                                     ),
-                                    items: items
-                                        .map((Extras item) =>
-                                            DropdownMenuItem<Extras>(
-                                              value: item,
-                                              child: Container(
-                                                width: double.infinity,
-                                                decoration: BoxDecoration(
-                                                  border: Border(
-                                                    bottom: BorderSide(
-                                                        color: AppColor
-                                                            .goldenYellow,
-                                                        width: 1),
-                                                  ),
-                                                ),
-                                                child: Text(
-                                                  item.label!,
-                                                  style: const TextStyle(
-                                                    fontSize: 14,
-                                                  ),
-                                                ),
-                                              ),
-                                            ))
-                                        .toList(),
-                                    value: selectedValue,
-                                    onChanged: (Extras? value) {
-                                      if (value!.countryGroup!.isEmpty) {
-                                        if (value.price! > 0) {
-                                          basePrice = value.price!;
-
-                                          _valueController.text =
-                                              value.price!.toString();
-                                          setState(() {
-                                            valueEnabled = false;
-                                          });
-                                        } else {
-                                          setState(() {
-                                            basePrice = 0.0;
-
-                                            _valueController.text = "0.0";
-                                            valueEnabled = true;
-                                            syrianExchangeValue = "6565";
-                                          });
-                                        }
-                                        evaluatePrice();
-                                      } else {
-                                        if (value.price! > 0) {
-                                          basePrice = value.price!;
-
-                                          _valueController.text =
-                                              value.price!.toString();
-                                          setState(() {
-                                            valueEnabled = false;
-                                          });
-                                        } else {
-                                          setState(() {
-                                            basePrice = 0.0;
-
-                                            _valueController.text = "0.0";
-                                            valueEnabled = true;
-                                            syrianExchangeValue = "6565";
-                                          });
-                                        }
-                                        evaluatePrice();
-                                      }
-                                      setState(() {
-                                        selectedValue = value;
-                                      });
-                                    },
-                                    buttonStyleData: ButtonStyleData(
-                                      height: 50,
-                                      width: double.infinity,
-
-                                      padding: const EdgeInsets.only(
-                                          left: 14, right: 14),
-                                      decoration: BoxDecoration(
-                                        borderRadius: BorderRadius.circular(12),
-                                        border: Border.all(
-                                          color: Colors.black26,
+                                  ),
+                                ),
+                                const SizedBox(
+                                  height: 12,
+                                ),
+                                Visibility(
+                                  visible: allowexport,
+                                  child: const Text(
+                                    "هذا البند ممنوع من الاستيراد",
+                                    style: TextStyle(
+                                      color: Colors.red,
+                                      fontSize: 13,
+                                    ),
+                                  ),
+                                ),
+                                const SizedBox(
+                                  height: 12,
+                                ),
+                                Visibility(
+                                  visible: isdropdwonVisible,
+                                  child: DropdownButtonHideUnderline(
+                                    child: DropdownButton2<Extras>(
+                                      isExpanded: true,
+                                      hint: Text(
+                                        _placeholder,
+                                        style: TextStyle(
+                                          fontSize: 14,
+                                          color: Theme.of(context).hintColor,
                                         ),
-                                        color: Colors.white,
                                       ),
-                                      // elevation: 2,
-                                    ),
-                                    iconStyleData: const IconStyleData(
-                                      icon: Icon(
-                                        Icons.keyboard_arrow_down_sharp,
-                                      ),
-                                      iconSize: 20,
-                                      iconEnabledColor: AppColor.AccentBlue,
-                                      iconDisabledColor: Colors.grey,
-                                    ),
-                                    dropdownStyleData: DropdownStyleData(
-                                      decoration: BoxDecoration(
-                                        borderRadius: BorderRadius.circular(14),
-                                        color: Colors.white,
-                                      ),
-                                      scrollbarTheme: ScrollbarThemeData(
-                                        radius: const Radius.circular(40),
-                                        thickness: MaterialStateProperty.all(6),
-                                        thumbVisibility:
-                                            MaterialStateProperty.all(true),
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                              ),
-                              const SizedBox(
-                                height: 12,
-                              ),
-                              TextFormField(
-                                controller: _wieghtController,
-                                onTap: () => _wieghtController.selection =
-                                    TextSelection(
-                                        baseOffset: 0,
-                                        extentOffset: _wieghtController
-                                            .value.text.length),
-                                enabled: !valueEnabled,
-                                keyboardType: TextInputType.number,
-                                decoration: InputDecoration(
-                                  labelText: wieghtLabel,
-                                  prefixText: showunit ? wieghtUnit : "",
-                                  prefixStyle:
-                                      const TextStyle(color: Colors.black),
-                                  contentPadding:
-                                      EdgeInsets.symmetric(horizontal: 5.w),
-                                  border: OutlineInputBorder(
-                                    borderRadius: BorderRadius.circular(12),
-                                  ),
-                                ),
-                                onChanged: (value) {
-                                  if (_originController.text.isNotEmpty) {
-                                    setState(() {
-                                      originerror = false;
-                                    });
-                                    if (value.isNotEmpty) {
-                                      // calculateTotalValueWithPrice(value);
-                                      wieghtValue = double.parse(value);
-                                    } else {
-                                      wieghtValue = 0.0;
-                                    }
-                                    evaluatePrice();
-                                  } else {
-                                    setState(() {
-                                      originerror = true;
-                                    });
-                                  }
-                                },
-                              ),
-                              const SizedBox(
-                                height: 12,
-                              ),
-                              BlocBuilder<FlagsBloc, FlagsState>(
-                                builder: (context, flagstate) {
-                                  if (flagstate is FlagsLoadedSuccess) {
-                                    return DropdownButtonHideUnderline(
-                                      child: DropdownButton2<Origin>(
-                                        isExpanded: true,
-                                        hint: Text(
-                                          " اختر المنشأ",
-                                          style: TextStyle(
-                                            fontSize: 15,
-                                            color: Theme.of(context).hintColor,
-                                          ),
-                                        ),
-                                        items: flagstate.origins
-                                            .map((Origin item) =>
-                                                DropdownMenuItem<Origin>(
-                                                  value: item,
-                                                  child: SizedBox(
-                                                    // width: 200,
-                                                    child: Row(
-                                                      children: [
-                                                        SvgPicture.network(
-                                                          item.imageURL!,
-                                                          height: 35,
-                                                          // semanticsLabel: 'A shark?!',
-                                                          placeholderBuilder:
-                                                              (BuildContext
-                                                                      context) =>
-                                                                  const CircularProgressIndicator(),
-                                                        ),
-                                                        const SizedBox(
-                                                            width: 7),
-                                                        Container(
-                                                          constraints:
-                                                              BoxConstraints(
-                                                            maxWidth: 280.w,
-                                                          ),
-                                                          child: Text(
-                                                            item.label!,
-                                                            overflow:
-                                                                TextOverflow
-                                                                    .ellipsis,
-                                                            // maxLines: 2,
-                                                          ),
-                                                        ),
-                                                      ],
-                                                      // subtitle: Text('\$${suggestion['price']}'),
+                                      items: items
+                                          .map((Extras item) =>
+                                              DropdownMenuItem<Extras>(
+                                                value: item,
+                                                child: Container(
+                                                  width: double.infinity,
+                                                  decoration: BoxDecoration(
+                                                    border: Border(
+                                                      bottom: BorderSide(
+                                                          color: AppColor
+                                                              .goldenYellow,
+                                                          width: 1),
                                                     ),
                                                   ),
-                                                ))
-                                            .toList(),
-                                        value: selectedOrigin,
-                                        onChanged: (Origin? value) {
-                                          // setState(() {
-                                          //   selectedOrigin = value;
-                                          // });
-                                          selectOrigin(value!);
-                                        },
-                                        dropdownSearchData: DropdownSearchData(
-                                          searchController: _originController,
-                                          searchInnerWidgetHeight: 60,
-                                          searchInnerWidget: Container(
-                                            height: 60,
-                                            padding: const EdgeInsets.only(
-                                              top: 8,
-                                              bottom: 4,
-                                              right: 8,
-                                              left: 8,
-                                            ),
-                                            child: TextFormField(
-                                              expands: true,
-                                              maxLines: null,
-                                              controller: _originController,
-                                              onTap: () {
-                                                _originController.selection =
-                                                    TextSelection(
-                                                        baseOffset: 0,
-                                                        extentOffset:
-                                                            _originController
-                                                                .value
-                                                                .text
-                                                                .length);
-                                              },
-                                              decoration: InputDecoration(
-                                                isDense: true,
-                                                contentPadding:
-                                                    const EdgeInsets.symmetric(
-                                                  horizontal: 10,
-                                                  vertical: 8,
+                                                  child: Text(
+                                                    item.label!,
+                                                    style: const TextStyle(
+                                                      fontSize: 14,
+                                                    ),
+                                                  ),
                                                 ),
-                                                hintText: 'اختر المنشأ',
-                                                hintStyle: const TextStyle(
-                                                    fontSize: 12),
-                                                border: OutlineInputBorder(
-                                                  borderRadius:
-                                                      BorderRadius.circular(8),
+                                              ))
+                                          .toList(),
+                                      value: selectedValue,
+                                      onChanged: (Extras? value) {
+                                        if (value!.countryGroup!.isEmpty) {
+                                          if (value.price! > 0) {
+                                            basePrice = value.price!;
+
+                                            _valueController.text =
+                                                value.price!.toString();
+                                            setState(() {
+                                              valueEnabled = false;
+                                            });
+                                          } else {
+                                            setState(() {
+                                              basePrice = 0.0;
+
+                                              _valueController.text = "0.0";
+                                              valueEnabled = true;
+                                              syrianExchangeValue = "6565";
+                                            });
+                                          }
+                                          evaluatePrice();
+                                        } else {
+                                          if (value.price! > 0) {
+                                            basePrice = value.price!;
+
+                                            _valueController.text =
+                                                value.price!.toString();
+                                            setState(() {
+                                              valueEnabled = false;
+                                            });
+                                          } else {
+                                            setState(() {
+                                              basePrice = 0.0;
+
+                                              _valueController.text = "0.0";
+                                              valueEnabled = true;
+                                              syrianExchangeValue = "6565";
+                                            });
+                                          }
+                                          evaluatePrice();
+                                        }
+                                        setState(() {
+                                          selectedValue = value;
+                                        });
+                                      },
+                                      buttonStyleData: ButtonStyleData(
+                                        height: 50,
+                                        width: double.infinity,
+
+                                        padding: const EdgeInsets.only(
+                                            left: 14, right: 14),
+                                        decoration: BoxDecoration(
+                                          borderRadius:
+                                              BorderRadius.circular(12),
+                                          border: Border.all(
+                                            color: Colors.black26,
+                                          ),
+                                          color: Colors.white,
+                                        ),
+                                        // elevation: 2,
+                                      ),
+                                      iconStyleData: const IconStyleData(
+                                        icon: Icon(
+                                          Icons.keyboard_arrow_down_sharp,
+                                        ),
+                                        iconSize: 20,
+                                        iconEnabledColor: AppColor.AccentBlue,
+                                        iconDisabledColor: Colors.grey,
+                                      ),
+                                      dropdownStyleData: DropdownStyleData(
+                                        decoration: BoxDecoration(
+                                          borderRadius:
+                                              BorderRadius.circular(14),
+                                          color: Colors.white,
+                                        ),
+                                        scrollbarTheme: ScrollbarThemeData(
+                                          radius: const Radius.circular(40),
+                                          thickness:
+                                              MaterialStateProperty.all(6),
+                                          thumbVisibility:
+                                              MaterialStateProperty.all(true),
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                                const SizedBox(
+                                  height: 12,
+                                ),
+                                Focus(
+                                  focusNode: _statenode,
+                                  onFocusChange: (bool focus) {
+                                    if (!focus) {
+                                      FocusManager.instance.primaryFocus
+                                          ?.unfocus();
+                                      BlocProvider.of<BottomNavBarCubit>(
+                                              context)
+                                          .emitShow();
+                                    }
+                                  },
+                                  child: TextFormField(
+                                    controller: _wieghtController,
+                                    onTap: () => _wieghtController.selection =
+                                        TextSelection(
+                                            baseOffset: 0,
+                                            extentOffset: _wieghtController
+                                                .value.text.length),
+                                    enabled: !valueEnabled,
+                                    keyboardType:
+                                        const TextInputType.numberWithOptions(
+                                            decimal: true),
+                                    inputFormatters: [DecimalFormatter()],
+                                    decoration: InputDecoration(
+                                      labelText: wieghtLabel,
+                                      prefixText: showunit ? wieghtUnit : "",
+                                      prefixStyle:
+                                          const TextStyle(color: Colors.black),
+                                      contentPadding:
+                                          EdgeInsets.symmetric(horizontal: 5.w),
+                                      border: OutlineInputBorder(
+                                        borderRadius: BorderRadius.circular(12),
+                                      ),
+                                    ),
+                                    onChanged: (value) {
+                                      if (_originController.text.isNotEmpty) {
+                                        setState(() {
+                                          originerror = false;
+                                        });
+                                        if (value.isNotEmpty) {
+                                          // calculateTotalValueWithPrice(value);
+                                          wieghtValue = double.parse(value);
+                                        } else {
+                                          wieghtValue = 0.0;
+                                        }
+                                        evaluatePrice();
+                                      } else {
+                                        setState(() {
+                                          originerror = true;
+                                        });
+                                      }
+                                    },
+                                  ),
+                                ),
+                                const SizedBox(
+                                  height: 12,
+                                ),
+                                BlocBuilder<FlagsBloc, FlagsState>(
+                                  builder: (context, flagstate) {
+                                    if (flagstate is FlagsLoadedSuccess) {
+                                      return DropdownButtonHideUnderline(
+                                        child: DropdownButton2<Origin>(
+                                          isExpanded: true,
+                                          hint: Text(
+                                            " اختر المنشأ",
+                                            style: TextStyle(
+                                              fontSize: 15,
+                                              color:
+                                                  Theme.of(context).hintColor,
+                                            ),
+                                          ),
+                                          items: flagstate.origins
+                                              .map((Origin item) =>
+                                                  DropdownMenuItem<Origin>(
+                                                    value: item,
+                                                    child: SizedBox(
+                                                      // width: 200,
+                                                      child: Row(
+                                                        children: [
+                                                          SvgPicture.network(
+                                                            item.imageURL!,
+                                                            height: 35,
+                                                            // semanticsLabel: 'A shark?!',
+                                                            placeholderBuilder:
+                                                                (BuildContext
+                                                                        context) =>
+                                                                    const CircularProgressIndicator(),
+                                                          ),
+                                                          const SizedBox(
+                                                              width: 7),
+                                                          Container(
+                                                            constraints:
+                                                                BoxConstraints(
+                                                              maxWidth: 280.w,
+                                                            ),
+                                                            child: Text(
+                                                              item.label!,
+                                                              overflow:
+                                                                  TextOverflow
+                                                                      .ellipsis,
+                                                              // maxLines: 2,
+                                                            ),
+                                                          ),
+                                                        ],
+                                                        // subtitle: Text('\$${suggestion['price']}'),
+                                                      ),
+                                                    ),
+                                                  ))
+                                              .toList(),
+                                          value: selectedOrigin,
+                                          onChanged: (Origin? value) {
+                                            // setState(() {
+                                            //   selectedOrigin = value;
+                                            // });
+                                            selectOrigin(value!);
+                                          },
+                                          dropdownSearchData:
+                                              DropdownSearchData(
+                                            searchController: _originController,
+                                            searchInnerWidgetHeight: 60,
+                                            searchInnerWidget: Container(
+                                              height: 60,
+                                              padding: const EdgeInsets.only(
+                                                top: 8,
+                                                bottom: 4,
+                                                right: 8,
+                                                left: 8,
+                                              ),
+                                              child: TextFormField(
+                                                expands: true,
+                                                maxLines: null,
+                                                controller: _originController,
+                                                onTap: () {
+                                                  _originController.selection =
+                                                      TextSelection(
+                                                          baseOffset: 0,
+                                                          extentOffset:
+                                                              _originController
+                                                                  .value
+                                                                  .text
+                                                                  .length);
+                                                },
+                                                decoration: InputDecoration(
+                                                  isDense: true,
+                                                  contentPadding:
+                                                      const EdgeInsets
+                                                          .symmetric(
+                                                    horizontal: 10,
+                                                    vertical: 8,
+                                                  ),
+                                                  hintText: 'اختر المنشأ',
+                                                  hintStyle: const TextStyle(
+                                                      fontSize: 12),
+                                                  border: OutlineInputBorder(
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            8),
+                                                  ),
                                                 ),
                                               ),
                                             ),
-                                          ),
-                                          searchMatchFn: (item, searchValue) {
-                                            return item.value!.label!
-                                                .contains(searchValue);
-                                          },
-                                        ),
-                                        onMenuStateChange: (isOpen) {
-                                          if (isOpen) {
-                                            setState(() {
-                                              _originController.clear();
-                                            });
-                                          }
-                                        },
-                                        buttonStyleData: ButtonStyleData(
-                                          height: 50,
-                                          width: double.infinity,
-                                          padding: const EdgeInsets.only(
-                                              left: 14, right: 14),
-
-                                          decoration: BoxDecoration(
-                                            borderRadius:
-                                                BorderRadius.circular(12),
-                                            border: Border.all(
-                                              color: Colors.black26,
-                                            ),
-                                            color: Colors.white,
-                                          ),
-                                          // elevation: 2,
-                                        ),
-                                        iconStyleData: const IconStyleData(
-                                          icon: Icon(
-                                            Icons.keyboard_arrow_down_sharp,
-                                          ),
-                                          iconSize: 20,
-                                          iconEnabledColor: AppColor.AccentBlue,
-                                          iconDisabledColor: Colors.grey,
-                                        ),
-                                        dropdownStyleData: DropdownStyleData(
-                                          width: double.infinity,
-                                          maxHeight: MediaQuery.of(context)
-                                                  .size
-                                                  .height -
-                                              142.h,
-                                          padding: const EdgeInsets.all(8.0),
-                                          decoration: BoxDecoration(
-                                            borderRadius:
-                                                BorderRadius.circular(14),
-                                            color: Colors.white,
-                                          ),
-                                          scrollbarTheme: ScrollbarThemeData(
-                                            radius: const Radius.circular(40),
-                                            thickness:
-                                                MaterialStateProperty.all(6),
-                                            thumbVisibility:
-                                                MaterialStateProperty.all(true),
-                                          ),
-                                        ),
-                                        menuItemStyleData:
-                                            const MenuItemStyleData(
-                                          height: 40,
-                                        ),
-                                      ),
-                                    );
-                                  } else if (flagstate
-                                      is FlagsLoadingProgressState) {
-                                    return const Center(
-                                      child: LinearProgressIndicator(),
-                                    );
-                                  } else {
-                                    return Center(
-                                      child: GestureDetector(
-                                        onTap: () {
-                                          BlocProvider.of<FlagsBloc>(context)
-                                              .add(FlagsLoadEvent());
-                                        },
-                                        child: const Row(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.center,
-                                          children: [
-                                            Text(
-                                              "حدث خطأأثناء تحميل القائمة...  ",
-                                              style:
-                                                  TextStyle(color: Colors.red),
-                                            ),
-                                            Icon(
-                                              Icons.refresh,
-                                              color: Colors.grey,
-                                            )
-                                          ],
-                                        ),
-                                      ),
-                                    );
-                                  }
-                                },
-                              ),
-                              const SizedBox(
-                                height: 12,
-                              ),
-                              Visibility(
-                                  visible: originerror,
-                                  child: const Text(
-                                    "الرجاء اختيار المنشأ",
-                                    style: TextStyle(color: Colors.red),
-                                  )),
-                              Visibility(
-                                visible: originerror,
-                                child: const SizedBox(
-                                  height: 12,
-                                ),
-                              ),
-                              const SizedBox(
-                                height: 12,
-                              ),
-                              TextFormField(
-                                controller: _valueController,
-                                onTap: () => _valueController.selection =
-                                    TextSelection(
-                                        baseOffset: 0,
-                                        extentOffset:
-                                            _valueController.value.text.length),
-                                enabled: valueEnabled,
-                                keyboardType: TextInputType.number,
-                                decoration: InputDecoration(
-                                  labelText: valueEnabled
-                                      ? "قيمة البضاعة الاجمالية بالدولار"
-                                      : "سعر الواحدة لدى الجمارك",
-                                  contentPadding:
-                                      EdgeInsets.symmetric(horizontal: 5.w),
-                                  border: OutlineInputBorder(
-                                    borderRadius: BorderRadius.circular(12),
-                                  ),
-                                ),
-                                onChanged: (value) {
-                                  if (_originController.text.isNotEmpty) {
-                                    setState(() {
-                                      originerror = false;
-                                    });
-                                    if (value.isNotEmpty) {
-                                      basePrice = double.parse(value);
-                                      // calculateTotalValue();
-                                    } else {
-                                      basePrice = 0.0;
-                                      // calculateTotalValue();
-                                    }
-                                    evaluatePrice();
-                                  } else {
-                                    setState(() {
-                                      originerror = true;
-                                    });
-                                  }
-                                },
-                              ),
-                              const SizedBox(
-                                height: 12,
-                              ),
-                              Visibility(
-                                visible: isfeeequal001,
-                                child: CheckboxListTile(
-                                    value: rawMaterialValue,
-                                    title: const Text("هل المادة أولية؟"),
-                                    onChanged: (value) {
-                                      setState(() {
-                                        rawMaterialValue = value!;
-                                      });
-                                    }),
-                              ),
-                              Visibility(
-                                visible: isfeeequal001,
-                                child: const SizedBox(
-                                  height: 12,
-                                ),
-                              ),
-                              Visibility(
-                                visible: isfeeequal001,
-                                child: CheckboxListTile(
-                                    value: industrialValue,
-                                    title: const Text("هل المنشأ صناعية؟"),
-                                    onChanged: (value) {
-                                      setState(() {
-                                        industrialValue = value!;
-                                      });
-                                    }),
-                              ),
-                              Visibility(
-                                visible: isfeeequal001,
-                                child: const SizedBox(
-                                  height: 12,
-                                ),
-                              ),
-                              Visibility(
-                                visible: isBrand,
-                                child: CheckboxListTile(
-                                    value: brandValue,
-                                    title: const Text("هل البضاعة ماركة؟"),
-                                    onChanged: (value) {
-                                      calculateExtrasPrice(1.5, value!);
-                                      setState(() {
-                                        brandValue = value;
-                                      });
-                                    }),
-                              ),
-                              Visibility(
-                                visible: isBrand,
-                                child: const SizedBox(
-                                  height: 12,
-                                ),
-                              ),
-                              Visibility(
-                                visible: isTubes,
-                                child: CheckboxListTile(
-                                    value: tubesValue,
-                                    title: const Text(
-                                        "هل قياس الأنابيب أقل أو يساوي 3inch؟"),
-                                    onChanged: (value) {
-                                      calculateExtrasPrice(.1, value!);
-                                      setState(() {
-                                        tubesValue = value;
-                                      });
-                                    }),
-                              ),
-                              Visibility(
-                                visible: isTubes,
-                                child: const SizedBox(
-                                  height: 12,
-                                ),
-                              ),
-                              Visibility(
-                                visible: isColored,
-                                child: CheckboxListTile(
-                                    value: colorValue,
-                                    title: const Text("هل الخيوط ملونة؟"),
-                                    onChanged: (value) {
-                                      calculateExtrasPrice(.1, value!);
-                                      setState(() {
-                                        colorValue = value;
-                                      });
-                                    }),
-                              ),
-                              Visibility(
-                                visible: isColored,
-                                child: const SizedBox(
-                                  height: 12,
-                                ),
-                              ),
-                              Visibility(
-                                visible: isLycra,
-                                child: CheckboxListTile(
-                                    value: lycraValue,
-                                    title: const Text("هل الخيوط ليكرا؟"),
-                                    onChanged: (value) {
-                                      calculateExtrasPrice(.05, value!);
-                                      setState(() {
-                                        lycraValue = value;
-                                      });
-                                    }),
-                              ),
-                              Visibility(
-                                visible: isLycra,
-                                child: const SizedBox(
-                                  height: 12,
-                                ),
-                              ),
-                              Text(!valueEnabled
-                                  ? "القيمة الاجمالية بالدولار :"
-                                  : "قيمة التحويل بالليرة السورية :"),
-                              Text(syrianExchangeValue),
-                              const Text("قيمة الاجمالية بالليرة السورية: "),
-                              Text(syrianTotalValue),
-                              const Text("قيمة البضاعة مع التأمين: "),
-                              Text(totalValueWithEnsurance),
-                              const SizedBox(
-                                height: 12,
-                              ),
-                              Row(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  BlocConsumer<CalculateResultBloc,
-                                      CalculateResultState>(
-                                    listener: (context, state) {
-                                      if (state is CalculateResultSuccessed) {}
-                                    },
-                                    builder: (context, state) {
-                                      if (state is CalculateResultLoading) {
-                                        return ElevatedButton(
-                                            onPressed: () {},
-                                            child:
-                                                const CircularProgressIndicator());
-                                      }
-                                      if (state is CalculateResultFailed) {
-                                        return Text(state.error);
-                                      } else {
-                                        return ElevatedButton(
-                                            onPressed: () {
-                                              result.insurance = int.parse(
-                                                  totalValueWithEnsurance);
-                                              result.fee =
-                                                  selectedPackage!.fee!;
-                                              result.rawMaterial =
-                                                  rawMaterialValue ? 1 : 0;
-                                              result.industrial =
-                                                  industrialValue ? 1 : 0;
-                                              result.totalTax = selectedPackage!
-                                                  .totalTaxes!.totalTax!;
-                                              result.partialTax =
-                                                  selectedPackage!
-                                                      .totalTaxes!.partialTax!;
-                                              result.origin =
-                                                  selectedOrigin!.label!;
-                                              result.spendingFee =
-                                                  selectedPackage!.spendingFee!;
-                                              result.supportFee =
-                                                  selectedPackage!.supportFee!;
-                                              result.localFee =
-                                                  selectedPackage!.localFee!;
-                                              result.protectionFee =
-                                                  selectedPackage!
-                                                      .protectionFee!;
-                                              result.naturalFee =
-                                                  selectedPackage!.naturalFee!;
-                                              result.taxFee =
-                                                  selectedPackage!.taxFee!;
-                                              BlocProvider.of<
-                                                          CalculateResultBloc>(
-                                                      context)
-                                                  .add(CalculateTheResultEvent(
-                                                      result));
-                                              // Navigator.push(
-                                              //     context,
-                                              //     MaterialPageRoute(
-                                              //       builder: (context) =>
-                                              //           const TraderCalculatorResultScreen(),
-                                              //     ));
-                                              setState(() {
-                                                calculateFeeScreen = true;
-                                              });
+                                            searchMatchFn: (item, searchValue) {
+                                              return item.value!.label!
+                                                  .contains(searchValue);
                                             },
-                                            child: const Text(
-                                                "احسب الرسم الجمركي"));
+                                          ),
+                                          onMenuStateChange: (isOpen) {
+                                            if (isOpen) {
+                                              setState(() {
+                                                _originController.clear();
+                                              });
+                                            }
+                                          },
+                                          buttonStyleData: ButtonStyleData(
+                                            height: 50,
+                                            width: double.infinity,
+                                            padding: const EdgeInsets.only(
+                                                left: 14, right: 14),
+
+                                            decoration: BoxDecoration(
+                                              borderRadius:
+                                                  BorderRadius.circular(12),
+                                              border: Border.all(
+                                                color: Colors.black26,
+                                              ),
+                                              color: Colors.white,
+                                            ),
+                                            // elevation: 2,
+                                          ),
+                                          iconStyleData: const IconStyleData(
+                                            icon: Icon(
+                                              Icons.keyboard_arrow_down_sharp,
+                                            ),
+                                            iconSize: 20,
+                                            iconEnabledColor:
+                                                AppColor.AccentBlue,
+                                            iconDisabledColor: Colors.grey,
+                                          ),
+                                          dropdownStyleData: DropdownStyleData(
+                                            width: double.infinity,
+                                            maxHeight: MediaQuery.of(context)
+                                                    .size
+                                                    .height -
+                                                142.h,
+                                            padding: const EdgeInsets.all(8.0),
+                                            decoration: BoxDecoration(
+                                              borderRadius:
+                                                  BorderRadius.circular(14),
+                                              color: Colors.white,
+                                            ),
+                                            scrollbarTheme: ScrollbarThemeData(
+                                              radius: const Radius.circular(40),
+                                              thickness:
+                                                  MaterialStateProperty.all(6),
+                                              thumbVisibility:
+                                                  MaterialStateProperty.all(
+                                                      true),
+                                            ),
+                                          ),
+                                          menuItemStyleData:
+                                              const MenuItemStyleData(
+                                            height: 40,
+                                          ),
+                                        ),
+                                      );
+                                    } else if (flagstate
+                                        is FlagsLoadingProgressState) {
+                                      return const Center(
+                                        child: LinearProgressIndicator(),
+                                      );
+                                    } else {
+                                      return Center(
+                                        child: GestureDetector(
+                                          onTap: () {
+                                            BlocProvider.of<FlagsBloc>(context)
+                                                .add(FlagsLoadEvent());
+                                          },
+                                          child: const Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.center,
+                                            children: [
+                                              Text(
+                                                "حدث خطأأثناء تحميل القائمة...  ",
+                                                style: TextStyle(
+                                                    color: Colors.red),
+                                              ),
+                                              Icon(
+                                                Icons.refresh,
+                                                color: Colors.grey,
+                                              )
+                                            ],
+                                          ),
+                                        ),
+                                      );
+                                    }
+                                  },
+                                ),
+                                const SizedBox(
+                                  height: 12,
+                                ),
+                                Visibility(
+                                    visible: originerror,
+                                    child: const Text(
+                                      "الرجاء اختيار المنشأ",
+                                      style: TextStyle(color: Colors.red),
+                                    )),
+                                Visibility(
+                                  visible: originerror,
+                                  child: const SizedBox(
+                                    height: 12,
+                                  ),
+                                ),
+                                const SizedBox(
+                                  height: 12,
+                                ),
+                                Focus(
+                                  focusNode: _statenode,
+                                  onFocusChange: (bool focus) {
+                                    if (!focus) {
+                                      FocusManager.instance.primaryFocus
+                                          ?.unfocus();
+                                      BlocProvider.of<BottomNavBarCubit>(
+                                              context)
+                                          .emitShow();
+                                    }
+                                  },
+                                  child: TextFormField(
+                                    controller: _valueController,
+                                    onTap: () => _valueController.selection =
+                                        TextSelection(
+                                            baseOffset: 0,
+                                            extentOffset: _valueController
+                                                .value.text.length),
+                                    enabled: valueEnabled,
+                                    keyboardType:
+                                        const TextInputType.numberWithOptions(
+                                            decimal: true),
+                                    inputFormatters: [DecimalFormatter()],
+                                    decoration: InputDecoration(
+                                      labelText: valueEnabled
+                                          ? "قيمة البضاعة الاجمالية بالدولار"
+                                          : "سعر الواحدة لدى الجمارك",
+                                      contentPadding:
+                                          EdgeInsets.symmetric(horizontal: 5.w),
+                                      border: OutlineInputBorder(
+                                        borderRadius: BorderRadius.circular(12),
+                                      ),
+                                    ),
+                                    onChanged: (value) {
+                                      if (_originController.text.isNotEmpty) {
+                                        setState(() {
+                                          originerror = false;
+                                        });
+                                        if (value.isNotEmpty) {
+                                          basePrice = double.parse(value);
+                                          // calculateTotalValue();
+                                        } else {
+                                          basePrice = 0.0;
+                                          // calculateTotalValue();
+                                        }
+                                        evaluatePrice();
+                                      } else {
+                                        setState(() {
+                                          originerror = true;
+                                        });
                                       }
                                     },
                                   ),
-                                ],
-                              )
-                            ],
+                                ),
+                                const SizedBox(
+                                  height: 12,
+                                ),
+                                Visibility(
+                                  visible: isfeeequal001,
+                                  child: CheckboxListTile(
+                                      value: rawMaterialValue,
+                                      title: const Text("هل المادة أولية؟"),
+                                      onChanged: (value) {
+                                        setState(() {
+                                          rawMaterialValue = value!;
+                                        });
+                                      }),
+                                ),
+                                Visibility(
+                                  visible: isfeeequal001,
+                                  child: const SizedBox(
+                                    height: 12,
+                                  ),
+                                ),
+                                Visibility(
+                                  visible: isfeeequal001,
+                                  child: CheckboxListTile(
+                                      value: industrialValue,
+                                      title: const Text("هل المنشأ صناعية؟"),
+                                      onChanged: (value) {
+                                        setState(() {
+                                          industrialValue = value!;
+                                        });
+                                      }),
+                                ),
+                                Visibility(
+                                  visible: isfeeequal001,
+                                  child: const SizedBox(
+                                    height: 12,
+                                  ),
+                                ),
+                                Visibility(
+                                  visible: isBrand,
+                                  child: CheckboxListTile(
+                                      value: brandValue,
+                                      title: const Text("هل البضاعة ماركة؟"),
+                                      onChanged: (value) {
+                                        calculateExtrasPrice(1.5, value!);
+                                        setState(() {
+                                          brandValue = value;
+                                        });
+                                      }),
+                                ),
+                                Visibility(
+                                  visible: isBrand,
+                                  child: const SizedBox(
+                                    height: 12,
+                                  ),
+                                ),
+                                Visibility(
+                                  visible: isTubes,
+                                  child: CheckboxListTile(
+                                      value: tubesValue,
+                                      title: const Text(
+                                          "هل قياس الأنابيب أقل أو يساوي 3inch؟"),
+                                      onChanged: (value) {
+                                        calculateExtrasPrice(.1, value!);
+                                        setState(() {
+                                          tubesValue = value;
+                                        });
+                                      }),
+                                ),
+                                Visibility(
+                                  visible: isTubes,
+                                  child: const SizedBox(
+                                    height: 12,
+                                  ),
+                                ),
+                                Visibility(
+                                  visible: isColored,
+                                  child: CheckboxListTile(
+                                      value: colorValue,
+                                      title: const Text("هل الخيوط ملونة؟"),
+                                      onChanged: (value) {
+                                        calculateExtrasPrice(.1, value!);
+                                        setState(() {
+                                          colorValue = value;
+                                        });
+                                      }),
+                                ),
+                                Visibility(
+                                  visible: isColored,
+                                  child: const SizedBox(
+                                    height: 12,
+                                  ),
+                                ),
+                                Visibility(
+                                  visible: isLycra,
+                                  child: CheckboxListTile(
+                                      value: lycraValue,
+                                      title: const Text("هل الخيوط ليكرا؟"),
+                                      onChanged: (value) {
+                                        calculateExtrasPrice(.05, value!);
+                                        setState(() {
+                                          lycraValue = value;
+                                        });
+                                      }),
+                                ),
+                                Visibility(
+                                  visible: isLycra,
+                                  child: const SizedBox(
+                                    height: 12,
+                                  ),
+                                ),
+                                Text(!valueEnabled
+                                    ? "القيمة الاجمالية بالدولار :"
+                                    : "قيمة التحويل بالليرة السورية :"),
+                                Text(syrianExchangeValue),
+                                const Text("قيمة الاجمالية بالليرة السورية: "),
+                                Text(syrianTotalValue),
+                                const Text("قيمة البضاعة مع التأمين: "),
+                                Text(totalValueWithEnsurance),
+                                const SizedBox(
+                                  height: 12,
+                                ),
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    BlocConsumer<CalculateResultBloc,
+                                        CalculateResultState>(
+                                      listener: (context, state) {
+                                        if (state
+                                            is CalculateResultSuccessed) {}
+                                      },
+                                      builder: (context, state) {
+                                        if (state is CalculateResultLoading) {
+                                          return ElevatedButton(
+                                              onPressed: () {},
+                                              child:
+                                                  const CircularProgressIndicator());
+                                        }
+                                        if (state is CalculateResultFailed) {
+                                          return Text(state.error);
+                                        } else {
+                                          return CustomButton(
+                                              onTap: () {
+                                                result.insurance = int.parse(
+                                                    totalValueWithEnsurance);
+                                                result.fee =
+                                                    selectedPackage!.fee!;
+                                                result.rawMaterial =
+                                                    rawMaterialValue ? 1 : 0;
+                                                result.industrial =
+                                                    industrialValue ? 1 : 0;
+                                                result.totalTax =
+                                                    selectedPackage!
+                                                        .totalTaxes!.totalTax!;
+                                                result.partialTax =
+                                                    selectedPackage!.totalTaxes!
+                                                        .partialTax!;
+                                                result.origin =
+                                                    selectedOrigin!.label!;
+                                                result.spendingFee =
+                                                    selectedPackage!
+                                                        .spendingFee!;
+                                                result.supportFee =
+                                                    selectedPackage!
+                                                        .supportFee!;
+                                                result.localFee =
+                                                    selectedPackage!.localFee!;
+                                                result.protectionFee =
+                                                    selectedPackage!
+                                                        .protectionFee!;
+                                                result.naturalFee =
+                                                    selectedPackage!
+                                                        .naturalFee!;
+                                                result.taxFee =
+                                                    selectedPackage!.taxFee!;
+                                                BlocProvider.of<
+                                                            CalculateResultBloc>(
+                                                        context)
+                                                    .add(
+                                                        CalculateTheResultEvent(
+                                                            result));
+                                                // Navigator.push(
+                                                //     context,
+                                                //     MaterialPageRoute(
+                                                //       builder: (context) =>
+                                                //           const TraderCalculatorResultScreen(),
+                                                //     ));
+                                                setState(() {
+                                                  calculateFeeScreen = true;
+                                                });
+                                              },
+                                              title: Padding(
+                                                padding: EdgeInsets.symmetric(
+                                                    vertical: 8.0,
+                                                    horizontal: 12.w),
+                                                child:
+                                                    Text("احسب الرسم الجمركي"),
+                                              ));
+                                        }
+                                      },
+                                    ),
+                                  ],
+                                )
+                              ],
+                            ),
                           ),
                         ),
-                      ),
-                    ]);
-              } else {
-                return const Center(
-                  child: CircularProgressIndicator(),
-                );
-              }
-            },
+                      ]);
+                } else {
+                  return const Center(child: CircularProgressIndicator());
+                }
+              },
+            ),
           ),
         ),
       )),
@@ -1848,18 +1915,27 @@ class _TraderHomeScreenState extends State<TraderHomeScreen>
       child: Scaffold(
         backgroundColor: Colors.grey[200],
         appBar: AppBar(
-          title: const Text("طلب مخلص"),
+          backgroundColor: AppColor.deepBlue,
+          title: const Text(
+            "الضرائب والرسوم",
+            style: TextStyle(
+              color: Colors.white,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+          centerTitle: true,
+          leading: GestureDetector(
+              onTap: () {
+                setState(() {
+                  calculateFeeScreen = false;
+                });
+              },
+              child: const Icon(Icons.arrow_back, color: Colors.white)),
+          elevation: 0,
         ),
         body: SingleChildScrollView(
           child: Column(
             children: [
-              SizedBox(
-                height: 40.h,
-              ),
-              const Text(
-                "الضرائب والرسوم",
-                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
-              ),
               SizedBox(
                 height: 20.h,
               ),
@@ -1882,9 +1958,7 @@ class _TraderHomeScreenState extends State<TraderHomeScreen>
                         finalFee: state.result.finalTotal!,
                       );
                     } else {
-                      return const Center(
-                        child: CircularProgressIndicator(),
-                      );
+                      return const CalculatorLoadingScreen();
                     }
                   },
                 ),
@@ -1908,9 +1982,7 @@ class _TraderHomeScreenState extends State<TraderHomeScreen>
                         finalTaxes: state.result.finalTaxes!,
                       );
                     } else {
-                      return const Center(
-                        child: CircularProgressIndicator(),
-                      );
+                      return const CalculatorLoadingScreen();
                     }
                   },
                 ),
@@ -1976,9 +2048,7 @@ class _TraderHomeScreenState extends State<TraderHomeScreen>
                         ),
                       );
                     } else {
-                      return const Center(
-                        child: CircularProgressIndicator(),
-                      );
+                      return const CalculatorLoadingScreen();
                     }
                   },
                 ),
@@ -2001,30 +2071,30 @@ class _TraderHomeScreenState extends State<TraderHomeScreen>
                       });
                     },
                     title: const SizedBox(
-                        width: 100, child: Center(child: Text("إلغاء"))),
+                        width: 100, child: Center(child: Text("رجوع"))),
                   ),
-                  CustomButton(
-                    onTap: () {
-                      // Navigator.push(
-                      //     context,
-                      //     MaterialPageRoute(
-                      //       builder: (context) => TraderBillReview(),
-                      //     ));
-                    },
-                    title: const SizedBox(
-                        width: 100, child: Center(child: Text("حفظ"))),
-                  ),
-                  CustomButton(
-                    onTap: () {
-                      // Navigator.push(
-                      //     context,
-                      //     MaterialPageRoute(
-                      //       builder: (context) => TraderAttachementScreen(),
-                      //     ));
-                    },
-                    title: const SizedBox(
-                        width: 100, child: Center(child: Text("طلب مخلص"))),
-                  ),
+                  // CustomButton(
+                  //   onTap: () {
+                  //     // Navigator.push(
+                  //     //     context,
+                  //     //     MaterialPageRoute(
+                  //     //       builder: (context) => TraderBillReview(),
+                  //     //     ));
+                  //   },
+                  //   title: const SizedBox(
+                  //       width: 100, child: Center(child: Text("حفظ"))),
+                  // ),
+                  // CustomButton(
+                  //   onTap: () {
+                  //     // Navigator.push(
+                  //     //     context,
+                  //     //     MaterialPageRoute(
+                  //     //       builder: (context) => TraderAttachementScreen(),
+                  //     //     ));
+                  //   },
+                  //   title: const SizedBox(
+                  //       width: 100, child: Center(child: Text("طلب مخلص"))),
+                  // ),
                 ],
               ),
               SizedBox(
@@ -2055,7 +2125,10 @@ class _TraderHomeScreenState extends State<TraderHomeScreen>
           backgroundColor: AppColor.deepBlue,
           title: const Text(
             "اختر البند الجمركي",
-            style: TextStyle(color: Colors.white),
+            style: TextStyle(
+              color: Colors.white,
+              fontWeight: FontWeight.bold,
+            ),
           ),
           centerTitle: true,
           leading: GestureDetector(
@@ -2196,7 +2269,7 @@ class _TraderHomeScreenState extends State<TraderHomeScreen>
                               );
                             },
                           );
-                        } else {
+                        } else if (state is SectionLoadingProgress) {
                           return Shimmer.fromColors(
                             baseColor: (Colors.grey[300])!,
                             highlightColor: (Colors.grey[100])!,
@@ -2218,10 +2291,35 @@ class _TraderHomeScreenState extends State<TraderHomeScreen>
                               itemCount: 10,
                             ),
                           );
+                        } else {
+                          return Center(
+                            child: GestureDetector(
+                              onTap: () {
+                                BlocProvider.of<SectionBloc>(context)
+                                    .add(SectionLoadEvent());
+                              },
+                              child: const Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Text(
+                                    "حدث خطأأثناء تحميل القائمة...  ",
+                                    style: TextStyle(color: Colors.red),
+                                  ),
+                                  Icon(
+                                    Icons.refresh,
+                                    color: Colors.grey,
+                                  )
+                                ],
+                              ),
+                            ),
+                          );
                         }
                       },
                     ),
                   ),
+                  SizedBox(
+                    height: 90.h,
+                  )
                 ],
               ),
             ),
@@ -2236,18 +2334,18 @@ class _TraderHomeScreenState extends State<TraderHomeScreen>
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceAround,
                     children: [
-                      CustomButton(
-                        onTap: () {
-                          setState(() {
-                            feeselected = -1;
-                            feeselectedId = "";
-                          });
-                        },
-                        color: Colors.white,
-                        bordercolor: Colors.red,
-                        title: const SizedBox(
-                            width: 100, child: Center(child: Text("إلغاء"))),
-                      ),
+                      // CustomButton(
+                      //   onTap: () {
+                      //     setState(() {
+                      //       feeselected = -1;
+                      //       feeselectedId = "";
+                      //     });
+                      //   },
+                      //   color: Colors.white,
+                      //   bordercolor: Colors.red,
+                      //   title: const SizedBox(
+                      //       width: 100, child: Center(child: Text("إلغاء"))),
+                      // ),
                       CustomButton(
                         onTap: () {
                           setState(() {
@@ -2310,38 +2408,44 @@ class _TraderHomeScreenState extends State<TraderHomeScreen>
                           }
                         },
                         child: Row(
-                          crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            SizedBox(
-                              width: 2.w,
-                            ),
-                            Text(
-                              state.fees[index4].id!,
-                              style: const TextStyle(
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
                             Flexible(
-                                child: Container(
-                              padding:
-                                  const EdgeInsets.symmetric(horizontal: 5),
-                              width: double.infinity,
-                              decoration: BoxDecoration(
-                                color: feeselected == index4
-                                    ? null
-                                    : Colors.grey[200],
-                                borderRadius: BorderRadius.circular(10),
+                              child: Row(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  SizedBox(
+                                    width: 2.w,
+                                  ),
+                                  Text(
+                                    state.fees[index4].id!,
+                                    style: const TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                  Flexible(
+                                      child: Container(
+                                    padding: const EdgeInsets.symmetric(
+                                        horizontal: 5),
+                                    width: double.infinity,
+                                    decoration: BoxDecoration(
+                                      color: feeselected == index4
+                                          ? null
+                                          : Colors.grey[200],
+                                      borderRadius: BorderRadius.circular(10),
+                                    ),
+                                    child: Text(
+                                      state.fees[index4].label!,
+                                      style: const TextStyle(
+                                        height: 1.3,
+                                        fontSize: 17,
+                                      ),
+                                      maxLines: 10,
+                                      overflow: TextOverflow.ellipsis,
+                                    ),
+                                  )),
+                                ],
                               ),
-                              child: Text(
-                                state.fees[index4].label!,
-                                style: const TextStyle(
-                                  height: 1.3,
-                                  fontSize: 17,
-                                ),
-                                maxLines: 4,
-                                overflow: TextOverflow.ellipsis,
-                              ),
-                            )),
+                            ),
                             feeselected == index4
                                 ? const Icon(
                                     Icons.check_box_outlined,
@@ -2350,9 +2454,12 @@ class _TraderHomeScreenState extends State<TraderHomeScreen>
                                 : Icon(
                                     Icons.check_box_outline_blank,
                                     color: AppColor.deepBlue,
-                                  )
+                                  ),
                           ],
                         ),
+                      ),
+                      SizedBox(
+                        height: 5.h,
                       ),
                       index4 != (state.fees.length - 1)
                           ? const Divider(

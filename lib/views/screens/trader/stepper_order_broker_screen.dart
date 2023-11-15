@@ -14,6 +14,7 @@ import 'package:custome_mobile/data/models/package_model.dart';
 import 'package:custome_mobile/data/models/state_custome_agency_model.dart';
 import 'package:custome_mobile/data/services/calculator_service.dart';
 import 'package:custome_mobile/helpers/color_constants.dart';
+import 'package:custome_mobile/helpers/formatter.dart';
 import 'package:custome_mobile/views/screens/trader/trader_bill_review.dart';
 import 'package:custome_mobile/views/widgets/custom_botton.dart';
 import 'package:custome_mobile/views/widgets/highlight_text.dart';
@@ -24,6 +25,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter_typeahead/flutter_typeahead.dart';
+import 'package:intl/intl.dart';
 
 class StepperOrderBrokerScreen extends StatefulWidget {
   const StepperOrderBrokerScreen({Key? key}) : super(key: key);
@@ -98,6 +100,7 @@ class _StepperOrderBrokerScreenState extends State<StepperOrderBrokerScreen> {
   String statePlaceholder = "اختر مديرية";
   String agencyPlaceholder = "اختر أمانة";
   String originPlaceholder = "اختر المنشأ";
+  var f = NumberFormat("#,###", "en_US");
 
   String patternString = "";
 
@@ -1006,6 +1009,8 @@ class _StepperOrderBrokerScreenState extends State<StepperOrderBrokerScreen> {
                                   if (!focus) {
                                     BlocProvider.of<BottomNavBarCubit>(context)
                                         .emitShow();
+                                    FocusManager.instance.primaryFocus
+                                        ?.unfocus();
                                   }
                                 },
                                 child: TypeAheadField(
@@ -1033,7 +1038,8 @@ class _StepperOrderBrokerScreenState extends State<StepperOrderBrokerScreen> {
                                     },
 
                                     decoration: InputDecoration(
-                                      label: const Text("  نوع البضاعة"),
+                                      labelText: "  نوع البضاعة",
+                                      labelStyle: const TextStyle(fontSize: 18),
                                       border: OutlineInputBorder(
                                           borderRadius:
                                               BorderRadius.circular(12)),
@@ -1043,8 +1049,8 @@ class _StepperOrderBrokerScreenState extends State<StepperOrderBrokerScreen> {
                                           BlocProvider.of<CalculatorPanelBloc>(
                                                   context)
                                               .add(TariffPanelOpenEvent());
-                                          BlocProvider.of<SectionBloc>(context)
-                                              .add(SectionLoadEvent());
+                                          // BlocProvider.of<SectionBloc>(context)
+                                          //     .add(SectionLoadEvent());
                                           FocusManager.instance.primaryFocus
                                               ?.unfocus();
                                           BlocProvider.of<BottomNavBarCubit>(
@@ -1097,19 +1103,15 @@ class _StepperOrderBrokerScreenState extends State<StepperOrderBrokerScreen> {
                                   itemBuilder: (context, suggestion) {
                                     return Column(
                                       children: [
-                                        Directionality(
-                                          textDirection: TextDirection.rtl,
-                                          child: ListTile(
-                                            // leading: Icon(Icons.shopping_cart),
-                                            title: HighlightText(
-                                              text: suggestion.label!,
-                                              highlight: patternString,
-                                              ignoreCase: false,
-                                              highlightColor:
-                                                  Colors.orangeAccent,
-                                            ),
-                                            // subtitle: Text('\$${suggestion['price']}'),
+                                        ListTile(
+                                          // leading: Icon(Icons.shopping_cart),
+                                          title: HighlightText(
+                                            text: suggestion.label!,
+                                            highlight: patternString,
+                                            ignoreCase: false,
+                                            highlightColor: Colors.orangeAccent,
                                           ),
+                                          // subtitle: Text('\$${suggestion['price']}'),
                                         ),
                                         const Divider(),
                                       ],
@@ -1468,109 +1470,141 @@ class _StepperOrderBrokerScreenState extends State<StepperOrderBrokerScreen> {
                                   height: 24,
                                 ),
                               ),
-                              TextFormField(
-                                controller: _wieghtController,
-                                onTap: () {
-                                  setSelectedPanel(2);
-
-                                  BlocProvider.of<BottomNavBarCubit>(context)
-                                      .emitHide();
-                                  _wieghtController.selection = TextSelection(
-                                      baseOffset: 0,
-                                      extentOffset:
-                                          _wieghtController.value.text.length);
-                                },
-                                enabled: !valueEnabled,
-                                scrollPadding: EdgeInsets.only(
-                                    bottom: MediaQuery.of(context)
-                                            .viewInsets
-                                            .bottom +
-                                        50),
-                                keyboardType: TextInputType.number,
-                                decoration: InputDecoration(
-                                  labelText: wieghtLabel,
-                                  prefixText: showunit ? wieghtUnit : "",
-                                  prefixStyle:
-                                      const TextStyle(color: Colors.black),
-                                  border: OutlineInputBorder(
-                                      borderRadius: BorderRadius.circular(12)),
-                                  contentPadding: EdgeInsets.zero,
-                                ),
-                                onChanged: (value) {
-                                  if (_originController.text.isNotEmpty) {
-                                    setState(() {
-                                      originerror = false;
-                                    });
-                                    if (value.isNotEmpty) {
-                                      // calculateTotalValueWithPrice(value);
-                                      wieghtValue = double.parse(value);
-                                    } else {
-                                      wieghtValue = 0.0;
-                                    }
-                                    evaluatePrice();
-                                  } else {
-                                    setState(() {
-                                      originerror = true;
-                                    });
+                              Focus(
+                                focusNode: _statenode,
+                                onFocusChange: (bool focus) {
+                                  if (!focus) {
+                                    BlocProvider.of<BottomNavBarCubit>(context)
+                                        .emitShow();
+                                    FocusManager.instance.primaryFocus
+                                        ?.unfocus();
                                   }
                                 },
-                                onFieldSubmitted: (value) {
-                                  BlocProvider.of<BottomNavBarCubit>(context)
-                                      .emitShow();
-                                },
+                                child: TextFormField(
+                                  controller: _wieghtController,
+                                  onTap: () {
+                                    setSelectedPanel(2);
+
+                                    BlocProvider.of<BottomNavBarCubit>(context)
+                                        .emitHide();
+                                    _wieghtController.selection = TextSelection(
+                                        baseOffset: 0,
+                                        extentOffset: _wieghtController
+                                            .value.text.length);
+                                  },
+                                  enabled: !valueEnabled,
+                                  scrollPadding: EdgeInsets.only(
+                                      bottom: MediaQuery.of(context)
+                                              .viewInsets
+                                              .bottom +
+                                          50),
+                                  keyboardType:
+                                      const TextInputType.numberWithOptions(
+                                          decimal: true),
+                                  inputFormatters: [DecimalFormatter()],
+                                  decoration: InputDecoration(
+                                    labelStyle: const TextStyle(fontSize: 18),
+                                    labelText: wieghtLabel,
+                                    suffixText: showunit ? wieghtUnit : "",
+                                    suffixStyle:
+                                        const TextStyle(color: Colors.black),
+                                    border: OutlineInputBorder(
+                                        borderRadius:
+                                            BorderRadius.circular(12)),
+                                    contentPadding: EdgeInsets.zero,
+                                  ),
+                                  onChanged: (value) {
+                                    if (_originController.text.isNotEmpty) {
+                                      setState(() {
+                                        originerror = false;
+                                      });
+                                      if (value.isNotEmpty) {
+                                        // calculateTotalValueWithPrice(value);
+                                        wieghtValue = double.parse(value);
+                                      } else {
+                                        wieghtValue = 0.0;
+                                      }
+                                      evaluatePrice();
+                                    } else {
+                                      setState(() {
+                                        originerror = true;
+                                      });
+                                    }
+                                  },
+                                  onFieldSubmitted: (value) {
+                                    BlocProvider.of<BottomNavBarCubit>(context)
+                                        .emitShow();
+                                  },
+                                ),
                               ),
 
                               const SizedBox(
                                 height: 24,
                               ),
-                              TextFormField(
-                                controller: _valueController,
-                                onTap: () {
-                                  BlocProvider.of<BottomNavBarCubit>(context)
-                                      .emitHide();
-                                  _valueController.selection = TextSelection(
-                                      baseOffset: 0,
-                                      extentOffset:
-                                          _valueController.value.text.length);
-                                },
-                                enabled: valueEnabled,
-                                keyboardType: TextInputType.number,
-                                scrollPadding: EdgeInsets.only(
-                                    bottom: MediaQuery.of(context)
-                                            .viewInsets
-                                            .bottom +
-                                        50),
-                                decoration: InputDecoration(
-                                  labelText: valueEnabled
-                                      ? "  قيمة البضاعة الاجمالية بالدولار"
-                                      : "  سعر الواحدة لدى الجمارك",
-                                  border: OutlineInputBorder(
-                                      borderRadius: BorderRadius.circular(12)),
-                                  contentPadding: EdgeInsets.zero,
-                                ),
-                                onChanged: (value) {
-                                  if (_originController.text.isNotEmpty) {
-                                    setState(() {
-                                      originerror = false;
-                                    });
-                                    if (value.isNotEmpty) {
-                                      basePrice = double.parse(value);
-                                      // calculateTotalValue();
-                                    } else {
-                                      basePrice = 0.0;
-                                      // calculateTotalValue();
-                                    }
-                                    evaluatePrice();
-                                  } else {
-                                    setState(() {
-                                      originerror = true;
-                                    });
+                              Focus(
+                                focusNode: _statenode,
+                                onFocusChange: (bool focus) {
+                                  if (!focus) {
+                                    BlocProvider.of<BottomNavBarCubit>(context)
+                                        .emitShow();
+                                    FocusManager.instance.primaryFocus
+                                        ?.unfocus();
                                   }
                                 },
-                                onFieldSubmitted: (value) {
-                                  BlocProvider.of<BottomNavBarCubit>(context)
-                                      .emitShow();
-                                },
+                                child: TextFormField(
+                                  controller: _valueController,
+                                  onTap: () {
+                                    BlocProvider.of<BottomNavBarCubit>(context)
+                                        .emitHide();
+                                    _valueController.selection = TextSelection(
+                                        baseOffset: 0,
+                                        extentOffset:
+                                            _valueController.value.text.length);
+                                  },
+                                  enabled: valueEnabled,
+                                  keyboardType:
+                                      const TextInputType.numberWithOptions(
+                                          decimal: true),
+                                  scrollPadding: EdgeInsets.only(
+                                      bottom: MediaQuery.of(context)
+                                              .viewInsets
+                                              .bottom +
+                                          50),
+                                  inputFormatters: [DecimalFormatter()],
+                                  decoration: InputDecoration(
+                                    labelText: valueEnabled
+                                        ? "  قيمة البضاعة الاجمالية بالدولار"
+                                        : "  سعر الواحدة لدى الجمارك",
+                                    labelStyle: const TextStyle(fontSize: 18),
+                                    border: OutlineInputBorder(
+                                        borderRadius:
+                                            BorderRadius.circular(12)),
+                                    contentPadding: EdgeInsets.zero,
+                                  ),
+                                  onChanged: (value) {
+                                    if (_originController.text.isNotEmpty) {
+                                      setState(() {
+                                        originerror = false;
+                                      });
+                                      if (value.isNotEmpty) {
+                                        basePrice = double.parse(value);
+                                        // calculateTotalValue();
+                                      } else {
+                                        basePrice = 0.0;
+                                        // calculateTotalValue();
+                                      }
+                                      evaluatePrice();
+                                    } else {
+                                      setState(() {
+                                        originerror = true;
+                                      });
+                                    }
+                                  },
+                                  onFieldSubmitted: (value) {
+                                    BlocProvider.of<BottomNavBarCubit>(context)
+                                        .emitShow();
+                                  },
+                                ),
                               ),
                               const SizedBox(
                                 height: 12,
@@ -1682,13 +1716,22 @@ class _StepperOrderBrokerScreenState extends State<StepperOrderBrokerScreen> {
                                   height: 12,
                                 ),
                               ),
-                              Text(!valueEnabled
-                                  ? "القيمة الاجمالية بالدولار :"
-                                  : "قيمة التحويل بالليرة السورية :"),
+                              Text(
+                                !valueEnabled
+                                    ? "القيمة الاجمالية بالدولار :"
+                                    : "قيمة التحويل بالليرة السورية :",
+                                style: const TextStyle(fontSize: 16),
+                              ),
                               Text(syrianExchangeValue),
-                              const Text("قيمة الاجمالية بالليرة السورية: "),
+                              const Text(
+                                "قيمة الاجمالية بالليرة السورية: ",
+                                style: TextStyle(fontSize: 16),
+                              ),
                               Text(syrianTotalValue),
-                              const Text("قيمة البضاعة مع التأمين: "),
+                              const Text(
+                                "قيمة البضاعة مع التأمين: ",
+                                style: TextStyle(fontSize: 16),
+                              ),
                               Text(totalValueWithEnsurance),
                               const SizedBox(
                                 height: 12,
@@ -1902,7 +1945,8 @@ class _StepperOrderBrokerScreenState extends State<StepperOrderBrokerScreen> {
                                         child: TextField(
                                           controller: _tabalehNumController,
                                           textAlign: TextAlign.center,
-                                          keyboardType: TextInputType.number,
+                                          keyboardType: const TextInputType
+                                              .numberWithOptions(decimal: true),
                                           decoration: InputDecoration(
                                             border: OutlineInputBorder(
                                                 borderRadius:
@@ -1999,7 +2043,9 @@ class _StepperOrderBrokerScreenState extends State<StepperOrderBrokerScreen> {
                                 child: TextField(
                                   controller: _packagesNumController,
                                   textAlign: TextAlign.center,
-                                  keyboardType: TextInputType.number,
+                                  keyboardType:
+                                      const TextInputType.numberWithOptions(
+                                          decimal: true),
                                   decoration: InputDecoration(
                                     border: OutlineInputBorder(
                                         borderRadius:
@@ -2096,9 +2142,16 @@ class _StepperOrderBrokerScreenState extends State<StepperOrderBrokerScreen> {
                           } else {
                             return CustomButton(
                                 title: SizedBox(
-                                    width: 250.w,
-                                    child: const Center(
-                                        child: Text("حساب الرسوم"))),
+                                  width: 250.w,
+                                  child: const Center(
+                                    child: Text(
+                                      "حساب الرسوم",
+                                      style: TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
+                                  ),
+                                ),
                                 // color: AppColor.deepYellow,
                                 onTap: () {
                                   result.insurance =

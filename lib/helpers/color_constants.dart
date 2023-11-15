@@ -13,7 +13,7 @@ class AppColor {
   static final deepAppBarBlue = HexColor("#164261");
   static final lightdeepBlue = HexColor("#E7F3F6");
   static final activeGreen = HexColor("#C5D21E");
-  static final goldenYellow = HexColor("#C5D21E");
+  static final goldenYellow = HexColor("#A3CC84");
   static final lightGoldenYellow = HexColor("#E3ED7F");
   static const AccentGreen = Color(0xff55AB67);
   static const AccentBrown = Color(0xffE6E2D6);
