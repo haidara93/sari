@@ -1505,8 +1505,8 @@ class _StepperOrderBrokerScreenState extends State<StepperOrderBrokerScreen> {
                                   decoration: InputDecoration(
                                     labelStyle: const TextStyle(fontSize: 18),
                                     labelText: wieghtLabel,
-                                    suffixText: showunit ? wieghtUnit : "",
-                                    suffixStyle:
+                                    prefixText: showunit ? wieghtUnit : "",
+                                    prefixStyle:
                                         const TextStyle(color: Colors.black),
                                     border: OutlineInputBorder(
                                         borderRadius:

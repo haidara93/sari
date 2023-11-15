@@ -845,8 +845,8 @@ class _CalculatorWidgetState extends State<CalculatorWidget> {
                   decoration: InputDecoration(
                     labelStyle: const TextStyle(fontSize: 20),
                     labelText: wieghtLabel,
-                    suffixText: showunit ? wieghtUnit : "",
-                    suffixStyle: const TextStyle(color: Colors.black),
+                    prefixText: showunit ? wieghtUnit : "",
+                    prefixStyle: const TextStyle(color: Colors.black),
                     border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(12)),
                     contentPadding: EdgeInsets.zero,
@@ -871,6 +871,7 @@ class _CalculatorWidgetState extends State<CalculatorWidget> {
                   },
                   onFieldSubmitted: (value) {
                     widget.unfocus;
+                    BlocProvider.of<BottomNavBarCubit>(context).emitShow();
                   },
                 ),
               ),
@@ -930,6 +931,7 @@ class _CalculatorWidgetState extends State<CalculatorWidget> {
                   },
                   onFieldSubmitted: (value) {
                     widget.unfocus;
+                    BlocProvider.of<BottomNavBarCubit>(context).emitShow();
                   },
                 ),
               ),
