@@ -26,7 +26,7 @@ class SecondStepOrderState extends StepOrderState {
   final int? rawMaterial;
   final int? industrial;
 
-  SecondStepOrderState(
+  const SecondStepOrderState(
       this.customAgency,
       this.customeState,
       this.offerType,

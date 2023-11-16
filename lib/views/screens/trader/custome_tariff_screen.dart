@@ -1,4 +1,3 @@
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:custome_mobile/business_logic/bloc/calculator_panel_bloc.dart';
 import 'package:custome_mobile/business_logic/bloc/chapter_bloc.dart';
 import 'package:custome_mobile/business_logic/bloc/fee_bloc.dart';
@@ -14,7 +13,6 @@ import 'package:custome_mobile/helpers/color_constants.dart';
 import 'package:custome_mobile/views/widgets/tariff_info_icon.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_img/flutter_img.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:shimmer/shimmer.dart';
@@ -987,7 +985,6 @@ class _CustomeTariffScreenState extends State<CustomeTariffScreen> {
                           ),
                           onExpansionChanged: (value) {
                             if (value) {
-                              print(state.subchapters[index3].id!);
                               BlocProvider.of<FeeBloc>(context).add(
                                   FeeLoadEvent(state.subchapters[index3].id!));
                               setState(() {
@@ -1407,8 +1404,6 @@ class _CustomeTariffScreenState extends State<CustomeTariffScreen> {
                           physics: const NeverScrollableScrollPhysics(),
                           itemCount: state.sections.length,
                           itemBuilder: (context, index) {
-                            final GlobalKey expansionTileKey = GlobalKey();
-                            double previousOffset = 0.0;
                             return Card(
                               margin: EdgeInsets.symmetric(
                                   vertical: 4.h, horizontal: 3.w),

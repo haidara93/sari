@@ -298,8 +298,6 @@ class _TraderMainScreenState extends State<TraderMainScreen> {
                                                                           false;
                                                                     });
                                                                   }
-
-                                                                  print(state2);
                                                                 },
                                                                 builder: (context,
                                                                     groupstate) {

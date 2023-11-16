@@ -318,7 +318,6 @@ class _TraderSigninScreenState extends State<TraderSigninScreen> {
                                       ],
                                     ),
                                   );
-                                  print(state.error!);
                                   ScaffoldMessenger.of(context)
                                       .showSnackBar(snackBar);
                                 }

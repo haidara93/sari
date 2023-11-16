@@ -10,6 +10,7 @@ class CustomeTimeLine extends StatelessWidget {
   final bool isCurrent;
   final String title;
   final String imageUrl;
+  final String type;
   const CustomeTimeLine(
       {Key? key,
       required this.isFirst,
@@ -17,6 +18,7 @@ class CustomeTimeLine extends StatelessWidget {
       required this.isPast,
       required this.title,
       required this.imageUrl,
+      required this.type,
       this.isCurrent = false})
       : super(key: key);
 
@@ -28,10 +30,18 @@ class CustomeTimeLine extends StatelessWidget {
         isLast: isLast,
         isFirst: isFirst,
         beforeLineStyle: LineStyle(
-          color: isPast ? AppColor.deepBlue : Colors.grey[400]!,
+          color: isPast
+              ? isCurrent
+                  ? AppColor.lightBlue
+                  : AppColor.deepBlue
+              : Colors.grey[400]!,
         ),
         indicatorStyle: IndicatorStyle(
-            color: isPast ? AppColor.deepBlue : Colors.grey[400]!,
+            color: isPast
+                ? isCurrent
+                    ? AppColor.lightBlue
+                    : AppColor.deepBlue
+                : Colors.grey[400]!,
             iconStyle: IconStyle(
                 iconData: Icons.done,
                 color: isPast ? Colors.white : Colors.grey[400]!,
@@ -40,6 +50,7 @@ class CustomeTimeLine extends StatelessWidget {
             isPast: isPast,
             title: title,
             imageUrl: imageUrl,
+            type: type,
             isCurrent: isCurrent),
       ),
     );

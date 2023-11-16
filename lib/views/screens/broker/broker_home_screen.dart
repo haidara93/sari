@@ -187,7 +187,7 @@ class _BrokerHomeScreenState extends State<BrokerHomeScreen>
                   mainAxisAlignment: MainAxisAlignment.spaceAround,
                   children: [
                     CircleAvatar(
-                      backgroundColor: Colors.yellow,
+                      backgroundColor: AppColor.goldenYellow,
                       radius: 35.h,
                     ),
                     Text(
@@ -348,8 +348,8 @@ class _BrokerHomeScreenState extends State<BrokerHomeScreen>
               child: TabBar(
                   labelPadding: EdgeInsets.zero,
                   controller: _tabController,
-                  indicatorColor: AppColor.activeGreen,
-                  labelColor: AppColor.activeGreen,
+                  indicatorColor: AppColor.goldenYellow,
+                  labelColor: AppColor.goldenYellow,
                   unselectedLabelColor: Colors.white,
                   labelStyle: const TextStyle(fontSize: 15),
                   unselectedLabelStyle: const TextStyle(fontSize: 14),
@@ -373,7 +373,7 @@ class _BrokerHomeScreenState extends State<BrokerHomeScreen>
                                 Text(
                                   "طلبات التخليص",
                                   style: TextStyle(
-                                      color: AppColor.activeGreen,
+                                      color: AppColor.goldenYellow,
                                       fontSize: 13),
                                 )
                               ],
@@ -409,7 +409,7 @@ class _BrokerHomeScreenState extends State<BrokerHomeScreen>
                                 Text(
                                   "الحاسبة",
                                   style: TextStyle(
-                                      color: AppColor.activeGreen,
+                                      color: AppColor.goldenYellow,
                                       fontSize: 15),
                                 )
                               ],
@@ -445,7 +445,7 @@ class _BrokerHomeScreenState extends State<BrokerHomeScreen>
                                 Text(
                                   "الرئيسية",
                                   style: TextStyle(
-                                      color: AppColor.activeGreen,
+                                      color: AppColor.goldenYellow,
                                       fontSize: 15),
                                 )
                               ],
@@ -481,7 +481,7 @@ class _BrokerHomeScreenState extends State<BrokerHomeScreen>
                                 Text(
                                   "التعرفة",
                                   style: TextStyle(
-                                      color: AppColor.activeGreen,
+                                      color: AppColor.goldenYellow,
                                       fontSize: 15),
                                 )
                               ],
@@ -517,7 +517,7 @@ class _BrokerHomeScreenState extends State<BrokerHomeScreen>
                                 Text(
                                   "السجل",
                                   style: TextStyle(
-                                      color: AppColor.activeGreen,
+                                      color: AppColor.goldenYellow,
                                       fontSize: 15),
                                 )
                               ],

@@ -1,12 +1,14 @@
 import 'package:custome_mobile/helpers/color_constants.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 
 // ignore: must_be_immutable
 class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   String title;
   GlobalKey<ScaffoldState>? scaffoldKey;
-  CustomAppBar({super.key, required this.title, this.scaffoldKey});
+  Function()? onTap;
+  CustomAppBar({super.key, required this.title, this.scaffoldKey, this.onTap});
 
   @override
   Widget build(BuildContext context) {
@@ -117,11 +119,14 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
                   ],
                 ),
               ),
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Image.asset(
-                  "assets/images/sari_white_logo.png",
-                  height: 35.h,
+              GestureDetector(
+                onTap: onTap ?? () {},
+                child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: SvgPicture.asset(
+                    "assets/images/sari_blue.svg",
+                    height: 40.h,
+                  ),
                 ),
               ),
             ],

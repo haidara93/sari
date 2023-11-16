@@ -22,7 +22,7 @@ class LoadSecondStep extends StepOrderEvent {
   final int? rawMaterial;
   final int? industrial;
 
-  LoadSecondStep(
+  const LoadSecondStep(
       this.customAgency,
       this.customeState,
       this.offerType,

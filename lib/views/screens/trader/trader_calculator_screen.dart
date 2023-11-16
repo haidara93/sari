@@ -1,5 +1,6 @@
 import 'package:custome_mobile/business_logic/bloc/fee_select_bloc.dart';
 import 'package:custome_mobile/business_logic/cubit/bottom_nav_bar_cubit.dart';
+import 'package:custome_mobile/helpers/color_constants.dart';
 import 'package:custome_mobile/views/widgets/calculator_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -45,7 +46,7 @@ class TraderCalculatorScreen extends StatelessWidget {
                           Text(
                             "حاسبة الرسوم الجمركية",
                             style: TextStyle(
-                                color: Colors.yellow[700],
+                                color: AppColor.goldenYellow,
                                 fontSize: 20,
                                 fontWeight: FontWeight.bold),
                           ),

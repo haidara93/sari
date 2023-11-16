@@ -128,8 +128,6 @@ class StateAgencyRepository {
       return Attachment.fromJson(res);
     } else {
       final respStr = await response.stream.bytesToString();
-      print(respStr);
-      print(response.statusCode);
       return null;
     }
   }
@@ -194,16 +192,10 @@ class StateAgencyRepository {
       "attachments": attachments,
       "notes": notes
     });
-    print("object");
-
-    print(response.statusCode);
-    print(response.body);
     var jsonObject = jsonDecode(response.body);
     if (response.statusCode == 201) {
       return Offer.fromJson(jsonObject);
     } else {
-      print(response.statusCode);
-      print(response.body);
       return null;
     }
   }

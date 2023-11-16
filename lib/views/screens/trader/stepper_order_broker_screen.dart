@@ -7,7 +7,6 @@ import 'package:custome_mobile/business_logic/bloc/calculator_panel_bloc.dart';
 import 'package:custome_mobile/business_logic/bloc/fee_select_bloc.dart';
 import 'package:custome_mobile/business_logic/bloc/flags_bloc.dart';
 import 'package:custome_mobile/business_logic/bloc/package_type_bloc.dart';
-import 'package:custome_mobile/business_logic/bloc/section_bloc.dart';
 import 'package:custome_mobile/business_logic/bloc/state_custome_bloc.dart';
 import 'package:custome_mobile/business_logic/cubit/bottom_nav_bar_cubit.dart';
 import 'package:custome_mobile/data/models/package_model.dart';
@@ -18,7 +17,6 @@ import 'package:custome_mobile/helpers/formatter.dart';
 import 'package:custome_mobile/views/screens/trader/trader_bill_review.dart';
 import 'package:custome_mobile/views/widgets/custom_botton.dart';
 import 'package:custome_mobile/views/widgets/highlight_text.dart';
-import 'package:custome_mobile/views/widgets/tariff_info_icon.dart';
 import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -428,7 +426,6 @@ class _StepperOrderBrokerScreenState extends State<StepperOrderBrokerScreen> {
       child: BlocListener<FeeSelectBloc, FeeSelectState>(
         listener: (context, state) {
           if (state is FeeSelectSuccess) {
-            print("asd");
             setState(() {
               _wieghtController.text = "0.0";
               _valueController.text = "0.0";
@@ -438,7 +435,7 @@ class _StepperOrderBrokerScreenState extends State<StepperOrderBrokerScreen> {
             });
             selectSuggestion(state.package);
           } else {
-            print("ghjhgjgh");
+            // print("ghjhgjgh");
           }
         },
         child: GestureDetector(
@@ -549,9 +546,9 @@ class _StepperOrderBrokerScreenState extends State<StepperOrderBrokerScreen> {
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(10),
                         gradient: selectedPanel == 0
-                            ? const LinearGradient(
+                            ? LinearGradient(
                                 colors: [
-                                    Color.fromARGB(255, 229, 215, 94),
+                                    AppColor.goldenYellow,
                                     Colors.white,
                                     Colors.white,
                                     Colors.white,
@@ -580,14 +577,19 @@ class _StepperOrderBrokerScreenState extends State<StepperOrderBrokerScreen> {
                               child: RadioListTile(
                                 value: "I",
                                 groupValue: selectedRadioTile,
-                                title: const Text("استيراد"),
+                                title: const Text(
+                                  "استيراد",
+                                  style: TextStyle(
+                                    fontSize: 16,
+                                  ),
+                                ),
                                 // subtitle: Text("Radio 1 Subtitle"),
                                 onChanged: (val) {
                                   // print("Radio Tile pressed $val");
                                   setSelectedPanel(0);
                                   setSelectedRadioTile(val!);
                                 },
-                                activeColor: AppColor.activeGreen,
+                                activeColor: AppColor.goldenYellow,
                                 selected: selectedRadioTile == "I",
                               ),
                             ),
@@ -596,14 +598,19 @@ class _StepperOrderBrokerScreenState extends State<StepperOrderBrokerScreen> {
                               child: RadioListTile(
                                 value: "E",
                                 groupValue: selectedRadioTile,
-                                title: const Text("تصدير"),
+                                title: const Text(
+                                  "تصدير",
+                                  style: TextStyle(
+                                    fontSize: 16,
+                                  ),
+                                ),
                                 // subtitle: Text("Radio 2 Subtitle"),
                                 onChanged: (val) {
                                   // print("Radio Tile pressed $val");
                                   setSelectedPanel(0);
                                   setSelectedRadioTile(val!);
                                 },
-                                activeColor: AppColor.activeGreen,
+                                activeColor: AppColor.goldenYellow,
 
                                 selected: selectedRadioTile == "E",
                               ),
@@ -628,9 +635,9 @@ class _StepperOrderBrokerScreenState extends State<StepperOrderBrokerScreen> {
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(10),
                         gradient: selectedPanel == 1
-                            ? const LinearGradient(
+                            ? LinearGradient(
                                 colors: [
-                                    Color.fromARGB(255, 229, 215, 94),
+                                    AppColor.goldenYellow,
                                     Colors.white,
                                     Colors.white,
                                     Colors.white,
@@ -971,9 +978,9 @@ class _StepperOrderBrokerScreenState extends State<StepperOrderBrokerScreen> {
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(10),
                         gradient: selectedPanel == 2
-                            ? const LinearGradient(
+                            ? LinearGradient(
                                 colors: [
-                                    Color.fromARGB(255, 229, 215, 94),
+                                    AppColor.goldenYellow,
                                     Colors.white,
                                     Colors.white,
                                     Colors.white,
@@ -1753,9 +1760,9 @@ class _StepperOrderBrokerScreenState extends State<StepperOrderBrokerScreen> {
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(10),
                         gradient: selectedPanel == 3
-                            ? const LinearGradient(
+                            ? LinearGradient(
                                 colors: [
-                                    Color.fromARGB(255, 229, 215, 94),
+                                    AppColor.goldenYellow,
                                     Colors.white,
                                     Colors.white,
                                     Colors.white,
@@ -1830,7 +1837,7 @@ class _StepperOrderBrokerScreenState extends State<StepperOrderBrokerScreen> {
                                                                               index]
                                                                           .id!
                                                                   ? AppColor
-                                                                      .activeGreen
+                                                                      .goldenYellow
                                                                   : Colors.grey[
                                                                       600]!,
                                                               width: 2.w)),
@@ -1905,7 +1912,7 @@ class _StepperOrderBrokerScreenState extends State<StepperOrderBrokerScreen> {
                             child: CheckboxListTile(
                                 value: haveTabaleh,
                                 title: const Text("هل يوجد طبالي؟"),
-                                activeColor: AppColor.activeGreen,
+                                activeColor: AppColor.goldenYellow,
                                 onChanged: (value) {
                                   setSelectedPanel(3);
 

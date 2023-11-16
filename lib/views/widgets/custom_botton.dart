@@ -24,7 +24,7 @@ class CustomButton extends StatelessWidget {
       borderRadius: BorderRadius.circular(45),
       onTap: onTap,
       child: Container(
-        margin: EdgeInsets.all(4),
+        margin: const EdgeInsets.all(4),
         height: hieght,
         decoration: BoxDecoration(
           color: color ?? Colors.white,
@@ -32,13 +32,13 @@ class CustomButton extends StatelessWidget {
           borderRadius: BorderRadius.circular(45),
           border: Border(
             top: BorderSide(
-                width: 1, color: bordercolor ?? AppColor.activeGreen),
+                width: 1, color: bordercolor ?? AppColor.goldenYellow),
             right: BorderSide(
-                width: 1, color: bordercolor ?? AppColor.activeGreen),
+                width: 1, color: bordercolor ?? AppColor.goldenYellow),
             left: BorderSide(
-                width: 1, color: bordercolor ?? AppColor.activeGreen),
+                width: 1, color: bordercolor ?? AppColor.goldenYellow),
             bottom: BorderSide(
-                width: 1, color: bordercolor ?? AppColor.activeGreen),
+                width: 1, color: bordercolor ?? AppColor.goldenYellow),
           ),
         ),
         child: Center(

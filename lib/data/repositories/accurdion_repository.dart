@@ -69,7 +69,6 @@ class AccordionRepository {
   Future<List<FeeSet>> getFees(String subchapterId) async {
     prefs = await SharedPreferences.getInstance();
     var jwt = prefs.getString("token");
-    print("$ACCURDION_FEES_ENDPOINT$subchapterId/");
     var rs = await HttpHelper.get("$ACCURDION_FEES_ENDPOINT$subchapterId/",
         apiToken: jwt);
     fees = [];
@@ -79,7 +78,6 @@ class AccordionRepository {
       for (var element in result["fees"]) {
         fees.add(FeeSet.fromJson(element));
       }
-      print(myDataString);
     }
     return fees;
   }

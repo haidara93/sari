@@ -308,9 +308,9 @@ class _TraderAttachementScreenState extends State<TraderAttachementScreen> {
                   BlocBuilder<AttachmentBloc, AttachmentState>(
                     builder: (context, state) {
                       if (state is AttachmentLoadingProgress) {
-                        return Row(
+                        return const Row(
                           mainAxisAlignment: MainAxisAlignment.center,
-                          children: const [
+                          children: [
                             Center(child: CircularProgressIndicator()),
                           ],
                         );
@@ -714,7 +714,6 @@ class _TraderAttachementScreenState extends State<TraderAttachementScreen> {
                           ),
                           BlocConsumer<OfferBloc, OfferState>(
                             listener: (context, offerstate) {
-                              print(offerstate);
                               if (offerstate is OfferLoadedSuccess) {
                                 BlocProvider.of<AttachmentsListBloc>(context)
                                     .add(ClearAttachmentToListEvent());

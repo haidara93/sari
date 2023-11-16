@@ -24,7 +24,7 @@ class DecimalFormatter extends TextInputFormatter {
       if (newText.trim() == '.') {
         return newValue.copyWith(
           text: '0.',
-          selection: TextSelection.collapsed(offset: 2),
+          selection: const TextSelection.collapsed(offset: 2),
         );
       }
       //in case if user tries to input multiple "."s or tries to input

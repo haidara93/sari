@@ -1,7 +1,5 @@
 // ignore_for_file: unused_local_variable, unnecessary_null_comparison
 
-import 'dart:io';
-
 import 'package:custome_mobile/data/models/attachments_models.dart';
 import 'package:custome_mobile/data/repositories/state_agency_repository.dart';
 import 'package:equatable/equatable.dart';
@@ -26,10 +24,9 @@ class AdditionalAttachmentBloc
           if (data) {
             emit(BrokerAdditionalAttachmentLoadedSuccess());
           } else {
-            emit(AdditionalAttachmentLoadedFailed("خطأ"));
+            emit(const AdditionalAttachmentLoadedFailed("خطأ"));
           }
         } catch (e) {
-          print('error');
           emit(AdditionalAttachmentLoadedFailed(e.toString()));
         }
       },

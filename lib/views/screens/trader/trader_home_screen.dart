@@ -86,7 +86,7 @@ class _TraderHomeScreenState extends State<TraderHomeScreen>
     // Remove the WidgetsBindingObserver when the state is disposed
     WidgetsBinding.instance.removeObserver(this);
     scroll.dispose();
-
+    _tabController.dispose();
     super.dispose();
   }
 
@@ -104,17 +104,17 @@ class _TraderHomeScreenState extends State<TraderHomeScreen>
     setState(() {
       navigationValue = selectedValue;
     });
+    _tabController.animateTo(selectedValue);
+
     switch (selectedValue) {
       case 0:
         {
+          BlocProvider.of<TraderLogBloc>(context)
+              .add(const TraderLogLoadEvent("R"));
           setState(() {
-            title = "طلب مخلص";
+            title = "السجل";
 
-            BlocProvider.of<StateCustomeBloc>(context)
-                .add(StateCustomeLoadEvent());
-            BlocProvider.of<PackageTypeBloc>(context)
-                .add(PackageTypeLoadEvent());
-            currentScreen = const OrderBrokerScreen();
+            currentScreen = const LogScreen();
           });
           break;
         }
@@ -149,12 +149,14 @@ class _TraderHomeScreenState extends State<TraderHomeScreen>
         }
       case 4:
         {
-          BlocProvider.of<TraderLogBloc>(context)
-              .add(const TraderLogLoadEvent("R"));
           setState(() {
-            title = "السجل";
+            title = "طلب مخلص";
 
-            currentScreen = const LogScreen();
+            BlocProvider.of<StateCustomeBloc>(context)
+                .add(StateCustomeLoadEvent());
+            BlocProvider.of<PackageTypeBloc>(context)
+                .add(PackageTypeLoadEvent());
+            currentScreen = const OrderBrokerScreen();
           });
           break;
         }
@@ -266,9 +268,11 @@ class _TraderHomeScreenState extends State<TraderHomeScreen>
                       appBar: CustomAppBar(
                         title: title,
                         scaffoldKey: _scaffoldKey,
+                        onTap: () => changeSelectedValue(
+                            selectedValue: 2, contxt: context),
                       ),
                       drawer: Drawer(
-                        backgroundColor: AppColor.deepBlue,
+                        backgroundColor: AppColor.deepAppBarBlue,
                         elevation: 1,
                         width: 250.w,
                         child: Padding(
@@ -285,7 +289,7 @@ class _TraderHomeScreenState extends State<TraderHomeScreen>
                                   radius: 35.h,
                                 ),
                                 Text(
-                                  "Haidara",
+                                  "Morad",
                                   style: TextStyle(
                                       color: Colors.white,
                                       fontSize: 26.sp,
@@ -548,13 +552,13 @@ class _TraderHomeScreenState extends State<TraderHomeScreen>
                                                 mainAxisAlignment:
                                                     MainAxisAlignment.end,
                                                 children: [
-                                                  Image.asset(
-                                                    "assets/icons/broker_order_active.png",
+                                                  SvgPicture.asset(
+                                                    "assets/icons/log_active.svg",
                                                     width: 36.w,
                                                     height: 36.h,
                                                   ),
                                                   Text(
-                                                    "طلب مخلص",
+                                                    "السجل",
                                                     style: TextStyle(
                                                         color: AppColor
                                                             .goldenYellow,
@@ -566,16 +570,16 @@ class _TraderHomeScreenState extends State<TraderHomeScreen>
                                                 mainAxisAlignment:
                                                     MainAxisAlignment.end,
                                                 children: [
-                                                  Image.asset(
-                                                    "assets/icons/broker_order.png",
+                                                  SvgPicture.asset(
+                                                    "assets/icons/log.svg",
                                                     width: 30.w,
                                                     height: 30.h,
                                                   ),
-                                                  const Text(
-                                                    "طلب مخلص",
+                                                  Text(
+                                                    "السجل",
                                                     style: TextStyle(
                                                         color: Colors.white,
-                                                        fontSize: 14),
+                                                        fontSize: 15.sp),
                                                   )
                                                 ],
                                               ),
@@ -588,8 +592,8 @@ class _TraderHomeScreenState extends State<TraderHomeScreen>
                                                 mainAxisAlignment:
                                                     MainAxisAlignment.end,
                                                 children: [
-                                                  Image.asset(
-                                                    "assets/icons/calculator_active.png",
+                                                  SvgPicture.asset(
+                                                    "assets/icons/calculator_active.svg",
                                                     width: 36.w,
                                                     height: 36.h,
                                                   ),
@@ -628,8 +632,8 @@ class _TraderHomeScreenState extends State<TraderHomeScreen>
                                                 mainAxisAlignment:
                                                     MainAxisAlignment.end,
                                                 children: [
-                                                  Image.asset(
-                                                    "assets/icons/home_active.png",
+                                                  SvgPicture.asset(
+                                                    "assets/icons/home_active.svg",
                                                     width: 36.w,
                                                     height: 36.h,
                                                   ),
@@ -668,8 +672,8 @@ class _TraderHomeScreenState extends State<TraderHomeScreen>
                                                 mainAxisAlignment:
                                                     MainAxisAlignment.end,
                                                 children: [
-                                                  Image.asset(
-                                                    "assets/icons/tariff_active.png",
+                                                  SvgPicture.asset(
+                                                    "assets/icons/tariff_active.svg",
                                                     width: 36.w,
                                                     height: 36.h,
                                                   ),
@@ -708,13 +712,13 @@ class _TraderHomeScreenState extends State<TraderHomeScreen>
                                                 mainAxisAlignment:
                                                     MainAxisAlignment.end,
                                                 children: [
-                                                  Image.asset(
-                                                    "assets/icons/log_active.png",
+                                                  SvgPicture.asset(
+                                                    "assets/icons/broker_order_active.svg",
                                                     width: 36.w,
                                                     height: 36.h,
                                                   ),
                                                   Text(
-                                                    "السجل",
+                                                    "طلب مخلص",
                                                     style: TextStyle(
                                                         color: AppColor
                                                             .goldenYellow,
@@ -726,16 +730,16 @@ class _TraderHomeScreenState extends State<TraderHomeScreen>
                                                 mainAxisAlignment:
                                                     MainAxisAlignment.end,
                                                 children: [
-                                                  SvgPicture.asset(
-                                                    "assets/icons/log.svg",
+                                                  Image.asset(
+                                                    "assets/icons/broker_order.png",
                                                     width: 30.w,
                                                     height: 30.h,
                                                   ),
-                                                  Text(
-                                                    "السجل",
+                                                  const Text(
+                                                    "طلب مخلص",
                                                     style: TextStyle(
                                                         color: Colors.white,
-                                                        fontSize: 15.sp),
+                                                        fontSize: 14),
                                                   )
                                                 ],
                                               ),
@@ -945,77 +949,77 @@ class _TraderHomeScreenState extends State<TraderHomeScreen>
       switch (suggestion.unit) {
         case "كغ":
           setState(() {
-            wieghtLabel = "الوزن";
+            wieghtLabel = "  الوزن";
           });
           break;
         case "طن":
           setState(() {
-            wieghtLabel = "الوزن";
+            wieghtLabel = "  الوزن";
           });
           break;
         case "قيراط":
           setState(() {
-            wieghtLabel = "الوزن";
+            wieghtLabel = "  الوزن";
           });
           break;
         case "كيلو واط بالساعة 1000":
           setState(() {
-            wieghtLabel = "الاستطاعة";
+            wieghtLabel = "  الاستطاعة";
           });
           break;
         case "الاستطاعة بالطن":
           setState(() {
-            wieghtLabel = "الاستطاعة";
+            wieghtLabel = "  الاستطاعة";
           });
           break;
         case "واط":
           setState(() {
-            wieghtLabel = "الاستطاعة";
+            wieghtLabel = "  الاستطاعة";
           });
           break;
         case "عدد الأزواج":
           setState(() {
-            wieghtLabel = "العدد";
+            wieghtLabel = "  العدد";
           });
           break;
         case "عدد":
           setState(() {
-            wieghtLabel = "العدد";
+            wieghtLabel = "  العدد";
           });
           break;
         case "طرد":
           setState(() {
-            wieghtLabel = "العدد";
+            wieghtLabel = "  العدد";
           });
           break;
         case "قدم":
           setState(() {
-            wieghtLabel = "العدد";
+            wieghtLabel = "  العدد";
           });
           break;
         case "متر":
           setState(() {
-            wieghtLabel = "الحجم";
+            wieghtLabel = "  الحجم";
           });
           break;
         case "متر مربع":
           setState(() {
-            wieghtLabel = "الحجم";
+            wieghtLabel = "  الحجم";
           });
           break;
         case "متر مكعب":
           setState(() {
-            wieghtLabel = "الحجم";
+            wieghtLabel = "  الحجم";
           });
           break;
         case "لتر":
           setState(() {
-            wieghtLabel = "السعة";
+            wieghtLabel = "  السعة";
           });
           break;
         default:
           setState(() {
-            wieghtLabel = "الوزن";
+            wieghtLabel = "  الوزن";
           });
       }
       setState(() {
@@ -1885,8 +1889,8 @@ class _TraderHomeScreenState extends State<TraderHomeScreen>
                                                 padding: EdgeInsets.symmetric(
                                                     vertical: 8.0,
                                                     horizontal: 12.w),
-                                                child:
-                                                    Text("احسب الرسم الجمركي"),
+                                                child: const Text(
+                                                    "احسب الرسم الجمركي"),
                                               ));
                                         }
                                       },
@@ -2026,7 +2030,7 @@ class _TraderHomeScreenState extends State<TraderHomeScreen>
                               style: TextStyle(
                                   fontWeight: FontWeight.bold, fontSize: 22),
                             ),
-                            Divider(color: Colors.yellow[800]),
+                            Divider(color: AppColor.goldenYellow),
                             Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [

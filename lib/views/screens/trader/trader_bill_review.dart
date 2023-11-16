@@ -1,5 +1,4 @@
 import 'package:custome_mobile/business_logic/bloc/calculate_result_bloc.dart';
-import 'package:custome_mobile/helpers/color_constants.dart';
 import 'package:custome_mobile/views/screens/trader/trader_attachement_screen.dart';
 import 'package:custome_mobile/views/widgets/calculator_loading_screen.dart';
 import 'package:custome_mobile/views/widgets/custom_app_bar.dart';

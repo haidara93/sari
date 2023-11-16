@@ -10,5 +10,5 @@ class FeeSelectEvent extends Equatable {
 class FeeSelectLoadEvent extends FeeSelectEvent {
   final String id;
 
-  FeeSelectLoadEvent({required this.id});
+  const FeeSelectLoadEvent({required this.id});
 }

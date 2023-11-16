@@ -1,8 +1,4 @@
-import 'package:custome_mobile/helpers/color_constants.dart';
-import 'package:custome_mobile/views/screens/trader/trader_confirm_screen.dart';
-import 'package:custome_mobile/views/widgets/custom_botton.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class TraderMessageScreen extends StatefulWidget {
   @override
@@ -21,16 +17,16 @@ class _TraderMessageScreenState extends State<TraderMessageScreen> {
       final box = keyContext.findRenderObject() as RenderBox;
       _scrollController.animateTo(
           isExpanded ? (box.size.height * index) : previousOffset,
-          duration: Duration(milliseconds: 500),
+          duration: const Duration(milliseconds: 500),
           curve: Curves.linear);
     }
   }
 
   List<Widget> _buildExpansionTileChildren() => [
-        FlutterLogo(
+        const FlutterLogo(
           size: 50.0,
         ),
-        Text(
+        const Text(
           'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse vulputate arcu interdum lacus pulvinar aliquam. Donec ut nunc eleifend, volutpat tellus vel, volutpat libero. Vestibulum et eros lorem. Nam ut lacus sagittis, varius risus faucibus, lobortis arcu. Nullam tempor vehicula nibh et ornare. Etiam interdum tellus ut metus faucibus semper. Aliquam quis ullamcorper urna, non semper purus. Mauris luctus quam enim, ut ornare magna vestibulum vel. Donec consectetur, quam a mattis tincidunt, augue nisi bibendum est, quis viverra risus odio ac ligula. Nullam vitae urna malesuada magna imperdiet faucibus non et nunc. Integer magna nisi, dictum a tempus in, bibendum quis nisi. Aliquam imperdiet metus id metus rutrum scelerisque. Morbi at nisi nec risus accumsan tempus. Curabitur non sem sit amet tellus eleifend tincidunt. Pellentesque sed lacus orci.',
           textAlign: TextAlign.justify,
         ),
@@ -56,7 +52,7 @@ class _TraderMessageScreenState extends State<TraderMessageScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('MyScrollView'),
+        title: const Text('MyScrollView'),
       ),
       body: ListView.builder(
         controller: _scrollController,

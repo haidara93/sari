@@ -204,9 +204,9 @@ class _LogScreenState extends State<LogScreen>
                           physics: const NeverScrollableScrollPhysics(),
                           shrinkWrap: true,
                           itemBuilder: (context, index) {
-                            DateTime now = DateTime.now();
-                            Duration diff = now
-                                .difference(state.offers[index].createdDate!);
+                            // DateTime now = DateTime.now();
+                            // Duration diff = now
+                            //     .difference(state.offers[index].createdDate!);
                             return Card(
                               child: Padding(
                                 padding: EdgeInsets.symmetric(vertical: 5.h),

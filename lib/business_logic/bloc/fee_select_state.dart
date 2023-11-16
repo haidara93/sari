@@ -14,11 +14,11 @@ class FeeSelectLoadingProgress extends FeeSelectState {}
 class FeeSelectSuccess extends FeeSelectState {
   final Package package;
 
-  FeeSelectSuccess({required this.package});
+  const FeeSelectSuccess({required this.package});
 }
 
 class FeeSelectFailed extends FeeSelectState {
   final String error;
 
-  FeeSelectFailed({required this.error});
+  const FeeSelectFailed({required this.error});
 }

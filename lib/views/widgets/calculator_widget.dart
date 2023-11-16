@@ -2,7 +2,6 @@ import 'package:custome_mobile/business_logic/bloc/calculate_result_bloc.dart';
 import 'package:custome_mobile/business_logic/bloc/calculator_panel_bloc.dart';
 import 'package:custome_mobile/business_logic/bloc/fee_select_bloc.dart';
 import 'package:custome_mobile/business_logic/bloc/flags_bloc.dart';
-import 'package:custome_mobile/business_logic/bloc/section_bloc.dart';
 import 'package:custome_mobile/business_logic/cubit/bottom_nav_bar_cubit.dart';
 import 'package:custome_mobile/data/models/package_model.dart';
 import 'package:custome_mobile/data/services/calculator_service.dart';

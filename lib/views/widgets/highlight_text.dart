@@ -8,6 +8,7 @@ class HighlightText extends StatelessWidget {
   final Color? highlightColor;
   final bool? ignoreCase;
 
+  // ignore: use_key_in_widget_constructors
   HighlightText({
     this.text,
     this.highlight,

@@ -2,7 +2,6 @@ import 'package:custome_mobile/views/widgets/custom_app_bar.dart';
 import 'package:custome_mobile/views/widgets/custome_timeline.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:timeline_tile/timeline_tile.dart';
 
 // ignore: must_be_immutable
 class OrderTrackingScreen extends StatelessWidget {
@@ -35,21 +34,24 @@ class OrderTrackingScreen extends StatelessWidget {
                     isFirst: true,
                     isLast: false,
                     isPast: true,
-                    imageUrl: "assets/images/step1.png",
+                    imageUrl: "assets/images/step1active.svg",
+                    type: "svg",
                     title: "استلام المستندات",
                   ),
                   const CustomeTimeLine(
                     isFirst: false,
                     isLast: false,
                     isPast: true,
-                    imageUrl: "assets/images/step2.png",
+                    imageUrl: "assets/images/step2active.svg",
+                    type: "svg",
                     title: "ميناء التفريغ",
                   ),
                   const CustomeTimeLine(
                     isFirst: false,
                     isLast: false,
                     isPast: true,
-                    imageUrl: "assets/images/step3.png",
+                    imageUrl: "assets/images/step3active.svg",
+                    type: "svg",
                     title: "استلام اذن التسليم",
                   ),
                   const CustomeTimeLine(
@@ -57,7 +59,8 @@ class OrderTrackingScreen extends StatelessWidget {
                     isLast: false,
                     isPast: true,
                     isCurrent: true,
-                    imageUrl: "assets/images/step4.png",
+                    imageUrl: "assets/images/step4.svg",
+                    type: "svg",
                     title: "تقديم البيان الجمركي",
                   ),
                   const CustomeTimeLine(
@@ -65,6 +68,7 @@ class OrderTrackingScreen extends StatelessWidget {
                     isLast: false,
                     isPast: false,
                     imageUrl: "assets/images/step5.png",
+                    type: "png",
                     title: "كشف البضاعة",
                   ),
                   const CustomeTimeLine(
@@ -72,20 +76,23 @@ class OrderTrackingScreen extends StatelessWidget {
                     isLast: false,
                     isPast: false,
                     imageUrl: "assets/images/step6.png",
+                    type: "png",
                     title: "دفع الرشوم والضرائب",
                   ),
                   const CustomeTimeLine(
                     isFirst: false,
                     isLast: false,
                     isPast: false,
-                    imageUrl: "assets/images/step7.png",
+                    imageUrl: "assets/images/step7.svg",
+                    type: "svg",
                     title: "اصدار اذن الخروج",
                   ),
                   const CustomeTimeLine(
                     isFirst: false,
                     isLast: true,
                     isPast: false,
-                    imageUrl: "assets/images/step8.png",
+                    imageUrl: "assets/images/step8.svg",
+                    type: "svg",
                     title: "تجميل على الشاحنة",
                   ),
                 ],
