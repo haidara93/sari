@@ -67,9 +67,6 @@ class _IntroductionViewState extends State<IntroductionView> {
               height: 65.h,
               width: 120.w,
             ),
-            SizedBox(
-              height: 10.h,
-            ),
           ],
         ),
       );

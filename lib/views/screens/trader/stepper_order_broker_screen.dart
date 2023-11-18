@@ -446,7 +446,7 @@ class _StepperOrderBrokerScreenState extends State<StepperOrderBrokerScreen> {
           child: Column(
             children: [
               SizedBox(
-                height: 86.h,
+                height: 96.h,
                 child: Stepper(
                   type: StepperType.horizontal,
                   steps: [
