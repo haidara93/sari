@@ -35,6 +35,10 @@ class StepperOrderBrokerScreen extends StatefulWidget {
 
 class _StepperOrderBrokerScreenState extends State<StepperOrderBrokerScreen> {
   final GlobalKey<FormState> _ordercalformkey = GlobalKey<FormState>();
+  final FocusNode _ordernode = FocusNode();
+  final FocusNode _orderTypenode = FocusNode();
+  final FocusNode _stateCustomenode = FocusNode();
+  final GlobalKey<FormState> _packagesformkey = GlobalKey<FormState>();
 
   final TextEditingController _typeAheadController = TextEditingController();
 
@@ -62,7 +66,7 @@ class _StepperOrderBrokerScreenState extends State<StepperOrderBrokerScreen> {
   String wieghtUnit = "";
   String wieghtLabel = "  الوزن";
 
-  double usTosp = 6565;
+  double usTosp = 30;
   double basePrice = 0.0;
   double wieghtValue = 0.0;
 
@@ -95,6 +99,10 @@ class _StepperOrderBrokerScreenState extends State<StepperOrderBrokerScreen> {
   int selectedPanel = 0;
   bool showtypeError = false;
   String selectedRadioTile = "";
+  bool selectedRadioTileError = false;
+  bool selectedStateError = false;
+  bool calculatorError = false;
+  bool packageError = false;
   String statePlaceholder = "اختر مديرية";
   String agencyPlaceholder = "اختر أمانة";
   String originPlaceholder = "اختر المنشأ";
@@ -115,7 +123,7 @@ class _StepperOrderBrokerScreenState extends State<StepperOrderBrokerScreen> {
   void calculateTotalValueWithPrice() {
     var syrianExch = double.parse(_wieghtController.text) *
         double.parse(_valueController.text);
-    var syrianTotal = syrianExch * 6565;
+    var syrianTotal = syrianExch * 30;
     var totalEnsurance = (syrianTotal) + (syrianTotal * 0.0012);
     setState(() {
       syrianExchangeValue = syrianExch.round().toString();
@@ -125,7 +133,7 @@ class _StepperOrderBrokerScreenState extends State<StepperOrderBrokerScreen> {
   }
 
   void calculateTotalValue() {
-    var syrianTotal = double.parse(_valueController.text) * 6565;
+    var syrianTotal = double.parse(_valueController.text) * 30;
     var totalEnsurance = (syrianTotal) + (syrianTotal * 0.0012);
     setState(() {
       syrianTotalValue = syrianTotal.round().toString();
@@ -149,7 +157,7 @@ class _StepperOrderBrokerScreenState extends State<StepperOrderBrokerScreen> {
 
         _valueController.text = "0.0";
         valueEnabled = true;
-        syrianExchangeValue = "6565";
+        syrianExchangeValue = "30";
       });
     }
 
@@ -357,7 +365,7 @@ class _StepperOrderBrokerScreenState extends State<StepperOrderBrokerScreen> {
               basePrice = 0.0;
               _valueController.text = "0.0";
               valueEnabled = true;
-              syrianExchangeValue = "6565";
+              syrianExchangeValue = "30";
             });
           }
         }
@@ -368,7 +376,7 @@ class _StepperOrderBrokerScreenState extends State<StepperOrderBrokerScreen> {
 
           _valueController.text = "0.0";
           valueEnabled = true;
-          syrianExchangeValue = "6565";
+          syrianExchangeValue = "30";
         });
       }
     }
@@ -403,6 +411,7 @@ class _StepperOrderBrokerScreenState extends State<StepperOrderBrokerScreen> {
   setSelectedRadioTile(String val) {
     setState(() {
       selectedRadioTile = val;
+      selectedRadioTileError = false;
     });
   }
 
@@ -537,434 +546,508 @@ class _StepperOrderBrokerScreenState extends State<StepperOrderBrokerScreen> {
               Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: Column(children: [
-                  Card(
-                    margin: const EdgeInsets.symmetric(vertical: 7),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(10),
-                    ),
-                    child: Container(
-                      decoration: BoxDecoration(
+                  Focus(
+                    focusNode: _orderTypenode,
+                    child: Card(
+                      margin: const EdgeInsets.symmetric(vertical: 7),
+                      shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(10),
-                        gradient: selectedPanel == 0
-                            ? LinearGradient(
-                                colors: [
-                                    AppColor.goldenYellow,
-                                    Colors.white,
-                                    Colors.white,
-                                    Colors.white,
-                                  ],
-                                begin: Alignment.topCenter,
-                                end: Alignment.bottomCenter)
-                            : null,
                       ),
-                      padding: const EdgeInsets.all(8.0),
-                      child: Column(children: [
-                        const Row(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          children: [
-                            Text("اختر نوع العملية",
-                                style: TextStyle(
-                                  fontSize: 17,
-                                  fontWeight: FontWeight.bold,
-                                )),
-                          ],
+                      child: Container(
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(10),
+                          gradient: selectedPanel == 0
+                              ? selectedRadioTileError
+                                  ? LinearGradient(
+                                      colors: [
+                                          Colors.red[300]!,
+                                          Colors.white,
+                                          Colors.white,
+                                          Colors.white,
+                                        ],
+                                      begin: Alignment.topCenter,
+                                      end: Alignment.bottomCenter)
+                                  : LinearGradient(
+                                      colors: [
+                                          AppColor.goldenYellow,
+                                          Colors.white,
+                                          Colors.white,
+                                          Colors.white,
+                                        ],
+                                      begin: Alignment.topCenter,
+                                      end: Alignment.bottomCenter)
+                              : null,
                         ),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            SizedBox(
-                              width: MediaQuery.of(context).size.width * .38,
-                              child: RadioListTile(
-                                value: "I",
-                                groupValue: selectedRadioTile,
-                                title: const Text(
-                                  "استيراد",
+                        padding: const EdgeInsets.all(8.0),
+                        child: Column(children: [
+                          const Row(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            children: [
+                              Text("اختر نوع العملية",
                                   style: TextStyle(
-                                    fontSize: 16,
+                                    fontSize: 17,
+                                    fontWeight: FontWeight.bold,
+                                  )),
+                            ],
+                          ),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              SizedBox(
+                                width: MediaQuery.of(context).size.width * .38,
+                                child: RadioListTile(
+                                  value: "I",
+                                  groupValue: selectedRadioTile,
+                                  title: const Text(
+                                    "استيراد",
+                                    style: TextStyle(
+                                      fontSize: 16,
+                                    ),
                                   ),
+                                  // subtitle: Text("Radio 1 Subtitle"),
+                                  onChanged: (val) {
+                                    // print("Radio Tile pressed $val");
+                                    setSelectedPanel(0);
+                                    setSelectedRadioTile(val!);
+                                  },
+                                  activeColor: AppColor.goldenYellow,
+                                  selected: selectedRadioTile == "I",
                                 ),
-                                // subtitle: Text("Radio 1 Subtitle"),
-                                onChanged: (val) {
-                                  // print("Radio Tile pressed $val");
-                                  setSelectedPanel(0);
-                                  setSelectedRadioTile(val!);
-                                },
-                                activeColor: AppColor.goldenYellow,
-                                selected: selectedRadioTile == "I",
                               ),
-                            ),
-                            SizedBox(
-                              width: MediaQuery.of(context).size.width * .38,
-                              child: RadioListTile(
-                                value: "E",
-                                groupValue: selectedRadioTile,
-                                title: const Text(
-                                  "تصدير",
-                                  style: TextStyle(
-                                    fontSize: 16,
+                              SizedBox(
+                                width: MediaQuery.of(context).size.width * .38,
+                                child: RadioListTile(
+                                  value: "E",
+                                  groupValue: selectedRadioTile,
+                                  title: const Text(
+                                    "تصدير",
+                                    style: TextStyle(
+                                      fontSize: 16,
+                                    ),
                                   ),
-                                ),
-                                // subtitle: Text("Radio 2 Subtitle"),
-                                onChanged: (val) {
-                                  // print("Radio Tile pressed $val");
-                                  setSelectedPanel(0);
-                                  setSelectedRadioTile(val!);
-                                },
-                                activeColor: AppColor.goldenYellow,
+                                  // subtitle: Text("Radio 2 Subtitle"),
+                                  onChanged: (val) {
+                                    // print("Radio Tile pressed $val");
+                                    setSelectedPanel(0);
+                                    setSelectedRadioTile(val!);
+                                  },
+                                  activeColor: AppColor.goldenYellow,
 
-                                selected: selectedRadioTile == "E",
-                              ),
-                            )
-                          ],
-                        ),
-                        Visibility(
-                            visible: showtypeError,
-                            child: const Text("الرجاء اختيار نوع العملية",
-                                style: TextStyle(color: Colors.red)))
-                      ]),
+                                  selected: selectedRadioTile == "E",
+                                ),
+                              )
+                            ],
+                          ),
+                          Visibility(
+                              visible: showtypeError,
+                              child: const Text("الرجاء اختيار نوع العملية",
+                                  style: TextStyle(color: Colors.red)))
+                        ]),
+                      ),
                     ),
                   ),
-                  Card(
-                    margin: const EdgeInsets.symmetric(vertical: 7),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(10),
-                    ),
-                    child: Container(
-                      width: double.infinity,
-                      clipBehavior: Clip.antiAlias,
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(10),
-                        gradient: selectedPanel == 1
-                            ? LinearGradient(
-                                colors: [
-                                    AppColor.goldenYellow,
-                                    Colors.white,
-                                    Colors.white,
-                                    Colors.white,
-                                    Colors.white,
-                                  ],
-                                begin: Alignment.topCenter,
-                                end: Alignment.bottomCenter)
-                            : null,
-                      ),
-                      padding: const EdgeInsets.all(8.0),
-                      child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            const Text("الأمانة الجمركية",
-                                style: TextStyle(
-                                  fontSize: 17,
-                                  fontWeight: FontWeight.bold,
-                                )),
-                            const SizedBox(
-                              height: 15,
+                  Visibility(
+                    visible: selectedRadioTileError,
+                    child: const Padding(
+                      padding: EdgeInsets.only(
+                          top: 2.0, bottom: 8.0, right: 25.0, left: 25.0),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: [
+                          Text(
+                            "الرجاء اختيار نوع العملية",
+                            style: TextStyle(
+                              color: Colors.red,
                             ),
-                            BlocBuilder<StateCustomeBloc, StateCustomeState>(
-                              builder: (context, state) {
-                                if (state is StateCustomeLoadedSuccess) {
-                                  return Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      DropdownButtonHideUnderline(
-                                        child: Focus(
-                                          focusNode: _statenode,
-                                          onFocusChange: (bool focus) {
-                                            if (focus) {
-                                              setSelectedPanel(1);
-                                            }
-                                          },
-                                          child: DropdownButton2<StateCustome>(
-                                            isExpanded: true,
-                                            barrierLabel: statePlaceholder,
-                                            hint: Text(
-                                              statePlaceholder,
-                                              style: TextStyle(
-                                                fontSize: 15,
-                                                color:
-                                                    Theme.of(context).hintColor,
-                                              ),
-                                            ),
-                                            items: state.states
-                                                .map((StateCustome item) =>
-                                                    DropdownMenuItem<
-                                                        StateCustome>(
-                                                      value: item,
-                                                      child: Text(
-                                                        item.name!,
-                                                        style: const TextStyle(
-                                                          fontSize: 15,
-                                                        ),
-                                                      ),
-                                                    ))
-                                                .toList(),
-                                            value: selectedStateCustome,
-                                            onChanged: (StateCustome? value) {
-                                              BlocProvider.of<AgencyBloc>(
-                                                      context)
-                                                  .add(AgenciesLoadEvent(
-                                                      value!.id!));
-                                              setState(() {
-                                                selectedStateCustome = value;
-                                                selectedCustomeAgency = null;
-                                                // statePlaceholder =
-                                                //     selectedStateCustome == null
-                                                //         ? 'اختر محافظة'
-                                                //         : value.name!;
-                                              });
-                                              // if (value!.price! > 0) {
-                                              //   _valueController.text =
-                                              //       value.price!.toString();
-                                              //   setState(() {
-                                              //     valueEnabled = false;
-                                              //   });
-                                              // } else {
-                                              //   setState(() {
-                                              //     _valueController.text = "";
-                                              //     valueEnabled = true;
-                                              //     syrianExchangeValue = "6565";
-                                              //   });
-                                              // }
-                                              // setState(() {
-                                              //   selectedValue = value;
-                                              // });
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                  Focus(
+                    focusNode: _stateCustomenode,
+                    child: Card(
+                      margin: const EdgeInsets.symmetric(vertical: 7),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                      child: Container(
+                        width: double.infinity,
+                        clipBehavior: Clip.antiAlias,
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(10),
+                          gradient: selectedPanel == 1
+                              ? selectedStateError
+                                  ? LinearGradient(
+                                      colors: [
+                                          Colors.red[300]!,
+                                          Colors.white,
+                                          Colors.white,
+                                          Colors.white,
+                                          Colors.white,
+                                        ],
+                                      begin: Alignment.topCenter,
+                                      end: Alignment.bottomCenter)
+                                  : LinearGradient(
+                                      colors: [
+                                          AppColor.goldenYellow,
+                                          Colors.white,
+                                          Colors.white,
+                                          Colors.white,
+                                          Colors.white,
+                                        ],
+                                      begin: Alignment.topCenter,
+                                      end: Alignment.bottomCenter)
+                              : null,
+                        ),
+                        padding: const EdgeInsets.all(8.0),
+                        child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              const Text("الأمانة الجمركية",
+                                  style: TextStyle(
+                                    fontSize: 17,
+                                    fontWeight: FontWeight.bold,
+                                  )),
+                              const SizedBox(
+                                height: 15,
+                              ),
+                              BlocBuilder<StateCustomeBloc, StateCustomeState>(
+                                builder: (context, state) {
+                                  if (state is StateCustomeLoadedSuccess) {
+                                    return Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        DropdownButtonHideUnderline(
+                                          child: Focus(
+                                            focusNode: _statenode,
+                                            onFocusChange: (bool focus) {
+                                              if (focus) {
+                                                setSelectedPanel(1);
+                                              }
                                             },
-                                            buttonStyleData: ButtonStyleData(
-                                              height: 50,
-                                              width: double.infinity,
-
-                                              padding: const EdgeInsets.only(
-                                                  left: 14, right: 14),
-                                              decoration: BoxDecoration(
-                                                borderRadius:
-                                                    BorderRadius.circular(12),
-                                                border: Border.all(
-                                                  color: Colors.black26,
+                                            child:
+                                                DropdownButton2<StateCustome>(
+                                              isExpanded: true,
+                                              barrierLabel: statePlaceholder,
+                                              hint: Text(
+                                                statePlaceholder,
+                                                style: TextStyle(
+                                                  fontSize: 15,
+                                                  color: Theme.of(context)
+                                                      .hintColor,
                                                 ),
-                                                color: Colors.white,
                                               ),
-                                              // elevation: 2,
-                                            ),
-                                            iconStyleData: const IconStyleData(
-                                              icon: Icon(
-                                                Icons.keyboard_arrow_down_sharp,
+                                              items: state.states
+                                                  .map((StateCustome item) =>
+                                                      DropdownMenuItem<
+                                                          StateCustome>(
+                                                        value: item,
+                                                        child: Text(
+                                                          item.name!,
+                                                          style:
+                                                              const TextStyle(
+                                                            fontSize: 15,
+                                                          ),
+                                                        ),
+                                                      ))
+                                                  .toList(),
+                                              value: selectedStateCustome,
+                                              onChanged: (StateCustome? value) {
+                                                BlocProvider.of<AgencyBloc>(
+                                                        context)
+                                                    .add(AgenciesLoadEvent(
+                                                        value!.id!));
+                                                setState(() {
+                                                  selectedStateCustome = value;
+                                                  selectedCustomeAgency = null;
+                                                  // statePlaceholder =
+                                                  //     selectedStateCustome == null
+                                                  //         ? 'اختر محافظة'
+                                                  //         : value.name!;
+                                                });
+                                                // if (value!.price! > 0) {
+                                                //   _valueController.text =
+                                                //       value.price!.toString();
+                                                //   setState(() {
+                                                //     valueEnabled = false;
+                                                //   });
+                                                // } else {
+                                                //   setState(() {
+                                                //     _valueController.text = "";
+                                                //     valueEnabled = true;
+                                                //     syrianExchangeValue = "30";
+                                                //   });
+                                                // }
+                                                // setState(() {
+                                                //   selectedValue = value;
+                                                // });
+                                              },
+                                              buttonStyleData: ButtonStyleData(
+                                                height: 50,
+                                                width: double.infinity,
+
+                                                padding: const EdgeInsets.only(
+                                                    left: 14, right: 14),
+                                                decoration: BoxDecoration(
+                                                  borderRadius:
+                                                      BorderRadius.circular(12),
+                                                  border: Border.all(
+                                                    color: Colors.black26,
+                                                  ),
+                                                  color: Colors.white,
+                                                ),
+                                                // elevation: 2,
                                               ),
-                                              iconSize: 20,
-                                              iconEnabledColor:
-                                                  AppColor.AccentBlue,
-                                              iconDisabledColor: Colors.grey,
-                                            ),
-                                            dropdownStyleData:
-                                                DropdownStyleData(
-                                              decoration: BoxDecoration(
-                                                borderRadius:
-                                                    BorderRadius.circular(14),
-                                                color: Colors.white,
+                                              iconStyleData:
+                                                  const IconStyleData(
+                                                icon: Icon(
+                                                  Icons
+                                                      .keyboard_arrow_down_sharp,
+                                                ),
+                                                iconSize: 20,
+                                                iconEnabledColor:
+                                                    AppColor.AccentBlue,
+                                                iconDisabledColor: Colors.grey,
                                               ),
-                                              scrollbarTheme:
-                                                  ScrollbarThemeData(
-                                                radius:
-                                                    const Radius.circular(40),
-                                                thickness:
-                                                    MaterialStateProperty.all(
-                                                        6),
-                                                thumbVisibility:
-                                                    MaterialStateProperty.all(
-                                                        true),
+                                              dropdownStyleData:
+                                                  DropdownStyleData(
+                                                decoration: BoxDecoration(
+                                                  borderRadius:
+                                                      BorderRadius.circular(14),
+                                                  color: Colors.white,
+                                                ),
+                                                scrollbarTheme:
+                                                    ScrollbarThemeData(
+                                                  radius:
+                                                      const Radius.circular(40),
+                                                  thickness:
+                                                      MaterialStateProperty.all(
+                                                          6),
+                                                  thumbVisibility:
+                                                      MaterialStateProperty.all(
+                                                          true),
+                                                ),
                                               ),
-                                            ),
-                                            menuItemStyleData:
-                                                MenuItemStyleData(
-                                              height: 40.h,
+                                              menuItemStyleData:
+                                                  MenuItemStyleData(
+                                                height: 40.h,
+                                              ),
                                             ),
                                           ),
                                         ),
-                                      ),
-                                      const SizedBox(
-                                        height: 24,
-                                      ),
-                                      BlocBuilder<AgencyBloc, AgencyState>(
-                                        builder: (context, state2) {
-                                          if (state2 is AgencyLoadedSuccess) {
-                                            return DropdownButtonHideUnderline(
-                                              child: Focus(
-                                                focusNode: _statenode,
-                                                onFocusChange: (bool focus) {
-                                                  if (focus) {
-                                                    setSelectedPanel(1);
-                                                  }
-                                                },
-                                                child: DropdownButton2<
-                                                    CustomeAgency>(
-                                                  isExpanded: true,
-                                                  hint: Text(
-                                                    agencyPlaceholder,
-                                                    style: TextStyle(
-                                                      fontSize: 15,
-                                                      color: Theme.of(context)
-                                                          .hintColor,
+                                        const SizedBox(
+                                          height: 24,
+                                        ),
+                                        BlocBuilder<AgencyBloc, AgencyState>(
+                                          builder: (context, state2) {
+                                            if (state2 is AgencyLoadedSuccess) {
+                                              return DropdownButtonHideUnderline(
+                                                child: Focus(
+                                                  focusNode: _statenode,
+                                                  onFocusChange: (bool focus) {
+                                                    if (focus) {
+                                                      setSelectedPanel(1);
+                                                    }
+                                                  },
+                                                  child: DropdownButton2<
+                                                      CustomeAgency>(
+                                                    isExpanded: true,
+                                                    hint: Text(
+                                                      agencyPlaceholder,
+                                                      style: TextStyle(
+                                                        fontSize: 15,
+                                                        color: Theme.of(context)
+                                                            .hintColor,
+                                                      ),
                                                     ),
-                                                  ),
-                                                  items: state2.agencies
-                                                      .map((CustomeAgency
-                                                              item) =>
-                                                          DropdownMenuItem<
-                                                              CustomeAgency>(
-                                                            value: item,
-                                                            child: SizedBox(
-                                                              width: 200,
-                                                              child: Text(
-                                                                item.name!,
-                                                                style:
-                                                                    const TextStyle(
-                                                                  fontSize: 15,
+                                                    items: state2.agencies
+                                                        .map((CustomeAgency
+                                                                item) =>
+                                                            DropdownMenuItem<
+                                                                CustomeAgency>(
+                                                              value: item,
+                                                              child: SizedBox(
+                                                                width: 200,
+                                                                child: Text(
+                                                                  item.name!,
+                                                                  style:
+                                                                      const TextStyle(
+                                                                    fontSize:
+                                                                        15,
+                                                                  ),
                                                                 ),
                                                               ),
-                                                            ),
-                                                          ))
-                                                      .toList(),
-                                                  value: selectedCustomeAgency,
-                                                  onChanged:
-                                                      (CustomeAgency? value) {
-                                                    setState(() {
-                                                      selectedCustomeAgency =
-                                                          value;
-                                                    });
-                                                  },
-                                                  buttonStyleData:
-                                                      ButtonStyleData(
-                                                    height: 50,
-                                                    width: double.infinity,
-                                                    padding:
-                                                        const EdgeInsets.only(
-                                                            left: 14,
-                                                            right: 14),
-                                                    decoration: BoxDecoration(
-                                                      borderRadius:
-                                                          BorderRadius.circular(
-                                                              12),
-                                                      border: Border.all(
-                                                        color: Colors.black26,
+                                                            ))
+                                                        .toList(),
+                                                    value:
+                                                        selectedCustomeAgency,
+                                                    onChanged:
+                                                        (CustomeAgency? value) {
+                                                      setState(() {
+                                                        selectedCustomeAgency =
+                                                            value;
+                                                        selectedStateError =
+                                                            false;
+                                                      });
+                                                    },
+                                                    buttonStyleData:
+                                                        ButtonStyleData(
+                                                      height: 50,
+                                                      width: double.infinity,
+                                                      padding:
+                                                          const EdgeInsets.only(
+                                                              left: 14,
+                                                              right: 14),
+                                                      decoration: BoxDecoration(
+                                                        borderRadius:
+                                                            BorderRadius
+                                                                .circular(12),
+                                                        border: Border.all(
+                                                          color: Colors.black26,
+                                                        ),
+                                                        color: Colors.white,
                                                       ),
-                                                      color: Colors.white,
+                                                      // elevation: 2,
                                                     ),
-                                                    // elevation: 2,
-                                                  ),
-                                                  iconStyleData:
-                                                      const IconStyleData(
-                                                    icon: Icon(
-                                                      Icons
-                                                          .keyboard_arrow_down_sharp,
+                                                    iconStyleData:
+                                                        const IconStyleData(
+                                                      icon: Icon(
+                                                        Icons
+                                                            .keyboard_arrow_down_sharp,
+                                                      ),
+                                                      iconSize: 20,
+                                                      iconEnabledColor:
+                                                          AppColor.AccentBlue,
+                                                      iconDisabledColor:
+                                                          Colors.grey,
                                                     ),
-                                                    iconSize: 20,
-                                                    iconEnabledColor:
-                                                        AppColor.AccentBlue,
-                                                    iconDisabledColor:
-                                                        Colors.grey,
-                                                  ),
-                                                  dropdownStyleData:
-                                                      DropdownStyleData(
-                                                    decoration: BoxDecoration(
-                                                      borderRadius:
-                                                          BorderRadius.circular(
-                                                              14),
-                                                      color: Colors.white,
+                                                    dropdownStyleData:
+                                                        DropdownStyleData(
+                                                      decoration: BoxDecoration(
+                                                        borderRadius:
+                                                            BorderRadius
+                                                                .circular(14),
+                                                        color: Colors.white,
+                                                      ),
+                                                      scrollbarTheme:
+                                                          ScrollbarThemeData(
+                                                        radius: const Radius
+                                                            .circular(40),
+                                                        thickness:
+                                                            MaterialStateProperty
+                                                                .all(6),
+                                                        thumbVisibility:
+                                                            MaterialStateProperty
+                                                                .all(true),
+                                                      ),
                                                     ),
-                                                    scrollbarTheme:
-                                                        ScrollbarThemeData(
-                                                      radius:
-                                                          const Radius.circular(
-                                                              40),
-                                                      thickness:
-                                                          MaterialStateProperty
-                                                              .all(6),
-                                                      thumbVisibility:
-                                                          MaterialStateProperty
-                                                              .all(true),
+                                                    menuItemStyleData:
+                                                        const MenuItemStyleData(
+                                                      height: 40,
                                                     ),
-                                                  ),
-                                                  menuItemStyleData:
-                                                      const MenuItemStyleData(
-                                                    height: 40,
                                                   ),
                                                 ),
-                                              ),
-                                            );
-                                          } else if (state2
-                                              is AgencyLoadingProgress) {
-                                            return const Center(
-                                              child: LinearProgressIndicator(),
-                                            );
-                                          } else if (state
-                                              is AgencyLoadedFailed) {
-                                            return Center(
-                                              child: GestureDetector(
-                                                onTap: () {
-                                                  BlocProvider.of<AgencyBloc>(
-                                                          context)
-                                                      .add(AgenciesLoadEvent(
-                                                          selectedStateCustome!
-                                                              .id!));
-                                                },
-                                                child: const Row(
-                                                  mainAxisAlignment:
-                                                      MainAxisAlignment.center,
-                                                  children: [
-                                                    Text(
-                                                      "حدث خطأأثناء تحميل القائمة...  ",
-                                                      style: TextStyle(
-                                                          color: Colors.red),
-                                                    ),
-                                                    Icon(
-                                                      Icons.refresh,
-                                                      color: Colors.grey,
-                                                    )
-                                                  ],
+                                              );
+                                            } else if (state2
+                                                is AgencyLoadingProgress) {
+                                              return const Center(
+                                                child:
+                                                    LinearProgressIndicator(),
+                                              );
+                                            } else if (state
+                                                is AgencyLoadedFailed) {
+                                              return Center(
+                                                child: GestureDetector(
+                                                  onTap: () {
+                                                    BlocProvider.of<AgencyBloc>(
+                                                            context)
+                                                        .add(AgenciesLoadEvent(
+                                                            selectedStateCustome!
+                                                                .id!));
+                                                  },
+                                                  child: const Row(
+                                                    mainAxisAlignment:
+                                                        MainAxisAlignment
+                                                            .center,
+                                                    children: [
+                                                      Text(
+                                                        "حدث خطأأثناء تحميل القائمة...  ",
+                                                        style: TextStyle(
+                                                            color: Colors.red),
+                                                      ),
+                                                      Icon(
+                                                        Icons.refresh,
+                                                        color: Colors.grey,
+                                                      )
+                                                    ],
+                                                  ),
                                                 ),
-                                              ),
-                                            );
-                                          } else {
-                                            return Container();
-                                          }
+                                              );
+                                            } else {
+                                              return Container();
+                                            }
+                                          },
+                                        ),
+                                      ],
+                                    );
+                                  } else if (state
+                                      is StateCustomeLoadedFailed) {
+                                    return Center(
+                                      child: GestureDetector(
+                                        onTap: () {
+                                          BlocProvider.of<StateCustomeBloc>(
+                                                  context)
+                                              .add(StateCustomeLoadEvent());
                                         },
+                                        child: const Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.center,
+                                          children: [
+                                            Text(
+                                              "حدث خطأأثناء تحميل القائمة...  ",
+                                              style:
+                                                  TextStyle(color: Colors.red),
+                                            ),
+                                            Icon(
+                                              Icons.refresh,
+                                              color: Colors.grey,
+                                            )
+                                          ],
+                                        ),
                                       ),
-                                    ],
-                                  );
-                                } else if (state is StateCustomeLoadedFailed) {
-                                  return Center(
-                                    child: GestureDetector(
-                                      onTap: () {
-                                        BlocProvider.of<StateCustomeBloc>(
-                                                context)
-                                            .add(StateCustomeLoadEvent());
-                                      },
-                                      child: const Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.center,
-                                        children: [
-                                          Text(
-                                            "حدث خطأأثناء تحميل القائمة...  ",
-                                            style: TextStyle(color: Colors.red),
-                                          ),
-                                          Icon(
-                                            Icons.refresh,
-                                            color: Colors.grey,
-                                          )
-                                        ],
-                                      ),
-                                    ),
-                                  );
-                                } else {
-                                  return const Center(
-                                    child: LinearProgressIndicator(),
-                                  );
-                                }
-                              },
+                                    );
+                                  } else {
+                                    return const Center(
+                                      child: LinearProgressIndicator(),
+                                    );
+                                  }
+                                },
+                              ),
+                              const SizedBox(
+                                height: 7,
+                              ),
+                            ]),
+                      ),
+                    ),
+                  ),
+                  Visibility(
+                    visible: selectedStateError,
+                    child: const Padding(
+                      padding: EdgeInsets.only(
+                          top: 2.0, bottom: 8.0, right: 25.0, left: 25.0),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: [
+                          Text(
+                            "الرجاء اختيار الأمانة الجمركية",
+                            style: TextStyle(
+                              color: Colors.red,
                             ),
-                            const SizedBox(
-                              height: 7,
-                            ),
-                          ]),
+                          ),
+                        ],
+                      ),
                     ),
                   ),
                   Card(
@@ -978,21 +1061,37 @@ class _StepperOrderBrokerScreenState extends State<StepperOrderBrokerScreen> {
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(10),
                         gradient: selectedPanel == 2
-                            ? LinearGradient(
-                                colors: [
-                                    AppColor.goldenYellow,
-                                    Colors.white,
-                                    Colors.white,
-                                    Colors.white,
-                                    Colors.white,
-                                    Colors.white,
-                                    Colors.white,
-                                    Colors.white,
-                                    Colors.white,
-                                    Colors.white,
-                                  ],
-                                begin: Alignment.topCenter,
-                                end: Alignment.bottomCenter)
+                            ? calculatorError
+                                ? LinearGradient(
+                                    colors: [
+                                        Colors.red[300]!,
+                                        Colors.white,
+                                        Colors.white,
+                                        Colors.white,
+                                        Colors.white,
+                                        Colors.white,
+                                        Colors.white,
+                                        Colors.white,
+                                        Colors.white,
+                                        Colors.white,
+                                      ],
+                                    begin: Alignment.topCenter,
+                                    end: Alignment.bottomCenter)
+                                : LinearGradient(
+                                    colors: [
+                                        AppColor.goldenYellow,
+                                        Colors.white,
+                                        Colors.white,
+                                        Colors.white,
+                                        Colors.white,
+                                        Colors.white,
+                                        Colors.white,
+                                        Colors.white,
+                                        Colors.white,
+                                        Colors.white,
+                                      ],
+                                    begin: Alignment.topCenter,
+                                    end: Alignment.bottomCenter)
                             : null,
                       ),
                       child: Padding(
@@ -1002,11 +1101,14 @@ class _StepperOrderBrokerScreenState extends State<StepperOrderBrokerScreen> {
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              const Text("نوع البضاعة",
-                                  style: TextStyle(
-                                    fontSize: 17,
-                                    fontWeight: FontWeight.bold,
-                                  )),
+                              Focus(
+                                focusNode: _ordernode,
+                                child: const Text("نوع البضاعة",
+                                    style: TextStyle(
+                                      fontSize: 17,
+                                      fontWeight: FontWeight.bold,
+                                    )),
+                              ),
                               const SizedBox(
                                 height: 15,
                               ),
@@ -1196,7 +1298,7 @@ class _StepperOrderBrokerScreenState extends State<StepperOrderBrokerScreen> {
 
                                             _valueController.text = "0.0";
                                             valueEnabled = true;
-                                            syrianExchangeValue = "6565";
+                                            syrianExchangeValue = "30";
                                           });
                                         }
                                         evaluatePrice();
@@ -1215,7 +1317,7 @@ class _StepperOrderBrokerScreenState extends State<StepperOrderBrokerScreen> {
 
                                             _valueController.text = "0.0";
                                             valueEnabled = true;
-                                            syrianExchangeValue = "6565";
+                                            syrianExchangeValue = "30";
                                           });
                                         }
                                         evaluatePrice();
@@ -1499,7 +1601,7 @@ class _StepperOrderBrokerScreenState extends State<StepperOrderBrokerScreen> {
                                         extentOffset: _wieghtController
                                             .value.text.length);
                                   },
-                                  enabled: !valueEnabled,
+                                  // enabled: !valueEnabled,
                                   scrollPadding: EdgeInsets.only(
                                       bottom: MediaQuery.of(context)
                                               .viewInsets
@@ -1507,7 +1609,7 @@ class _StepperOrderBrokerScreenState extends State<StepperOrderBrokerScreen> {
                                           50),
                                   keyboardType:
                                       const TextInputType.numberWithOptions(
-                                          decimal: true),
+                                          signed: true, decimal: true),
                                   inputFormatters: [DecimalFormatter()],
                                   decoration: InputDecoration(
                                     labelStyle: const TextStyle(fontSize: 18),
@@ -1537,6 +1639,17 @@ class _StepperOrderBrokerScreenState extends State<StepperOrderBrokerScreen> {
                                         originerror = true;
                                       });
                                     }
+                                  },
+                                  autovalidateMode:
+                                      AutovalidateMode.onUserInteraction,
+                                  validator: (value) {
+                                    if (value!.isEmpty) {
+                                      return "الرجاء ادخال القيمة";
+                                    }
+                                    return null;
+                                  },
+                                  onSaved: (newValue) {
+                                    _wieghtController.text = newValue!;
                                   },
                                   onFieldSubmitted: (value) {
                                     BlocProvider.of<BottomNavBarCubit>(context)
@@ -1568,10 +1681,10 @@ class _StepperOrderBrokerScreenState extends State<StepperOrderBrokerScreen> {
                                         extentOffset:
                                             _valueController.value.text.length);
                                   },
-                                  enabled: valueEnabled,
+                                  // enabled: valueEnabled,
                                   keyboardType:
                                       const TextInputType.numberWithOptions(
-                                          decimal: true),
+                                          signed: true, decimal: true),
                                   scrollPadding: EdgeInsets.only(
                                       bottom: MediaQuery.of(context)
                                               .viewInsets
@@ -1606,6 +1719,17 @@ class _StepperOrderBrokerScreenState extends State<StepperOrderBrokerScreen> {
                                         originerror = true;
                                       });
                                     }
+                                  },
+                                  autovalidateMode:
+                                      AutovalidateMode.onUserInteraction,
+                                  validator: (value) {
+                                    if (value!.isEmpty) {
+                                      return "الرجاء ادخال القيمة";
+                                    }
+                                    return null;
+                                  },
+                                  onSaved: (newValue) {
+                                    _valueController.text = newValue!;
                                   },
                                   onFieldSubmitted: (value) {
                                     BlocProvider.of<BottomNavBarCubit>(context)
@@ -1726,12 +1850,12 @@ class _StepperOrderBrokerScreenState extends State<StepperOrderBrokerScreen> {
                               Text(
                                 !valueEnabled
                                     ? "القيمة الاجمالية بالدولار :"
-                                    : "قيمة التحويل بالليرة السورية :",
+                                    : "قيمة التحويل بالجنيه المصري :",
                                 style: const TextStyle(fontSize: 16),
                               ),
                               Text(syrianExchangeValue),
                               const Text(
-                                "قيمة الاجمالية بالليرة السورية: ",
+                                "قيمة الاجمالية بالجنيه المصري: ",
                                 style: TextStyle(fontSize: 16),
                               ),
                               Text(syrianTotalValue),
@@ -2047,50 +2171,79 @@ class _StepperOrderBrokerScreenState extends State<StepperOrderBrokerScreen> {
                               SizedBox(
                                 width: 70.w,
                                 height: 50.h,
-                                child: TextField(
-                                  controller: _packagesNumController,
-                                  textAlign: TextAlign.center,
-                                  keyboardType:
-                                      const TextInputType.numberWithOptions(
-                                          decimal: true),
-                                  decoration: InputDecoration(
-                                    border: OutlineInputBorder(
-                                        borderRadius:
-                                            BorderRadius.circular(12)),
-                                    contentPadding: EdgeInsets.zero,
+                                child: Form(
+                                  key: _packagesformkey,
+                                  child: TextFormField(
+                                    controller: _packagesNumController,
+                                    textAlign: TextAlign.center,
+                                    keyboardType:
+                                        const TextInputType.numberWithOptions(
+                                            signed: true, decimal: true),
+                                    decoration: InputDecoration(
+                                      border: OutlineInputBorder(
+                                          borderRadius:
+                                              BorderRadius.circular(12)),
+                                      contentPadding: EdgeInsets.zero,
+                                      errorBorder: OutlineInputBorder(
+                                        borderRadius: BorderRadius.circular(12),
+                                        borderSide: const BorderSide(
+                                          color: Colors.red,
+                                        ),
+                                      ),
+                                      focusedErrorBorder: OutlineInputBorder(
+                                        borderRadius: BorderRadius.circular(12),
+                                        borderSide: const BorderSide(
+                                          color: Colors.red,
+                                        ),
+                                      ),
+                                    ),
+                                    scrollPadding: EdgeInsets.only(
+                                        bottom: MediaQuery.of(context)
+                                                .viewInsets
+                                                .bottom +
+                                            50),
+                                    onTap: () {
+                                      setSelectedPanel(2);
+                                      BlocProvider.of<BottomNavBarCubit>(
+                                              context)
+                                          .emitHide();
+                                      _packagesNumController.selection =
+                                          TextSelection(
+                                              baseOffset: 0,
+                                              extentOffset:
+                                                  _packagesNumController
+                                                      .value.text.length);
+                                    },
+                                    onChanged: (value) {
+                                      if (value.isEmpty) {
+                                        setState(() {
+                                          _packagesNumController.text = "0";
+                                          packageNum = 0;
+                                        });
+                                      } else {
+                                        packageNum = int.parse(double.parse(
+                                                _packagesNumController.text)
+                                            .toInt()
+                                            .toString());
+                                      }
+                                    },
+                                    autovalidateMode:
+                                        AutovalidateMode.onUserInteraction,
+                                    validator: (value) {
+                                      if (value!.isEmpty || value == "0") {
+                                        return "الرجاء ادخال القيمة";
+                                      }
+                                      return null;
+                                    },
+                                    onSaved: (newValue) {
+                                      _packagesNumController.text = newValue!;
+                                    },
+                                    onFieldSubmitted: (value) {
+                                      BlocProvider.of<BottomNavBarCubit>(
+                                              context)
+                                          .emitShow();
+                                    },
                                   ),
-                                  scrollPadding: EdgeInsets.only(
-                                      bottom: MediaQuery.of(context)
-                                              .viewInsets
-                                              .bottom +
-                                          50),
-                                  onTap: () {
-                                    setSelectedPanel(2);
-                                    BlocProvider.of<BottomNavBarCubit>(context)
-                                        .emitHide();
-                                    _packagesNumController.selection =
-                                        TextSelection(
-                                            baseOffset: 0,
-                                            extentOffset: _packagesNumController
-                                                .value.text.length);
-                                  },
-                                  onChanged: (value) {
-                                    if (value.isEmpty) {
-                                      setState(() {
-                                        _packagesNumController.text = "0";
-                                        packageNum = 0;
-                                      });
-                                    } else {
-                                      packageNum = int.parse(double.parse(
-                                              _packagesNumController.text)
-                                          .toInt()
-                                          .toString());
-                                    }
-                                  },
-                                  onSubmitted: (value) {
-                                    BlocProvider.of<BottomNavBarCubit>(context)
-                                        .emitShow();
-                                  },
                                 ),
                               ),
                               GestureDetector(
@@ -2148,69 +2301,125 @@ class _StepperOrderBrokerScreenState extends State<StepperOrderBrokerScreen> {
                             return Text(state.error);
                           } else {
                             return CustomButton(
-                                title: SizedBox(
-                                  width: 250.w,
-                                  child: const Center(
-                                    child: Text(
-                                      "حساب الرسوم",
-                                      style: TextStyle(
-                                        fontWeight: FontWeight.bold,
-                                      ),
+                              title: SizedBox(
+                                width: 250.w,
+                                child: const Center(
+                                  child: Text(
+                                    "حساب الرسوم",
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.bold,
                                     ),
                                   ),
                                 ),
-                                // color: AppColor.deepYellow,
-                                onTap: () {
-                                  result.insurance =
-                                      int.parse(totalValueWithEnsurance);
-                                  result.fee = selectedPackage!.fee!;
-                                  result.rawMaterial = rawMaterialValue ? 1 : 0;
-                                  result.industrial = industrialValue ? 1 : 0;
-                                  result.totalTax =
-                                      selectedPackage!.totalTaxes!.totalTax!;
-                                  result.partialTax =
-                                      selectedPackage!.totalTaxes!.partialTax!;
-                                  result.origin = selectedOrigin!.label!;
-                                  result.spendingFee =
-                                      selectedPackage!.spendingFee!;
-                                  result.supportFee =
-                                      selectedPackage!.supportFee!;
-                                  result.localFee = selectedPackage!.localFee!;
-                                  result.protectionFee =
-                                      selectedPackage!.protectionFee!;
-                                  result.naturalFee =
-                                      selectedPackage!.naturalFee!;
-                                  result.taxFee = selectedPackage!.taxFee!;
-                                  BlocProvider.of<CalculateResultBloc>(context)
-                                      .add(CalculateTheResultEvent(result));
-                                  BlocProvider.of<AttachmentTypeBloc>(context)
-                                      .add(AttachmentTypeLoadEvent());
-                                  // BlocProvider.of<CurrentStepCubit>(context)
-                                  //     .increament();
+                              ),
+                              // color: AppColor.deepYellow,
+                              onTap: () {
+                                FocusManager.instance.primaryFocus?.unfocus();
+                                if (selectedRadioTile.isNotEmpty) {
+                                  if (selectedStateCustome != null ||
+                                      selectedCustomeAgency != null) {
+                                    _ordercalformkey.currentState?.save();
+                                    if (_ordercalformkey.currentState!
+                                        .validate()) {
+                                      setState(() {
+                                        calculatorError = false;
+                                      });
+                                      _packagesformkey.currentState?.save();
+                                      if (_packagesformkey.currentState!
+                                          .validate()) {
+                                        setState(() {
+                                          packageError = false;
+                                        });
+                                        result.insurance =
+                                            int.parse(totalValueWithEnsurance);
+                                        result.fee = selectedPackage!.fee!;
+                                        result.rawMaterial =
+                                            rawMaterialValue ? 1 : 0;
+                                        result.industrial =
+                                            industrialValue ? 1 : 0;
+                                        result.totalTax = selectedPackage!
+                                            .totalTaxes!.totalTax!;
+                                        result.partialTax = selectedPackage!
+                                            .totalTaxes!.partialTax!;
+                                        result.origin = selectedOrigin!.label!;
+                                        result.spendingFee =
+                                            selectedPackage!.spendingFee!;
+                                        result.supportFee =
+                                            selectedPackage!.supportFee!;
+                                        result.localFee =
+                                            selectedPackage!.localFee!;
+                                        result.protectionFee =
+                                            selectedPackage!.protectionFee!;
+                                        result.naturalFee =
+                                            selectedPackage!.naturalFee!;
+                                        result.taxFee =
+                                            selectedPackage!.taxFee!;
+                                        BlocProvider.of<CalculateResultBloc>(
+                                                context)
+                                            .add(CalculateTheResultEvent(
+                                                result));
+                                        BlocProvider.of<AttachmentTypeBloc>(
+                                                context)
+                                            .add(AttachmentTypeLoadEvent());
+                                        // BlocProvider.of<CurrentStepCubit>(context)
+                                        //     .increament();
 
-                                  Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                        builder: (context) => TraderBillReview(
-                                          offerType: selectedRadioTile,
-                                          customAgency:
-                                              selectedCustomeAgency!.id!,
-                                          customeState:
-                                              selectedStateCustome!.id!,
-                                          origin: selectedOrigin!.id!,
-                                          packageType: packageTypeId,
-                                          packagesNum: packageNum,
-                                          tabalehNum: tabalehNum,
-                                          weight: wieghtValue.toInt(),
-                                          product: selectedPackage!.id,
-                                          price: int.parse(syrianTotalValue),
-                                          taxes: int.parse(
-                                              totalValueWithEnsurance),
-                                          rawMaterial: result.rawMaterial,
-                                          industrial: result.industrial,
-                                        ),
-                                      ));
-                                });
+                                        Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                            builder: (context) =>
+                                                TraderBillReview(
+                                              offerType: selectedRadioTile,
+                                              customAgency:
+                                                  selectedCustomeAgency!.id!,
+                                              customeState:
+                                                  selectedStateCustome!.id!,
+                                              origin: selectedOrigin!.id!,
+                                              packageType: packageTypeId,
+                                              packagesNum: packageNum,
+                                              tabalehNum: tabalehNum,
+                                              weight: wieghtValue.toInt(),
+                                              product: selectedPackage!.id,
+                                              price:
+                                                  int.parse(syrianTotalValue),
+                                              taxes: int.parse(
+                                                  totalValueWithEnsurance),
+                                              rawMaterial: result.rawMaterial,
+                                              industrial: result.industrial,
+                                            ),
+                                          ),
+                                        );
+                                      } else {
+                                        setSelectedPanel(3);
+
+                                        setState(() {
+                                          packageError = true;
+                                        });
+                                      }
+                                    } else {
+                                      setSelectedPanel(2);
+
+                                      setState(() {
+                                        calculatorError = true;
+                                      });
+                                      _ordernode.requestFocus();
+                                    }
+                                  } else {
+                                    setSelectedPanel(1);
+                                    setState(() {
+                                      selectedStateError = true;
+                                    });
+                                    _stateCustomenode.requestFocus();
+                                  }
+                                } else {
+                                  setSelectedPanel(0);
+                                  setState(() {
+                                    selectedRadioTileError = true;
+                                  });
+                                  _orderTypenode.requestFocus();
+                                }
+                              },
+                            );
                           }
                         },
                       ),

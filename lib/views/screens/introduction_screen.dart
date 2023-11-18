@@ -92,17 +92,27 @@ class _IntroductionViewState extends State<IntroductionView> {
                   urlImage: "assets/images/intro1.svg",
                   title: Text(
                     "أهلا وسهلا بك",
-                    style: TextStyle(color: AppColor.deepBlue, fontSize: 24.sp),
+                    style: TextStyle(
+                      color: AppColor.deepBlue,
+                      fontSize: 24.sp,
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
                   subtitle: Text.rich(
                     TextSpan(
                         text: "في التطبيق الأول",
                         style: TextStyle(
-                            fontSize: 24.sp, color: AppColor.deepBlue),
+                          fontSize: 24.sp,
+                          color: AppColor.deepBlue,
+                          fontWeight: FontWeight.bold,
+                        ),
                         children: [
                           TextSpan(
                               text: " للتخليص الجمركي",
-                              style: TextStyle(color: AppColor.deepYellow))
+                              style: TextStyle(
+                                color: AppColor.deepYellow,
+                                fontWeight: FontWeight.bold,
+                              ))
                         ]),
                   ),
                 ),
@@ -113,39 +123,57 @@ class _IntroductionViewState extends State<IntroductionView> {
                       TextSpan(
                           text: "اطلع على",
                           style: TextStyle(
-                              fontSize: 24.sp, color: AppColor.deepBlue),
+                            fontSize: 24.sp,
+                            color: AppColor.deepBlue,
+                            fontWeight: FontWeight.bold,
+                          ),
                           children: [
                             TextSpan(
-                                text: " إجراءات التخليص واللوائح",
-                                style: TextStyle(
-                                    fontSize: 24.sp,
-                                    color: AppColor.deepYellow))
+                              text: " إجراءات التخليص واللوائح",
+                              style: TextStyle(
+                                fontSize: 24.sp,
+                                color: AppColor.deepYellow,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            )
                           ]),
                     ),
                     subtitle: Text(
                       "الجمركية المطبقة على نوع بضاعتك",
-                      style:
-                          TextStyle(color: AppColor.deepBlue, fontSize: 24.sp),
+                      style: TextStyle(
+                        color: AppColor.deepBlue,
+                        fontSize: 24.sp,
+                        fontWeight: FontWeight.bold,
+                      ),
                     )),
                 builfPage(
                     color: Colors.white,
                     urlImage: "assets/images/intro3.svg",
                     title: Text(
                       "احسب الرسوم الجمركية المفروضة على",
-                      style:
-                          TextStyle(color: AppColor.deepBlue, fontSize: 24.sp),
+                      style: TextStyle(
+                        color: AppColor.deepBlue,
+                        fontSize: 24.sp,
+                        fontWeight: FontWeight.bold,
+                      ),
                     ),
                     subtitle: Text.rich(
                       TextSpan(
                           text: "بضائعك قبل البدء",
                           style: TextStyle(
-                              fontSize: 24.sp, color: AppColor.deepBlue),
+                            fontSize: 24.sp,
+                            color: AppColor.deepBlue,
+                            fontWeight: FontWeight.bold,
+                          ),
                           children: [
                             TextSpan(
-                                text: " بعملية الاستيراد",
-                                style: TextStyle(
-                                    fontSize: 24.sp,
-                                    color: AppColor.deepYellow))
+                              text: " بعملية الاستيراد",
+                              style: TextStyle(
+                                fontSize: 24.sp,
+                                color: AppColor.deepYellow,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            )
                           ]),
                     )),
                 builfPage(
@@ -153,13 +181,19 @@ class _IntroductionViewState extends State<IntroductionView> {
                     urlImage: "assets/images/intro4.svg",
                     title: Text(
                       "المخلص الجمركي المختص",
-                      style:
-                          TextStyle(color: AppColor.deepBlue, fontSize: 24.sp),
+                      style: TextStyle(
+                        color: AppColor.deepBlue,
+                        fontSize: 24.sp,
+                        fontWeight: FontWeight.bold,
+                      ),
                     ),
                     subtitle: Text(
                       "",
-                      style:
-                          TextStyle(color: AppColor.deepBlue, fontSize: 24.sp),
+                      style: TextStyle(
+                        color: AppColor.deepBlue,
+                        fontSize: 24.sp,
+                        fontWeight: FontWeight.bold,
+                      ),
                     )),
               ],
             ),
@@ -185,7 +219,11 @@ class _IntroductionViewState extends State<IntroductionView> {
                 },
                 child: Text(
                   'ابدأ الأن',
-                  style: TextStyle(fontSize: 26.sp, color: AppColor.deepYellow),
+                  style: TextStyle(
+                    fontSize: 26.sp,
+                    color: AppColor.deepYellow,
+                    fontWeight: FontWeight.bold,
+                  ),
                 ))
             : Container(
                 color: Colors.white,
@@ -203,6 +241,7 @@ class _IntroductionViewState extends State<IntroductionView> {
                           style: TextStyle(
                             color: AppColor.deepYellow,
                             fontSize: 24.sp,
+                            fontWeight: FontWeight.bold,
                           ),
                         )),
                     Center(

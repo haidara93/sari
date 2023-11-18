@@ -45,7 +45,7 @@ class TraderConfirmScreen extends StatelessWidget {
               Text(
                 "شكراً لانضمامك معنا..",
                 style: TextStyle(
-                    fontSize: 19.sp,
+                    fontSize: 26.sp,
                     fontWeight: FontWeight.bold,
                     color: AppColor.deepBlue),
               ),
@@ -58,11 +58,11 @@ class TraderConfirmScreen extends StatelessWidget {
                   title: Text(
                     "الرئيسية",
                     style: TextStyle(
-                      color: Colors.white,
+                      color: AppColor.deepBlue,
                       fontSize: 19.sp,
                     ),
                   ),
-                  color: AppColor.deepYellow,
+                  color: Colors.white,
                   onTap: () {
                     Navigator.push(
                         context,

@@ -46,7 +46,11 @@ class SelectUserType extends StatelessWidget {
               ),
               Text(
                 "الرجاء اختيار مستخدم",
-                style: TextStyle(fontSize: 24.sp, color: AppColor.deepBlue),
+                style: TextStyle(
+                  fontSize: 24.sp,
+                  color: AppColor.deepBlue,
+                  fontWeight: FontWeight.bold,
+                ),
               ),
               SizedBox(
                 height: 10.h,
@@ -74,7 +78,7 @@ class SelectUserType extends StatelessWidget {
                               fontSize: 19.sp,
                             ),
                           ),
-                          color: AppColor.lightYellow,
+                          color: Colors.white,
                           onTap: () async {
                             Navigator.push(
                                 context,
@@ -113,7 +117,7 @@ class SelectUserType extends StatelessWidget {
                               fontSize: 19.sp,
                             ),
                           ),
-                          color: AppColor.deepYellow,
+                          color: Colors.white,
                           onTap: () async {
                             Navigator.push(
                                 context,

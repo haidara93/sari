@@ -81,7 +81,7 @@ class _TraderSigninScreenState extends State<TraderSigninScreen> {
                 Text(
                   "قم بتسجيل الدخول",
                   style: TextStyle(
-                      fontSize: 19.sp,
+                      fontSize: 24.sp,
                       fontWeight: FontWeight.bold,
                       color: AppColor.deepBlue),
                 ),
@@ -134,9 +134,11 @@ class _TraderSigninScreenState extends State<TraderSigninScreen> {
                                 onSaved: (newValue) {
                                   _usernameController.text = newValue!;
                                 },
+                                autovalidateMode:
+                                    AutovalidateMode.onUserInteraction,
                                 style: TextStyle(
                                   color: Colors.black,
-                                  fontSize: 16.sp,
+                                  fontSize: 19.sp,
                                 ),
                                 decoration: InputDecoration(
                                   contentPadding: EdgeInsets.symmetric(
@@ -159,11 +161,17 @@ class _TraderSigninScreenState extends State<TraderSigninScreen> {
                                       color: Color.fromRGBO(13, 52, 83, 1),
                                     ),
                                   ),
+                                  focusedErrorBorder: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(42),
+                                    borderSide: const BorderSide(
+                                      color: Colors.red,
+                                    ),
+                                  ),
                                   hintText: "اسم المستخدم",
                                   labelText: "اسم المستخدم",
                                   hintStyle: TextStyle(
                                     color: Colors.grey,
-                                    fontSize: 16.sp,
+                                    fontSize: 19.sp,
                                   ),
                                   filled: true,
                                   fillColor: Colors.white,
@@ -197,8 +205,10 @@ class _TraderSigninScreenState extends State<TraderSigninScreen> {
                                 },
                                 style: TextStyle(
                                   color: Colors.black,
-                                  fontSize: 16.sp,
+                                  fontSize: 19.sp,
                                 ),
+                                autovalidateMode:
+                                    AutovalidateMode.onUserInteraction,
                                 decoration: InputDecoration(
                                   contentPadding: EdgeInsets.symmetric(
                                       horizontal: 20.w, vertical: 2.h),
@@ -220,11 +230,17 @@ class _TraderSigninScreenState extends State<TraderSigninScreen> {
                                       color: Color.fromRGBO(13, 52, 83, 1),
                                     ),
                                   ),
+                                  focusedErrorBorder: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(42),
+                                    borderSide: const BorderSide(
+                                      color: Colors.red,
+                                    ),
+                                  ),
                                   hintText: "كلمة المرور",
                                   labelText: "كلمة المرور",
                                   hintStyle: TextStyle(
                                     color: Colors.grey,
-                                    fontSize: 16.sp,
+                                    fontSize: 19.sp,
                                   ),
                                   filled: true,
                                   fillColor: Colors.white,
@@ -348,7 +364,7 @@ class _TraderSigninScreenState extends State<TraderSigninScreen> {
                                   return SizedBox(
                                       width: 304.w,
                                       child: CustomButton(
-                                        color: AppColor.deepYellow,
+                                        color: Colors.white,
                                         title:
                                             const CircularProgressIndicator(),
                                         onTap: () {},
@@ -360,11 +376,11 @@ class _TraderSigninScreenState extends State<TraderSigninScreen> {
                                         title: Text(
                                           "تسجيل الدخول",
                                           style: TextStyle(
-                                            color: Colors.black,
+                                            color: AppColor.deepBlue,
                                             fontSize: 19.sp,
                                           ),
                                         ),
-                                        color: AppColor.deepYellow,
+                                        color: Colors.white,
                                         onTap: () {
                                           _formKey.currentState?.save();
 

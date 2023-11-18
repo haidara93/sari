@@ -48,7 +48,7 @@ class CalculatorWidget extends StatefulWidget {
 }
 
 class _CalculatorWidgetState extends State<CalculatorWidget> {
-  String syrianExchangeValue = "6565";
+  String syrianExchangeValue = "30";
 
   String syrianTotalValue = "0";
 
@@ -60,7 +60,7 @@ class _CalculatorWidgetState extends State<CalculatorWidget> {
   String wieghtUnit = "";
   String wieghtLabel = "الوزن";
 
-  double usTosp = 6565;
+  double usTosp = 30;
   double basePrice = 0;
   double wieghtValue = 0;
   var f = NumberFormat("#,###", "en_US");
@@ -96,7 +96,7 @@ class _CalculatorWidgetState extends State<CalculatorWidget> {
   void calculateTotalValueWithPrice() {
     var syrianExch = double.parse(widget.wieghtController!.text) *
         double.parse(widget.valueController!.text);
-    var syrianTotal = syrianExch * 6565;
+    var syrianTotal = syrianExch * 30;
     var totalEnsurance = (syrianTotal) + (syrianTotal * 0.0012);
     setState(() {
       syrianExchangeValue = syrianExch.round().toString();
@@ -106,7 +106,7 @@ class _CalculatorWidgetState extends State<CalculatorWidget> {
   }
 
   void calculateTotalValue() {
-    var syrianTotal = double.parse(widget.valueController!.text) * 6565;
+    var syrianTotal = double.parse(widget.valueController!.text) * 30;
     var totalEnsurance = (syrianTotal) + (syrianTotal * 0.0012);
     setState(() {
       syrianTotalValue = syrianTotal.round().toString();
@@ -130,7 +130,7 @@ class _CalculatorWidgetState extends State<CalculatorWidget> {
 
         widget.valueController!.text = "0.0";
         valueEnabled = true;
-        syrianExchangeValue = "6565";
+        syrianExchangeValue = "30";
       });
     }
 
@@ -338,7 +338,7 @@ class _CalculatorWidgetState extends State<CalculatorWidget> {
               basePrice = 0.0;
               widget.valueController!.text = "0.0";
               valueEnabled = true;
-              syrianExchangeValue = "6565";
+              syrianExchangeValue = "30";
             });
           }
         }
@@ -349,7 +349,7 @@ class _CalculatorWidgetState extends State<CalculatorWidget> {
 
           widget.valueController!.text = "0.0";
           valueEnabled = true;
-          syrianExchangeValue = "6565";
+          syrianExchangeValue = "30";
         });
       }
     }
@@ -583,7 +583,7 @@ class _CalculatorWidgetState extends State<CalculatorWidget> {
 
                             widget.valueController!.text = "0.0";
                             valueEnabled = true;
-                            syrianExchangeValue = "6565";
+                            syrianExchangeValue = "30";
                           });
                         }
                         evaluatePrice();
@@ -602,7 +602,7 @@ class _CalculatorWidgetState extends State<CalculatorWidget> {
 
                             widget.valueController!.text = "0.0";
                             valueEnabled = true;
-                            syrianExchangeValue = "6565";
+                            syrianExchangeValue = "30";
                           });
                         }
                         evaluatePrice();
@@ -835,11 +835,11 @@ class _CalculatorWidgetState extends State<CalculatorWidget> {
                         extentOffset:
                             widget.wieghtController!.value.text.length);
                   },
-                  enabled: !valueEnabled,
+                  // enabled: !valueEnabled,
                   scrollPadding: EdgeInsets.only(
                       bottom: MediaQuery.of(context).viewInsets.bottom + 50),
-                  keyboardType:
-                      const TextInputType.numberWithOptions(decimal: true),
+                  keyboardType: const TextInputType.numberWithOptions(
+                      signed: true, decimal: true),
                   inputFormatters: [DecimalFormatter()],
                   decoration: InputDecoration(
                     labelStyle: const TextStyle(fontSize: 20),
@@ -894,9 +894,9 @@ class _CalculatorWidgetState extends State<CalculatorWidget> {
                         extentOffset:
                             widget.valueController!.value.text.length);
                   },
-                  enabled: valueEnabled,
-                  keyboardType:
-                      const TextInputType.numberWithOptions(decimal: true),
+                  // enabled: valueEnabled,
+                  keyboardType: const TextInputType.numberWithOptions(
+                      signed: true, decimal: true),
                   inputFormatters: [DecimalFormatter()],
                   scrollPadding: EdgeInsets.only(
                       bottom: MediaQuery.of(context).viewInsets.bottom + 50),
@@ -1045,9 +1045,9 @@ class _CalculatorWidgetState extends State<CalculatorWidget> {
               ),
               Text(!valueEnabled
                   ? "القيمة الاجمالية بالدولار :"
-                  : "قيمة التحويل بالليرة السورية :"),
+                  : "قيمة التحويل بالجنيه المصري :"),
               Text(syrianExchangeValue),
-              const Text("قيمة الاجمالية بالليرة السورية: "),
+              const Text("قيمة الاجمالية بالجنيه المصري: "),
               Text(syrianTotalValue),
               const Text("قيمة البضاعة مع التأمين: "),
               Text(totalValueWithEnsurance),
@@ -1075,33 +1075,38 @@ class _CalculatorWidgetState extends State<CalculatorWidget> {
                       } else {
                         return CustomButton(
                             onTap: () {
-                              widget.unfocus;
-                              result.insurance =
-                                  int.parse(totalValueWithEnsurance);
-                              result.fee = selectedPackage!.fee!;
-                              result.rawMaterial = rawMaterialValue ? 1 : 0;
-                              result.industrial = industrialValue ? 1 : 0;
-                              result.totalTax =
-                                  selectedPackage!.totalTaxes!.totalTax!;
-                              result.partialTax =
-                                  selectedPackage!.totalTaxes!.partialTax!;
-                              result.origin = selectedOrigin!.label!;
-                              result.spendingFee =
-                                  selectedPackage!.spendingFee!;
-                              result.supportFee = selectedPackage!.supportFee!;
-                              result.localFee = selectedPackage!.localFee!;
-                              result.protectionFee =
-                                  selectedPackage!.protectionFee!;
-                              result.naturalFee = selectedPackage!.naturalFee!;
-                              result.taxFee = selectedPackage!.taxFee!;
-                              BlocProvider.of<CalculateResultBloc>(context)
-                                  .add(CalculateTheResultEvent(result));
-                              Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder: (context) =>
-                                        const TraderCalculatorResultScreen(),
-                                  ));
+                              widget.calformkey.currentState?.save();
+                              if (widget.calformkey.currentState!.validate()) {
+                                widget.unfocus;
+                                result.insurance =
+                                    int.parse(totalValueWithEnsurance);
+                                result.fee = selectedPackage!.fee!;
+                                result.rawMaterial = rawMaterialValue ? 1 : 0;
+                                result.industrial = industrialValue ? 1 : 0;
+                                result.totalTax =
+                                    selectedPackage!.totalTaxes!.totalTax!;
+                                result.partialTax =
+                                    selectedPackage!.totalTaxes!.partialTax!;
+                                result.origin = selectedOrigin!.label!;
+                                result.spendingFee =
+                                    selectedPackage!.spendingFee!;
+                                result.supportFee =
+                                    selectedPackage!.supportFee!;
+                                result.localFee = selectedPackage!.localFee!;
+                                result.protectionFee =
+                                    selectedPackage!.protectionFee!;
+                                result.naturalFee =
+                                    selectedPackage!.naturalFee!;
+                                result.taxFee = selectedPackage!.taxFee!;
+                                BlocProvider.of<CalculateResultBloc>(context)
+                                    .add(CalculateTheResultEvent(result));
+                                Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) =>
+                                          const TraderCalculatorResultScreen(),
+                                    ));
+                              }
                             },
                             title: SizedBox(
                               width: 250.w,

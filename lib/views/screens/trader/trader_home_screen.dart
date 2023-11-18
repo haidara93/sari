@@ -1387,7 +1387,7 @@ class _TraderHomeScreenState extends State<TraderHomeScreen>
                                     enabled: !valueEnabled,
                                     keyboardType:
                                         const TextInputType.numberWithOptions(
-                                            decimal: true),
+                                            signed: true, decimal: true),
                                     inputFormatters: [DecimalFormatter()],
                                     decoration: InputDecoration(
                                       labelText: wieghtLabel,
@@ -1662,7 +1662,7 @@ class _TraderHomeScreenState extends State<TraderHomeScreen>
                                     enabled: valueEnabled,
                                     keyboardType:
                                         const TextInputType.numberWithOptions(
-                                            decimal: true),
+                                            signed: true, decimal: true),
                                     inputFormatters: [DecimalFormatter()],
                                     decoration: InputDecoration(
                                       labelText: valueEnabled
@@ -1807,9 +1807,9 @@ class _TraderHomeScreenState extends State<TraderHomeScreen>
                                 ),
                                 Text(!valueEnabled
                                     ? "القيمة الاجمالية بالدولار :"
-                                    : "قيمة التحويل بالليرة السورية :"),
+                                    : "قيمة التحويل بالجنيه المصري :"),
                                 Text(syrianExchangeValue),
-                                const Text("قيمة الاجمالية بالليرة السورية: "),
+                                const Text("قيمة الاجمالية بالجنيه المصري: "),
                                 Text(syrianTotalValue),
                                 const Text("قيمة البضاعة مع التأمين: "),
                                 Text(totalValueWithEnsurance),
