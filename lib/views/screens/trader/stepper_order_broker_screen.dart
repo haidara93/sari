@@ -2274,6 +2274,27 @@ class _StepperOrderBrokerScreenState extends State<StepperOrderBrokerScreen> {
                   SizedBox(
                     height: 7.h,
                   ),
+                  Visibility(
+                    visible: selectedStateError ||
+                        selectedRadioTileError ||
+                        calculatorError ||
+                        packageError,
+                    child: const Padding(
+                      padding: EdgeInsets.only(
+                          top: 2.0, bottom: 8.0, right: 25.0, left: 25.0),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: [
+                          Text(
+                            "الرجاء ملء الحقول الفارغة واستكمال باقي الخيارات",
+                            style: TextStyle(
+                              color: Colors.red,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceAround,
                     children: [
