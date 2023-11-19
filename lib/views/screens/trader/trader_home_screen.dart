@@ -825,7 +825,7 @@ class _TraderHomeScreenState extends State<TraderHomeScreen>
   String wieghtUnit = "";
   String wieghtLabel = "الوزن";
 
-  double usTosp = 6565;
+  double usTosp = 30;
   double basePrice = 0.0;
   double wieghtValue = 0.0;
 
@@ -856,7 +856,7 @@ class _TraderHomeScreenState extends State<TraderHomeScreen>
   void calculateTotalValueWithPrice() {
     var syrianExch = double.parse(_wieghtController.text) *
         double.parse(_valueController.text);
-    var syrianTotal = syrianExch * 6565;
+    var syrianTotal = syrianExch * 30;
     var totalEnsurance = (syrianTotal) + (syrianTotal * 0.0012);
     setState(() {
       syrianExchangeValue = syrianExch.round().toString();
@@ -866,7 +866,7 @@ class _TraderHomeScreenState extends State<TraderHomeScreen>
   }
 
   void calculateTotalValue() {
-    var syrianTotal = double.parse(_valueController.text) * 6565;
+    var syrianTotal = double.parse(_valueController.text) * 30;
     var totalEnsurance = (syrianTotal) + (syrianTotal * 0.0012);
     setState(() {
       syrianTotalValue = syrianTotal.round().toString();
@@ -892,7 +892,7 @@ class _TraderHomeScreenState extends State<TraderHomeScreen>
 
         _valueController.text = "0.0";
         valueEnabled = true;
-        syrianExchangeValue = "6565";
+        syrianExchangeValue = "30";
       });
     }
 
@@ -1100,7 +1100,7 @@ class _TraderHomeScreenState extends State<TraderHomeScreen>
               basePrice = 0.0;
               _valueController.text = "0.0";
               valueEnabled = true;
-              syrianExchangeValue = "6565";
+              syrianExchangeValue = "30";
             });
           }
         }
@@ -1111,7 +1111,7 @@ class _TraderHomeScreenState extends State<TraderHomeScreen>
 
           _valueController.text = "0.0";
           valueEnabled = true;
-          syrianExchangeValue = "6565";
+          syrianExchangeValue = "30";
         });
       }
     }
@@ -1218,10 +1218,12 @@ class _TraderHomeScreenState extends State<TraderHomeScreen>
                                   maxLines: null,
                                   decoration: InputDecoration(
                                     labelText: "نوع البضاعة",
-                                    prefixStyle:
-                                        const TextStyle(color: Colors.black),
-                                    contentPadding:
-                                        EdgeInsets.symmetric(horizontal: 5.w),
+                                    prefixStyle: const TextStyle(
+                                      color: Colors.black,
+                                      fontSize: 19,
+                                    ),
+                                    contentPadding: EdgeInsets.symmetric(
+                                        horizontal: 9.0, vertical: 11.0),
                                     border: OutlineInputBorder(
                                       borderRadius: BorderRadius.circular(12),
                                     ),
@@ -1295,7 +1297,7 @@ class _TraderHomeScreenState extends State<TraderHomeScreen>
 
                                               _valueController.text = "0.0";
                                               valueEnabled = true;
-                                              syrianExchangeValue = "6565";
+                                              syrianExchangeValue = "30";
                                             });
                                           }
                                           evaluatePrice();
@@ -1314,7 +1316,7 @@ class _TraderHomeScreenState extends State<TraderHomeScreen>
 
                                               _valueController.text = "0.0";
                                               valueEnabled = true;
-                                              syrianExchangeValue = "6565";
+                                              syrianExchangeValue = "30";
                                             });
                                           }
                                           evaluatePrice();
@@ -1385,7 +1387,7 @@ class _TraderHomeScreenState extends State<TraderHomeScreen>
                                             baseOffset: 0,
                                             extentOffset: _wieghtController
                                                 .value.text.length),
-                                    enabled: !valueEnabled,
+                                    // enabled: !valueEnabled,
                                     keyboardType:
                                         const TextInputType.numberWithOptions(
                                             signed: true, decimal: true),
@@ -1393,10 +1395,11 @@ class _TraderHomeScreenState extends State<TraderHomeScreen>
                                     decoration: InputDecoration(
                                       labelText: wieghtLabel,
                                       prefixText: showunit ? wieghtUnit : "",
-                                      prefixStyle:
-                                          const TextStyle(color: Colors.black),
-                                      contentPadding:
-                                          EdgeInsets.symmetric(horizontal: 5.w),
+                                      prefixStyle: const TextStyle(
+                                        color: Colors.black,
+                                      ),
+                                      contentPadding: EdgeInsets.symmetric(
+                                          horizontal: 9.0, vertical: 11.0),
                                       border: OutlineInputBorder(
                                         borderRadius: BorderRadius.circular(12),
                                       ),
@@ -1660,7 +1663,7 @@ class _TraderHomeScreenState extends State<TraderHomeScreen>
                                             baseOffset: 0,
                                             extentOffset: _valueController
                                                 .value.text.length),
-                                    enabled: valueEnabled,
+                                    // enabled: valueEnabled,
                                     keyboardType:
                                         const TextInputType.numberWithOptions(
                                             signed: true, decimal: true),
@@ -1669,8 +1672,8 @@ class _TraderHomeScreenState extends State<TraderHomeScreen>
                                       labelText: valueEnabled
                                           ? "قيمة البضاعة الاجمالية بالدولار"
                                           : "سعر الواحدة لدى الجمارك",
-                                      contentPadding:
-                                          EdgeInsets.symmetric(horizontal: 5.w),
+                                      contentPadding: EdgeInsets.symmetric(
+                                          horizontal: 9.0, vertical: 11.0),
                                       border: OutlineInputBorder(
                                         borderRadius: BorderRadius.circular(12),
                                       ),

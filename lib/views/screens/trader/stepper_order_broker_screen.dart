@@ -18,6 +18,7 @@ import 'package:custome_mobile/views/screens/trader/trader_bill_review.dart';
 import 'package:custome_mobile/views/widgets/custom_botton.dart';
 import 'package:custome_mobile/views/widgets/highlight_text.dart';
 import 'package:dropdown_button2/dropdown_button2.dart';
+import 'package:ensure_visible_when_focused/ensure_visible_when_focused.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_img/flutter_img.dart';
@@ -545,7 +546,7 @@ class _StepperOrderBrokerScreenState extends State<StepperOrderBrokerScreen> {
               Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: Column(children: [
-                  Focus(
+                  EnsureVisibleWhenFocused(
                     focusNode: _orderTypenode,
                     child: Card(
                       margin: const EdgeInsets.symmetric(vertical: 7),
@@ -663,7 +664,7 @@ class _StepperOrderBrokerScreenState extends State<StepperOrderBrokerScreen> {
                       ),
                     ),
                   ),
-                  Focus(
+                  EnsureVisibleWhenFocused(
                     focusNode: _stateCustomenode,
                     child: Card(
                       margin: const EdgeInsets.symmetric(vertical: 7),
@@ -2178,7 +2179,7 @@ class _StepperOrderBrokerScreenState extends State<StepperOrderBrokerScreen> {
                                                     BorderRadius.circular(12)),
                                             labelText: "عدد الطبالي",
                                             labelStyle:
-                                                const TextStyle(fontSize: 19),
+                                                TextStyle(fontSize: 17.sp),
                                             contentPadding:
                                                 const EdgeInsets.symmetric(
                                               horizontal: 9.0,
@@ -2432,21 +2433,21 @@ class _StepperOrderBrokerScreenState extends State<StepperOrderBrokerScreen> {
                                               setState(() {
                                                 calculatorError = true;
                                               });
-                                              _ordernode.requestFocus();
+                                              // _ordernode.requestFocus();
                                             }
                                           } else {
                                             setSelectedPanel(1);
                                             setState(() {
                                               selectedStateError = true;
                                             });
-                                            _stateCustomenode.requestFocus();
+                                            // _stateCustomenode.requestFocus();
                                           }
                                         } else {
                                           setSelectedPanel(0);
                                           setState(() {
                                             selectedRadioTileError = true;
                                           });
-                                          _orderTypenode.requestFocus();
+                                          // _orderTypenode.requestFocus();
                                         }
                                       },
                                     );

@@ -598,7 +598,13 @@ class _TraderAttachementScreenState extends State<TraderAttachementScreen> {
                           child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                const Text("تاريخ وصول البضاعة"),
+                                const Text(
+                                  "تاريخ وصول البضاعة",
+                                  style: TextStyle(
+                                    fontSize: 19,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
                                 const SizedBox(
                                   height: 15,
                                 ),
@@ -640,8 +646,19 @@ class _TraderAttachementScreenState extends State<TraderAttachementScreen> {
                           child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                const Text("المرفقات"),
-                                const Text("يرجى تحميل المرفقات المتاحة حاليا"),
+                                const Text(
+                                  "المرفقات",
+                                  style: TextStyle(
+                                    fontSize: 19,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                                const Text(
+                                  "يرجى تحميل المرفقات المتاحة حاليا",
+                                  style: TextStyle(
+                                    fontSize: 17,
+                                  ),
+                                ),
                                 SizedBox(
                                   height: 15.h,
                                 ),
@@ -679,8 +696,8 @@ class _TraderAttachementScreenState extends State<TraderAttachementScreen> {
                           child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                const Text("اترك ملاحظاتك للمخلص",
-                                    style: TextStyle(fontSize: 16)),
+                                const Text("الملاحظات",
+                                    style: TextStyle(fontSize: 18)),
                                 SizedBox(
                                   height: 15.h,
                                 ),
