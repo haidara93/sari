@@ -760,7 +760,7 @@ class _CalculatorWidgetState extends State<CalculatorWidget> {
                         ),
                         dropdownStyleData: DropdownStyleData(
                           width: double.infinity,
-                          maxHeight: MediaQuery.of(context).size.height - 142.h,
+                          maxHeight: MediaQuery.of(context).size.height - 160.h,
                           padding: const EdgeInsets.all(8.0),
                           decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(14),

@@ -1573,7 +1573,7 @@ class _TraderHomeScreenState extends State<TraderHomeScreen>
                                             maxHeight: MediaQuery.of(context)
                                                     .size
                                                     .height -
-                                                142.h,
+                                                160.h,
                                             padding: const EdgeInsets.all(8.0),
                                             decoration: BoxDecoration(
                                               borderRadius:
