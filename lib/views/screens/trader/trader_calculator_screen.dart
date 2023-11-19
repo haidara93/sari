@@ -41,20 +41,6 @@ class TraderCalculatorScreen extends StatelessWidget {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           const SizedBox(
-                            height: 35,
-                          ),
-                          Text(
-                            "حاسبة الرسوم الجمركية",
-                            style: TextStyle(
-                                color: AppColor.goldenYellow,
-                                fontSize: 20,
-                                fontWeight: FontWeight.bold),
-                          ),
-                          const Text(
-                            "تتيح أداة حاسبة الرسوم الجمركية تقدير التكلفة الإجمالية لاستيراد البضائع وفقاً للتعرفة الجمركية والقوانين الضريبية في جمهورية مصر العربية، وتوفر مجموعة واسعة من المعلومات المفصلة حول الرسوم الجمركية بما في ذلك الأحكام والشروط والأسعار الاسترشادية المتوفرة.",
-                            maxLines: 10,
-                          ),
-                          const SizedBox(
                             height: 25,
                           ),
                           Card(

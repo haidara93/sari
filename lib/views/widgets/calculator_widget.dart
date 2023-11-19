@@ -188,17 +188,17 @@ class _CalculatorWidgetState extends State<CalculatorWidget> {
       switch (suggestion.unit) {
         case "كغ":
           setState(() {
-            wieghtLabel = "الوزن";
+            wieghtLabel = " الوزن";
           });
           break;
         case "طن":
           setState(() {
-            wieghtLabel = "الوزن";
+            wieghtLabel = " الوزن";
           });
           break;
         case "قيراط":
           setState(() {
-            wieghtLabel = "الوزن";
+            wieghtLabel = " الوزن";
           });
           break;
         case "كيلو واط بالساعة 1000":
@@ -444,10 +444,13 @@ class _CalculatorWidgetState extends State<CalculatorWidget> {
 
                     decoration: InputDecoration(
                       labelStyle: const TextStyle(fontSize: 18),
-                      labelText: "  نوع البضاعة",
+                      labelText: "نوع البضاعة",
                       border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(12)),
-                      contentPadding: EdgeInsets.zero,
+                      contentPadding: const EdgeInsets.symmetric(
+                        horizontal: 9.0,
+                        vertical: 11.0,
+                      ),
                       suffixIcon: widget.tariffButton!
                           ? GestureDetector(
                               onTap: () {
@@ -635,7 +638,7 @@ class _CalculatorWidgetState extends State<CalculatorWidget> {
                       child: DropdownButton2<Origin>(
                         isExpanded: true,
                         hint: Text(
-                          "  اختر المنشأ",
+                          "اختر المنشأ",
                           style: TextStyle(
                             fontSize: 15,
                             color: Theme.of(context).hintColor,
@@ -848,7 +851,10 @@ class _CalculatorWidgetState extends State<CalculatorWidget> {
                     prefixStyle: const TextStyle(color: Colors.black),
                     border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(12)),
-                    contentPadding: EdgeInsets.zero,
+                    contentPadding: const EdgeInsets.symmetric(
+                      horizontal: 9.0,
+                      vertical: 11.0,
+                    ),
                   ),
                   onChanged: (value) {
                     if (widget.originController!.text.isNotEmpty) {
@@ -903,11 +909,14 @@ class _CalculatorWidgetState extends State<CalculatorWidget> {
                   decoration: InputDecoration(
                     labelStyle: const TextStyle(fontSize: 18),
                     labelText: valueEnabled
-                        ? "  قيمة البضاعة الاجمالية بالدولار"
-                        : "  سعر الواحدة لدى الجمارك",
+                        ? "قيمة البضاعة الاجمالية بالدولار"
+                        : "سعر الواحدة لدى الجمارك",
                     border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(12)),
-                    contentPadding: EdgeInsets.zero,
+                    contentPadding: const EdgeInsets.symmetric(
+                      horizontal: 9.0,
+                      vertical: 11.0,
+                    ),
                   ),
                   onChanged: (value) {
                     if (widget.originController!.text.isNotEmpty) {

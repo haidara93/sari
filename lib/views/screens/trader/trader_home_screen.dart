@@ -33,6 +33,7 @@ import 'package:custome_mobile/views/widgets/pens_taxes_widget.dart';
 import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_img/flutter_img.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:shimmer/shimmer.dart';
@@ -2211,7 +2212,7 @@ class _TraderHomeScreenState extends State<TraderHomeScreen>
                                               SizedBox(
                                                 width: 36.w,
                                                 height: 36.h,
-                                                child: SvgPicture.network(
+                                                child: Img(
                                                   state.sections[index].image!,
                                                 ),
                                               ),

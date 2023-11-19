@@ -20,6 +20,7 @@ import 'package:custome_mobile/views/widgets/highlight_text.dart';
 import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_img/flutter_img.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter_typeahead/flutter_typeahead.dart';
@@ -64,7 +65,7 @@ class _StepperOrderBrokerScreenState extends State<StepperOrderBrokerScreen> {
   Origin? selectedOrigin;
 
   String wieghtUnit = "";
-  String wieghtLabel = "  الوزن";
+  String wieghtLabel = "الوزن";
 
   double usTosp = 30;
   double basePrice = 0.0;
@@ -96,7 +97,7 @@ class _StepperOrderBrokerScreenState extends State<StepperOrderBrokerScreen> {
   int packageNum = 0;
   int tabalehNum = 0;
 
-  int selectedPanel = 0;
+  int selectedPanel = -1;
   bool showtypeError = false;
   String selectedRadioTile = "";
   bool selectedRadioTileError = false;
@@ -116,8 +117,6 @@ class _StepperOrderBrokerScreenState extends State<StepperOrderBrokerScreen> {
   void initState() {
     super.initState();
     // FocusScope.of(context).unfocus();
-    _tabalehNumController.text = "0";
-    _packagesNumController.text = "0";
   }
 
   void calculateTotalValueWithPrice() {
@@ -215,77 +214,77 @@ class _StepperOrderBrokerScreenState extends State<StepperOrderBrokerScreen> {
       switch (suggestion.unit) {
         case "كغ":
           setState(() {
-            wieghtLabel = "  الوزن";
+            wieghtLabel = "الوزن";
           });
           break;
         case "طن":
           setState(() {
-            wieghtLabel = "  الوزن";
+            wieghtLabel = "الوزن";
           });
           break;
         case "قيراط":
           setState(() {
-            wieghtLabel = "  الوزن";
+            wieghtLabel = "الوزن";
           });
           break;
         case "  كيلو واط بالساعة 1000":
           setState(() {
-            wieghtLabel = "  الاستطاعة";
+            wieghtLabel = "الاستطاعة";
           });
           break;
         case "  الاستطاعة بالطن":
           setState(() {
-            wieghtLabel = "  الاستطاعة";
+            wieghtLabel = "الاستطاعة";
           });
           break;
         case "واط":
           setState(() {
-            wieghtLabel = "  الاستطاعة";
+            wieghtLabel = "الاستطاعة";
           });
           break;
         case "عدد الأزواج":
           setState(() {
-            wieghtLabel = "  العدد";
+            wieghtLabel = "العدد";
           });
           break;
         case "عدد":
           setState(() {
-            wieghtLabel = "  العدد";
+            wieghtLabel = "العدد";
           });
           break;
         case "طرد":
           setState(() {
-            wieghtLabel = "  العدد";
+            wieghtLabel = "العدد";
           });
           break;
         case "قدم":
           setState(() {
-            wieghtLabel = "  العدد";
+            wieghtLabel = "العدد";
           });
           break;
         case "متر":
           setState(() {
-            wieghtLabel = "  الحجم";
+            wieghtLabel = "الحجم";
           });
           break;
         case "متر مربع":
           setState(() {
-            wieghtLabel = "  الحجم";
+            wieghtLabel = "الحجم";
           });
           break;
         case "متر مكعب":
           setState(() {
-            wieghtLabel = "  الحجم";
+            wieghtLabel = "الحجم";
           });
           break;
         case "لتر":
           setState(() {
-            wieghtLabel = "  السعة";
+            wieghtLabel = "السعة";
           });
           break;
         default:
           setState(() {
-            wieghtLabel = "  الوزن";
+            wieghtLabel = "الوزن";
           });
       }
       setState(() {
@@ -1147,12 +1146,14 @@ class _StepperOrderBrokerScreenState extends State<StepperOrderBrokerScreen> {
                                     },
 
                                     decoration: InputDecoration(
-                                      labelText: "  نوع البضاعة",
+                                      labelText: "نوع البضاعة",
                                       labelStyle: const TextStyle(fontSize: 18),
                                       border: OutlineInputBorder(
                                           borderRadius:
                                               BorderRadius.circular(12)),
-                                      contentPadding: EdgeInsets.zero,
+                                      contentPadding:
+                                          const EdgeInsets.symmetric(
+                                              vertical: 11.0, horizontal: 9.0),
                                       suffixIcon: GestureDetector(
                                         onTap: () {
                                           BlocProvider.of<CalculatorPanelBloc>(
@@ -1373,14 +1374,13 @@ class _StepperOrderBrokerScreenState extends State<StepperOrderBrokerScreen> {
                                                       // width: 200,
                                                       child: Row(
                                                         children: [
-                                                          SvgPicture.network(
+                                                          Img(
                                                             item.imageURL!,
                                                             height: 35,
                                                             // semanticsLabel: 'A shark?!',
-                                                            placeholderBuilder:
-                                                                (BuildContext
-                                                                        context) =>
-                                                                    const CircularProgressIndicator(),
+
+                                                            placeholder:
+                                                                const CircularProgressIndicator(),
                                                           ),
                                                           const SizedBox(
                                                               width: 7),
@@ -1620,7 +1620,8 @@ class _StepperOrderBrokerScreenState extends State<StepperOrderBrokerScreen> {
                                     border: OutlineInputBorder(
                                         borderRadius:
                                             BorderRadius.circular(12)),
-                                    contentPadding: EdgeInsets.zero,
+                                    contentPadding: const EdgeInsets.symmetric(
+                                        vertical: 11.0, horizontal: 9.0),
                                   ),
                                   onChanged: (value) {
                                     if (_originController.text.isNotEmpty) {
@@ -1693,13 +1694,14 @@ class _StepperOrderBrokerScreenState extends State<StepperOrderBrokerScreen> {
                                   inputFormatters: [DecimalFormatter()],
                                   decoration: InputDecoration(
                                     labelText: valueEnabled
-                                        ? "  قيمة البضاعة الاجمالية بالدولار"
-                                        : "  سعر الواحدة لدى الجمارك",
+                                        ? "قيمة البضاعة الاجمالية بالدولار"
+                                        : "سعر الواحدة لدى الجمارك",
                                     labelStyle: const TextStyle(fontSize: 18),
                                     border: OutlineInputBorder(
                                         borderRadius:
                                             BorderRadius.circular(12)),
-                                    contentPadding: EdgeInsets.zero,
+                                    contentPadding: const EdgeInsets.symmetric(
+                                        vertical: 11.0, horizontal: 9.0),
                                   ),
                                   onChanged: (value) {
                                     if (_originController.text.isNotEmpty) {
@@ -1907,7 +1909,13 @@ class _StepperOrderBrokerScreenState extends State<StepperOrderBrokerScreen> {
                           SizedBox(
                             height: 2.h,
                           ),
-                          const Text("نوع الطرد"),
+                          const Text(
+                            "نوع الطرد",
+                            style: TextStyle(
+                              fontSize: 19,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
                           SizedBox(
                             height: 7.h,
                           ),
@@ -2031,11 +2039,91 @@ class _StepperOrderBrokerScreenState extends State<StepperOrderBrokerScreen> {
                             height: 7.h,
                           ),
                           const Divider(),
+                          SizedBox(
+                            height: 7.h,
+                          ),
+                          Form(
+                            key: _packagesformkey,
+                            child: TextFormField(
+                              controller: _packagesNumController,
+                              textAlign: TextAlign.center,
+                              keyboardType:
+                                  const TextInputType.numberWithOptions(
+                                      signed: true, decimal: true),
+                              decoration: InputDecoration(
+                                labelText: "عدد الطرود",
+                                labelStyle: const TextStyle(fontSize: 19),
+                                contentPadding: const EdgeInsets.symmetric(
+                                  horizontal: 9.0,
+                                  vertical: 11.0,
+                                ),
+                                border: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(12)),
+                                errorBorder: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(12),
+                                  borderSide: const BorderSide(
+                                    color: Colors.red,
+                                  ),
+                                ),
+                                focusedErrorBorder: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(12),
+                                  borderSide: const BorderSide(
+                                    color: Colors.red,
+                                  ),
+                                ),
+                              ),
+                              scrollPadding: EdgeInsets.only(
+                                  bottom:
+                                      MediaQuery.of(context).viewInsets.bottom +
+                                          50),
+                              onTap: () {
+                                setSelectedPanel(2);
+                                BlocProvider.of<BottomNavBarCubit>(context)
+                                    .emitHide();
+                                _packagesNumController.selection =
+                                    TextSelection(
+                                        baseOffset: 0,
+                                        extentOffset: _packagesNumController
+                                            .value.text.length);
+                              },
+                              onChanged: (value) {
+                                if (value.isEmpty) {
+                                  setState(() {
+                                    _packagesNumController.text = "0";
+                                    packageNum = 0;
+                                  });
+                                } else {
+                                  packageNum = int.parse(
+                                      double.parse(_packagesNumController.text)
+                                          .toInt()
+                                          .toString());
+                                }
+                              },
+                              autovalidateMode:
+                                  AutovalidateMode.onUserInteraction,
+                              validator: (value) {
+                                if (value!.isEmpty || value == "0") {
+                                  return "الرجاء ادخال القيمة";
+                                }
+                                return null;
+                              },
+                              onSaved: (newValue) {
+                                _packagesNumController.text = newValue!;
+                              },
+                              onFieldSubmitted: (value) {
+                                BlocProvider.of<BottomNavBarCubit>(context)
+                                    .emitShow();
+                              },
+                            ),
+                          ),
+                          SizedBox(
+                            height: 7.h,
+                          ),
                           Padding(
                             padding: EdgeInsets.symmetric(horizontal: 18.w),
                             child: CheckboxListTile(
                                 value: haveTabaleh,
-                                title: const Text("هل يوجد طبالي؟"),
+                                title: const Text("مع طبالي؟"),
                                 activeColor: AppColor.goldenYellow,
                                 onChanged: (value) {
                                   setSelectedPanel(3);
@@ -2053,7 +2141,13 @@ class _StepperOrderBrokerScreenState extends State<StepperOrderBrokerScreen> {
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
-                                  const Text("عدد الطبالي"),
+                                  // const Text(
+                                  //   "عدد الطبالي",
+                                  //   style: TextStyle(
+                                  //     fontSize: 16,
+                                  //     fontWeight: FontWeight.bold,
+                                  //   ),
+                                  // ),
                                   Row(
                                     mainAxisAlignment:
                                         MainAxisAlignment.spaceAround,
@@ -2071,7 +2165,7 @@ class _StepperOrderBrokerScreenState extends State<StepperOrderBrokerScreen> {
                                               size: 30.w,
                                               color: Colors.grey[600]!)),
                                       SizedBox(
-                                        width: 70.w,
+                                        width: 100.w,
                                         height: 50.h,
                                         child: TextField(
                                           controller: _tabalehNumController,
@@ -2082,7 +2176,14 @@ class _StepperOrderBrokerScreenState extends State<StepperOrderBrokerScreen> {
                                             border: OutlineInputBorder(
                                                 borderRadius:
                                                     BorderRadius.circular(12)),
-                                            contentPadding: EdgeInsets.zero,
+                                            labelText: "عدد الطبالي",
+                                            labelStyle:
+                                                const TextStyle(fontSize: 19),
+                                            contentPadding:
+                                                const EdgeInsets.symmetric(
+                                              horizontal: 9.0,
+                                              vertical: 11.0,
+                                            ),
                                           ),
                                           scrollPadding: EdgeInsets.only(
                                               bottom: MediaQuery.of(context)
@@ -2149,119 +2250,209 @@ class _StepperOrderBrokerScreenState extends State<StepperOrderBrokerScreen> {
                                   ),
                                 ],
                               )),
+                          const Divider(),
                           SizedBox(
                             height: 7.h,
                           ),
-                          const Divider(),
-                          const Text("عدد الطرود"),
+                          Visibility(
+                            visible: selectedStateError ||
+                                selectedRadioTileError ||
+                                calculatorError ||
+                                packageError,
+                            child: const Padding(
+                              padding: EdgeInsets.only(
+                                  top: 2.0,
+                                  bottom: 8.0,
+                                  right: 25.0,
+                                  left: 25.0),
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    "الرجاء ملء الحقول الفارغة واستكمال باقي الخيارات",
+                                    style: TextStyle(
+                                      color: Colors.red,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
                           Row(
                             mainAxisAlignment: MainAxisAlignment.spaceAround,
                             children: [
-                              GestureDetector(
-                                  onTap: () {
-                                    setSelectedPanel(3);
-                                    setState(() {
-                                      packageNum++;
-                                      _packagesNumController.text =
-                                          packageNum.toString();
-                                    });
-                                  },
-                                  child: Icon(Icons.add_box_outlined,
-                                      size: 30, color: Colors.grey[600]!)),
-                              SizedBox(
-                                width: 70.w,
-                                height: 50.h,
-                                child: Form(
-                                  key: _packagesformkey,
-                                  child: TextFormField(
-                                    controller: _packagesNumController,
-                                    textAlign: TextAlign.center,
-                                    keyboardType:
-                                        const TextInputType.numberWithOptions(
-                                            signed: true, decimal: true),
-                                    decoration: InputDecoration(
-                                      border: OutlineInputBorder(
-                                          borderRadius:
-                                              BorderRadius.circular(12)),
-                                      contentPadding: EdgeInsets.zero,
-                                      errorBorder: OutlineInputBorder(
-                                        borderRadius: BorderRadius.circular(12),
-                                        borderSide: const BorderSide(
-                                          color: Colors.red,
+                              // CustomButton(
+                              //   onTap: () {},
+                              //   color: AppColor.deepYellow,
+                              //   title: const SizedBox(
+                              //       width: 100, child: Center(child: Text("إلغاء"))),
+                              // ),
+                              BlocConsumer<CalculateResultBloc,
+                                  CalculateResultState>(
+                                listener: (context, state) {
+                                  if (state is CalculateResultSuccessed) {}
+                                },
+                                builder: (context, state) {
+                                  if (state is CalculateResultLoading) {
+                                    return CustomButton(
+                                        title: SizedBox(
+                                            width: 250.w,
+                                            child: const Center(
+                                                child:
+                                                    CircularProgressIndicator())),
+                                        // color: AppColor.deepYellow,
+                                        onTap: () {});
+                                  }
+                                  if (state is CalculateResultFailed) {
+                                    return Text(state.error);
+                                  } else {
+                                    return CustomButton(
+                                      title: SizedBox(
+                                        width: 250.w,
+                                        child: const Center(
+                                          child: Text(
+                                            "حساب الرسوم",
+                                            style: TextStyle(
+                                              fontWeight: FontWeight.bold,
+                                            ),
+                                          ),
                                         ),
                                       ),
-                                      focusedErrorBorder: OutlineInputBorder(
-                                        borderRadius: BorderRadius.circular(12),
-                                        borderSide: const BorderSide(
-                                          color: Colors.red,
-                                        ),
-                                      ),
-                                    ),
-                                    scrollPadding: EdgeInsets.only(
-                                        bottom: MediaQuery.of(context)
-                                                .viewInsets
-                                                .bottom +
-                                            50),
-                                    onTap: () {
-                                      setSelectedPanel(2);
-                                      BlocProvider.of<BottomNavBarCubit>(
-                                              context)
-                                          .emitHide();
-                                      _packagesNumController.selection =
-                                          TextSelection(
-                                              baseOffset: 0,
-                                              extentOffset:
-                                                  _packagesNumController
-                                                      .value.text.length);
-                                    },
-                                    onChanged: (value) {
-                                      if (value.isEmpty) {
-                                        setState(() {
-                                          _packagesNumController.text = "0";
-                                          packageNum = 0;
-                                        });
-                                      } else {
-                                        packageNum = int.parse(double.parse(
-                                                _packagesNumController.text)
-                                            .toInt()
-                                            .toString());
-                                      }
-                                    },
-                                    autovalidateMode:
-                                        AutovalidateMode.onUserInteraction,
-                                    validator: (value) {
-                                      if (value!.isEmpty || value == "0") {
-                                        return "الرجاء ادخال القيمة";
-                                      }
-                                      return null;
-                                    },
-                                    onSaved: (newValue) {
-                                      _packagesNumController.text = newValue!;
-                                    },
-                                    onFieldSubmitted: (value) {
-                                      BlocProvider.of<BottomNavBarCubit>(
-                                              context)
-                                          .emitShow();
-                                    },
-                                  ),
-                                ),
-                              ),
-                              GestureDetector(
-                                  onTap: () {
-                                    setSelectedPanel(3);
-                                    if (packageNum > 0) {
-                                      setState(() {
-                                        packageNum--;
+                                      // color: AppColor.deepYellow,
+                                      onTap: () {
+                                        FocusManager.instance.primaryFocus
+                                            ?.unfocus();
+                                        if (selectedRadioTile.isNotEmpty) {
+                                          if (selectedStateCustome != null &&
+                                              selectedCustomeAgency != null) {
+                                            _ordercalformkey.currentState
+                                                ?.save();
+                                            if (_ordercalformkey.currentState!
+                                                .validate()) {
+                                              setState(() {
+                                                calculatorError = false;
+                                              });
+                                              _packagesformkey.currentState
+                                                  ?.save();
+                                              if (_packagesformkey.currentState!
+                                                  .validate()) {
+                                                setState(() {
+                                                  packageError = false;
+                                                });
+                                                result.insurance = int.parse(
+                                                    totalValueWithEnsurance);
+                                                result.fee =
+                                                    selectedPackage!.fee!;
+                                                result.rawMaterial =
+                                                    rawMaterialValue ? 1 : 0;
+                                                result.industrial =
+                                                    industrialValue ? 1 : 0;
+                                                result.totalTax =
+                                                    selectedPackage!
+                                                        .totalTaxes!.totalTax!;
+                                                result.partialTax =
+                                                    selectedPackage!.totalTaxes!
+                                                        .partialTax!;
+                                                result.origin =
+                                                    selectedOrigin!.label!;
+                                                result.spendingFee =
+                                                    selectedPackage!
+                                                        .spendingFee!;
+                                                result.supportFee =
+                                                    selectedPackage!
+                                                        .supportFee!;
+                                                result.localFee =
+                                                    selectedPackage!.localFee!;
+                                                result.protectionFee =
+                                                    selectedPackage!
+                                                        .protectionFee!;
+                                                result.naturalFee =
+                                                    selectedPackage!
+                                                        .naturalFee!;
+                                                result.taxFee =
+                                                    selectedPackage!.taxFee!;
+                                                BlocProvider.of<
+                                                            CalculateResultBloc>(
+                                                        context)
+                                                    .add(
+                                                        CalculateTheResultEvent(
+                                                            result));
+                                                BlocProvider.of<
+                                                            AttachmentTypeBloc>(
+                                                        context)
+                                                    .add(
+                                                        AttachmentTypeLoadEvent());
+                                                // BlocProvider.of<CurrentStepCubit>(context)
+                                                //     .increament();
 
-                                        _packagesNumController.text =
-                                            packageNum.toString();
-                                      });
-                                    }
-                                  },
-                                  child: Icon(
-                                      Icons.indeterminate_check_box_outlined,
-                                      size: 30.w,
-                                      color: Colors.grey[600]!)),
+                                                Navigator.push(
+                                                  context,
+                                                  MaterialPageRoute(
+                                                    builder: (context) =>
+                                                        TraderBillReview(
+                                                      offerType:
+                                                          selectedRadioTile,
+                                                      customAgency:
+                                                          selectedCustomeAgency!
+                                                              .id!,
+                                                      customeState:
+                                                          selectedStateCustome!
+                                                              .id!,
+                                                      origin:
+                                                          selectedOrigin!.id!,
+                                                      packageType:
+                                                          packageTypeId,
+                                                      packagesNum: packageNum,
+                                                      tabalehNum: tabalehNum,
+                                                      weight:
+                                                          wieghtValue.toInt(),
+                                                      product:
+                                                          selectedPackage!.id,
+                                                      price: int.parse(
+                                                          syrianTotalValue),
+                                                      taxes: int.parse(
+                                                          totalValueWithEnsurance),
+                                                      rawMaterial:
+                                                          result.rawMaterial,
+                                                      industrial:
+                                                          result.industrial,
+                                                    ),
+                                                  ),
+                                                );
+                                              } else {
+                                                setSelectedPanel(3);
+
+                                                setState(() {
+                                                  packageError = true;
+                                                });
+                                              }
+                                            } else {
+                                              setSelectedPanel(2);
+
+                                              setState(() {
+                                                calculatorError = true;
+                                              });
+                                              _ordernode.requestFocus();
+                                            }
+                                          } else {
+                                            setSelectedPanel(1);
+                                            setState(() {
+                                              selectedStateError = true;
+                                            });
+                                            _stateCustomenode.requestFocus();
+                                          }
+                                        } else {
+                                          setSelectedPanel(0);
+                                          setState(() {
+                                            selectedRadioTileError = true;
+                                          });
+                                          _orderTypenode.requestFocus();
+                                        }
+                                      },
+                                    );
+                                  }
+                                },
+                              ),
                             ],
                           ),
                           SizedBox(
@@ -2270,181 +2461,6 @@ class _StepperOrderBrokerScreenState extends State<StepperOrderBrokerScreen> {
                         ],
                       ),
                     ),
-                  ),
-                  SizedBox(
-                    height: 7.h,
-                  ),
-                  Visibility(
-                    visible: selectedStateError ||
-                        selectedRadioTileError ||
-                        calculatorError ||
-                        packageError,
-                    child: const Padding(
-                      padding: EdgeInsets.only(
-                          top: 2.0, bottom: 8.0, right: 25.0, left: 25.0),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        children: [
-                          Text(
-                            "الرجاء ملء الحقول الفارغة واستكمال باقي الخيارات",
-                            style: TextStyle(
-                              color: Colors.red,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceAround,
-                    children: [
-                      // CustomButton(
-                      //   onTap: () {},
-                      //   color: AppColor.deepYellow,
-                      //   title: const SizedBox(
-                      //       width: 100, child: Center(child: Text("إلغاء"))),
-                      // ),
-                      BlocConsumer<CalculateResultBloc, CalculateResultState>(
-                        listener: (context, state) {
-                          if (state is CalculateResultSuccessed) {}
-                        },
-                        builder: (context, state) {
-                          if (state is CalculateResultLoading) {
-                            return CustomButton(
-                                title: SizedBox(
-                                    width: 250.w,
-                                    child: const Center(
-                                        child: CircularProgressIndicator())),
-                                // color: AppColor.deepYellow,
-                                onTap: () {});
-                          }
-                          if (state is CalculateResultFailed) {
-                            return Text(state.error);
-                          } else {
-                            return CustomButton(
-                              title: SizedBox(
-                                width: 250.w,
-                                child: const Center(
-                                  child: Text(
-                                    "حساب الرسوم",
-                                    style: TextStyle(
-                                      fontWeight: FontWeight.bold,
-                                    ),
-                                  ),
-                                ),
-                              ),
-                              // color: AppColor.deepYellow,
-                              onTap: () {
-                                FocusManager.instance.primaryFocus?.unfocus();
-                                if (selectedRadioTile.isNotEmpty) {
-                                  if (selectedStateCustome != null ||
-                                      selectedCustomeAgency != null) {
-                                    _ordercalformkey.currentState?.save();
-                                    if (_ordercalformkey.currentState!
-                                        .validate()) {
-                                      setState(() {
-                                        calculatorError = false;
-                                      });
-                                      _packagesformkey.currentState?.save();
-                                      if (_packagesformkey.currentState!
-                                          .validate()) {
-                                        setState(() {
-                                          packageError = false;
-                                        });
-                                        result.insurance =
-                                            int.parse(totalValueWithEnsurance);
-                                        result.fee = selectedPackage!.fee!;
-                                        result.rawMaterial =
-                                            rawMaterialValue ? 1 : 0;
-                                        result.industrial =
-                                            industrialValue ? 1 : 0;
-                                        result.totalTax = selectedPackage!
-                                            .totalTaxes!.totalTax!;
-                                        result.partialTax = selectedPackage!
-                                            .totalTaxes!.partialTax!;
-                                        result.origin = selectedOrigin!.label!;
-                                        result.spendingFee =
-                                            selectedPackage!.spendingFee!;
-                                        result.supportFee =
-                                            selectedPackage!.supportFee!;
-                                        result.localFee =
-                                            selectedPackage!.localFee!;
-                                        result.protectionFee =
-                                            selectedPackage!.protectionFee!;
-                                        result.naturalFee =
-                                            selectedPackage!.naturalFee!;
-                                        result.taxFee =
-                                            selectedPackage!.taxFee!;
-                                        BlocProvider.of<CalculateResultBloc>(
-                                                context)
-                                            .add(CalculateTheResultEvent(
-                                                result));
-                                        BlocProvider.of<AttachmentTypeBloc>(
-                                                context)
-                                            .add(AttachmentTypeLoadEvent());
-                                        // BlocProvider.of<CurrentStepCubit>(context)
-                                        //     .increament();
-
-                                        Navigator.push(
-                                          context,
-                                          MaterialPageRoute(
-                                            builder: (context) =>
-                                                TraderBillReview(
-                                              offerType: selectedRadioTile,
-                                              customAgency:
-                                                  selectedCustomeAgency!.id!,
-                                              customeState:
-                                                  selectedStateCustome!.id!,
-                                              origin: selectedOrigin!.id!,
-                                              packageType: packageTypeId,
-                                              packagesNum: packageNum,
-                                              tabalehNum: tabalehNum,
-                                              weight: wieghtValue.toInt(),
-                                              product: selectedPackage!.id,
-                                              price:
-                                                  int.parse(syrianTotalValue),
-                                              taxes: int.parse(
-                                                  totalValueWithEnsurance),
-                                              rawMaterial: result.rawMaterial,
-                                              industrial: result.industrial,
-                                            ),
-                                          ),
-                                        );
-                                      } else {
-                                        setSelectedPanel(3);
-
-                                        setState(() {
-                                          packageError = true;
-                                        });
-                                      }
-                                    } else {
-                                      setSelectedPanel(2);
-
-                                      setState(() {
-                                        calculatorError = true;
-                                      });
-                                      _ordernode.requestFocus();
-                                    }
-                                  } else {
-                                    setSelectedPanel(1);
-                                    setState(() {
-                                      selectedStateError = true;
-                                    });
-                                    _stateCustomenode.requestFocus();
-                                  }
-                                } else {
-                                  setSelectedPanel(0);
-                                  setState(() {
-                                    selectedRadioTileError = true;
-                                  });
-                                  _orderTypenode.requestFocus();
-                                }
-                              },
-                            );
-                          }
-                        },
-                      ),
-                    ],
                   ),
                   SizedBox(
                     height: 7.h,
