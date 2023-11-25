@@ -29,7 +29,7 @@ class TraderConfirmScreen extends StatelessWidget {
               Padding(
                 padding: EdgeInsets.symmetric(horizontal: 15.w),
                 child: SvgPicture.asset(
-                  "assets/images/trader_confirm.svg",
+                  "assets/images/welcome.svg",
                   fit: BoxFit.cover,
                   width: 265.w,
                   height: 280.h,

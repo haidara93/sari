@@ -7,7 +7,7 @@ class Section {
   String? image;
   String? start;
   String? end;
-  List<ChapterSet>? chapterSet;
+  List<ChapterSet?>? chapterSet;
 
   Section(
       {this.id,
@@ -42,7 +42,7 @@ class Section {
     data['start'] = start;
     data['end'] = end;
     if (chapterSet != null) {
-      data['chapter_set'] = chapterSet!.map((v) => v.toJson()).toList();
+      data['chapter_set'] = chapterSet!.map((v) => v!.toJson()).toList();
     }
     return data;
   }
@@ -51,7 +51,7 @@ class Section {
 class ChapterSet {
   String? id;
   String? label;
-  List<SubChapterSet>? subChapterSet;
+  List<SubChapterSet?>? subChapterSet;
 
   ChapterSet({this.id, this.label, this.subChapterSet});
 
@@ -71,7 +71,7 @@ class ChapterSet {
     data['id'] = id;
     data['label'] = label;
     if (subChapterSet != null) {
-      data['sub_chapter_set'] = subChapterSet!.map((v) => v.toJson()).toList();
+      data['sub_chapter_set'] = subChapterSet!.map((v) => v!.toJson()).toList();
     }
     return data;
   }
@@ -80,12 +80,19 @@ class ChapterSet {
 class SubChapterSet {
   String? id;
   String? label;
+  List<FeeSet?>? feeSet;
 
-  SubChapterSet({this.id, this.label});
+  SubChapterSet({this.id, this.label, this.feeSet});
 
   SubChapterSet.fromJson(Map<String, dynamic> json) {
     id = json['id'];
     label = json['label'];
+    if (json['fee_set'] != null) {
+      feeSet = <FeeSet>[];
+      json['fee_set'].forEach((v) {
+        feeSet!.add(FeeSet.fromJson(v));
+      });
+    }
   }
 
   Map<String, dynamic> toJson() {
@@ -95,38 +102,6 @@ class SubChapterSet {
     return data;
   }
 }
-
-// class Section {
-//   int? id;
-//   String? label;
-//   String? name;
-//   String? image;
-//   String? start;
-//   String? end;
-//   List<Chapter>? chapters;
-
-//   Section({this.id, this.label, this.name, this.image, this.start, this.end});
-
-//   Section.fromJson(Map<String, dynamic> json) {
-//     id = json['id'];
-//     label = json['label'];
-//     name = json['name'];
-//     image = json['image'];
-//     start = json['start'];
-//     end = json['end'];
-//   }
-
-//   Map<String, dynamic> toJson() {
-//     final Map<String, dynamic> data = new Map<String, dynamic>();
-//     data['id'] = this.id;
-//     data['label'] = this.label;
-//     data['name'] = this.name;
-//     data['image'] = this.image;
-//     data['start'] = this.start;
-//     data['end'] = this.end;
-//     return data;
-//   }
-// }
 
 class Chapter {
   String? id;
@@ -302,11 +277,11 @@ class StoneFarming {
 
   StoneFarming.fromJson(Map<String, dynamic> json) {
     id = json['id'];
-    stonImport = json['ston_import'];
-    stonImportNotes = json['ston_import_notes'];
-    stonExport = json['ston_export'];
-    stonExportNotes = json['ston_export_notes'];
-    idStone = json['id_stone'];
+    stonImport = json['ston_import'] ?? "";
+    stonImportNotes = json['ston_import_notes'] ?? "";
+    stonExport = json['ston_export'] ?? "";
+    stonExportNotes = json['ston_export_notes'] ?? "";
+    idStone = json['id_stone'] ?? "";
   }
 
   Map<String, dynamic> toJson() {
@@ -336,9 +311,9 @@ class ImportFee {
 
   ImportFee.fromJson(Map<String, dynamic> json) {
     id = json['id'];
-    id_importfee = json['id_importfee'];
-    restriction_import = json['restriction_import'];
-    document_import = json['document_import'];
+    id_importfee = json['id_importfee'] ?? "";
+    restriction_import = json['restriction_import'] ?? "";
+    document_import = json['document_import'] ?? "";
   }
 }
 
@@ -355,8 +330,8 @@ class Finance {
 
   Finance.fromJson(Map<String, dynamic> json) {
     id = json['id'];
-    id_finance = json['id_finance'];
-    finance = json['finance'];
+    id_finance = json['id_finance'] ?? "";
+    finance = json['finance'] ?? "";
   }
 }
 
@@ -367,13 +342,13 @@ class TradeDescription {
   TradeDescription({this.commercialDescriptions, this.imageDescriptions});
 
   TradeDescription.fromJson(Map<String, dynamic> json) {
-    if (json['commercial_descriptions'] != null) {
+    if (json['commercial_descriptions'] != []) {
       commercialDescriptions = <CommercialDescriptions>[];
       json['commercial_descriptions'].forEach((v) {
         commercialDescriptions!.add(CommercialDescriptions.fromJson(v));
       });
     }
-    if (json['image_descriptions'] != null) {
+    if (json['image_descriptions'] != []) {
       imageDescriptions = <ImageDescriptions>[];
       json['image_descriptions'].forEach((v) {
         imageDescriptions!.add(ImageDescriptions.fromJson(v));
@@ -404,8 +379,8 @@ class CommercialDescriptions {
 
   CommercialDescriptions.fromJson(Map<String, dynamic> json) {
     id = json['id'];
-    secondDescription = json['second_description'];
-    idDesc = json['id_desc'];
+    secondDescription = json['second_description'] ?? "";
+    idDesc = json['id_desc'] ?? "";
   }
 
   Map<String, dynamic> toJson() {
@@ -426,8 +401,8 @@ class ImageDescriptions {
 
   ImageDescriptions.fromJson(Map<String, dynamic> json) {
     id = json['id'];
-    image = json['image'];
-    idDesc = json['id_desc'];
+    image = json['image'] ?? "";
+    idDesc = json['id_desc'] ?? "";
   }
 
   Map<String, dynamic> toJson() {
@@ -478,6 +453,232 @@ class SectionNote {
     data['note_c'] = noteC;
     data['note_num'] = noteNum;
     // data['id_section'] = this.idSection;
+    return data;
+  }
+}
+
+class ChapterSearch {
+  String? id;
+  String? label;
+  IdParent1? idParent1;
+
+  ChapterSearch({this.id, this.label, this.idParent1});
+
+  ChapterSearch.fromJson(Map<String, dynamic> json) {
+    id = json['id'];
+    label = json['label'];
+    idParent1 = json['id_parent_1'] != null
+        ? new IdParent1.fromJson(json['id_parent_1'])
+        : null;
+  }
+}
+
+class SubChapterSearch {
+  String? id;
+  String? label;
+  String? review;
+  String? reviewValue;
+  IdParent2? idParent2;
+
+  SubChapterSearch(
+      {this.id, this.label, this.review, this.reviewValue, this.idParent2});
+
+  SubChapterSearch.fromJson(Map<String, dynamic> json) {
+    id = json['id'];
+    label = json['label'] ?? "";
+    review = json['review'] ?? "";
+    reviewValue = json['review_value'] ?? "";
+    idParent2 = json['id_parent_2'] != null
+        ? new IdParent2.fromJson(json['id_parent_2'])
+        : null;
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['id'] = this.id;
+    data['label'] = this.label;
+    data['review'] = this.review;
+    data['review_value'] = this.reviewValue;
+    if (this.idParent2 != null) {
+      data['id_parent_2'] = this.idParent2!.toJson();
+    }
+    return data;
+  }
+}
+
+class IdParent2 {
+  String? id;
+  String? label;
+  IdParent1? idParent1;
+
+  IdParent2({this.id, this.label, this.idParent1});
+
+  IdParent2.fromJson(Map<String, dynamic> json) {
+    id = json['id'];
+    label = json['label'];
+    idParent1 = json['id_parent_1'] != null
+        ? new IdParent1.fromJson(json['id_parent_1'])
+        : null;
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['id'] = this.id;
+    data['label'] = this.label;
+    if (this.idParent1 != null) {
+      data['id_parent_1'] = this.idParent1!.toJson();
+    }
+    return data;
+  }
+}
+
+class IdParent1 {
+  String? id;
+  int? number;
+  String? label;
+  String? name;
+  String? image;
+  String? start;
+  String? end;
+
+  IdParent1(
+      {this.id,
+      this.number,
+      this.label,
+      this.name,
+      this.image,
+      this.start,
+      this.end});
+
+  IdParent1.fromJson(Map<String, dynamic> json) {
+    id = json['id'];
+    number = json['number'];
+    label = json['label'];
+    name = json['name'];
+    image = json['image'];
+    start = json['start'];
+    end = json['end'];
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['id'] = this.id;
+    data['number'] = this.number;
+    data['label'] = this.label;
+    data['name'] = this.name;
+    data['image'] = this.image;
+    data['start'] = this.start;
+    data['end'] = this.end;
+    return data;
+  }
+}
+
+class FeeSearch {
+  String? id;
+  String? label;
+  String? export;
+  String? restrictionExport;
+  String? review;
+  String? reviewValue;
+  List<StoneFarming>? stoneFarming;
+  List<ImportFee>? importFees;
+  List<Finance>? finance;
+  List<Fees>? fees;
+  IdParent3? idParent3;
+
+  FeeSearch(
+      {this.id,
+      this.label,
+      this.export,
+      this.restrictionExport,
+      this.review,
+      this.reviewValue,
+      this.stoneFarming,
+      this.importFees,
+      this.finance,
+      this.fees,
+      this.idParent3});
+
+  FeeSearch.fromJson(Map<String, dynamic> json) {
+    id = json['id'];
+    label = json['label'];
+    export = json['export'] ?? "";
+    restrictionExport = json['restriction_export'] ?? "";
+    review = json['review'] ?? "";
+    reviewValue = json['review_value'] ?? "";
+    if (json['stone_farming'] != []) {
+      stoneFarming = <StoneFarming>[];
+      json['stone_farming'].forEach((v) {
+        stoneFarming!.add(new StoneFarming.fromJson(v));
+      });
+    }
+    if (json['import_fees'] != []) {
+      importFees = <ImportFee>[];
+      json['import_fees'].forEach((v) {
+        importFees!.add(new ImportFee.fromJson(v));
+      });
+    }
+    if (json['finance'] != []) {
+      finance = <Finance>[];
+      json['finance'].forEach((v) {
+        finance!.add(new Finance.fromJson(v));
+      });
+    }
+    if (json['fees'] != []) {
+      fees = <Fees>[];
+      json['fees'].forEach((v) {
+        fees!.add(new Fees.fromJson(v));
+      });
+    }
+    idParent3 = json['id_parent_3'] != null
+        ? new IdParent3.fromJson(json['id_parent_3'])
+        : null;
+  }
+}
+
+class Fees {
+  String? id;
+  double? price;
+  double? fee;
+
+  Fees({this.id, this.price, this.fee});
+
+  Fees.fromJson(Map<String, dynamic> json) {
+    id = json['id'];
+    price = json['price'] ?? 0.0;
+    fee = json['fee'] ?? 0.0;
+  }
+}
+
+class IdParent3 {
+  String? id;
+  String? label;
+  String? review;
+  String? reviewValue;
+  IdParent2? idParent2;
+
+  IdParent3(
+      {this.id, this.label, this.review, this.reviewValue, this.idParent2});
+
+  IdParent3.fromJson(Map<String, dynamic> json) {
+    id = json['id'];
+    label = json['label'];
+    review = json['review'];
+    reviewValue = json['review_value'];
+    idParent2 = json['id_parent_2'] != null
+        ? new IdParent2.fromJson(json['id_parent_2'])
+        : null;
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['id'] = this.id;
+    data['label'] = this.label;
+    data['review'] = this.review;
+    data['review_value'] = this.reviewValue;
+    if (this.idParent2 != null) {
+      data['id_parent_2'] = this.idParent2!.toJson();
+    }
     return data;
   }
 }

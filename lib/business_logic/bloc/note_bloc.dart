@@ -14,6 +14,7 @@ class NoteBloc extends Bloc<NoteEvent, NoteState> {
       emit(NoteLoadingProgress());
       try {
         var notes = await accordionRepository.getNotes(event.id, event.type);
+        print("asdasd");
         emit(NoteLoadedSuccess(notes));
       } catch (e) {
         emit(NoteLoadedFailed(e.toString()));

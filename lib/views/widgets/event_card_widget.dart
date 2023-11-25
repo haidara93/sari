@@ -48,11 +48,7 @@ class EventCardWidget extends StatelessWidget {
           Text(
             title,
             style: TextStyle(
-              color: isPast
-                  ? isCurrent
-                      ? AppColor.lightBlue
-                      : Colors.black
-                  : Colors.black54,
+              color: isPast ? AppColor.deepBlue : Colors.black54,
             ),
           )
         ],

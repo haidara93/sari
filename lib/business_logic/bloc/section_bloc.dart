@@ -23,7 +23,7 @@ class SectionBloc extends Bloc<SectionEvent, SectionState> {
         SectionLoadedSuccess currentState = state as SectionLoadedSuccess;
 
         for (var element in currentState.sections) {
-          if (element.id == event.section.id) {
+          if (element!.id == event.section.id) {
             // element.chapters = event.chapters;
           }
         }

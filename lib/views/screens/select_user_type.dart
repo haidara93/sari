@@ -35,7 +35,7 @@ class SelectUserType extends StatelessWidget {
                       width: 230.w,
                     );
                   },
-                  "assets/images/select_user.svg",
+                  "assets/images/trader_signin.svg",
                   fit: BoxFit.cover,
                   height: 230.h,
                   width: 230.w,

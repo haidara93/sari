@@ -10,12 +10,14 @@ import 'package:custome_mobile/business_logic/bloc/flags_bloc.dart';
 import 'package:custome_mobile/business_logic/bloc/group_bloc.dart';
 import 'package:custome_mobile/business_logic/bloc/package_type_bloc.dart';
 import 'package:custome_mobile/business_logic/bloc/post_bloc.dart';
+import 'package:custome_mobile/business_logic/bloc/search_section_bloc.dart';
 import 'package:custome_mobile/business_logic/bloc/section_bloc.dart';
 import 'package:custome_mobile/business_logic/bloc/state_custome_bloc.dart';
 import 'package:custome_mobile/business_logic/bloc/sub_chapter_bloc.dart';
 import 'package:custome_mobile/business_logic/bloc/trader_log_bloc.dart';
 import 'package:custome_mobile/business_logic/cubit/bottom_nav_bar_cubit.dart';
 import 'package:custome_mobile/constants/enums.dart';
+import 'package:custome_mobile/data/models/accurdion_model.dart';
 import 'package:custome_mobile/data/models/package_model.dart';
 import 'package:custome_mobile/enum/panel_state.dart';
 import 'package:custome_mobile/helpers/color_constants.dart';
@@ -28,8 +30,10 @@ import 'package:custome_mobile/views/screens/trader/trader_main_screen.dart';
 import 'package:custome_mobile/views/widgets/calculator_loading_screen.dart';
 import 'package:custome_mobile/views/widgets/custom_app_bar.dart';
 import 'package:custome_mobile/views/widgets/custom_botton.dart';
+import 'package:custome_mobile/views/widgets/highlight_text.dart';
 import 'package:custome_mobile/views/widgets/item_taxes_widget.dart';
 import 'package:custome_mobile/views/widgets/pens_taxes_widget.dart';
+import 'package:custome_mobile/views/widgets/tariff_info_icon.dart';
 import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -1222,7 +1226,7 @@ class _TraderHomeScreenState extends State<TraderHomeScreen>
                                       color: Colors.black,
                                       fontSize: 19,
                                     ),
-                                    contentPadding: EdgeInsets.symmetric(
+                                    contentPadding: const EdgeInsets.symmetric(
                                         horizontal: 9.0, vertical: 11.0),
                                     border: OutlineInputBorder(
                                       borderRadius: BorderRadius.circular(12),
@@ -1398,8 +1402,9 @@ class _TraderHomeScreenState extends State<TraderHomeScreen>
                                       prefixStyle: const TextStyle(
                                         color: Colors.black,
                                       ),
-                                      contentPadding: EdgeInsets.symmetric(
-                                          horizontal: 9.0, vertical: 11.0),
+                                      contentPadding:
+                                          const EdgeInsets.symmetric(
+                                              horizontal: 9.0, vertical: 11.0),
                                       border: OutlineInputBorder(
                                         borderRadius: BorderRadius.circular(12),
                                       ),
@@ -1672,8 +1677,9 @@ class _TraderHomeScreenState extends State<TraderHomeScreen>
                                       labelText: valueEnabled
                                           ? "قيمة البضاعة الاجمالية بالدولار"
                                           : "سعر الواحدة لدى الجمارك",
-                                      contentPadding: EdgeInsets.symmetric(
-                                          horizontal: 9.0, vertical: 11.0),
+                                      contentPadding:
+                                          const EdgeInsets.symmetric(
+                                              horizontal: 9.0, vertical: 11.0),
                                       border: OutlineInputBorder(
                                         borderRadius: BorderRadius.circular(12),
                                       ),
@@ -2123,6 +2129,8 @@ class _TraderHomeScreenState extends State<TraderHomeScreen>
   bool shownote = false;
   NoteType noteType = NoteType.None;
   final ScrollController scroll = ScrollController();
+  bool isSearch = false;
+  final TextEditingController _searchController = TextEditingController();
 
   Widget _buildTariffPanel(BuildContext context) {
     return Directionality(
@@ -2158,173 +2166,420 @@ class _TraderHomeScreenState extends State<TraderHomeScreen>
             SingleChildScrollView(
               child: Column(
                 children: [
+                  SizedBox(
+                    height: 10.h,
+                  ),
                   Padding(
-                    padding: EdgeInsets.all(8.h),
-                    child: BlocConsumer<SectionBloc, SectionState>(
-                      listener: (context, state) {
-                        // if(state is)
+                    padding: const EdgeInsets.all(8.0),
+                    child: Focus(
+                      focusNode: _statenode,
+                      onFocusChange: (bool focus) {
+                        if (!focus) {
+                          BlocProvider.of<BottomNavBarCubit>(context)
+                              .emitShow();
+                          FocusManager.instance.primaryFocus?.unfocus();
+                        }
                       },
-                      builder: (context, state) {
-                        if (state is SectionLoadedSuccess) {
-                          return ListView.builder(
-                            key: Key('builder ${selected.toString()}'),
-                            shrinkWrap: true,
-                            controller: scroll,
-                            physics: const NeverScrollableScrollPhysics(),
-                            itemCount: state.sections.length,
-                            itemBuilder: (context, index) {
-                              return Card(
-                                margin: EdgeInsets.symmetric(
-                                    vertical: 4.h, horizontal: 3.w),
-                                clipBehavior: Clip.none,
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: const BorderRadius.all(
-                                    Radius.circular(10),
-                                  ),
-                                  side: BorderSide(
-                                      color: AppColor.goldenYellow, width: 2),
-                                ),
-                                color: Colors.white,
-                                child: Theme(
-                                  data: Theme.of(context).copyWith(
-                                      dividerColor: Colors.transparent),
-                                  child: ExpansionTile(
-                                    key: Key(index.toString()), //attention
-                                    initiallyExpanded: index == selected,
-                                    tilePadding:
-                                        EdgeInsets.symmetric(horizontal: 5.w),
-                                    title: Row(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.center,
-                                      children: [
-                                        // Padding(
-                                        //   padding: const EdgeInsets.symmetric(
-                                        //       horizontal: 3),
-                                        //   child: SizedBox(
-                                        //     width: 36.w,
-                                        //     height: 36.h,
-                                        //     child: Img(
-                                        //       state.sections[index].image!,
-                                        //     ),
-                                        //   ),
-                                        // ),
-                                        SizedBox(
-                                          width: 65.w,
-                                          child: Column(
-                                            children: [
-                                              SizedBox(
-                                                width: 36.w,
-                                                height: 36.h,
-                                                child: Img(
-                                                  state.sections[index].image!,
-                                                ),
-                                              ),
-                                              Text(
-                                                "(${state.sections[index].end!}__${state.sections[index].start!})",
-                                                style: const TextStyle(
-                                                    fontSize: 14),
-                                              ),
-                                            ],
-                                          ),
-                                        ),
-                                        SizedBox(
-                                          height: 5.w,
-                                        ),
-                                        Flexible(
-                                          child: Text(
-                                            state.sections[index].label!,
-                                            maxLines: 10,
-                                            overflow: TextOverflow.ellipsis,
-                                            style: const TextStyle(
-                                              fontWeight: FontWeight.bold,
-                                            ),
-                                          ),
-                                        ),
-                                      ],
+                      child:
+                          BlocListener<SearchSectionBloc, SearchSectionState>(
+                        listener: (context, state) {
+                          if (state is SearchSectionLoadedSuccess) {
+                            // print(jsonEncode(state.sections));
+                          }
+                          if (state is SearchSectionLoadedFailed) {
+                            print(state.error);
+                          }
+                        },
+                        child: TextFormField(
+                          controller: _searchController,
+                          onTap: () {
+                            BlocProvider.of<BottomNavBarCubit>(context)
+                                .emitHide();
+                            _searchController.selection = TextSelection(
+                                baseOffset: 0,
+                                extentOffset:
+                                    _searchController.value.text.length);
+                          },
+                          scrollPadding: EdgeInsets.only(
+                              bottom: MediaQuery.of(context).viewInsets.bottom +
+                                  50),
+                          decoration: InputDecoration(
+                            labelText: "بحث",
+                            labelStyle: const TextStyle(fontSize: 18),
+                            border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(12)),
+                            contentPadding: const EdgeInsets.symmetric(
+                                vertical: 11.0, horizontal: 9.0),
+                          ),
+                          onChanged: (value) {
+                            if (value.isEmpty) {
+                              setState(() {
+                                isSearch = false;
+                              });
+                            }
+                          },
+                          onFieldSubmitted: (value) {
+                            BlocProvider.of<BottomNavBarCubit>(context)
+                                .emitShow();
+                            _searchController.text = value;
+                            if (value.isNotEmpty) {
+                              BlocProvider.of<SearchSectionBloc>(context)
+                                  .add(SearchSectionLoadEvent(value));
+                              setState(() {
+                                isSearch = true;
+                              });
+                            }
+                          },
+                        ),
+                      ),
+                    ),
+                  ),
+                  SizedBox(
+                    height: 5.h,
+                  ),
+                  isSearch
+                      ? BlocBuilder<SearchSectionBloc, SearchSectionState>(
+                          builder: (context, state) {
+                            if (state is SearchSectionLoadedSuccess) {
+                              return ListView.builder(
+                                key: Key('builder ${selected.toString()}'),
+                                shrinkWrap: true,
+                                physics: const NeverScrollableScrollPhysics(),
+                                itemCount: state.sections.length,
+                                itemBuilder: (context, index) {
+                                  return Card(
+                                    margin: EdgeInsets.symmetric(
+                                        vertical: 4.h, horizontal: 3.w),
+                                    clipBehavior: Clip.none,
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: const BorderRadius.all(
+                                        Radius.circular(10),
+                                      ),
+                                      side: BorderSide(
+                                          color: AppColor.goldenYellow,
+                                          width: 2),
                                     ),
+                                    color: Colors.white,
+                                    // decoration: BoxDecoration(
+                                    //   borderRadius: BorderRadius.circular(10),
+                                    //   border: selected == index
+                                    //       ? Border.all(
+                                    //           color: Colors.yellow[600]!, width: 2)
+                                    //       : null,
+                                    // ),
+                                    child: Theme(
+                                      data: Theme.of(context).copyWith(
+                                          dividerColor: Colors.transparent),
+                                      child: ExpansionTile(
+                                        key: Key(index.toString()), //attention
+                                        initiallyExpanded: true,
+                                        tilePadding: EdgeInsets.symmetric(
+                                            horizontal: 5.w),
 
-                                    onExpansionChanged: (value) {
-                                      if (value) {
-                                        BlocProvider.of<ChapterBloc>(context)
-                                            .add(ChapterLoadEvent(
-                                                state.sections[index].id!));
-                                        setState(() {
-                                          selected = index;
-                                          chapterselected = -1;
-                                          subchapterselected = -1;
-                                        });
+                                        title: Row(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.center,
+                                          children: [
+                                            SizedBox(
+                                              width: 65.w,
+                                              child: Column(
+                                                children: [
+                                                  SizedBox(
+                                                    width: 36.w,
+                                                    height: 36.h,
+                                                    child: Img(
+                                                      "https://across-mena.com${state.sections[index]!.image!}",
+                                                      placeholder: Container(
+                                                        color: Colors.grey[200],
+                                                        width: 36.w,
+                                                        height: 36.h,
+                                                      ),
+                                                      errorWidget: Container(
+                                                        color: Colors.grey[200],
+                                                        width: 36.w,
+                                                        height: 36.h,
+                                                        child: const Center(
+                                                            child:
+                                                                Text("error")),
+                                                      ),
+                                                    ),
+                                                  ),
+                                                  Text(
+                                                    "(${state.sections[index]!.end!}__${state.sections[index]!.start!})",
+                                                    style: const TextStyle(
+                                                        fontSize: 14),
+                                                  ),
+                                                ],
+                                              ),
+                                            ),
+                                            SizedBox(
+                                              height: 5.w,
+                                            ),
+                                            Flexible(
+                                              child: HighlightText(
+                                                highlightStyle: const TextStyle(
+                                                  height: 1.3,
+                                                  fontSize: 17,
+                                                  fontWeight: FontWeight.bold,
+                                                  color: Colors.orangeAccent,
+                                                ),
+                                                style: const TextStyle(
+                                                  height: 1.3,
+                                                  fontSize: 17,
+                                                  fontWeight: FontWeight.bold,
+                                                ),
+                                                text: state
+                                                    .sections[index]!.label!,
+                                                highlight:
+                                                    _searchController.text,
+                                                ignoreCase: false,
+                                              ),
+                                            ),
+                                          ],
+                                        ),
 
-                                        scroll.animateTo(
-                                            index +
-                                                MediaQuery.of(context)
-                                                        .size
-                                                        .width /
-                                                    2,
-                                            duration:
-                                                const Duration(seconds: 1),
-                                            curve: Curves.easeIn);
-                                      } else {
-                                        setState(() {
-                                          selected = -1;
-                                          shownote = false;
-                                          noteType = NoteType.None;
-                                        });
-                                      }
-                                    },
-                                    children: buildChapterTiles(),
+                                        children: buildSearchChapterTiles(
+                                            state.sections[index]!.chapterSet!),
+                                      ),
+                                    ),
+                                  );
+                                },
+                              );
+                            } else if (state is SearchSectionLoading) {
+                              return Shimmer.fromColors(
+                                baseColor: (Colors.grey[300])!,
+                                highlightColor: (Colors.grey[100])!,
+                                enabled: true,
+                                child: ListView.builder(
+                                  shrinkWrap: true,
+                                  itemBuilder: (_, __) => Container(
+                                    margin: const EdgeInsets.symmetric(
+                                        vertical: 4, horizontal: 3),
+                                    clipBehavior: Clip.antiAlias,
+                                    decoration: BoxDecoration(
+                                      color: Colors.white,
+                                      borderRadius: BorderRadius.circular(10),
+                                    ),
+                                    child: SizedBox(
+                                      height: 90.h,
+                                    ),
+                                  ),
+                                  itemCount: 10,
+                                ),
+                              );
+                            } else {
+                              return Center(
+                                child: GestureDetector(
+                                  onTap: () {
+                                    // BlocProvider.of<SectionBloc>(context)
+                                    //     .add(SectionLoadEvent());
+                                  },
+                                  child: const Row(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      Text(
+                                        "حدث خطأأثناء تحميل القائمة...  ",
+                                        style: TextStyle(color: Colors.red),
+                                      ),
+                                      Icon(
+                                        Icons.refresh,
+                                        color: Colors.grey,
+                                      )
+                                    ],
                                   ),
                                 ),
                               );
+                            }
+                          },
+                        )
+                      : Padding(
+                          padding: EdgeInsets.all(8.h),
+                          child: BlocConsumer<SectionBloc, SectionState>(
+                            listener: (context, state) {
+                              // if(state is)
                             },
-                          );
-                        } else if (state is SectionLoadingProgress) {
-                          return Shimmer.fromColors(
-                            baseColor: (Colors.grey[300])!,
-                            highlightColor: (Colors.grey[100])!,
-                            enabled: true,
-                            child: ListView.builder(
-                              shrinkWrap: true,
-                              itemBuilder: (_, __) => Container(
-                                margin: const EdgeInsets.symmetric(
-                                    vertical: 4, horizontal: 3),
-                                clipBehavior: Clip.antiAlias,
-                                decoration: BoxDecoration(
-                                  color: Colors.white,
-                                  borderRadius: BorderRadius.circular(10),
-                                ),
-                                child: SizedBox(
-                                  height: 90.h,
-                                ),
-                              ),
-                              itemCount: 10,
-                            ),
-                          );
-                        } else {
-                          return Center(
-                            child: GestureDetector(
-                              onTap: () {
-                                BlocProvider.of<SectionBloc>(context)
-                                    .add(SectionLoadEvent());
-                              },
-                              child: const Row(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  Text(
-                                    "حدث خطأأثناء تحميل القائمة...  ",
-                                    style: TextStyle(color: Colors.red),
+                            builder: (context, state) {
+                              if (state is SectionLoadedSuccess) {
+                                return ListView.builder(
+                                  key: Key('builder ${selected.toString()}'),
+                                  shrinkWrap: true,
+                                  controller: scroll,
+                                  physics: const NeverScrollableScrollPhysics(),
+                                  itemCount: state.sections.length,
+                                  itemBuilder: (context, index) {
+                                    return Card(
+                                      margin: EdgeInsets.symmetric(
+                                          vertical: 4.h, horizontal: 3.w),
+                                      clipBehavior: Clip.none,
+                                      shape: RoundedRectangleBorder(
+                                        borderRadius: const BorderRadius.all(
+                                          Radius.circular(10),
+                                        ),
+                                        side: BorderSide(
+                                            color: AppColor.goldenYellow,
+                                            width: 2),
+                                      ),
+                                      color: Colors.white,
+                                      child: Theme(
+                                        data: Theme.of(context).copyWith(
+                                            dividerColor: Colors.transparent),
+                                        child: ExpansionTile(
+                                          key:
+                                              Key(index.toString()), //attention
+                                          initiallyExpanded: index == selected,
+                                          tilePadding: EdgeInsets.symmetric(
+                                              horizontal: 5.w),
+                                          title: Row(
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.center,
+                                            children: [
+                                              // Padding(
+                                              //   padding: const EdgeInsets.symmetric(
+                                              //       horizontal: 3),
+                                              //   child: SizedBox(
+                                              //     width: 36.w,
+                                              //     height: 36.h,
+                                              //     child: Img(
+                                              //       state.sections[index].image!,
+                                              //     ),
+                                              //   ),
+                                              // ),
+                                              SizedBox(
+                                                width: 65.w,
+                                                child: Column(
+                                                  children: [
+                                                    SizedBox(
+                                                      width: 36.w,
+                                                      height: 36.h,
+                                                      child: Img(
+                                                        state.sections[index]!
+                                                            .image!,
+                                                        placeholder: Container(
+                                                          color:
+                                                              Colors.grey[200],
+                                                          width: 36.w,
+                                                          height: 36.h,
+                                                        ),
+                                                        errorWidget: Container(
+                                                          color:
+                                                              Colors.grey[200],
+                                                          width: 36.w,
+                                                          height: 36.h,
+                                                          child: const Center(
+                                                              child: Text(
+                                                                  "error")),
+                                                        ),
+                                                      ),
+                                                    ),
+                                                    Text(
+                                                      "(${state.sections[index]!.end!}__${state.sections[index]!.start!})",
+                                                      style: const TextStyle(
+                                                          fontSize: 14),
+                                                    ),
+                                                  ],
+                                                ),
+                                              ),
+                                              SizedBox(
+                                                height: 5.w,
+                                              ),
+                                              Flexible(
+                                                child: Text(
+                                                  state.sections[index]!.label!,
+                                                  maxLines: 10,
+                                                  overflow:
+                                                      TextOverflow.ellipsis,
+                                                  style: const TextStyle(
+                                                    fontWeight: FontWeight.bold,
+                                                  ),
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+
+                                          onExpansionChanged: (value) {
+                                            if (value) {
+                                              BlocProvider.of<ChapterBloc>(
+                                                      context)
+                                                  .add(ChapterLoadEvent(state
+                                                      .sections[index]!.id!));
+                                              setState(() {
+                                                selected = index;
+                                                chapterselected = -1;
+                                                subchapterselected = -1;
+                                              });
+
+                                              scroll.animateTo(
+                                                  index +
+                                                      MediaQuery.of(context)
+                                                              .size
+                                                              .width /
+                                                          2,
+                                                  duration: const Duration(
+                                                      seconds: 1),
+                                                  curve: Curves.easeIn);
+                                            } else {
+                                              setState(() {
+                                                selected = -1;
+                                                shownote = false;
+                                                noteType = NoteType.None;
+                                              });
+                                            }
+                                          },
+                                          children: buildChapterTiles(),
+                                        ),
+                                      ),
+                                    );
+                                  },
+                                );
+                              } else if (state is SectionLoadingProgress) {
+                                return Shimmer.fromColors(
+                                  baseColor: (Colors.grey[300])!,
+                                  highlightColor: (Colors.grey[100])!,
+                                  enabled: true,
+                                  child: ListView.builder(
+                                    shrinkWrap: true,
+                                    itemBuilder: (_, __) => Container(
+                                      margin: const EdgeInsets.symmetric(
+                                          vertical: 4, horizontal: 3),
+                                      clipBehavior: Clip.antiAlias,
+                                      decoration: BoxDecoration(
+                                        color: Colors.white,
+                                        borderRadius: BorderRadius.circular(10),
+                                      ),
+                                      child: SizedBox(
+                                        height: 90.h,
+                                      ),
+                                    ),
+                                    itemCount: 10,
                                   ),
-                                  Icon(
-                                    Icons.refresh,
-                                    color: Colors.grey,
-                                  )
-                                ],
-                              ),
-                            ),
-                          );
-                        }
-                      },
-                    ),
-                  ),
+                                );
+                              } else {
+                                return Center(
+                                  child: GestureDetector(
+                                    onTap: () {
+                                      BlocProvider.of<SectionBloc>(context)
+                                          .add(SectionLoadEvent());
+                                    },
+                                    child: const Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      children: [
+                                        Text(
+                                          "حدث خطأأثناء تحميل القائمة...  ",
+                                          style: TextStyle(color: Colors.red),
+                                        ),
+                                        Icon(
+                                          Icons.refresh,
+                                          color: Colors.grey,
+                                        )
+                                      ],
+                                    ),
+                                  ),
+                                );
+                              }
+                            },
+                          ),
+                        ),
                   SizedBox(
                     height: 90.h,
                   )
@@ -2361,6 +2616,8 @@ class _TraderHomeScreenState extends State<TraderHomeScreen>
                             chapterselected = -1;
                             subchapterselected = -1;
                             feeselected = -1;
+                            _searchController.text = "";
+                            isSearch = false;
                           });
                           BlocProvider.of<FeeSelectBloc>(context)
                               .add(FeeSelectLoadEvent(id: feeselectedId!));
@@ -2382,6 +2639,328 @@ class _TraderHomeScreenState extends State<TraderHomeScreen>
         ),
       ),
     );
+  }
+
+  buildSearchChapterTiles(List<ChapterSet?> chapters) {
+    // _CustomeTariffScreenState? stateobject =
+    //     context.findAncestorStateOfType<_CustomeTariffScreenState>();
+    List<Widget> list = [];
+    list.add(Container(
+      color: Colors.grey[200],
+      padding: const EdgeInsets.only(top: 3.0),
+      child: ListView.builder(
+        key: Key('chapterbuilder ${chapterselected.toString()}'),
+        shrinkWrap: true,
+        itemCount: chapters.length,
+        physics: const NeverScrollableScrollPhysics(),
+        itemBuilder: (context, index2) {
+          return Column(
+            children: [
+              Card(
+                margin: const EdgeInsets.all(2),
+                clipBehavior: Clip.antiAlias,
+                elevation: 1,
+                color: Colors.grey[200],
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(10),
+                  side: BorderSide(
+                      color: Colors.grey[200]!,
+                      // color: chapterselected == index2
+                      //     ? subchapterselected == -1
+                      //         ? AppColor.goldenYellow
+                      //         : Colors.grey[200]!
+                      //     : Colors.grey[200]!,
+                      width: 2),
+                ),
+                child: ListTileTheme(
+                  contentPadding: const EdgeInsets.all(0),
+                  dense: true,
+                  horizontalTitleGap: 0.0,
+                  minLeadingWidth: 0,
+                  child: ExpansionTile(
+                    title: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        SizedBox(
+                          width: 17.w,
+                        ),
+                        Flexible(
+                          child: Row(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                chapters[index2]!.id!,
+                                style: const TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                              SizedBox(
+                                width: 5.w,
+                              ),
+                              Flexible(
+                                child: HighlightText(
+                                  highlightStyle: const TextStyle(
+                                    height: 1.3,
+                                    fontSize: 17,
+                                    color: Colors.orangeAccent,
+                                  ),
+                                  style: const TextStyle(
+                                    height: 1.3,
+                                    fontSize: 17,
+                                  ),
+                                  text: chapters[index2]!.label!,
+                                  highlight: _searchController.text,
+                                  ignoreCase: false,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
+                    key: Key(index2.toString()), //attention
+                    initiallyExpanded: true,
+                    children: buildSearchSubChapterTiles(
+                        chapters[index2]!.subChapterSet!),
+                  ),
+                ),
+              ),
+              chapters.length - 1 == index2
+                  ? const SizedBox.shrink()
+                  : Divider(
+                      height: 1,
+                      color: AppColor.goldenYellow,
+                    ),
+            ],
+          );
+        },
+      ),
+    ));
+
+    return list;
+  }
+
+  buildSearchSubChapterTiles(List<SubChapterSet?> subchapters) {
+    List<Widget> list = [];
+    list.add(Container(
+      color: Colors.white,
+      padding: const EdgeInsets.only(top: 0.0),
+      child: ListView.builder(
+        key: Key('subchapterbuilder ${subchapterselected.toString()}'),
+        shrinkWrap: true,
+        itemCount: subchapters.length,
+        physics: const NeverScrollableScrollPhysics(),
+        itemBuilder: (context, index3) {
+          return Column(
+            children: [
+              Card(
+                margin: const EdgeInsets.all(2),
+                clipBehavior: Clip.antiAlias,
+                elevation: subchapterselected == index3 ? 1 : 0,
+                color: Colors.white,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(10),
+                  side: BorderSide(
+                      color: subchapterselected == index3
+                          ? feeselected == -1
+                              ? AppColor.goldenYellow
+                              : Colors.white
+                          : Colors.white,
+                      width: 2),
+                ),
+                child: ExpansionTile(
+                  key: Key(index3.toString()), //attention
+                  initiallyExpanded: true,
+                  tilePadding: EdgeInsets.zero,
+
+                  // controlAffinity: ListTileControlAffinity.leading,
+                  childrenPadding: EdgeInsets.zero,
+                  // leading: Container(
+                  //   margin: EdgeInsets.symmetric(horizontal: 7),
+                  //   child: subchapterselected == index3
+                  //       ? const Icon(Icons.remove)
+                  //       : const Icon(Icons.add),
+                  // ),
+                  // leading: const SizedBox.shrink(),
+                  title: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      SizedBox(
+                        width: 15.w,
+                      ),
+                      Flexible(
+                        child: Row(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              subchapters[index3]!.id!,
+                              style: const TextStyle(
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                            SizedBox(
+                              width: 5.w,
+                            ),
+                            Flexible(
+                              child: HighlightText(
+                                highlightStyle: const TextStyle(
+                                  height: 1.3,
+                                  fontSize: 17,
+                                  color: Colors.orangeAccent,
+                                ),
+                                style: const TextStyle(
+                                  height: 1.3,
+                                  fontSize: 17,
+                                ),
+                                text: subchapters[index3]!.label!,
+                                highlight: _searchController.text,
+                                ignoreCase: false,
+                              ),
+                            ),
+                            SizedBox(
+                              width: 5.w,
+                            ),
+                          ],
+                        ),
+                      ),
+                      // GestureDetector(
+                      //   onTap: () {},
+                      //   child: const TariffInfoIcon(),
+                      // ),
+                    ],
+                  ),
+
+                  children: subchapters[index3]!.feeSet == null
+                      ? []
+                      : buildSearchFeesTiles(subchapters[index3]!.feeSet!),
+                ),
+              ),
+              subchapters.length - 1 == index3
+                  ? const SizedBox.shrink()
+                  : Divider(
+                      height: 1,
+                      color: AppColor.goldenYellow,
+                    ),
+            ],
+          );
+        },
+      ),
+    ));
+
+    return list;
+  }
+
+  buildSearchFeesTiles(List<FeeSet?> feeslist) {
+    List<Widget> list = [];
+    List<FeeSet?> fees = [];
+    for (var element in feeslist) {
+      if (fees.singleWhere((it) => it!.id == element!.id, orElse: () => null) ==
+          null) {
+        fees.add(element);
+      }
+    }
+    list.add(Container(
+      color: Colors.grey[200],
+      padding: const EdgeInsets.all(3.0),
+      child: ListView.builder(
+        key: Key('feebuilder ${feeselected.toString()}'),
+        shrinkWrap: true,
+        itemCount: fees.length,
+        physics: const NeverScrollableScrollPhysics(),
+        itemBuilder: (context, index4) {
+          return Container(
+            margin: const EdgeInsets.all(8.0),
+            child: Column(
+              children: [
+                InkWell(
+                  onTap: () {
+                    if (feeselected == index4) {
+                      setState(() {
+                        feeselected = -1;
+                        feeselectedId = "";
+                      });
+                    } else {
+                      setState(() {
+                        feeselected = index4;
+                        feeselectedId = fees[index4]!.id!;
+                      });
+                    }
+                  },
+                  child: Row(
+                    children: [
+                      Flexible(
+                        child: Row(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            SizedBox(
+                              width: 2.w,
+                            ),
+                            Text(
+                              fees[index4]!.id!,
+                              style: const TextStyle(
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                            Flexible(
+                                child: Container(
+                              padding:
+                                  const EdgeInsets.symmetric(horizontal: 5),
+                              width: double.infinity,
+                              decoration: BoxDecoration(
+                                color: feeselected == index4
+                                    ? null
+                                    : Colors.grey[200],
+                                borderRadius: BorderRadius.circular(10),
+                              ),
+                              child: HighlightText(
+                                highlightStyle: const TextStyle(
+                                  height: 1.3,
+                                  fontSize: 17,
+                                  color: Colors.orangeAccent,
+                                ),
+                                style: const TextStyle(
+                                  height: 1.3,
+                                  fontSize: 17,
+                                ),
+                                text: fees[index4]!.label!,
+                                highlight: _searchController.text,
+                                ignoreCase: false,
+                              ),
+                            )),
+                          ],
+                        ),
+                      ),
+                      feeselected == index4
+                          ? const Icon(
+                              Icons.check_box_outlined,
+                              color: Colors.green,
+                            )
+                          : Icon(
+                              Icons.check_box_outline_blank,
+                              color: AppColor.deepBlue,
+                            ),
+                    ],
+                  ),
+                ),
+                SizedBox(
+                  height: 5.h,
+                ),
+                index4 == (fees.length - 1)
+                    ? const SizedBox.shrink()
+                    : Divider(
+                        height: 1,
+                        color: AppColor.goldenYellow,
+                      ),
+              ],
+            ),
+          );
+        },
+      ),
+    ));
+
+    return list;
   }
 
   buildFeesTiles(int index3) {

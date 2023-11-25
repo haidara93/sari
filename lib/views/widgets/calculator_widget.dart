@@ -462,6 +462,7 @@ class _CalculatorWidgetState extends State<CalculatorWidget> {
                               },
                               child: SizedBox(
                                 width: 85.w,
+                                height: 60.h,
                                 child: Column(
                                   mainAxisAlignment: MainAxisAlignment.center,
                                   children: [
@@ -651,13 +652,23 @@ class _CalculatorWidgetState extends State<CalculatorWidget> {
                                     // width: 200,
                                     child: Row(
                                       children: [
-                                        SvgPicture.network(
-                                          item.imageURL!,
+                                        SizedBox(
                                           height: 35,
-                                          // semanticsLabel: 'A shark?!',
-                                          placeholderBuilder: (BuildContext
-                                                  context) =>
-                                              const CircularProgressIndicator(),
+                                          width: 55,
+                                          child: SvgPicture.network(
+                                            item.imageURL!,
+
+                                            height: 35,
+                                            width: 55,
+                                            // semanticsLabel: 'A shark?!',
+                                            placeholderBuilder:
+                                                (BuildContext context) =>
+                                                    Container(
+                                                        height: 35,
+                                                        width: 55,
+                                                        color:
+                                                            Colors.grey[200]),
+                                          ),
                                         ),
                                         const SizedBox(width: 7),
                                         Container(
@@ -720,8 +731,15 @@ class _CalculatorWidgetState extends State<CalculatorWidget> {
                                   borderRadius: BorderRadius.circular(8),
                                 ),
                               ),
+                              onTapOutside: (event) {
+                                widget.unfocus;
+                                BlocProvider.of<BottomNavBarCubit>(context)
+                                    .emitShow();
+                              },
                               onFieldSubmitted: (value) {
                                 widget.unfocus;
+                                BlocProvider.of<BottomNavBarCubit>(context)
+                                    .emitShow();
                               },
                             ),
                           ),

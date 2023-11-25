@@ -328,7 +328,7 @@ class _TraderSigninScreenState extends State<TraderSigninScreen> {
                                                     ContentType.success,
                                               ),
                                               SizedBox(
-                                                height: 90.h,
+                                                height: 30.h,
                                               ),
                                             ],
                                           ),
@@ -360,7 +360,7 @@ class _TraderSigninScreenState extends State<TraderSigninScreen> {
                                                     ContentType.failure,
                                               ),
                                               SizedBox(
-                                                height: 90.h,
+                                                height: 30.h,
                                               ),
                                             ],
                                           ),
@@ -382,7 +382,7 @@ class _TraderSigninScreenState extends State<TraderSigninScreen> {
                                                     ContentType.failure,
                                               ),
                                               SizedBox(
-                                                height: 90.h,
+                                                height: 30.h,
                                               ),
                                             ],
                                           ),

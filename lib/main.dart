@@ -15,10 +15,12 @@ import 'package:custome_mobile/business_logic/bloc/fee_select_bloc.dart';
 import 'package:custome_mobile/business_logic/bloc/fee_trade_description_bloc.dart';
 import 'package:custome_mobile/business_logic/bloc/flags_bloc.dart';
 import 'package:custome_mobile/business_logic/bloc/group_bloc.dart';
+import 'package:custome_mobile/business_logic/bloc/note_bloc.dart';
 import 'package:custome_mobile/business_logic/bloc/offer_bloc.dart';
 import 'package:custome_mobile/business_logic/bloc/package_type_bloc.dart';
 import 'package:custome_mobile/business_logic/bloc/post_bloc.dart';
 import 'package:custome_mobile/business_logic/bloc/saved_post_bloc.dart';
+import 'package:custome_mobile/business_logic/bloc/search_section_bloc.dart';
 import 'package:custome_mobile/business_logic/bloc/section_bloc.dart';
 import 'package:custome_mobile/business_logic/bloc/state_custome_bloc.dart';
 import 'package:custome_mobile/business_logic/bloc/sub_chapter_bloc.dart';
@@ -98,6 +100,12 @@ class MyApp extends StatelessWidget {
                             RepositoryProvider.of<PostRepository>(context)),
                   ),
                   BlocProvider(
+                    create: (context) => SearchSectionBloc(
+                        accordionRepository:
+                            RepositoryProvider.of<AccordionRepository>(
+                                context)),
+                  ),
+                  BlocProvider(
                     create: (context) => SectionBloc(
                         accordionRepository:
                             RepositoryProvider.of<AccordionRepository>(
@@ -171,6 +179,12 @@ class MyApp extends StatelessWidget {
                     create: (context) => AttachmentTypeBloc(
                         stateAgencyRepository:
                             RepositoryProvider.of<StateAgencyRepository>(
+                                context)),
+                  ),
+                  BlocProvider(
+                    create: (context) => NoteBloc(
+                        accordionRepository:
+                            RepositoryProvider.of<AccordionRepository>(
                                 context)),
                   ),
                   BlocProvider(

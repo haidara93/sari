@@ -12,7 +12,7 @@ class SectionInitial extends SectionState {}
 class SectionLoadingProgress extends SectionState {}
 
 class SectionLoadedSuccess extends SectionState {
-  final List<Section> sections;
+  final List<Section?> sections;
 
   const SectionLoadedSuccess(this.sections);
 }

@@ -580,13 +580,14 @@ class _StepperOrderBrokerScreenState extends State<StepperOrderBrokerScreen> {
                         ),
                         padding: const EdgeInsets.all(8.0),
                         child: Column(children: [
-                          const Row(
+                          Row(
                             mainAxisAlignment: MainAxisAlignment.start,
                             children: [
                               Text("اختر نوع العملية",
                                   style: TextStyle(
                                     fontSize: 17,
                                     fontWeight: FontWeight.bold,
+                                    color: AppColor.deepBlue,
                                   )),
                             ],
                           ),
@@ -704,10 +705,11 @@ class _StepperOrderBrokerScreenState extends State<StepperOrderBrokerScreen> {
                         child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              const Text("الأمانة الجمركية",
+                              Text("الأمانة الجمركية",
                                   style: TextStyle(
                                     fontSize: 17,
                                     fontWeight: FontWeight.bold,
+                                    color: AppColor.deepBlue,
                                   )),
                               const SizedBox(
                                 height: 15,
@@ -1103,10 +1105,11 @@ class _StepperOrderBrokerScreenState extends State<StepperOrderBrokerScreen> {
                             children: [
                               Focus(
                                 focusNode: _ordernode,
-                                child: const Text("نوع البضاعة",
+                                child: Text("نوع البضاعة",
                                     style: TextStyle(
                                       fontSize: 17,
                                       fontWeight: FontWeight.bold,
+                                      color: AppColor.deepBlue,
                                     )),
                               ),
                               const SizedBox(
@@ -1170,6 +1173,7 @@ class _StepperOrderBrokerScreenState extends State<StepperOrderBrokerScreen> {
                                         },
                                         child: SizedBox(
                                           width: 85.w,
+                                          height: 55.h,
                                           child: Column(
                                             mainAxisAlignment:
                                                 MainAxisAlignment.center,
@@ -1910,15 +1914,13 @@ class _StepperOrderBrokerScreenState extends State<StepperOrderBrokerScreen> {
                           SizedBox(
                             height: 2.h,
                           ),
-                          const Text(
+                          Text(
                             "نوع الطرد",
                             style: TextStyle(
                               fontSize: 19,
                               fontWeight: FontWeight.bold,
+                              color: AppColor.deepBlue,
                             ),
-                          ),
-                          SizedBox(
-                            height: 7.h,
                           ),
                           SizedBox(
                               height: 140.h,
@@ -1939,12 +1941,11 @@ class _StepperOrderBrokerScreenState extends State<StepperOrderBrokerScreen> {
                                           itemBuilder: (context, index) {
                                             return Padding(
                                               padding: EdgeInsets.symmetric(
-                                                  horizontal: 12.w,
+                                                  horizontal: 5.w,
                                                   vertical: 15.h),
                                               child: GestureDetector(
                                                 onTap: () {
                                                   setSelectedPanel(3);
-
                                                   setState(() {
                                                     packageTypeId = state
                                                         .packageTypes[index]
@@ -1956,24 +1957,23 @@ class _StepperOrderBrokerScreenState extends State<StepperOrderBrokerScreen> {
                                                   children: [
                                                     Container(
                                                       width: 120.w,
-                                                      padding:
-                                                          const EdgeInsets.all(
-                                                              5),
                                                       decoration: BoxDecoration(
-                                                          borderRadius:
-                                                              BorderRadius
-                                                                  .circular(7),
-                                                          border: Border.all(
-                                                              color: packageTypeId ==
-                                                                      state
-                                                                          .packageTypes[
-                                                                              index]
-                                                                          .id!
-                                                                  ? AppColor
-                                                                      .goldenYellow
-                                                                  : Colors.grey[
-                                                                      600]!,
-                                                              width: 2.w)),
+                                                        borderRadius:
+                                                            BorderRadius
+                                                                .circular(7),
+                                                        border: Border.all(
+                                                          color: packageTypeId ==
+                                                                  state
+                                                                      .packageTypes[
+                                                                          index]
+                                                                      .id!
+                                                              ? AppColor
+                                                                  .goldenYellow
+                                                              : Colors
+                                                                  .grey[600]!,
+                                                          width: 2.w,
+                                                        ),
+                                                      ),
                                                       child: Column(
                                                         mainAxisAlignment:
                                                             MainAxisAlignment
@@ -1984,12 +1984,19 @@ class _StepperOrderBrokerScreenState extends State<StepperOrderBrokerScreen> {
                                                                 .packageTypes[
                                                                     index]
                                                                 .image!,
-                                                            height: 40.h,
+                                                            height: 50.h,
                                                           ),
-                                                          Text(state
-                                                              .packageTypes[
-                                                                  index]
-                                                              .name!),
+                                                          Text(
+                                                            state
+                                                                .packageTypes[
+                                                                    index]
+                                                                .name!,
+                                                            style: TextStyle(
+                                                              fontSize: 17.sp,
+                                                              color: AppColor
+                                                                  .deepBlue,
+                                                            ),
+                                                          ),
                                                         ],
                                                       ),
                                                     ),
@@ -2019,7 +2026,8 @@ class _StepperOrderBrokerScreenState extends State<StepperOrderBrokerScreen> {
                                                                   size: 16.w,
                                                                   color: Colors
                                                                       .white),
-                                                            ))
+                                                            ),
+                                                          )
                                                         : const SizedBox
                                                             .shrink()
                                                   ],
@@ -2126,6 +2134,7 @@ class _StepperOrderBrokerScreenState extends State<StepperOrderBrokerScreen> {
                                 value: haveTabaleh,
                                 title: const Text("مع طبالي؟"),
                                 activeColor: AppColor.goldenYellow,
+                                contentPadding: EdgeInsets.zero,
                                 onChanged: (value) {
                                   setSelectedPanel(3);
 
@@ -2138,119 +2147,130 @@ class _StepperOrderBrokerScreenState extends State<StepperOrderBrokerScreen> {
                                 }),
                           ),
                           Visibility(
-                              visible: haveTabaleh,
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
+                            visible: haveTabaleh,
+                            child: Padding(
+                              padding: EdgeInsets.symmetric(horizontal: 20.w),
+                              child: Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
                                 children: [
-                                  // const Text(
-                                  //   "عدد الطبالي",
-                                  //   style: TextStyle(
-                                  //     fontSize: 16,
-                                  //     fontWeight: FontWeight.bold,
-                                  //   ),
-                                  // ),
-                                  Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceAround,
-                                    children: [
-                                      GestureDetector(
-                                          onTap: () {
-                                            setSelectedPanel(3);
-                                            setState(() {
-                                              tabalehNum++;
-                                              _tabalehNumController.text =
-                                                  tabalehNum.toString();
-                                            });
-                                          },
-                                          child: Icon(Icons.add_box_outlined,
-                                              size: 30.w,
-                                              color: Colors.grey[600]!)),
-                                      SizedBox(
-                                        width: 100.w,
-                                        height: 50.h,
-                                        child: TextField(
-                                          controller: _tabalehNumController,
-                                          textAlign: TextAlign.center,
-                                          keyboardType: const TextInputType
-                                              .numberWithOptions(decimal: true),
-                                          decoration: InputDecoration(
-                                            border: OutlineInputBorder(
-                                                borderRadius:
-                                                    BorderRadius.circular(12)),
-                                            labelText: "عدد الطبالي",
-                                            labelStyle:
-                                                TextStyle(fontSize: 17.sp),
-                                            contentPadding:
-                                                const EdgeInsets.symmetric(
-                                              horizontal: 9.0,
-                                              vertical: 11.0,
-                                            ),
+                                  GestureDetector(
+                                      onTap: () {
+                                        setSelectedPanel(3);
+                                        setState(() {
+                                          tabalehNum++;
+                                          _tabalehNumController.text =
+                                              tabalehNum.toString();
+                                        });
+                                      },
+                                      child: Container(
+                                        padding: const EdgeInsets.all(3),
+                                        decoration: BoxDecoration(
+                                          border: Border.all(
+                                            color: Colors.grey[600]!,
+                                            width: 1,
                                           ),
-                                          scrollPadding: EdgeInsets.only(
-                                              bottom: MediaQuery.of(context)
-                                                      .viewInsets
-                                                      .bottom +
-                                                  50),
-                                          onTap: () {
-                                            setSelectedPanel(2);
-                                            BlocProvider.of<BottomNavBarCubit>(
-                                                    context)
-                                                .emitHide();
-                                            _tabalehNumController.selection =
-                                                TextSelection(
-                                                    baseOffset: 0,
-                                                    extentOffset:
-                                                        _tabalehNumController
-                                                            .value.text.length);
-                                          },
-                                          onChanged: (value) {
-                                            if (value.isEmpty) {
-                                              setState(() {
-                                                _tabalehNumController.text =
-                                                    "0";
-                                                tabalehNum = 0;
-                                              });
-                                            } else {
-                                              tabalehNum = int.parse(
-                                                  double.parse(
-                                                          _tabalehNumController
-                                                              .text)
-                                                      .toInt()
-                                                      .toString());
-                                            }
-                                          },
-                                          onSubmitted: (value) {
-                                            BlocProvider.of<BottomNavBarCubit>(
-                                                    context)
-                                                .emitShow();
-                                          },
+                                          borderRadius:
+                                              BorderRadius.circular(45),
+                                        ),
+                                        child: Icon(Icons.add,
+                                            size: 40.w,
+                                            color: Colors.blue[200]!),
+                                      )),
+                                  SizedBox(
+                                    width: 200.w,
+                                    height: 50.h,
+                                    child: TextField(
+                                      controller: _tabalehNumController,
+                                      textAlign: TextAlign.center,
+                                      keyboardType:
+                                          const TextInputType.numberWithOptions(
+                                              decimal: true),
+                                      decoration: InputDecoration(
+                                        border: OutlineInputBorder(
+                                            borderRadius:
+                                                BorderRadius.circular(12)),
+                                        labelText: "العدد",
+                                        labelStyle: TextStyle(
+                                          fontSize: 17.sp,
+                                        ),
+                                        alignLabelWithHint: true,
+                                        contentPadding:
+                                            const EdgeInsets.symmetric(
+                                          horizontal: 9.0,
+                                          vertical: 11.0,
                                         ),
                                       ),
-                                      // Text(
-                                      //   tabalehNum.toString(),
-                                      //   style: const TextStyle(fontSize: 30),
-                                      // ),
-                                      GestureDetector(
-                                          onTap: () {
-                                            setSelectedPanel(3);
-
-                                            if (tabalehNum > 0) {
-                                              setState(() {
-                                                tabalehNum--;
-                                                _tabalehNumController.text =
-                                                    tabalehNum.toString();
-                                              });
-                                            }
-                                          },
-                                          child: Icon(
-                                              Icons
-                                                  .indeterminate_check_box_outlined,
-                                              size: 30.w,
-                                              color: Colors.grey[600]!)),
-                                    ],
+                                      scrollPadding: EdgeInsets.only(
+                                          bottom: MediaQuery.of(context)
+                                                  .viewInsets
+                                                  .bottom +
+                                              50),
+                                      onTap: () {
+                                        setSelectedPanel(2);
+                                        BlocProvider.of<BottomNavBarCubit>(
+                                                context)
+                                            .emitHide();
+                                        _tabalehNumController.selection =
+                                            TextSelection(
+                                                baseOffset: 0,
+                                                extentOffset:
+                                                    _tabalehNumController
+                                                        .value.text.length);
+                                      },
+                                      onChanged: (value) {
+                                        if (value.isEmpty) {
+                                          setState(() {
+                                            tabalehNum = 0;
+                                          });
+                                        } else {
+                                          tabalehNum = int.parse(double.parse(
+                                                  _tabalehNumController.text)
+                                              .toInt()
+                                              .toString());
+                                        }
+                                      },
+                                      onSubmitted: (value) {
+                                        BlocProvider.of<BottomNavBarCubit>(
+                                                context)
+                                            .emitShow();
+                                      },
+                                    ),
                                   ),
+                                  // Text(
+                                  //   tabalehNum.toString(),
+                                  //   style: const TextStyle(fontSize: 30),
+                                  // ),
+                                  GestureDetector(
+                                      onTap: () {
+                                        setSelectedPanel(3);
+
+                                        if (tabalehNum > 0) {
+                                          setState(() {
+                                            tabalehNum--;
+                                            _tabalehNumController.text =
+                                                tabalehNum.toString();
+                                          });
+                                        }
+                                      },
+                                      child: Container(
+                                        padding: const EdgeInsets.all(3),
+                                        decoration: BoxDecoration(
+                                          border: Border.all(
+                                            color: Colors.grey[600]!,
+                                            width: 1,
+                                          ),
+                                          borderRadius:
+                                              BorderRadius.circular(45),
+                                        ),
+                                        child: Icon(Icons.remove,
+                                            size: 40.w,
+                                            color: Colors.grey[600]!),
+                                      )),
                                 ],
-                              )),
+                              ),
+                            ),
+                          ),
                           const Divider(),
                           SizedBox(
                             height: 7.h,

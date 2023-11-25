@@ -30,18 +30,10 @@ class CustomeTimeLine extends StatelessWidget {
         isLast: isLast,
         isFirst: isFirst,
         beforeLineStyle: LineStyle(
-          color: isPast
-              ? isCurrent
-                  ? AppColor.lightBlue
-                  : AppColor.deepBlue
-              : Colors.grey[400]!,
+          color: isPast ? AppColor.deepBlue : Colors.grey[400]!,
         ),
         indicatorStyle: IndicatorStyle(
-            color: isPast
-                ? isCurrent
-                    ? AppColor.lightBlue
-                    : AppColor.deepBlue
-                : Colors.grey[400]!,
+            color: isPast ? AppColor.deepBlue : Colors.grey[400]!,
             iconStyle: IconStyle(
                 iconData: Icons.done,
                 color: isPast ? Colors.white : Colors.grey[400]!,
