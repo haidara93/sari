@@ -41,6 +41,7 @@ dependencies:
   timeline_tile: ^2.0.0
   ensure_visible_when_focused: ^1.2.0
   popover: ^0.2.8
+  flutter_keyboard_visibility: ^5.4.1
 
 dev_dependencies:
   flutter_test:

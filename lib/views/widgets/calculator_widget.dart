@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:custome_mobile/business_logic/bloc/calculate_result_bloc.dart';
 import 'package:custome_mobile/business_logic/bloc/calculator_panel_bloc.dart';
 import 'package:custome_mobile/business_logic/bloc/fee_select_bloc.dart';
@@ -17,6 +19,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter_typeahead/flutter_typeahead.dart';
 import 'package:intl/intl.dart';
+import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
 
 // ignore: must_be_immutable
 class CalculatorWidget extends StatefulWidget {
@@ -86,11 +89,26 @@ class _CalculatorWidgetState extends State<CalculatorWidget> {
   String patternString = "";
   CalculateObject result = CalculateObject();
   final FocusNode _statenode = FocusNode();
-
+  late final KeyboardVisibilityController _keyboardVisibilityController;
+  late StreamSubscription<bool> keyboardSubscription;
   @override
   void initState() {
     super.initState();
+    _keyboardVisibilityController = KeyboardVisibilityController();
+    keyboardSubscription =
+        _keyboardVisibilityController.onChange.listen((isVisible) {
+      if (!isVisible) {
+        BlocProvider.of<BottomNavBarCubit>(context).emitShow();
+        FocusManager.instance.primaryFocus?.unfocus();
+      }
+    });
     // FocusScope.of(context).unfocus();
+  }
+
+  @override
+  void dispose() {
+    keyboardSubscription.cancel();
+    super.dispose();
   }
 
   void calculateTotalValueWithPrice() {
@@ -1119,6 +1137,9 @@ class _CalculatorWidgetState extends State<CalculatorWidget> {
                                 result.taxFee = selectedPackage!.taxFee!;
                                 BlocProvider.of<CalculateResultBloc>(context)
                                     .add(CalculateTheResultEvent(result));
+                                BlocProvider.of<BottomNavBarCubit>(context)
+                                    .emitShow();
+                                FocusManager.instance.primaryFocus?.unfocus();
                                 Navigator.push(
                                     context,
                                     MaterialPageRoute(

@@ -76,6 +76,7 @@ class _IntroductionViewState extends State<IntroductionView> {
     return Directionality(
       textDirection: TextDirection.ltr,
       child: Scaffold(
+        backgroundColor: Colors.white,
         body: SafeArea(
           child: Container(
             padding: const EdgeInsets.only(bottom: 80),

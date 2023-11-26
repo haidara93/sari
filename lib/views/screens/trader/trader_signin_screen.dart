@@ -28,8 +28,6 @@ class _TraderSigninScreenState extends State<TraderSigninScreen> {
 
   Future<void> _login() async {
     _postData(context);
-    // _usernameController.text = '';
-    // _passwordController.text = '';
   }
 
   void _postData(context) {
@@ -295,16 +293,13 @@ class _TraderSigninScreenState extends State<TraderSigninScreen> {
                                                     ContentType.success,
                                               ),
                                               SizedBox(
-                                                height: 90.h,
+                                                height: 30.h,
                                               ),
                                             ],
                                           ),
                                         );
                                         ScaffoldMessenger.of(context)
                                             .showSnackBar(snackBar);
-
-                                        _usernameController.text = '';
-                                        _passwordController.text = '';
 
                                         Navigator.push(
                                             context,
@@ -336,8 +331,6 @@ class _TraderSigninScreenState extends State<TraderSigninScreen> {
                                         ScaffoldMessenger.of(context)
                                             .showSnackBar(snackBar);
 
-                                        _usernameController.text = '';
-                                        _passwordController.text = '';
                                         Navigator.push(
                                             context,
                                             MaterialPageRoute(
