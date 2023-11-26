@@ -2581,7 +2581,7 @@ class _TraderHomeScreenState extends State<TraderHomeScreen>
                           ),
                         ),
                   SizedBox(
-                    height: 90.h,
+                    height: 70.h,
                   )
                 ],
               ),

@@ -28,57 +28,52 @@ class ListItems extends StatelessWidget {
         list.add(sectionnotes.isEmpty
             ? const SizedBox(
                 height: 50,
-                child: Center(
-                  child: Text("لايوجد ملاحظات"),
-                ))
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Center(
+                      child: Text("لايوجد ملاحظات"),
+                    ),
+                  ],
+                ),
+              )
             : Directionality(
                 textDirection: TextDirection.rtl,
                 child: Container(
-                  color: Colors.grey[200],
                   height: 280.h,
-                  padding: const EdgeInsets.all(8.0),
-                  child: Container(
-                    padding: const EdgeInsets.all(3.0),
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.circular(10),
-                    ),
-                    child: Scrollbar(
-                      controller: _scrollController,
-                      thumbVisibility: true,
-                      thickness: 5.0,
-                      radius: const Radius.circular(2),
-                      child: ListView.builder(
-                        // key: Key('sectionnotebuilder ${chapterselected.toString()}'),
-                        controller: _scrollController,
-
-                        itemCount: sectionnotes.length, shrinkWrap: true,
-                        physics: const ScrollPhysics(),
-                        itemBuilder: (context, index2) {
-                          return Container(
-                            padding: const EdgeInsets.all(8.0),
-                            margin: const EdgeInsets.symmetric(horizontal: 4),
-                            decoration: BoxDecoration(
-                              color: Colors.white,
-                              borderRadius: BorderRadius.circular(10),
-                            ),
-                            child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    sectionnotes[index2].noteNum!,
-                                    style: TextStyle(
-                                        color: AppColor.deepBlue,
-                                        fontSize: 16,
-                                        fontWeight: FontWeight.bold),
-                                  ),
-                                  Text(
-                                      "  ${sectionnotes[index2].noteA!.replaceAll("#", "\n")}"),
-                                ]),
-                          );
-                        },
-                      ),
-                    ),
+                  padding: const EdgeInsets.all(3.0),
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                  child: ListView.builder(
+                    controller: _scrollController,
+                    itemCount: sectionnotes.length,
+                    shrinkWrap: true,
+                    physics: const ScrollPhysics(),
+                    itemBuilder: (context, index2) {
+                      return Container(
+                        padding: const EdgeInsets.all(8.0),
+                        margin: const EdgeInsets.symmetric(horizontal: 4),
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                        child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                sectionnotes[index2].noteNum!,
+                                style: TextStyle(
+                                    color: AppColor.deepBlue,
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.bold),
+                              ),
+                              Text(
+                                  "  ${sectionnotes[index2].noteA!.replaceAll("#", "\n")}"),
+                            ]),
+                      );
+                    },
                   ),
                 ),
               ));
@@ -119,8 +114,22 @@ class ListItems extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ListView(
-      children: buildNoteWidget(),
+    return Container(
+      decoration: BoxDecoration(
+          border: Border.all(
+            color: AppColor.goldenYellow,
+            width: 4,
+          ),
+          borderRadius: BorderRadius.circular(14)),
+      child: Scrollbar(
+        controller: _scrollController,
+        thumbVisibility: true,
+        thickness: 2.0,
+        radius: const Radius.circular(2),
+        child: ListView(
+          children: buildNoteWidget(),
+        ),
+      ),
     );
   }
 }

@@ -443,10 +443,7 @@ class _CalculatorWidgetState extends State<CalculatorWidget> {
                     },
 
                     decoration: InputDecoration(
-                      labelStyle: const TextStyle(fontSize: 18),
                       labelText: "نوع البضاعة",
-                      border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(12)),
                       contentPadding: const EdgeInsets.symmetric(
                         horizontal: 9.0,
                         vertical: 11.0,
@@ -525,6 +522,7 @@ class _CalculatorWidgetState extends State<CalculatorWidget> {
                       totalValueWithEnsurance = "0.0";
                     });
                     selectSuggestion(suggestion);
+                    BlocProvider.of<BottomNavBarCubit>(context).emitShow();
                   },
                 ),
               ),
@@ -863,12 +861,9 @@ class _CalculatorWidgetState extends State<CalculatorWidget> {
                       signed: true, decimal: true),
                   inputFormatters: [DecimalFormatter()],
                   decoration: InputDecoration(
-                    labelStyle: const TextStyle(fontSize: 20),
                     labelText: wieghtLabel,
                     prefixText: showunit ? wieghtUnit : "",
                     prefixStyle: const TextStyle(color: Colors.black),
-                    border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(12)),
                     contentPadding: const EdgeInsets.symmetric(
                       horizontal: 9.0,
                       vertical: 11.0,
@@ -925,12 +920,9 @@ class _CalculatorWidgetState extends State<CalculatorWidget> {
                   scrollPadding: EdgeInsets.only(
                       bottom: MediaQuery.of(context).viewInsets.bottom + 50),
                   decoration: InputDecoration(
-                    labelStyle: const TextStyle(fontSize: 18),
                     labelText: valueEnabled
                         ? "قيمة البضاعة الاجمالية بالدولار"
                         : "سعر الواحدة لدى الجمارك",
-                    border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(12)),
                     contentPadding: const EdgeInsets.symmetric(
                       horizontal: 9.0,
                       vertical: 11.0,

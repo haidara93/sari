@@ -14,7 +14,9 @@ import 'package:custome_mobile/data/models/state_custome_agency_model.dart';
 import 'package:custome_mobile/data/services/calculator_service.dart';
 import 'package:custome_mobile/helpers/color_constants.dart';
 import 'package:custome_mobile/helpers/formatter.dart';
+import 'package:custome_mobile/views/screens/trader/trader_attachement_screen.dart';
 import 'package:custome_mobile/views/screens/trader/trader_bill_review.dart';
+import 'package:custome_mobile/views/screens/trader/trader_calculator_result_screen.dart';
 import 'package:custome_mobile/views/widgets/custom_botton.dart';
 import 'package:custome_mobile/views/widgets/highlight_text.dart';
 import 'package:dropdown_button2/dropdown_button2.dart';
@@ -23,9 +25,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_img/flutter_img.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter_typeahead/flutter_typeahead.dart';
 import 'package:intl/intl.dart';
+import 'package:timeline_tile/timeline_tile.dart';
 
 class StepperOrderBrokerScreen extends StatefulWidget {
   const StepperOrderBrokerScreen({Key? key}) : super(key: key);
@@ -60,6 +62,10 @@ class _StepperOrderBrokerScreenState extends State<StepperOrderBrokerScreen> {
   String syrianTotalValue = "0.0";
 
   String totalValueWithEnsurance = "0.0";
+  String totalFees = "0.0";
+  bool totalFeesloading = false;
+  bool totalFeesdone = false;
+
   bool haveTabaleh = false;
 
   Package? selectedPackage;
@@ -117,6 +123,7 @@ class _StepperOrderBrokerScreenState extends State<StepperOrderBrokerScreen> {
   @override
   void initState() {
     super.initState();
+    _tabalehNumController.text = "0";
     // FocusScope.of(context).unfocus();
   }
 
@@ -406,6 +413,32 @@ class _StepperOrderBrokerScreenState extends State<StepperOrderBrokerScreen> {
     } else {
       calculateTotalValueWithPrice();
     }
+    calculateTheFees();
+  }
+
+  void calculateTheFees() {
+    _ordercalformkey.currentState?.save();
+    if (_ordercalformkey.currentState!.validate()) {
+      print("fghf");
+      setState(() {
+        packageError = false;
+      });
+      result.insurance = int.parse(totalValueWithEnsurance);
+      result.fee = selectedPackage!.fee!;
+      result.rawMaterial = rawMaterialValue ? 1 : 0;
+      result.industrial = industrialValue ? 1 : 0;
+      result.totalTax = selectedPackage!.totalTaxes!.totalTax!;
+      result.partialTax = selectedPackage!.totalTaxes!.partialTax!;
+      result.origin = selectedOrigin!.label!;
+      result.spendingFee = selectedPackage!.spendingFee!;
+      result.supportFee = selectedPackage!.supportFee!;
+      result.localFee = selectedPackage!.localFee!;
+      result.protectionFee = selectedPackage!.protectionFee!;
+      result.naturalFee = selectedPackage!.naturalFee!;
+      result.taxFee = selectedPackage!.taxFee!;
+      BlocProvider.of<CalculateResultBloc>(context)
+          .add(CalculateTheResultEvent(result));
+    }
   }
 
   setSelectedRadioTile(String val) {
@@ -543,6 +576,12 @@ class _StepperOrderBrokerScreenState extends State<StepperOrderBrokerScreen> {
                   onStepCancel: () => setState(() {}),
                 ),
               ),
+              // SizedBox(height: 96.h,
+              // child:Row(children: [
+              //   TimelineTile(
+
+              //   )
+              // ],) ,),
               Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: Column(children: [
@@ -1151,10 +1190,6 @@ class _StepperOrderBrokerScreenState extends State<StepperOrderBrokerScreen> {
 
                                     decoration: InputDecoration(
                                       labelText: "نوع البضاعة",
-                                      labelStyle: const TextStyle(fontSize: 18),
-                                      border: OutlineInputBorder(
-                                          borderRadius:
-                                              BorderRadius.circular(12)),
                                       contentPadding:
                                           const EdgeInsets.symmetric(
                                               vertical: 11.0, horizontal: 9.0),
@@ -1241,7 +1276,8 @@ class _StepperOrderBrokerScreenState extends State<StepperOrderBrokerScreen> {
                                       totalValueWithEnsurance = "0.0";
                                     });
                                     selectSuggestion(suggestion);
-
+                                    BlocProvider.of<BottomNavBarCubit>(context)
+                                        .emitShow();
                                     // Navigator.of(context).push(MaterialPageRoute(
                                     //   builder: (context) => ProductPage(product: suggestion)
                                     // ));
@@ -1252,11 +1288,12 @@ class _StepperOrderBrokerScreenState extends State<StepperOrderBrokerScreen> {
                                 height: 24,
                               ),
                               Visibility(
-                                  visible: allowexport,
-                                  child: const Text(
-                                    "هذا البند ممنوع من الاستيراد",
-                                    style: TextStyle(color: Colors.red),
-                                  )),
+                                visible: allowexport,
+                                child: const Text(
+                                  "هذا البند ممنوع من الاستيراد",
+                                  style: TextStyle(color: Colors.red),
+                                ),
+                              ),
                               Visibility(
                                 visible: allowexport,
                                 child: const SizedBox(
@@ -1617,14 +1654,10 @@ class _StepperOrderBrokerScreenState extends State<StepperOrderBrokerScreen> {
                                           signed: true, decimal: true),
                                   inputFormatters: [DecimalFormatter()],
                                   decoration: InputDecoration(
-                                    labelStyle: const TextStyle(fontSize: 18),
                                     labelText: wieghtLabel,
                                     prefixText: showunit ? wieghtUnit : "",
                                     prefixStyle:
                                         const TextStyle(color: Colors.black),
-                                    border: OutlineInputBorder(
-                                        borderRadius:
-                                            BorderRadius.circular(12)),
                                     contentPadding: const EdgeInsets.symmetric(
                                         vertical: 11.0, horizontal: 9.0),
                                   ),
@@ -1701,12 +1734,6 @@ class _StepperOrderBrokerScreenState extends State<StepperOrderBrokerScreen> {
                                     labelText: valueEnabled
                                         ? "قيمة البضاعة الاجمالية بالدولار"
                                         : "سعر الواحدة لدى الجمارك",
-                                    labelStyle: const TextStyle(fontSize: 18),
-                                    border: OutlineInputBorder(
-                                        borderRadius:
-                                            BorderRadius.circular(12)),
-                                    contentPadding: const EdgeInsets.symmetric(
-                                        vertical: 11.0, horizontal: 9.0),
                                   ),
                                   onChanged: (value) {
                                     if (_originController.text.isNotEmpty) {
@@ -1874,6 +1901,94 @@ class _StepperOrderBrokerScreenState extends State<StepperOrderBrokerScreen> {
                               const SizedBox(
                                 height: 12,
                               ),
+                              Row(
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                children: [
+                                  Row(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.center,
+                                    children: [
+                                      Text(
+                                        "الرسوم :  ",
+                                        style: TextStyle(
+                                          fontSize: 17,
+                                          fontWeight: FontWeight.bold,
+                                          color: AppColor.deepBlue,
+                                        ),
+                                      ),
+                                      SizedBox(
+                                        width: 230.w,
+                                        child: BlocBuilder<CalculateResultBloc,
+                                            CalculateResultState>(
+                                          builder: (context, state) {
+                                            if (state
+                                                    is CalculateResultSuccessed &&
+                                                totalValueWithEnsurance !=
+                                                    "0.0") {
+                                              return Text(
+                                                state.result.finalTotal!
+                                                    .toStringAsFixed(2),
+                                                style: const TextStyle(
+                                                  fontSize: 16,
+                                                  fontWeight: FontWeight.bold,
+                                                ),
+                                              );
+                                            } else if (state
+                                                is CalculateResultLoading) {
+                                              return const LinearProgressIndicator();
+                                            } else {
+                                              return const Text(
+                                                ". . . . . . . . . . . . . . . . . . . . . . . . . . . . . . ",
+                                                style: TextStyle(
+                                                  fontSize: 16,
+                                                  fontWeight: FontWeight.bold,
+                                                ),
+                                              );
+                                            }
+                                          },
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                  BlocBuilder<CalculateResultBloc,
+                                      CalculateResultState>(
+                                    builder: (context, state) {
+                                      if (state is CalculateResultSuccessed &&
+                                          totalValueWithEnsurance != "0.0") {
+                                        return GestureDetector(
+                                          onTap: () {
+                                            Navigator.push(
+                                              context,
+                                              MaterialPageRoute(
+                                                builder: (context) =>
+                                                    const TraderCalculatorResultScreen(),
+                                              ),
+                                            );
+                                          },
+                                          child: SizedBox(
+                                            height: 50,
+                                            child: Column(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.center,
+                                              children: [
+                                                Text(
+                                                  "تفاصيل الرسوم",
+                                                  style: TextStyle(
+                                                    fontSize: 17,
+                                                    color: AppColor.deepBlue,
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
+                                          ),
+                                        );
+                                      } else {
+                                        return const SizedBox.shrink();
+                                      }
+                                    },
+                                  )
+                                ],
+                              ),
                             ],
                           ),
                         ),
@@ -1931,6 +2046,7 @@ class _StepperOrderBrokerScreenState extends State<StepperOrderBrokerScreen> {
                                     return Scrollbar(
                                       controller: _scrollController,
                                       thumbVisibility: true,
+                                      thickness: 2.0,
                                       child: Padding(
                                         padding: EdgeInsets.all(2.h),
                                         child: ListView.builder(
@@ -1956,7 +2072,7 @@ class _StepperOrderBrokerScreenState extends State<StepperOrderBrokerScreen> {
                                                   clipBehavior: Clip.none,
                                                   children: [
                                                     Container(
-                                                      width: 120.w,
+                                                      width: 145.w,
                                                       decoration: BoxDecoration(
                                                         borderRadius:
                                                             BorderRadius
@@ -2141,6 +2257,7 @@ class _StepperOrderBrokerScreenState extends State<StepperOrderBrokerScreen> {
                                   setState(() {
                                     haveTabaleh = value!;
                                     if (!value) {
+                                      _tabalehNumController.text = "0";
                                       tabalehNum = 0;
                                     }
                                   });
@@ -2332,7 +2449,7 @@ class _StepperOrderBrokerScreenState extends State<StepperOrderBrokerScreen> {
                                         width: 250.w,
                                         child: const Center(
                                           child: Text(
-                                            "حساب الرسوم",
+                                            "التالي",
                                             style: TextStyle(
                                               fontWeight: FontWeight.bold,
                                             ),
@@ -2392,25 +2509,11 @@ class _StepperOrderBrokerScreenState extends State<StepperOrderBrokerScreen> {
                                                         .naturalFee!;
                                                 result.taxFee =
                                                     selectedPackage!.taxFee!;
-                                                BlocProvider.of<
-                                                            CalculateResultBloc>(
-                                                        context)
-                                                    .add(
-                                                        CalculateTheResultEvent(
-                                                            result));
-                                                BlocProvider.of<
-                                                            AttachmentTypeBloc>(
-                                                        context)
-                                                    .add(
-                                                        AttachmentTypeLoadEvent());
-                                                // BlocProvider.of<CurrentStepCubit>(context)
-                                                //     .increament();
-
                                                 Navigator.push(
                                                   context,
                                                   MaterialPageRoute(
                                                     builder: (context) =>
-                                                        TraderBillReview(
+                                                        TraderAttachementScreen(
                                                       offerType:
                                                           selectedRadioTile,
                                                       customAgency:

@@ -8,7 +8,7 @@ class TariffInfoIcon extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: EdgeInsets.symmetric(vertical: 8.h, horizontal: 9.w),
+      padding: EdgeInsets.symmetric(vertical: 10.w, horizontal: 10.w),
       child: SvgPicture.asset(
         "assets/icons/expansionTileIcon.svg",
         width: 20.w,

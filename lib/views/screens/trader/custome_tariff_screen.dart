@@ -236,322 +236,272 @@ class _CustomeTariffScreenState extends State<CustomeTariffScreen> {
 
   List<Widget> buildfeesChildren(FeeSet fe) {
     List<Widget> list = [];
-    if (shownote && (noteType == NoteType.Fee)) {
-      list.add(BlocBuilder<NoteBloc, NoteState>(
-        builder: (context, state) {
-          if (state is NoteLoadedSuccess) {
-            return state.notes.isEmpty
-                ? const SizedBox(
-                    height: 50,
+    list.add(Container(
+      color: Colors.white,
+      child: ListView(
+        shrinkWrap: true,
+        physics: const NeverScrollableScrollPhysics(),
+        children: [
+          Divider(
+            height: 1,
+            color: AppColor.goldenYellow,
+          ),
+          ExpansionTile(
+            title: Directionality(
+              textDirection: TextDirection.rtl,
+              child: Row(
+                children: [
+                  Container(
+                    margin: const EdgeInsets.symmetric(horizontal: 4),
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(10),
+                    ),
                     child: Center(
-                      child: Text("لايوجد ملاحظات"),
-                    ))
-                : ListView.builder(
-                    // key: Key('sectionnotebuilder ${chapterselected.toString()}'),
-                    shrinkWrap: true,
-                    itemCount: state.notes.length,
-                    physics: const NeverScrollableScrollPhysics(),
-                    itemBuilder: (context, index2) {
-                      return Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: Container(
-                          margin: const EdgeInsets.symmetric(horizontal: 4),
-                          decoration: BoxDecoration(
-                            color: Colors.white,
-                            borderRadius: BorderRadius.circular(10),
-                          ),
-                          child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  state.notes[index2].noteNum!,
-                                  style: TextStyle(
-                                      color: AppColor.deepBlue,
-                                      fontSize: 16,
-                                      fontWeight: FontWeight.bold),
-                                ),
-                                Text("  ${state.notes[index2].noteA!}"),
-                              ]),
-                        ),
-                      );
-                    },
-                  );
-          } else {
-            return const CircularProgressIndicator();
-          }
-        },
-      ));
-    } else {
-      list.add(Container(
-        color: Colors.white,
-        child: ListView(
-          shrinkWrap: true,
-          physics: const NeverScrollableScrollPhysics(),
-          children: [
-            Divider(
-              height: 1,
-              color: AppColor.goldenYellow,
-            ),
-            ExpansionTile(
-              title: Directionality(
-                textDirection: TextDirection.rtl,
-                child: Row(
-                  children: [
-                    Container(
-                      margin: const EdgeInsets.symmetric(horizontal: 4),
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.circular(10),
-                      ),
-                      child: Center(
-                        child:
-                            Image.asset("assets/icons/trade_description.png"),
-                      ),
+                      child: Image.asset("assets/icons/trade_description.png"),
                     ),
-                    Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 5),
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.circular(10),
-                      ),
-                      child: const Text(
-                        "الوصف التجاري",
-                      ),
+                  ),
+                  Container(
+                    padding: const EdgeInsets.symmetric(horizontal: 5),
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(10),
                     ),
-                  ],
-                ),
+                    child: const Text(
+                      "الوصف التجاري",
+                    ),
+                  ),
+                ],
               ),
-              onExpansionChanged: (value) {
-                if (value) {
-                  BlocProvider.of<FeeTradeDescriptionBloc>(context)
-                      .add(FeeTradeDescriptionLoadEvent(fe.id!));
-                } else {}
-              },
-              children: buildFeesTradeDescription(),
             ),
-            Divider(
-              height: 1,
-              color: AppColor.goldenYellow,
-            ),
-            ExpansionTile(
-              title: Directionality(
-                textDirection: TextDirection.rtl,
-                child: Row(
-                  children: [
-                    Container(
-                      margin: const EdgeInsets.symmetric(horizontal: 4),
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.circular(10),
-                      ),
-                      child: Center(
-                        child:
-                            Image.asset("assets/icons/import_conditions.png"),
-                      ),
+            onExpansionChanged: (value) {
+              if (value) {
+                BlocProvider.of<FeeTradeDescriptionBloc>(context)
+                    .add(FeeTradeDescriptionLoadEvent(fe.id!));
+              } else {}
+            },
+            children: buildFeesTradeDescription(),
+          ),
+          Divider(
+            height: 1,
+            color: AppColor.goldenYellow,
+          ),
+          ExpansionTile(
+            title: Directionality(
+              textDirection: TextDirection.rtl,
+              child: Row(
+                children: [
+                  Container(
+                    margin: const EdgeInsets.symmetric(horizontal: 4),
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(10),
                     ),
-                    Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 5),
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.circular(10),
-                      ),
-                      child: const Text(
-                        "شروط الاستيراد",
-                      ),
+                    child: Center(
+                      child: Image.asset("assets/icons/import_conditions.png"),
                     ),
-                  ],
-                ),
+                  ),
+                  Container(
+                    padding: const EdgeInsets.symmetric(horizontal: 5),
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                    child: const Text(
+                      "شروط الاستيراد",
+                    ),
+                  ),
+                ],
               ),
-              children: fe.importFees!.isEmpty
-                  ? [
-                      Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 20),
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          children: [
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.start,
-                              children: [
-                                Image.asset(
-                                    "assets/icons/export_restrection.png"),
-                                SizedBox(
-                                  width: 5.w,
-                                ),
-                                const Text("شروط الاستيراد:"),
-                                const Icon(
-                                  Icons.close,
-                                  color: Colors.red,
-                                ),
-                                const Text("ممنوع الاستيراد"),
-                              ],
-                            ),
-                          ],
-                        ),
-                      ),
-                    ]
-                  : buildimportfees(fe),
             ),
-            Divider(
-              height: 1,
-              color: AppColor.goldenYellow,
-            ),
-            ExpansionTile(
-              title: Directionality(
-                textDirection: TextDirection.rtl,
-                child: Row(
-                  children: [
-                    Container(
-                      margin: const EdgeInsets.symmetric(horizontal: 4),
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.circular(10),
-                      ),
-                      child: Center(
-                        child:
-                            Image.asset("assets/icons/export_conditions.png"),
-                      ),
-                    ),
-                    Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 5),
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.circular(10),
-                      ),
-                      child: const Text(
-                        "شروط التصدير",
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-              children: [
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 20),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    children: [
-                      Row(
+            children: fe.importFees!.isEmpty
+                ? [
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 20),
+                      child: Column(
                         mainAxisAlignment: MainAxisAlignment.start,
                         children: [
-                          Image.asset("assets/icons/export_restrection.png"),
-                          SizedBox(
-                            width: 5.w,
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            children: [
+                              Image.asset(
+                                  "assets/icons/export_restrection.png"),
+                              SizedBox(
+                                width: 5.w,
+                              ),
+                              const Text("شروط الاستيراد:"),
+                              const Icon(
+                                Icons.close,
+                                color: Colors.red,
+                              ),
+                              const Text("ممنوع الاستيراد"),
+                            ],
                           ),
-                          const Text("شروط التصدير:"),
-                          fe.export! == "مسموح التصدير"
-                              ? const Icon(
-                                  Icons.check,
-                                  color: Colors.green,
-                                )
-                              : const Icon(
-                                  Icons.close,
-                                  color: Colors.red,
-                                ),
-                          Text(fe.export!),
                         ],
                       ),
-                      Text(
-                        fe.restrictionExport!,
-                        textAlign: TextAlign.start,
-                      ),
-                    ],
+                    ),
+                  ]
+                : buildimportfees(fe),
+          ),
+          Divider(
+            height: 1,
+            color: AppColor.goldenYellow,
+          ),
+          ExpansionTile(
+            title: Directionality(
+              textDirection: TextDirection.rtl,
+              child: Row(
+                children: [
+                  Container(
+                    margin: const EdgeInsets.symmetric(horizontal: 4),
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                    child: Center(
+                      child: Image.asset("assets/icons/export_conditions.png"),
+                    ),
                   ),
-                ),
-              ],
-            ),
-            Divider(
-              height: 1,
-              color: AppColor.goldenYellow,
-            ),
-            ExpansionTile(
-              title: Directionality(
-                textDirection: TextDirection.rtl,
-                child: Row(
-                  children: [
-                    Container(
-                      margin: const EdgeInsets.symmetric(horizontal: 4),
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.circular(10),
-                      ),
-                      child: Center(
-                        child: Image.asset("assets/icons/calculate_fees.png"),
-                      ),
+                  Container(
+                    padding: const EdgeInsets.symmetric(horizontal: 5),
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(10),
                     ),
-                    Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 5),
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.circular(10),
-                      ),
-                      child: const Text(
-                        "حساب الرسوم",
-                      ),
+                    child: const Text(
+                      "شروط التصدير",
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            children: [
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 20),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: [
+                        Image.asset("assets/icons/export_restrection.png"),
+                        SizedBox(
+                          width: 5.w,
+                        ),
+                        const Text("شروط التصدير:"),
+                        fe.export! == "مسموح التصدير"
+                            ? const Icon(
+                                Icons.check,
+                                color: Colors.green,
+                              )
+                            : const Icon(
+                                Icons.close,
+                                color: Colors.red,
+                              ),
+                        Text(fe.export!),
+                      ],
+                    ),
+                    Text(
+                      fe.restrictionExport!,
+                      textAlign: TextAlign.start,
                     ),
                   ],
                 ),
               ),
-              onExpansionChanged: (value) {
-                BlocProvider.of<CalculatorPanelBloc>(context)
-                    .add(CalculatorPanelOpenEvent());
-                BlocProvider.of<FeeItemBloc>(context)
-                    .add(FeeItemLoadEvent(fe.id!));
-              },
-              trailing: const SizedBox.shrink(),
-            ),
-            Divider(
-              height: 1,
-              color: AppColor.goldenYellow,
-            ),
-            ExpansionTile(
-              title: Directionality(
-                textDirection: TextDirection.rtl,
-                child: Row(
-                  children: [
-                    Container(
-                      margin: const EdgeInsets.symmetric(horizontal: 4),
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.circular(10),
-                      ),
-                      child: Center(
-                        child: Image.asset("assets/icons/share_fee.png"),
-                      ),
+            ],
+          ),
+          Divider(
+            height: 1,
+            color: AppColor.goldenYellow,
+          ),
+          ExpansionTile(
+            title: Directionality(
+              textDirection: TextDirection.rtl,
+              child: Row(
+                children: [
+                  Container(
+                    margin: const EdgeInsets.symmetric(horizontal: 4),
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(10),
                     ),
-                    Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 5),
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.circular(10),
-                      ),
-                      child: const Text(
-                        "مشاركة",
-                      ),
+                    child: Center(
+                      child: Image.asset("assets/icons/calculate_fees.png"),
                     ),
-                  ],
-                ),
+                  ),
+                  Container(
+                    padding: const EdgeInsets.symmetric(horizontal: 5),
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                    child: const Text(
+                      "حساب الرسوم",
+                    ),
+                  ),
+                ],
               ),
-              trailing: const SizedBox.shrink(),
+            ),
+            onExpansionChanged: (value) {
+              BlocProvider.of<CalculatorPanelBloc>(context)
+                  .add(CalculatorPanelOpenEvent());
+              BlocProvider.of<FeeItemBloc>(context)
+                  .add(FeeItemLoadEvent(fe.id!));
+            },
+            trailing: const SizedBox.shrink(),
+          ),
+          Divider(
+            height: 1,
+            color: AppColor.goldenYellow,
+          ),
+          ExpansionTile(
+            title: Directionality(
+              textDirection: TextDirection.rtl,
+              child: Row(
+                children: [
+                  Container(
+                    margin: const EdgeInsets.symmetric(horizontal: 4),
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                    child: Center(
+                      child: Image.asset("assets/icons/share_fee.png"),
+                    ),
+                  ),
+                  Container(
+                    padding: const EdgeInsets.symmetric(horizontal: 5),
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                    child: const Text(
+                      "مشاركة",
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            trailing: const SizedBox.shrink(),
 
-              // onExpansionChanged: (value) {
-              //   if (value) {
-              //     // BlocProvider.of<FeeBloc>(context)
-              //     //     .add(FeeLoadEvent(state.subchapters[index].id!));
-              //     setState(() {
-              //       feeselected = index4;
-              //     });
-              //   } else {
-              //     setState(() {
-              //       feeselected = -1;
-              //     });
-              //   }
-              // },
-              // children: buildFeesTiles(),
-            ),
-          ],
-        ),
-      ));
-    }
+            // onExpansionChanged: (value) {
+            //   if (value) {
+            //     // BlocProvider.of<FeeBloc>(context)
+            //     //     .add(FeeLoadEvent(state.subchapters[index].id!));
+            //     setState(() {
+            //       feeselected = index4;
+            //     });
+            //   } else {
+            //     setState(() {
+            //       feeselected = -1;
+            //     });
+            //   }
+            // },
+            // children: buildFeesTiles(),
+          ),
+        ],
+      ),
+    ));
     return list;
   }
 
@@ -1006,7 +956,7 @@ class _CustomeTariffScreenState extends State<CustomeTariffScreen> {
                                           28.w,
                                       height: 280.h,
                                       arrowHeight: 15,
-                                      arrowWidth: 25,
+                                      arrowWidth: 0,
                                       barrierLabel: "ملاحظات",
                                     );
                                   },
@@ -1206,7 +1156,7 @@ class _CustomeTariffScreenState extends State<CustomeTariffScreen> {
                                 width: MediaQuery.of(context).size.width - 28.w,
                                 height: 280.h,
                                 arrowHeight: 15,
-                                arrowWidth: 25,
+                                arrowWidth: 0,
                                 barrierLabel: "ملاحظات",
                               );
                             },
@@ -1856,8 +1806,9 @@ class _CustomeTariffScreenState extends State<CustomeTariffScreen> {
                                                     28.w,
                                                 height: 280.h,
                                                 arrowHeight: 15,
-                                                arrowWidth: 25,
+                                                arrowWidth: 0,
                                                 barrierLabel: "ملاحظات",
+                                                radius: 15,
                                               );
                                               // BlocProvider.of<NoteBloc>(context)
                                               //     .add(NoteLoadEvent(

@@ -239,9 +239,53 @@ class MyApp extends StatelessWidget {
                   ],
                   locale: const Locale("ar", "SY"),
                   theme: ThemeData(
+                    useMaterial3: true,
                     colorScheme: ColorScheme.fromSwatch().copyWith(
                       primary: AppColor.deepBlue,
-                      secondary: AppColor.lightAppBarBlue,
+                      // secondary: AppColor.lightAppBarBlue,
+                    ),
+                    cardTheme: const CardTheme(
+                      surfaceTintColor: Colors.white,
+                      clipBehavior: Clip.antiAlias,
+                    ),
+                    inputDecorationTheme: InputDecorationTheme(
+                      labelStyle:
+                          TextStyle(fontSize: 18, color: Colors.grey[600]!),
+                      contentPadding: const EdgeInsets.symmetric(
+                          vertical: 11.0, horizontal: 9.0),
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                      enabledBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(12),
+                        borderSide: const BorderSide(
+                          color: Colors.black26,
+                        ),
+                      ),
+                      focusedBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(12),
+                        borderSide: BorderSide(
+                          color: AppColor.deepBlue,
+                        ),
+                      ),
+                      errorBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(12),
+                        borderSide: const BorderSide(
+                          color: Colors.red,
+                        ),
+                      ),
+                      focusedErrorBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(12),
+                        borderSide: const BorderSide(
+                          color: Colors.red,
+                        ),
+                      ),
+                      disabledBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(12),
+                        borderSide: const BorderSide(
+                          color: Colors.grey,
+                        ),
+                      ),
                     ),
                     textTheme: GoogleFonts.notoNaskhArabicTextTheme(
                       Theme.of(context).textTheme,

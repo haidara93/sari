@@ -190,173 +190,184 @@ class _LogScreenState extends State<LogScreen>
               ),
             ),
             SizedBox(
-              height: 15.h,
+              height: 10.h,
             ),
-            BlocBuilder<TraderLogBloc, TraderLogState>(
-              builder: (context, state) {
-                if (state is TraderLogLoadedSuccess) {
-                  return state.offers.isEmpty
-                      ? const Center(
-                          child: Text("لا يوجد عروض لعرضها"),
-                        )
-                      : ListView.builder(
-                          itemCount: state.offers.length,
-                          physics: const NeverScrollableScrollPhysics(),
-                          shrinkWrap: true,
-                          itemBuilder: (context, index) {
-                            // DateTime now = DateTime.now();
-                            // Duration diff = now
-                            //     .difference(state.offers[index].createdDate!);
-                            return Card(
-                              child: Padding(
-                                padding: EdgeInsets.symmetric(vertical: 5.h),
-                                child: ListTile(
-                                  contentPadding:
-                                      EdgeInsets.symmetric(horizontal: 5.w),
-                                  onTap: () {
-                                    Navigator.push(
-                                        context,
-                                        MaterialPageRoute(
-                                          builder: (context) =>
-                                              OfferDetailsScreen(
-                                                  offer: state.offers[index]),
-                                        ));
-                                  },
-                                  leading: Container(
-                                    height: 75.h,
-                                    width: 75.w,
-                                    decoration: BoxDecoration(
-                                        // color: AppColor.lightGoldenYellow,
-                                        borderRadius: BorderRadius.circular(5)),
-                                    child: Center(
-                                      child: SvgPicture.asset(
-                                        "assets/icons/naval_shipping.svg",
-                                        height: 55.h,
-                                        width: 55.w,
-                                        fit: BoxFit.fill,
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: BlocBuilder<TraderLogBloc, TraderLogState>(
+                builder: (context, state) {
+                  if (state is TraderLogLoadedSuccess) {
+                    return state.offers.isEmpty
+                        ? const Center(
+                            child: Text("لا يوجد عروض لعرضها"),
+                          )
+                        : ListView.builder(
+                            itemCount: state.offers.length,
+                            physics: const NeverScrollableScrollPhysics(),
+                            shrinkWrap: true,
+                            itemBuilder: (context, index) {
+                              // DateTime now = DateTime.now();
+                              // Duration diff = now
+                              //     .difference(state.offers[index].createdDate!);
+                              return Card(
+                                shape: const RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.all(
+                                    Radius.circular(10),
+                                  ),
+                                ),
+                                child: Padding(
+                                  padding: EdgeInsets.symmetric(vertical: 5.h),
+                                  child: ListTile(
+                                    contentPadding: EdgeInsets.zero,
+                                    onTap: () {
+                                      Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                            builder: (context) =>
+                                                OfferDetailsScreen(
+                                                    offer: state.offers[index]),
+                                          ));
+                                    },
+                                    leading: Container(
+                                      height: 75.h,
+                                      width: 75.w,
+                                      decoration: BoxDecoration(
+                                          // color: AppColor.lightGoldenYellow,
+                                          borderRadius:
+                                              BorderRadius.circular(5)),
+                                      child: Center(
+                                        child: SvgPicture.asset(
+                                          "assets/icons/naval_shipping.svg",
+                                          height: 55.h,
+                                          width: 55.w,
+                                          fit: BoxFit.fill,
+                                        ),
                                       ),
                                     ),
-                                  ),
-                                  title: Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
-                                    children: [
-                                      Column(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.start,
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                        children: [
-                                          Text(
-                                            'رقم العملية: SA-${state.offers[index].id!}',
-                                            style: TextStyle(
-                                                // color: AppColor.lightBlue,
-                                                fontSize: 15.sp,
-                                                fontWeight: FontWeight.bold),
-                                          ),
-                                          Text(
-                                              'نوع العملية: ${getOfferType(state.offers[index].offerType!)}'),
-                                          Text(
-                                              '${state.offers[index].origin!.label!}  --->  ${state.offers[index].costumestate!.name}'),
-                                          // Text(
-                                          //     'نوع البضاعة: ${state.offers[index].product!.label!}'),
-                                        ],
-                                      ),
-                                      SizedBox(
-                                        height: 80.h,
-                                        child: GestureDetector(
-                                          onTap: () {
-                                            Navigator.push(
-                                                context,
-                                                MaterialPageRoute(
-                                                  builder: (context) =>
-                                                      OrderTrackingScreen(
-                                                          offernum: state
-                                                              .offers[index]
-                                                              .id!),
-                                                ));
-                                          },
-                                          child: Padding(
-                                            padding: const EdgeInsets.symmetric(
-                                                vertical: 6.0, horizontal: 3.0),
-                                            child: Column(
-                                              mainAxisSize: MainAxisSize.min,
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment.center,
-                                              children: [
-                                                Text(
-                                                  "تتبع العملية",
-                                                  style: TextStyle(
-                                                    color: AppColor.lightBlue,
-                                                    fontWeight: FontWeight.bold,
-                                                  ),
-                                                )
-                                              ],
+                                    title: Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        Column(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.start,
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: [
+                                            Text(
+                                              'رقم العملية: SA-${state.offers[index].id!}',
+                                              style: TextStyle(
+                                                  // color: AppColor.lightBlue,
+                                                  fontSize: 15.sp,
+                                                  fontWeight: FontWeight.bold),
+                                            ),
+                                            Text(
+                                                'نوع العملية: ${getOfferType(state.offers[index].offerType!)}'),
+                                            Text(
+                                                '${state.offers[index].origin!.label!}  --->  ${state.offers[index].costumestate!.name}'),
+                                            // Text(
+                                            //     'نوع البضاعة: ${state.offers[index].product!.label!}'),
+                                          ],
+                                        ),
+                                        SizedBox(
+                                          height: 80.h,
+                                          child: GestureDetector(
+                                            onTap: () {
+                                              Navigator.push(
+                                                  context,
+                                                  MaterialPageRoute(
+                                                    builder: (context) =>
+                                                        OrderTrackingScreen(
+                                                            offernum: state
+                                                                .offers[index]
+                                                                .id!),
+                                                  ));
+                                            },
+                                            child: Padding(
+                                              padding:
+                                                  const EdgeInsets.symmetric(
+                                                      vertical: 6.0,
+                                                      horizontal: 3.0),
+                                              child: Column(
+                                                mainAxisSize: MainAxisSize.min,
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment.center,
+                                                children: [
+                                                  Text(
+                                                    "تتبع العملية",
+                                                    style: TextStyle(
+                                                      color: AppColor.lightBlue,
+                                                      fontWeight:
+                                                          FontWeight.bold,
+                                                    ),
+                                                  )
+                                                ],
+                                              ),
                                             ),
                                           ),
                                         ),
-                                      ),
-                                    ],
+                                      ],
+                                    ),
+                                    dense: false,
                                   ),
-                                  dense: false,
+                                ),
+                              );
+                            });
+                  } else {
+                    return Shimmer.fromColors(
+                      baseColor: (Colors.grey[300])!,
+                      highlightColor: (Colors.grey[100])!,
+                      enabled: true,
+                      child: ListView.builder(
+                        shrinkWrap: true,
+                        itemBuilder: (_, __) => Padding(
+                          padding: const EdgeInsets.all(15.0),
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Container(
+                                height: 30.h,
+                                width: 100.w,
+                                clipBehavior: Clip.antiAlias,
+                                decoration: BoxDecoration(
+                                  color: Colors.white,
+                                  borderRadius: BorderRadius.circular(10),
                                 ),
                               ),
-                            );
-                          });
-                } else {
-                  return Shimmer.fromColors(
-                    baseColor: (Colors.grey[300])!,
-                    highlightColor: (Colors.grey[100])!,
-                    enabled: true,
-                    child: ListView.builder(
-                      shrinkWrap: true,
-                      itemBuilder: (_, __) => Padding(
-                        padding: const EdgeInsets.all(15.0),
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Container(
-                              height: 30.h,
-                              width: 100.w,
-                              clipBehavior: Clip.antiAlias,
-                              decoration: BoxDecoration(
-                                color: Colors.white,
-                                borderRadius: BorderRadius.circular(10),
+                              const SizedBox(
+                                height: 15,
                               ),
-                            ),
-                            const SizedBox(
-                              height: 15,
-                            ),
-                            Container(
-                              height: 30.h,
-                              width: 150.w,
-                              clipBehavior: Clip.antiAlias,
-                              decoration: BoxDecoration(
-                                color: Colors.white,
-                                borderRadius: BorderRadius.circular(10),
+                              Container(
+                                height: 30.h,
+                                width: 150.w,
+                                clipBehavior: Clip.antiAlias,
+                                decoration: BoxDecoration(
+                                  color: Colors.white,
+                                  borderRadius: BorderRadius.circular(10),
+                                ),
                               ),
-                            ),
-                            const SizedBox(
-                              height: 15,
-                            ),
-                            Container(
-                              height: 30.h,
-                              width: 150.w,
-                              clipBehavior: Clip.antiAlias,
-                              decoration: BoxDecoration(
-                                color: Colors.white,
-                                borderRadius: BorderRadius.circular(10),
+                              const SizedBox(
+                                height: 15,
                               ),
-                            ),
-                          ],
+                              Container(
+                                height: 30.h,
+                                width: 150.w,
+                                clipBehavior: Clip.antiAlias,
+                                decoration: BoxDecoration(
+                                  color: Colors.white,
+                                  borderRadius: BorderRadius.circular(10),
+                                ),
+                              ),
+                            ],
+                          ),
                         ),
+                        itemCount: 6,
                       ),
-                      itemCount: 6,
-                    ),
-                  );
-                }
-              },
+                    );
+                  }
+                },
+              ),
             ),
             const SizedBox(
               height: 15,
