@@ -263,8 +263,30 @@ class _LogScreenState extends State<LogScreen>
                                             ),
                                             Text(
                                                 'نوع العملية: ${getOfferType(state.offers[index].offerType!)}'),
-                                            Text(
-                                                '${state.offers[index].origin!.label!}  --->  ${state.offers[index].costumestate!.name}'),
+                                            Text.rich(
+                                              TextSpan(
+                                                  text: state.offers[index]
+                                                      .origin!.label!,
+                                                  style: TextStyle(
+                                                    color: AppColor.lightBlue,
+                                                  ),
+                                                  children: [
+                                                    const TextSpan(
+                                                      text: "  --->  ",
+                                                      style: TextStyle(
+                                                        color: Colors.black,
+                                                      ),
+                                                    ),
+                                                    TextSpan(
+                                                      text:
+                                                          "${state.offers[index].costumestate!.name}",
+                                                      style: TextStyle(
+                                                        color:
+                                                            AppColor.lightBlue,
+                                                      ),
+                                                    ),
+                                                  ]),
+                                            ),
                                             // Text(
                                             //     'نوع البضاعة: ${state.offers[index].product!.label!}'),
                                           ],

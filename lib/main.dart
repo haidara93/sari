@@ -291,6 +291,8 @@ class MyApp extends StatelessWidget {
                     textTheme: GoogleFonts.notoNaskhArabicTextTheme(
                       Theme.of(context).textTheme,
                     ),
+                    dividerColor: Colors.grey[400],
+                    scaffoldBackgroundColor: Colors.white,
                   ),
                   home: EasySplashScreen(
                       logoWidth: 120,

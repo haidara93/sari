@@ -74,47 +74,276 @@ class OfferDetailsScreen extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       mainAxisSize: MainAxisSize.min,
                       children: [
-                        Text(
-                          'رقم العملية: ${offer.id!}',
-                          style: TextStyle(
-                              color: AppColor.lightBlue,
-                              fontSize: 17.sp,
-                              fontWeight: FontWeight.bold),
+                        SizedBox(
+                          height: 7.h,
                         ),
-                        Text('نوع العملية: ${getOfferType(offer.offerType!)}'),
-                        Text('الأمانة الجمركية: ${offer.costumeagency!.name}'),
-                        Text('نوع البضاعة: ${offer.product!.label!}'),
                         Text(
-                          'منشأ البضاعة: ${offer.origin!.label!}',
+                          'رقم العملية: SA-${offer.id!}',
+                          style: TextStyle(
+                            color: AppColor.lightBlue,
+                            fontSize: 18.sp,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        Divider(
+                          color: Colors.grey[300]!,
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.symmetric(vertical: 5.0),
+                          child: Text.rich(
+                            TextSpan(
+                                text: "نوع العملية: ",
+                                style: TextStyle(
+                                  fontSize: 17.sp,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                                children: [
+                                  TextSpan(
+                                    text: getOfferType(offer.offerType!),
+                                    style: TextStyle(
+                                      color: Colors.black,
+                                      fontSize: 16.sp,
+                                      fontWeight: FontWeight.normal,
+                                    ),
+                                  ),
+                                ]),
+                          ),
+                        ),
+                        Divider(
+                          color: Colors.grey[300]!,
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.symmetric(vertical: 5.0),
+                          child: Text.rich(
+                            TextSpan(
+                                text: "الأمانة الجمركية: ",
+                                style: TextStyle(
+                                  fontSize: 17.sp,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                                children: [
+                                  TextSpan(
+                                    text: offer.costumeagency!.name,
+                                    style: TextStyle(
+                                      color: Colors.black,
+                                      fontSize: 16.sp,
+                                      fontWeight: FontWeight.normal,
+                                    ),
+                                  ),
+                                ]),
+                          ),
+                        ),
+                        Divider(
+                          color: Colors.grey[300]!,
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.symmetric(vertical: 5.0),
+                          child: Text.rich(
+                            TextSpan(
+                                text: "نوع البضاعة: ",
+                                style: TextStyle(
+                                  fontSize: 17.sp,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                                children: [
+                                  TextSpan(
+                                    text: offer.product!.label!,
+                                    style: TextStyle(
+                                      color: Colors.black,
+                                      fontSize: 16.sp,
+                                      fontWeight: FontWeight.normal,
+                                    ),
+                                  ),
+                                ]),
+                          ),
+                        ),
+                        Divider(
+                          color: Colors.grey[300]!,
+                        ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          children: [
+                            SizedBox(
+                              width: MediaQuery.of(context).size.width * .4,
+                              child: Text.rich(
+                                TextSpan(
+                                    text: "منشأ البضاعة: ",
+                                    style: TextStyle(
+                                      fontSize: 17.sp,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                    children: [
+                                      TextSpan(
+                                        text: offer.origin!.label!,
+                                        style: TextStyle(
+                                          color: Colors.black,
+                                          fontSize: 16.sp,
+                                          fontWeight: FontWeight.normal,
+                                        ),
+                                      ),
+                                    ]),
+                              ),
+                            ),
+                            SizedBox(
+                              height: 45.h,
+                              child: VerticalDivider(
+                                color: Colors.grey[300],
+                              ),
+                            ),
+                            Text.rich(
+                              TextSpan(
+                                  text: "الوجهة: ",
+                                  style: TextStyle(
+                                    fontSize: 17.sp,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                  children: [
+                                    TextSpan(
+                                      text: offer.costumestate!.name!,
+                                      style: TextStyle(
+                                        color: Colors.black,
+                                        fontSize: 16.sp,
+                                        fontWeight: FontWeight.normal,
+                                      ),
+                                    ),
+                                  ]),
+                            ),
+                          ],
+                        ),
+                        Divider(
+                          color: Colors.grey[300]!,
+                        ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          children: [
+                            SizedBox(
+                              width: MediaQuery.of(context).size.width * .4,
+                              child: Text.rich(
+                                TextSpan(
+                                    text: "نوع الطرد: ",
+                                    style: TextStyle(
+                                      fontSize: 17.sp,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                    children: [
+                                      TextSpan(
+                                        text: offer.packageType!.toString(),
+                                        style: TextStyle(
+                                          color: Colors.black,
+                                          fontSize: 16.sp,
+                                          fontWeight: FontWeight.normal,
+                                        ),
+                                      ),
+                                    ]),
+                              ),
+                            ),
+                            SizedBox(
+                              height: 45.h,
+                              child: VerticalDivider(
+                                color: Colors.grey[300],
+                              ),
+                            ),
+                            Text.rich(
+                              TextSpan(
+                                  text: "عدد الطرود: ",
+                                  style: TextStyle(
+                                    fontSize: 17.sp,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                  children: [
+                                    TextSpan(
+                                      text: offer.packagesNum!.toString(),
+                                      style: TextStyle(
+                                        color: Colors.black,
+                                        fontSize: 16.sp,
+                                        fontWeight: FontWeight.normal,
+                                      ),
+                                    ),
+                                  ]),
+                            ),
+                          ],
+                        ),
+                        Divider(
+                          color: Colors.grey[300]!,
+                        ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          children: [
+                            SizedBox(
+                              width: MediaQuery.of(context).size.width * .4,
+                              child: Text.rich(
+                                TextSpan(
+                                    text: "الوزن: ",
+                                    style: TextStyle(
+                                      fontSize: 17.sp,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                    children: [
+                                      TextSpan(
+                                        text: offer.weight!.toString(),
+                                        style: TextStyle(
+                                          color: Colors.black,
+                                          fontSize: 16.sp,
+                                          fontWeight: FontWeight.normal,
+                                        ),
+                                      ),
+                                    ]),
+                              ),
+                            ),
+                            SizedBox(
+                              height: 45.h,
+                              child: VerticalDivider(
+                                color: Colors.grey[300],
+                              ),
+                            ),
+                            Text.rich(
+                              TextSpan(
+                                  text: "القيمة: ",
+                                  style: TextStyle(
+                                    fontSize: 17.sp,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                  children: [
+                                    TextSpan(
+                                      text: offer.price!.toString(),
+                                      style: TextStyle(
+                                        color: Colors.black,
+                                        fontSize: 16.sp,
+                                        fontWeight: FontWeight.normal,
+                                      ),
+                                    ),
+                                  ]),
+                            ),
+                          ],
+                        ),
+                        Divider(
+                          color: Colors.grey[300]!,
                         ),
                         SizedBox(
-                          height: 5.h,
+                          height: 7.h,
                         ),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Text(
-                              'نوع الطرد: ${offer.packageType!}',
-                            ),
-                            Text(
-                              'عدد الطرود: ${offer.packagesNum!}',
-                            ),
-                          ],
+                        Text.rich(
+                          TextSpan(
+                              text: "تاريخ وصول البضاعة: ",
+                              style: TextStyle(
+                                fontSize: 17.sp,
+                                fontWeight: FontWeight.bold,
+                              ),
+                              children: [
+                                TextSpan(
+                                  text:
+                                      '${offer.expectedArrivalDate!.day}-${offer.expectedArrivalDate!.month}-${offer.expectedArrivalDate!.year}',
+                                  style: TextStyle(
+                                    color: Colors.black,
+                                    fontSize: 16.sp,
+                                    fontWeight: FontWeight.normal,
+                                  ),
+                                ),
+                              ]),
                         ),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Text(
-                              'الوزن: ${offer.weight!}',
-                            ),
-                            Text(
-                              'القيمة: ${offer.price!}',
-                            ),
-                          ],
-                        ),
-                        Text(
-                          'تاريخ وصول البضاعة: ${offer.expectedArrivalDate!.day}-${offer.expectedArrivalDate!.month}-${offer.expectedArrivalDate!.year}',
-                        ),
+                        SizedBox(
+                          height: 10.h,
+                        )
                       ],
                     ),
                   ),
@@ -137,7 +366,13 @@ class OfferDetailsScreen extends StatelessWidget {
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        const Text("اجمالي التكاليف:"),
+                        Text(
+                          "اجمالي التكاليف:",
+                          style: TextStyle(
+                            fontSize: 17.sp,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
                         Text(
                           totalCost(offer.costs),
                           style: TextStyle(
@@ -209,7 +444,13 @@ class OfferDetailsScreen extends StatelessWidget {
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        const Text("المرفقات:"),
+                        Text(
+                          "المرفقات:",
+                          style: TextStyle(
+                            fontSize: 17.sp,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
                         GestureDetector(
                           onTap: () {
                             Navigator.push(
@@ -256,7 +497,13 @@ class OfferDetailsScreen extends StatelessWidget {
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        const Text("تتبع العملية:"),
+                        Text(
+                          "تتبع العملية:",
+                          style: TextStyle(
+                            fontSize: 17.sp,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
                         Padding(
                           padding: EdgeInsets.all(8.h),
                           child: const Text(

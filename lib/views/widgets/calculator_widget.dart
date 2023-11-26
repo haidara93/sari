@@ -1139,7 +1139,6 @@ class _CalculatorWidgetState extends State<CalculatorWidget> {
                                     .add(CalculateTheResultEvent(result));
                                 BlocProvider.of<BottomNavBarCubit>(context)
                                     .emitShow();
-                                FocusManager.instance.primaryFocus?.unfocus();
                                 Navigator.push(
                                     context,
                                     MaterialPageRoute(
