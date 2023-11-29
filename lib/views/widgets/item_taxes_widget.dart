@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:intl/intl.dart';
 
 class ItemTaxesWidget extends StatelessWidget {
   final double? customsFee;
@@ -12,7 +13,7 @@ class ItemTaxesWidget extends StatelessWidget {
   final double? incomeTaxFee;
   final double? finalFee;
 
-  const ItemTaxesWidget(
+  ItemTaxesWidget(
       {Key? key,
       this.customsFee,
       this.spendingFee,
@@ -24,7 +25,7 @@ class ItemTaxesWidget extends StatelessWidget {
       this.incomeTaxFee,
       this.finalFee})
       : super(key: key);
-
+  var f = NumberFormat("#,###", "en_US");
   @override
   Widget build(BuildContext context) {
     return Card(
@@ -140,7 +141,7 @@ class ItemTaxesWidget extends StatelessWidget {
                   style: TextStyle(fontWeight: FontWeight.bold),
                 ),
                 Text(
-                  finalFee!.toString(),
+                  f.format(finalFee!.toInt()),
                   style: const TextStyle(fontWeight: FontWeight.bold),
                 ),
               ],

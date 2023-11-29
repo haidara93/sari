@@ -242,7 +242,7 @@ class MyApp extends StatelessWidget {
                     useMaterial3: true,
                     colorScheme: ColorScheme.fromSwatch().copyWith(
                       primary: AppColor.deepBlue,
-                      // secondary: AppColor.lightAppBarBlue,
+                      // secondary: Colors.white,
                       primaryContainer: Colors.white,
                     ),
                     cardTheme: const CardTheme(

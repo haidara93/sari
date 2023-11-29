@@ -356,6 +356,12 @@ class CalculateObject {
   double? naturalFee;
   double? protectionFee;
   double? taxFee;
+  int? weight;
+  int? price;
+  int? cnsulate;
+  int? dolar;
+  int? arabic_stamp;
+  double? import_fee;
 
   CalculateObject({
     this.insurance,
@@ -371,5 +377,11 @@ class CalculateObject {
     this.naturalFee,
     this.protectionFee,
     this.taxFee,
+    this.weight,
+    this.price,
+    this.cnsulate,
+    this.dolar,
+    this.arabic_stamp,
+    this.import_fee,
   });
 }

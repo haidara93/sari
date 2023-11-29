@@ -340,6 +340,7 @@ class _LogScreenState extends State<LogScreen>
                       baseColor: (Colors.grey[300])!,
                       highlightColor: (Colors.grey[100])!,
                       enabled: true,
+                      direction: ShimmerDirection.ttb,
                       child: ListView.builder(
                         shrinkWrap: true,
                         itemBuilder: (_, __) => Padding(

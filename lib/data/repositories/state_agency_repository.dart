@@ -137,16 +137,18 @@ class StateAgencyRepository {
     var jwt = prefs.getString("token");
 
     var url =
-        'https://across-mena.com/Fee_calculator/calculate/?insurance=${cal.insurance}&fee=0.01&raw_material=${cal.rawMaterial}&industrial=${cal.industrial}&origin=${cal.origin}&total_tax=${cal.totalTax}&partial_tax=${cal.partialTax}&spending_fee=${cal.spendingFee}&local_fee=${cal.localFee}&support_fee=${cal.supportFee}&protection_fee=${cal.protectionFee}&natural_fee=${cal.naturalFee}&tax_fee=${cal.taxFee}';
+        'https://across-mena.com/Fee_calculator/calculate/?insurance=${cal.insurance}&fee=0.01&raw_material=${cal.rawMaterial}&industrial=${cal.industrial}&origin=${cal.origin}&total_tax=${cal.totalTax}&partial_tax=${cal.partialTax}&spending_fee=${cal.spendingFee}&local_fee=${cal.localFee}&support_fee=${cal.supportFee}&protection_fee=${cal.protectionFee}&natural_fee=${cal.naturalFee}&tax_fee=${cal.taxFee}&weight=${cal.weight}&price=${cal.price}&cnsulate=${cal.cnsulate}&dolar=${cal.dolar}&arabic_stamp=${cal.arabic_stamp}&import_fee=${cal.import_fee}';
     var response = await http.get(Uri.parse(url), headers: {
       HttpHeaders.contentTypeHeader: 'application/json; charset=UTF-8',
       HttpHeaders.acceptHeader: 'application/json',
       HttpHeaders.authorizationHeader: 'JWT $jwt'
     });
     var myDataString = utf8.decode(response.bodyBytes);
-
+    print(myDataString);
     var json = jsonDecode(myDataString);
     var result = CalculatorResult.fromJson(json);
+    print(
+        '${result.customsFee}\n${result.finalTaxes}\n${result.finalTotal}\n${result.reconstructionFee}\n${result.finalFee}');
     return result;
   }
 

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:intl/intl.dart';
 
 class PensTaxesWidget extends StatelessWidget {
   final double addedTaxes;
@@ -11,7 +12,7 @@ class PensTaxesWidget extends StatelessWidget {
   final double reconstructionFee;
   final double finalTaxes;
 
-  const PensTaxesWidget(
+  PensTaxesWidget(
       {Key? key,
       required this.addedTaxes,
       required this.customsCertificate,
@@ -22,6 +23,7 @@ class PensTaxesWidget extends StatelessWidget {
       required this.reconstructionFee,
       required this.finalTaxes})
       : super(key: key);
+  var f = NumberFormat("#,###", "en_US");
 
   @override
   Widget build(BuildContext context) {
@@ -128,7 +130,7 @@ class PensTaxesWidget extends StatelessWidget {
                   style: TextStyle(fontWeight: FontWeight.bold),
                 ),
                 Text(
-                  finalTaxes.toStringAsFixed(2),
+                  f.format(finalTaxes.toInt()),
                   style: const TextStyle(fontWeight: FontWeight.bold),
                 ),
               ],

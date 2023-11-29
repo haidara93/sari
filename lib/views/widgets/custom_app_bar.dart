@@ -65,18 +65,16 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
                             ),
                           ),
                         )
-                      : GestureDetector(
+                      : InkWell(
                           onTap: () {
                             scaffoldKey!.currentState!.openDrawer();
                           },
                           child: Padding(
-                            padding: const EdgeInsets.all(8.0),
+                            padding: EdgeInsets.symmetric(
+                                vertical: 13.h, horizontal: 10.w),
                             child: SizedBox(
-                              // margin:
-                              //     EdgeInsets.symmetric(vertical: 13.h, horizontal: 3.w),
                               height: 35.h,
                               width: 35.w,
-
                               child: Center(
                                 child:
                                     Image.asset("assets/icons/drawer_icon.png"),
@@ -85,20 +83,23 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
                           ),
                         ),
                   SizedBox(
-                    width: 24.w,
+                    width: 2.w,
                   ),
-                  GestureDetector(
+                  InkWell(
+                    // borderRadius: BorderRadius.circular(45),
                     onTap: () {
+                      print("asdasd");
                       // scaffoldKey.currentState!.openDrawer();
                     },
-                    child: SizedBox(
-                      // margin:
-                      //     EdgeInsets.symmetric(vertical: 13.h, horizontal: 3.w),
-                      height: 35.h,
-                      width: 35.w,
-
-                      child: Center(
-                        child: Image.asset("assets/icons/notification.png"),
+                    child: Padding(
+                      padding: EdgeInsets.symmetric(
+                          vertical: 13.h, horizontal: 10.w),
+                      child: SizedBox(
+                        height: 35.h,
+                        width: 35.h,
+                        child: Center(
+                          child: Image.asset("assets/icons/notification.png"),
+                        ),
                       ),
                     ),
                   ),

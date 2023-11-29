@@ -51,7 +51,7 @@ class CalculatorWidget extends StatefulWidget {
 }
 
 class _CalculatorWidgetState extends State<CalculatorWidget> {
-  String syrianExchangeValue = "30";
+  String syrianExchangeValue = "6565";
 
   String syrianTotalValue = "0";
 
@@ -63,7 +63,7 @@ class _CalculatorWidgetState extends State<CalculatorWidget> {
   String wieghtUnit = "";
   String wieghtLabel = "الوزن";
 
-  double usTosp = 30;
+  double usTosp = 6565;
   double basePrice = 0;
   double wieghtValue = 0;
   var f = NumberFormat("#,###", "en_US");
@@ -91,6 +91,7 @@ class _CalculatorWidgetState extends State<CalculatorWidget> {
   final FocusNode _statenode = FocusNode();
   late final KeyboardVisibilityController _keyboardVisibilityController;
   late StreamSubscription<bool> keyboardSubscription;
+
   @override
   void initState() {
     super.initState();
@@ -114,7 +115,7 @@ class _CalculatorWidgetState extends State<CalculatorWidget> {
   void calculateTotalValueWithPrice() {
     var syrianExch = double.parse(widget.wieghtController!.text) *
         double.parse(widget.valueController!.text);
-    var syrianTotal = syrianExch * 30;
+    var syrianTotal = syrianExch * 6565;
     var totalEnsurance = (syrianTotal) + (syrianTotal * 0.0012);
     setState(() {
       syrianExchangeValue = syrianExch.round().toString();
@@ -124,7 +125,7 @@ class _CalculatorWidgetState extends State<CalculatorWidget> {
   }
 
   void calculateTotalValue() {
-    var syrianTotal = double.parse(widget.valueController!.text) * 30;
+    var syrianTotal = double.parse(widget.valueController!.text) * 6565;
     var totalEnsurance = (syrianTotal) + (syrianTotal * 0.0012);
     setState(() {
       syrianTotalValue = syrianTotal.round().toString();
@@ -148,7 +149,7 @@ class _CalculatorWidgetState extends State<CalculatorWidget> {
 
         widget.valueController!.text = "0.0";
         valueEnabled = true;
-        syrianExchangeValue = "30";
+        syrianExchangeValue = "6565";
       });
     }
 
@@ -356,7 +357,7 @@ class _CalculatorWidgetState extends State<CalculatorWidget> {
               basePrice = 0.0;
               widget.valueController!.text = "0.0";
               valueEnabled = true;
-              syrianExchangeValue = "30";
+              syrianExchangeValue = "6565";
             });
           }
         }
@@ -367,7 +368,7 @@ class _CalculatorWidgetState extends State<CalculatorWidget> {
 
           widget.valueController!.text = "0.0";
           valueEnabled = true;
-          syrianExchangeValue = "30";
+          syrianExchangeValue = "6565";
         });
       }
     }
@@ -505,14 +506,10 @@ class _CalculatorWidgetState extends State<CalculatorWidget> {
                     );
                   },
                   suggestionsCallback: (pattern) async {
-                    if (pattern.isNotEmpty && pattern.length > 2) {
-                      setState(() {
-                        patternString = pattern;
-                      });
-                      return await CalculatorService.getpackages(pattern);
-                    } else {
-                      return [];
-                    }
+                    setState(() {
+                      patternString = pattern;
+                    });
+                    return await CalculatorService.getpackages(pattern);
                   },
                   itemBuilder: (context, suggestion) {
                     return Column(
@@ -523,7 +520,7 @@ class _CalculatorWidgetState extends State<CalculatorWidget> {
                             text: suggestion.label!,
                             highlight: patternString,
                             ignoreCase: false,
-                            highlightColor: Colors.orangeAccent,
+                            highlightColor: AppColor.goldenYellow,
                           ),
                           // subtitle: Text('\$${suggestion['price']}'),
                         ),
@@ -603,7 +600,7 @@ class _CalculatorWidgetState extends State<CalculatorWidget> {
 
                             widget.valueController!.text = "0.0";
                             valueEnabled = true;
-                            syrianExchangeValue = "30";
+                            syrianExchangeValue = "6565";
                           });
                         }
                         evaluatePrice();
@@ -622,7 +619,7 @@ class _CalculatorWidgetState extends State<CalculatorWidget> {
 
                             widget.valueController!.text = "0.0";
                             valueEnabled = true;
-                            syrianExchangeValue = "30";
+                            syrianExchangeValue = "6565";
                           });
                         }
                         evaluatePrice();
@@ -905,6 +902,12 @@ class _CalculatorWidgetState extends State<CalculatorWidget> {
                       });
                     }
                   },
+                  validator: (value) {
+                    if (value!.isEmpty) {
+                      return "الرجاء ادخال القيمة";
+                    }
+                    return null;
+                  },
                   onFieldSubmitted: (value) {
                     widget.unfocus;
                     BlocProvider.of<BottomNavBarCubit>(context).emitShow();
@@ -946,6 +949,12 @@ class _CalculatorWidgetState extends State<CalculatorWidget> {
                       vertical: 11.0,
                     ),
                   ),
+                  validator: (value) {
+                    if (value!.isEmpty) {
+                      return "الرجاء ادخال القيمة";
+                    }
+                    return null;
+                  },
                   onChanged: (value) {
                     if (widget.originController!.text.isNotEmpty) {
                       setState(() {
@@ -1143,7 +1152,7 @@ class _CalculatorWidgetState extends State<CalculatorWidget> {
                                     context,
                                     MaterialPageRoute(
                                       builder: (context) =>
-                                          const TraderCalculatorResultScreen(),
+                                          TraderCalculatorResultScreen(),
                                     ));
                               }
                             },

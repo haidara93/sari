@@ -1103,10 +1103,10 @@ class _CustomeTariffScreenState extends State<CustomeTariffScreen> {
                               ),
                               Flexible(
                                 child: HighlightText(
-                                  highlightStyle: const TextStyle(
+                                  highlightStyle: TextStyle(
                                     height: 1.3,
                                     fontSize: 17,
-                                    color: Colors.orangeAccent,
+                                    color: AppColor.goldenYellow,
                                   ),
                                   style: const TextStyle(
                                     height: 1.3,
@@ -1254,10 +1254,10 @@ class _CustomeTariffScreenState extends State<CustomeTariffScreen> {
                             ),
                             Flexible(
                               child: HighlightText(
-                                highlightStyle: const TextStyle(
+                                highlightStyle: TextStyle(
                                   height: 1.3,
                                   fontSize: 17,
-                                  color: Colors.orangeAccent,
+                                  color: AppColor.goldenYellow,
                                 ),
                                 style: const TextStyle(
                                   height: 1.3,
@@ -1363,10 +1363,10 @@ class _CustomeTariffScreenState extends State<CustomeTariffScreen> {
                             ),
                             Flexible(
                               child: HighlightText(
-                                highlightStyle: const TextStyle(
+                                highlightStyle: TextStyle(
                                   height: 1.3,
                                   fontSize: 17,
-                                  color: Colors.orangeAccent,
+                                  color: AppColor.goldenYellow,
                                 ),
                                 style: const TextStyle(
                                   height: 1.3,
@@ -1481,11 +1481,26 @@ class _CustomeTariffScreenState extends State<CustomeTariffScreen> {
                                   50),
                           decoration: InputDecoration(
                             labelText: "بحث",
-                            labelStyle: const TextStyle(fontSize: 18),
-                            border: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(12)),
-                            contentPadding: const EdgeInsets.symmetric(
-                                vertical: 11.0, horizontal: 9.0),
+                            suffixIcon: InkWell(
+                              onTap: () {
+                                BlocProvider.of<BottomNavBarCubit>(context)
+                                    .emitShow();
+                                FocusManager.instance.primaryFocus?.unfocus();
+
+                                if (_searchController.text.isNotEmpty) {
+                                  BlocProvider.of<SearchSectionBloc>(context)
+                                      .add(SearchSectionLoadEvent(
+                                          _searchController.text));
+                                  setState(() {
+                                    isSearch = true;
+                                  });
+                                }
+                              },
+                              child: const Icon(
+                                Icons.search,
+                                color: Colors.grey,
+                              ),
+                            ),
                           ),
                           onChanged: (value) {
                             if (value.isEmpty) {
@@ -1510,170 +1525,212 @@ class _CustomeTariffScreenState extends State<CustomeTariffScreen> {
                       ),
                     ),
                   ),
-                  SizedBox(
-                    height: 5.h,
-                  ),
                   isSearch
                       ? BlocBuilder<SearchSectionBloc, SearchSectionState>(
                           builder: (context, state) {
                             if (state is SearchSectionLoadedSuccess) {
-                              return ListView.builder(
-                                key: Key('builder ${selected.toString()}'),
-                                shrinkWrap: true,
-                                physics: const NeverScrollableScrollPhysics(),
-                                itemCount: state.sections.length,
-                                itemBuilder: (context, index) {
-                                  return Card(
-                                    margin: EdgeInsets.symmetric(
-                                        vertical: 4.h, horizontal: 3.w),
-                                    clipBehavior: Clip.none,
-                                    shape: RoundedRectangleBorder(
-                                      borderRadius: const BorderRadius.all(
-                                        Radius.circular(10),
+                              return state.sections.isEmpty
+                                  ? const Center(
+                                      child: Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        children: [
+                                          Text(
+                                            "لم يتم العثور على نتائج موافقة للبحث...  ",
+                                            maxLines: 2,
+                                            style:
+                                                TextStyle(color: Colors.grey),
+                                          ),
+                                          Icon(
+                                            Icons.warning_rounded,
+                                            color: Colors.grey,
+                                          )
+                                        ],
                                       ),
-                                      side: BorderSide(
-                                          color: AppColor.goldenYellow,
-                                          width: 2),
-                                    ),
-                                    color: Colors.white,
-                                    // decoration: BoxDecoration(
-                                    //   borderRadius: BorderRadius.circular(10),
-                                    //   border: selected == index
-                                    //       ? Border.all(
-                                    //           color: Colors.yellow[600]!, width: 2)
-                                    //       : null,
-                                    // ),
-                                    child: Theme(
-                                      data: Theme.of(context).copyWith(
-                                          dividerColor: Colors.transparent),
-                                      child: ExpansionTile(
-                                        key: Key(index.toString()), //attention
-                                        initiallyExpanded: true,
-                                        tilePadding: const EdgeInsets.all(5),
-                                        // controlAffinity:
-                                        //     ListTileControlAffinity.leading,
-                                        trailing:
-                                            Builder(builder: (iconcontext) {
-                                          return GestureDetector(
-                                            onTap: () {
-                                              showPopover(
-                                                context: iconcontext,
-                                                bodyBuilder: (iconcontext) =>
-                                                    StatefulBuilder(builder:
-                                                        (context, setState) {
-                                                  BlocProvider.of<NoteBloc>(
-                                                          context)
-                                                      .add(NoteLoadEvent(
-                                                          state.sections[index]!
-                                                              .id!
-                                                              .toString(),
-                                                          NoteType.Section));
-                                                  return BlocBuilder<NoteBloc,
-                                                      NoteState>(
-                                                    builder: (context, state) {
-                                                      if (state
-                                                          is NoteLoadedSuccess) {
-                                                        return ListItems(
-                                                          noteType:
-                                                              NoteType.Section,
-                                                          sectionnotes:
-                                                              state.notes,
-                                                          loading: false,
-                                                          contxt: context,
+                                    )
+                                  : ListView.builder(
+                                      key:
+                                          Key('builder ${selected.toString()}'),
+                                      shrinkWrap: true,
+                                      physics:
+                                          const NeverScrollableScrollPhysics(),
+                                      itemCount: state.sections.length,
+                                      itemBuilder: (context, index) {
+                                        return Card(
+                                          margin: EdgeInsets.symmetric(
+                                              vertical: 4.h, horizontal: 3.w),
+                                          clipBehavior: Clip.none,
+                                          shape: RoundedRectangleBorder(
+                                            borderRadius:
+                                                const BorderRadius.all(
+                                              Radius.circular(10),
+                                            ),
+                                            side: BorderSide(
+                                                color: AppColor.goldenYellow,
+                                                width: 2),
+                                          ),
+                                          color: Colors.white,
+                                          // decoration: BoxDecoration(
+                                          //   borderRadius: BorderRadius.circular(10),
+                                          //   border: selected == index
+                                          //       ? Border.all(
+                                          //           color: Colors.yellow[600]!, width: 2)
+                                          //       : null,
+                                          // ),
+                                          child: Theme(
+                                            data: Theme.of(context).copyWith(
+                                                dividerColor:
+                                                    Colors.transparent),
+                                            child: ExpansionTile(
+                                              key: Key(
+                                                  index.toString()), //attention
+                                              initiallyExpanded: true,
+                                              tilePadding:
+                                                  const EdgeInsets.all(5),
+                                              // controlAffinity:
+                                              //     ListTileControlAffinity.leading,
+                                              trailing: Builder(
+                                                  builder: (iconcontext) {
+                                                return GestureDetector(
+                                                  onTap: () {
+                                                    showPopover(
+                                                      context: iconcontext,
+                                                      bodyBuilder: (iconcontext) =>
+                                                          StatefulBuilder(
+                                                              builder: (context,
+                                                                  setState) {
+                                                        BlocProvider.of<
+                                                                    NoteBloc>(
+                                                                context)
+                                                            .add(NoteLoadEvent(
+                                                                state
+                                                                    .sections[
+                                                                        index]!
+                                                                    .id!
+                                                                    .toString(),
+                                                                NoteType
+                                                                    .Section));
+                                                        return BlocBuilder<
+                                                            NoteBloc,
+                                                            NoteState>(
+                                                          builder:
+                                                              (context, state) {
+                                                            if (state
+                                                                is NoteLoadedSuccess) {
+                                                              return ListItems(
+                                                                noteType:
+                                                                    NoteType
+                                                                        .Section,
+                                                                sectionnotes:
+                                                                    state.notes,
+                                                                loading: false,
+                                                                contxt: context,
+                                                              );
+                                                            } else {
+                                                              return ListItems(
+                                                                noteType:
+                                                                    NoteType
+                                                                        .Section,
+                                                                sectionnotes: [],
+                                                                loading: true,
+                                                                contxt: context,
+                                                              );
+                                                            }
+                                                          },
                                                         );
-                                                      } else {
-                                                        return ListItems(
-                                                          noteType:
-                                                              NoteType.Section,
-                                                          sectionnotes: [],
-                                                          loading: true,
-                                                          contxt: context,
-                                                        );
-                                                      }
-                                                    },
-                                                  );
-                                                }),
-                                                onPop: () => print(
-                                                    'Popover was popped!'),
-                                                direction:
-                                                    PopoverDirection.bottom,
-                                                width: MediaQuery.of(context)
-                                                        .size
-                                                        .width -
-                                                    28.w,
-                                                height: 280.h,
-                                                arrowHeight: 15,
-                                                arrowWidth: 25,
-                                                barrierLabel: "ملاحظات",
-                                              );
-                                            },
-                                            child: const TariffInfoIcon(),
-                                          );
-                                        }),
+                                                      }),
+                                                      onPop: () => print(
+                                                          'Popover was popped!'),
+                                                      direction:
+                                                          PopoverDirection
+                                                              .bottom,
+                                                      width:
+                                                          MediaQuery.of(context)
+                                                                  .size
+                                                                  .width -
+                                                              28.w,
+                                                      height: 280.h,
+                                                      arrowHeight: 15,
+                                                      arrowWidth: 25,
+                                                      barrierLabel: "ملاحظات",
+                                                    );
+                                                  },
+                                                  child: const TariffInfoIcon(),
+                                                );
+                                              }),
 
-                                        title: Row(
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.center,
-                                          children: [
-                                            SizedBox(
-                                              width: 65.w,
-                                              child: Column(
+                                              title: Row(
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment.center,
                                                 children: [
                                                   SizedBox(
-                                                    width: 36.w,
-                                                    height: 36.h,
-                                                    child: SvgPicture.network(
-                                                      "https://across-mena.com${state.sections[index]!.image!}",
-                                                      placeholderBuilder:
-                                                          (context) =>
-                                                              Container(
-                                                        color: Colors.grey[200],
-                                                        width: 36.w,
-                                                        height: 36.h,
-                                                      ),
+                                                    width: 65.w,
+                                                    child: Column(
+                                                      children: [
+                                                        SizedBox(
+                                                          width: 36.w,
+                                                          height: 36.h,
+                                                          child: SvgPicture
+                                                              .network(
+                                                            "https://across-mena.com${state.sections[index]!.image!}",
+                                                            placeholderBuilder:
+                                                                (context) =>
+                                                                    Container(
+                                                              color: Colors
+                                                                  .grey[200],
+                                                              width: 36.w,
+                                                              height: 36.h,
+                                                            ),
+                                                          ),
+                                                        ),
+                                                        Text(
+                                                          "(${state.sections[index]!.end!}__${state.sections[index]!.start!})",
+                                                          style:
+                                                              const TextStyle(
+                                                                  fontSize: 14),
+                                                        ),
+                                                      ],
                                                     ),
                                                   ),
-                                                  Text(
-                                                    "(${state.sections[index]!.end!}__${state.sections[index]!.start!})",
-                                                    style: const TextStyle(
-                                                        fontSize: 14),
+                                                  SizedBox(
+                                                    height: 5.w,
+                                                  ),
+                                                  Flexible(
+                                                    child: HighlightText(
+                                                      highlightStyle: TextStyle(
+                                                        height: 1.3,
+                                                        fontSize: 17,
+                                                        fontWeight:
+                                                            FontWeight.bold,
+                                                        color: AppColor
+                                                            .goldenYellow,
+                                                      ),
+                                                      style: const TextStyle(
+                                                        height: 1.3,
+                                                        fontSize: 17,
+                                                        fontWeight:
+                                                            FontWeight.bold,
+                                                      ),
+                                                      text: state
+                                                          .sections[index]!
+                                                          .label!,
+                                                      highlight:
+                                                          _searchController
+                                                              .text,
+                                                      ignoreCase: false,
+                                                    ),
                                                   ),
                                                 ],
                                               ),
-                                            ),
-                                            SizedBox(
-                                              height: 5.w,
-                                            ),
-                                            Flexible(
-                                              child: HighlightText(
-                                                highlightStyle: const TextStyle(
-                                                  height: 1.3,
-                                                  fontSize: 17,
-                                                  fontWeight: FontWeight.bold,
-                                                  color: Colors.orangeAccent,
-                                                ),
-                                                style: const TextStyle(
-                                                  height: 1.3,
-                                                  fontSize: 17,
-                                                  fontWeight: FontWeight.bold,
-                                                ),
-                                                text: state
-                                                    .sections[index]!.label!,
-                                                highlight:
-                                                    _searchController.text,
-                                                ignoreCase: false,
-                                              ),
-                                            ),
-                                          ],
-                                        ),
 
-                                        children: buildSearchChapterTiles(
-                                            state.sections[index]!.chapterSet!),
-                                      ),
-                                    ),
-                                  );
-                                },
-                              );
+                                              children: buildSearchChapterTiles(
+                                                  state.sections[index]!
+                                                      .chapterSet!),
+                                            ),
+                                          ),
+                                        );
+                                      },
+                                    );
                             } else if (state is SearchSectionLoading) {
                               return Shimmer.fromColors(
                                 baseColor: (Colors.grey[300])!,

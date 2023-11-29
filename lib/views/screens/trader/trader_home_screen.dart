@@ -2212,11 +2212,26 @@ class _TraderHomeScreenState extends State<TraderHomeScreen>
                                   50),
                           decoration: InputDecoration(
                             labelText: "بحث",
-                            labelStyle: const TextStyle(fontSize: 18),
-                            border: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(12)),
-                            contentPadding: const EdgeInsets.symmetric(
-                                vertical: 11.0, horizontal: 9.0),
+                            suffixIcon: InkWell(
+                              onTap: () {
+                                BlocProvider.of<BottomNavBarCubit>(context)
+                                    .emitShow();
+                                FocusManager.instance.primaryFocus?.unfocus();
+
+                                if (_searchController.text.isNotEmpty) {
+                                  BlocProvider.of<SearchSectionBloc>(context)
+                                      .add(SearchSectionLoadEvent(
+                                          _searchController.text));
+                                  setState(() {
+                                    isSearch = true;
+                                  });
+                                }
+                              },
+                              child: const Icon(
+                                Icons.search,
+                                color: Colors.grey,
+                              ),
+                            ),
                           ),
                           onChanged: (value) {
                             if (value.isEmpty) {
@@ -2240,9 +2255,6 @@ class _TraderHomeScreenState extends State<TraderHomeScreen>
                         ),
                       ),
                     ),
-                  ),
-                  SizedBox(
-                    height: 5.h,
                   ),
                   isSearch
                       ? BlocBuilder<SearchSectionBloc, SearchSectionState>(
@@ -2324,11 +2336,11 @@ class _TraderHomeScreenState extends State<TraderHomeScreen>
                                             ),
                                             Flexible(
                                               child: HighlightText(
-                                                highlightStyle: const TextStyle(
+                                                highlightStyle: TextStyle(
                                                   height: 1.3,
                                                   fontSize: 17,
                                                   fontWeight: FontWeight.bold,
-                                                  color: Colors.orangeAccent,
+                                                  color: AppColor.goldenYellow,
                                                 ),
                                                 style: const TextStyle(
                                                   height: 1.3,
@@ -2707,10 +2719,10 @@ class _TraderHomeScreenState extends State<TraderHomeScreen>
                               ),
                               Flexible(
                                 child: HighlightText(
-                                  highlightStyle: const TextStyle(
+                                  highlightStyle: TextStyle(
                                     height: 1.3,
                                     fontSize: 17,
-                                    color: Colors.orangeAccent,
+                                    color: AppColor.goldenYellow,
                                   ),
                                   style: const TextStyle(
                                     height: 1.3,
@@ -2812,10 +2824,10 @@ class _TraderHomeScreenState extends State<TraderHomeScreen>
                             ),
                             Flexible(
                               child: HighlightText(
-                                highlightStyle: const TextStyle(
+                                highlightStyle: TextStyle(
                                   height: 1.3,
                                   fontSize: 17,
-                                  color: Colors.orangeAccent,
+                                  color: AppColor.goldenYellow,
                                 ),
                                 style: const TextStyle(
                                   height: 1.3,
@@ -2922,10 +2934,10 @@ class _TraderHomeScreenState extends State<TraderHomeScreen>
                                 borderRadius: BorderRadius.circular(10),
                               ),
                               child: HighlightText(
-                                highlightStyle: const TextStyle(
+                                highlightStyle: TextStyle(
                                   height: 1.3,
                                   fontSize: 17,
-                                  color: Colors.orangeAccent,
+                                  color: AppColor.goldenYellow,
                                 ),
                                 style: const TextStyle(
                                   height: 1.3,

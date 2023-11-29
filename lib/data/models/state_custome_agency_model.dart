@@ -68,13 +68,15 @@ class PackageType {
   int? id;
   String? name;
   String? image;
+  String? activeImage;
 
-  PackageType({this.id, this.name, this.image});
+  PackageType({this.id, this.name, this.image, this.activeImage});
 
   PackageType.fromJson(Map<String, dynamic> json) {
     id = json['id'];
     name = json['name'];
     image = json['image'];
+    activeImage = json['active_image'];
   }
 
   Map<String, dynamic> toJson() {
@@ -82,6 +84,7 @@ class PackageType {
     data['id'] = id;
     data['name'] = name;
     data['image'] = image;
+    data['active_image'] = activeImage;
     return data;
   }
 }

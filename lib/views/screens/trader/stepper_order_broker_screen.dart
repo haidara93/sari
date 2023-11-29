@@ -1,5 +1,4 @@
 import 'package:awesome_snackbar_content/awesome_snackbar_content.dart';
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:custome_mobile/business_logic/bloc/agency_bloc.dart';
 import 'package:custome_mobile/business_logic/bloc/attachment_type_bloc.dart';
 import 'package:custome_mobile/business_logic/bloc/calculate_result_bloc.dart';
@@ -13,9 +12,9 @@ import 'package:custome_mobile/data/models/package_model.dart';
 import 'package:custome_mobile/data/models/state_custome_agency_model.dart';
 import 'package:custome_mobile/data/services/calculator_service.dart';
 import 'package:custome_mobile/helpers/color_constants.dart';
+import 'package:custome_mobile/helpers/depouncer.dart';
 import 'package:custome_mobile/helpers/formatter.dart';
 import 'package:custome_mobile/views/screens/trader/trader_attachement_screen.dart';
-import 'package:custome_mobile/views/screens/trader/trader_bill_review.dart';
 import 'package:custome_mobile/views/screens/trader/trader_calculator_result_screen.dart';
 import 'package:custome_mobile/views/widgets/custom_botton.dart';
 import 'package:custome_mobile/views/widgets/highlight_text.dart';
@@ -25,9 +24,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_img/flutter_img.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter_typeahead/flutter_typeahead.dart';
 import 'package:intl/intl.dart';
-import 'package:timeline_tile/timeline_tile.dart';
+import 'package:shimmer/shimmer.dart';
 
 class StepperOrderBrokerScreen extends StatefulWidget {
   const StepperOrderBrokerScreen({Key? key}) : super(key: key);
@@ -44,6 +44,10 @@ class _StepperOrderBrokerScreenState extends State<StepperOrderBrokerScreen> {
   final FocusNode _stateCustomenode = FocusNode();
   final GlobalKey<FormState> _packagesformkey = GlobalKey<FormState>();
 
+  var key1 = GlobalKey();
+  var key2 = GlobalKey();
+  var key3 = GlobalKey();
+
   final TextEditingController _typeAheadController = TextEditingController();
 
   final TextEditingController _wieghtController = TextEditingController();
@@ -57,7 +61,7 @@ class _StepperOrderBrokerScreenState extends State<StepperOrderBrokerScreen> {
   final TextEditingController _packagesNumController = TextEditingController();
 
   final ScrollController _scrollController = ScrollController();
-  String syrianExchangeValue = "0.0";
+  String syrianExchangeValue = "6565";
 
   String syrianTotalValue = "0.0";
 
@@ -74,7 +78,7 @@ class _StepperOrderBrokerScreenState extends State<StepperOrderBrokerScreen> {
   String wieghtUnit = "";
   String wieghtLabel = "الوزن";
 
-  double usTosp = 30;
+  double usTosp = 6565;
   double basePrice = 0.0;
   double wieghtValue = 0.0;
 
@@ -124,13 +128,14 @@ class _StepperOrderBrokerScreenState extends State<StepperOrderBrokerScreen> {
   void initState() {
     super.initState();
     _tabalehNumController.text = "0";
+    BlocProvider.of<AttachmentTypeBloc>(context).add(AttachmentTypeLoadEvent());
     // FocusScope.of(context).unfocus();
   }
 
   void calculateTotalValueWithPrice() {
     var syrianExch = double.parse(_wieghtController.text) *
         double.parse(_valueController.text);
-    var syrianTotal = syrianExch * 30;
+    var syrianTotal = syrianExch * 6565;
     var totalEnsurance = (syrianTotal) + (syrianTotal * 0.0012);
     setState(() {
       syrianExchangeValue = syrianExch.round().toString();
@@ -140,7 +145,7 @@ class _StepperOrderBrokerScreenState extends State<StepperOrderBrokerScreen> {
   }
 
   void calculateTotalValue() {
-    var syrianTotal = double.parse(_valueController.text) * 30;
+    var syrianTotal = double.parse(_valueController.text) * 6565;
     var totalEnsurance = (syrianTotal) + (syrianTotal * 0.0012);
     setState(() {
       syrianTotalValue = syrianTotal.round().toString();
@@ -164,7 +169,7 @@ class _StepperOrderBrokerScreenState extends State<StepperOrderBrokerScreen> {
 
         _valueController.text = "0.0";
         valueEnabled = true;
-        syrianExchangeValue = "30";
+        syrianExchangeValue = "6565";
       });
     }
 
@@ -372,7 +377,7 @@ class _StepperOrderBrokerScreenState extends State<StepperOrderBrokerScreen> {
               basePrice = 0.0;
               _valueController.text = "0.0";
               valueEnabled = true;
-              syrianExchangeValue = "30";
+              syrianExchangeValue = "6565";
             });
           }
         }
@@ -383,7 +388,7 @@ class _StepperOrderBrokerScreenState extends State<StepperOrderBrokerScreen> {
 
           _valueController.text = "0.0";
           valueEnabled = true;
-          syrianExchangeValue = "30";
+          syrianExchangeValue = "6565";
         });
       }
     }
@@ -419,10 +424,11 @@ class _StepperOrderBrokerScreenState extends State<StepperOrderBrokerScreen> {
   void calculateTheFees() {
     _ordercalformkey.currentState?.save();
     if (_ordercalformkey.currentState!.validate()) {
-      print("fghf");
       setState(() {
         packageError = false;
       });
+      // print(
+      //     '$totalValueWithEnsurance\n${selectedPackage!.fee!}\n$rawMaterialValue\n$industrialValue\n${selectedPackage!.totalTaxes!.totalTax!}\n${selectedPackage!.totalTaxes!.partialTax!}\n${selectedOrigin!.label!}\n${selectedPackage!.spendingFee!}\n${selectedPackage!.supportFee!}\n${selectedPackage!.localFee!}\n${selectedPackage!.protectionFee!}\n${selectedPackage!.naturalFee!}${selectedPackage!.taxFee!}\n');
       result.insurance = int.parse(totalValueWithEnsurance);
       result.fee = selectedPackage!.fee!;
       result.rawMaterial = rawMaterialValue ? 1 : 0;
@@ -436,6 +442,12 @@ class _StepperOrderBrokerScreenState extends State<StepperOrderBrokerScreen> {
       result.protectionFee = selectedPackage!.protectionFee!;
       result.naturalFee = selectedPackage!.naturalFee!;
       result.taxFee = selectedPackage!.taxFee!;
+      result.weight = wieghtValue.toInt();
+      result.price = basePrice.toInt();
+      result.cnsulate = 1;
+      result.dolar = 6565;
+      result.arabic_stamp = 650;
+      result.import_fee = 0.01;
       BlocProvider.of<CalculateResultBloc>(context)
           .add(CalculateTheResultEvent(result));
     }
@@ -461,7 +473,7 @@ class _StepperOrderBrokerScreenState extends State<StepperOrderBrokerScreen> {
 
   StateCustome? selectedStateCustome;
   CustomeAgency? selectedCustomeAgency;
-
+  final _debouncer = Debouncer(milliseconds: 1000);
   @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(
@@ -471,7 +483,7 @@ class _StepperOrderBrokerScreenState extends State<StepperOrderBrokerScreen> {
             setState(() {
               _wieghtController.text = "0.0";
               _valueController.text = "0.0";
-              syrianExchangeValue = "0.0";
+              syrianExchangeValue = "6565";
               syrianTotalValue = "0.0";
               totalValueWithEnsurance = "0.0";
             });
@@ -487,95 +499,103 @@ class _StepperOrderBrokerScreenState extends State<StepperOrderBrokerScreen> {
           },
           child: Column(
             children: [
-              SizedBox(
-                height: 96.h,
-                child: Stepper(
-                  type: StepperType.horizontal,
-                  steps: [
-                    Step(
-                        isActive: true,
-                        title: Text(
-                          "معلومات الشحنة",
-                          style: TextStyle(fontSize: 12.sp),
-                        ),
-                        content: const SizedBox.shrink()),
-                    Step(
-                        isActive: false,
-                        title: GestureDetector(
-                          onTap: () {
-                            var snackBar = SnackBar(
-                              elevation: 0,
-                              duration: const Duration(seconds: 4),
-                              backgroundColor: Colors.transparent,
-                              content: Column(
-                                children: [
-                                  AwesomeSnackbarContent(
-                                    title: 'تنبيه',
-                                    message:
-                                        'لا يمكن الانتقال إلى هذه الشاشة إلا من خلال اكمال التفاصيل والضغط على زر حساب الرسوم.',
+              // SizedBox(
+              //   height: 96.h,
+              //   child: Theme(
+              //     data: ThemeData(
+              //       // accentColor: Colors.orange,
+              //       colorScheme: ColorScheme.light(
+              //         primary: AppColor.deepBlue,
+              //       ),
+              //     ),
+              //     child: Stepper(
+              //       type: StepperType.horizontal,
+              //       steps: [
+              //         Step(
+              //             isActive: true,
+              //             title: Text(
+              //               "معلومات الشحنة",
+              //               style: TextStyle(fontSize: 12.sp),
+              //             ),
+              //             content: const SizedBox.shrink()),
+              //         Step(
+              //             isActive: false,
+              //             title: GestureDetector(
+              //               onTap: () {
+              //                 var snackBar = SnackBar(
+              //                   elevation: 0,
+              //                   duration: const Duration(seconds: 4),
+              //                   backgroundColor: Colors.transparent,
+              //                   content: Column(
+              //                     children: [
+              //                       AwesomeSnackbarContent(
+              //                         title: 'تنبيه',
+              //                         message:
+              //                             'لا يمكن الانتقال إلى هذه الشاشة إلا بعد اكمال ادخال البيانات اللازمة.',
 
-                                    /// change contentType to ContentType.success, ContentType.warning or ContentType.help for variants
-                                    contentType: ContentType.warning,
-                                  ),
-                                  SizedBox(
-                                    height: 90.h,
-                                  ),
-                                ],
-                              ),
-                            );
+              //                         /// change contentType to ContentType.success, ContentType.warning or ContentType.help for variants
+              //                         contentType: ContentType.warning,
+              //                       ),
+              //                       SizedBox(
+              //                         height: 90.h,
+              //                       ),
+              //                     ],
+              //                   ),
+              //                 );
 
-                            ScaffoldMessenger.of(context)
-                                .showSnackBar(snackBar);
-                          },
-                          child: Text(
-                            "حساب الرسوم",
-                            style: TextStyle(fontSize: 12.sp),
-                          ),
-                        ),
-                        content: const SizedBox.shrink()),
-                    Step(
-                        isActive: false,
-                        title: GestureDetector(
-                          onTap: () {
-                            var snackBar = SnackBar(
-                              elevation: 0,
-                              duration: const Duration(seconds: 4),
-                              backgroundColor: Colors.transparent,
-                              content: Column(
-                                children: [
-                                  AwesomeSnackbarContent(
-                                    title: 'تنبيه',
-                                    message:
-                                        'لا يمكن الانتقال إلى هذه الشاشة إلا بعد حساب الرسوم.',
+              //                 ScaffoldMessenger.of(context)
+              //                     .showSnackBar(snackBar);
+              //               },
+              //               child: Text(
+              //                 "المرفقات",
+              //                 style: TextStyle(fontSize: 12.sp),
+              //               ),
+              //             ),
+              //             content: const SizedBox.shrink()),
+              //         Step(
+              //             isActive: false,
+              //             title: GestureDetector(
+              //               onTap: () {
+              //                 var snackBar = SnackBar(
+              //                   elevation: 0,
+              //                   duration: const Duration(seconds: 4),
+              //                   backgroundColor: Colors.transparent,
+              //                   content: Column(
+              //                     children: [
+              //                       AwesomeSnackbarContent(
+              //                         title: 'تنبيه',
+              //                         message:
+              //                             'لا يمكن الانتقال إلى هذه الشاشة إلا بعد اكمال ادخال البيانات اللازمة.',
 
-                                    /// change contentType to ContentType.success, ContentType.warning or ContentType.help for variants
-                                    contentType: ContentType.warning,
-                                  ),
-                                  SizedBox(
-                                    height: 90.h,
-                                  ),
-                                ],
-                              ),
-                            );
+              //                         /// change contentType to ContentType.success, ContentType.warning or ContentType.help for variants
+              //                         contentType: ContentType.warning,
+              //                       ),
+              //                       SizedBox(
+              //                         height: 90.h,
+              //                       ),
+              //                     ],
+              //                   ),
+              //                 );
 
-                            ScaffoldMessenger.of(context)
-                                .showSnackBar(snackBar);
-                          },
-                          child: Text(
-                            "المرفقات",
-                            style: TextStyle(fontSize: 12.sp),
-                          ),
-                        ),
-                        content: const SizedBox.shrink()),
-                  ],
-                  currentStep: 1,
-                  controlsBuilder: (context, details) {
-                    return const SizedBox.shrink();
-                  },
-                  onStepContinue: () => setState(() {}),
-                  onStepCancel: () => setState(() {}),
-                ),
-              ),
+              //                 ScaffoldMessenger.of(context)
+              //                     .showSnackBar(snackBar);
+              //               },
+              //               child: Text(
+              //                 "تم",
+              //                 style: TextStyle(fontSize: 12.sp),
+              //               ),
+              //             ),
+              //             content: const SizedBox.shrink()),
+              //       ],
+              //       currentStep: 1,
+              //       controlsBuilder: (context, details) {
+              //         return const SizedBox.shrink();
+              //       },
+              //       onStepContinue: () => setState(() {}),
+              //       onStepCancel: () => setState(() {}),
+              //     ),
+              //   ),
+              // ),
               // SizedBox(height: 96.h,
               // child:Row(children: [
               //   TimelineTile(
@@ -588,6 +608,7 @@ class _StepperOrderBrokerScreenState extends State<StepperOrderBrokerScreen> {
                   EnsureVisibleWhenFocused(
                     focusNode: _orderTypenode,
                     child: Card(
+                      key: key1,
                       margin: const EdgeInsets.symmetric(vertical: 7),
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(10),
@@ -707,6 +728,7 @@ class _StepperOrderBrokerScreenState extends State<StepperOrderBrokerScreen> {
                   EnsureVisibleWhenFocused(
                     focusNode: _stateCustomenode,
                     child: Card(
+                      key: key2,
                       margin: const EdgeInsets.symmetric(vertical: 7),
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(10),
@@ -775,7 +797,7 @@ class _StepperOrderBrokerScreenState extends State<StepperOrderBrokerScreen> {
                                               hint: Text(
                                                 statePlaceholder,
                                                 style: TextStyle(
-                                                  fontSize: 15,
+                                                  fontSize: 18,
                                                   color: Theme.of(context)
                                                       .hintColor,
                                                 ),
@@ -789,7 +811,7 @@ class _StepperOrderBrokerScreenState extends State<StepperOrderBrokerScreen> {
                                                           item.name!,
                                                           style:
                                                               const TextStyle(
-                                                            fontSize: 15,
+                                                            fontSize: 17,
                                                           ),
                                                         ),
                                                       ))
@@ -803,34 +825,16 @@ class _StepperOrderBrokerScreenState extends State<StepperOrderBrokerScreen> {
                                                 setState(() {
                                                   selectedStateCustome = value;
                                                   selectedCustomeAgency = null;
-                                                  // statePlaceholder =
-                                                  //     selectedStateCustome == null
-                                                  //         ? 'اختر محافظة'
-                                                  //         : value.name!;
                                                 });
-                                                // if (value!.price! > 0) {
-                                                //   _valueController.text =
-                                                //       value.price!.toString();
-                                                //   setState(() {
-                                                //     valueEnabled = false;
-                                                //   });
-                                                // } else {
-                                                //   setState(() {
-                                                //     _valueController.text = "";
-                                                //     valueEnabled = true;
-                                                //     syrianExchangeValue = "30";
-                                                //   });
-                                                // }
-                                                // setState(() {
-                                                //   selectedValue = value;
-                                                // });
                                               },
                                               buttonStyleData: ButtonStyleData(
                                                 height: 50,
                                                 width: double.infinity,
 
-                                                padding: const EdgeInsets.only(
-                                                    left: 14, right: 14),
+                                                padding:
+                                                    const EdgeInsets.symmetric(
+                                                  horizontal: 9.0,
+                                                ),
                                                 decoration: BoxDecoration(
                                                   borderRadius:
                                                       BorderRadius.circular(12),
@@ -898,7 +902,7 @@ class _StepperOrderBrokerScreenState extends State<StepperOrderBrokerScreen> {
                                                     hint: Text(
                                                       agencyPlaceholder,
                                                       style: TextStyle(
-                                                        fontSize: 15,
+                                                        fontSize: 18,
                                                         color: Theme.of(context)
                                                             .hintColor,
                                                       ),
@@ -916,7 +920,7 @@ class _StepperOrderBrokerScreenState extends State<StepperOrderBrokerScreen> {
                                                                   style:
                                                                       const TextStyle(
                                                                     fontSize:
-                                                                        15,
+                                                                        17,
                                                                   ),
                                                                 ),
                                                               ),
@@ -937,10 +941,10 @@ class _StepperOrderBrokerScreenState extends State<StepperOrderBrokerScreen> {
                                                         ButtonStyleData(
                                                       height: 50,
                                                       width: double.infinity,
-                                                      padding:
-                                                          const EdgeInsets.only(
-                                                              left: 14,
-                                                              right: 14),
+                                                      padding: const EdgeInsets
+                                                          .symmetric(
+                                                        horizontal: 9.0,
+                                                      ),
                                                       decoration: BoxDecoration(
                                                         borderRadius:
                                                             BorderRadius
@@ -1092,6 +1096,7 @@ class _StepperOrderBrokerScreenState extends State<StepperOrderBrokerScreen> {
                     ),
                   ),
                   Card(
+                    key: key3,
                     margin: const EdgeInsets.symmetric(vertical: 7),
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(10),
@@ -1187,7 +1192,7 @@ class _StepperOrderBrokerScreenState extends State<StepperOrderBrokerScreen> {
                                               extentOffset: _typeAheadController
                                                   .value.text.length);
                                     },
-
+                                    style: const TextStyle(fontSize: 17),
                                     decoration: InputDecoration(
                                       labelText: "نوع البضاعة",
                                       contentPadding:
@@ -1206,9 +1211,16 @@ class _StepperOrderBrokerScreenState extends State<StepperOrderBrokerScreen> {
                                                   context)
                                               .emitShow();
                                         },
-                                        child: SizedBox(
+                                        child: Container(
+                                          margin: const EdgeInsets.all(1),
+                                          decoration: BoxDecoration(
+                                              color: Colors.grey[350],
+                                              borderRadius:
+                                                  const BorderRadius.horizontal(
+                                                right: Radius.circular(12),
+                                                left: Radius.circular(12),
+                                              )),
                                           width: 85.w,
-                                          height: 55.h,
                                           child: Column(
                                             mainAxisAlignment:
                                                 MainAxisAlignment.center,
@@ -1217,7 +1229,7 @@ class _StepperOrderBrokerScreenState extends State<StepperOrderBrokerScreen> {
                                                 "التعرفة الجمركية",
                                                 textAlign: TextAlign.center,
                                                 style: TextStyle(
-                                                    color: AppColor.deepYellow,
+                                                    color: AppColor.deepBlue,
                                                     fontSize: 12,
                                                     fontWeight:
                                                         FontWeight.bold),
@@ -1234,44 +1246,58 @@ class _StepperOrderBrokerScreenState extends State<StepperOrderBrokerScreen> {
                                     },
                                   ),
                                   loadingBuilder: (context) {
-                                    return const Center(
-                                      child: CircularProgressIndicator(),
+                                    return Container(
+                                      color: Colors.white,
+                                      child: const Center(
+                                        child: CircularProgressIndicator(),
+                                      ),
+                                    );
+                                  },
+                                  errorBuilder: (context, error) {
+                                    return Container(
+                                      color: Colors.white,
                                     );
                                   },
                                   suggestionsCallback: (pattern) async {
-                                    if (pattern.isNotEmpty &&
-                                        pattern.length > 2) {
-                                      setState(() {
-                                        patternString = pattern;
-                                      });
-                                      return await CalculatorService
-                                          .getpackages(pattern);
-                                    } else {
-                                      return [];
-                                    }
+                                    // _debouncer.run(() {
+
+                                    // });
+                                    setState(() {
+                                      patternString = pattern;
+                                    });
+                                    return await CalculatorService.getpackages(
+                                        pattern);
                                   },
                                   itemBuilder: (context, suggestion) {
-                                    return Column(
-                                      children: [
-                                        ListTile(
-                                          // leading: Icon(Icons.shopping_cart),
-                                          title: HighlightText(
-                                            text: suggestion.label!,
-                                            highlight: patternString,
-                                            ignoreCase: false,
-                                            highlightColor: Colors.orangeAccent,
+                                    return Container(
+                                      color: Colors.white,
+                                      child: Column(
+                                        children: [
+                                          ListTile(
+                                            // leading: Icon(Icons.shopping_cart),
+                                            tileColor: Colors.white,
+                                            title: HighlightText(
+                                              text: suggestion.label!,
+                                              highlight: patternString,
+                                              ignoreCase: false,
+                                              highlightColor:
+                                                  AppColor.goldenYellow,
+                                            ),
+                                            // subtitle: Text('\$${suggestion['price']}'),
                                           ),
-                                          // subtitle: Text('\$${suggestion['price']}'),
-                                        ),
-                                        const Divider(),
-                                      ],
+                                          Divider(
+                                            color: Colors.grey[300],
+                                            height: 3,
+                                          ),
+                                        ],
+                                      ),
                                     );
                                   },
                                   onSuggestionSelected: (suggestion) {
                                     setState(() {
                                       _wieghtController.text = "0.0";
                                       _valueController.text = "0.0";
-                                      syrianExchangeValue = "0.0";
+                                      syrianExchangeValue = "6565";
                                       syrianTotalValue = "0.0";
                                       totalValueWithEnsurance = "0.0";
                                     });
@@ -1284,21 +1310,22 @@ class _StepperOrderBrokerScreenState extends State<StepperOrderBrokerScreen> {
                                   },
                                 ),
                               ),
-                              const SizedBox(
-                                height: 24,
+                              Visibility(
+                                visible: allowexport,
+                                child: const SizedBox(
+                                  height: 7,
+                                ),
                               ),
                               Visibility(
                                 visible: allowexport,
                                 child: const Text(
-                                  "هذا البند ممنوع من الاستيراد",
+                                  "   هذا البند ممنوع من الاستيراد",
                                   style: TextStyle(color: Colors.red),
                                 ),
                               ),
-                              Visibility(
-                                visible: allowexport,
-                                child: const SizedBox(
-                                  height: 24,
-                                ),
+
+                              const SizedBox(
+                                height: 24,
                               ),
                               Visibility(
                                 visible: isdropdwonVisible,
@@ -1341,7 +1368,7 @@ class _StepperOrderBrokerScreenState extends State<StepperOrderBrokerScreen> {
 
                                             _valueController.text = "0.0";
                                             valueEnabled = true;
-                                            syrianExchangeValue = "30";
+                                            syrianExchangeValue = "6565";
                                           });
                                         }
                                         evaluatePrice();
@@ -1360,7 +1387,7 @@ class _StepperOrderBrokerScreenState extends State<StepperOrderBrokerScreen> {
 
                                             _valueController.text = "0.0";
                                             valueEnabled = true;
-                                            syrianExchangeValue = "30";
+                                            syrianExchangeValue = "6565";
                                           });
                                         }
                                         evaluatePrice();
@@ -1403,7 +1430,7 @@ class _StepperOrderBrokerScreenState extends State<StepperOrderBrokerScreen> {
                                           hint: Text(
                                             originPlaceholder,
                                             style: TextStyle(
-                                              fontSize: 15,
+                                              fontSize: 18,
                                               color:
                                                   Theme.of(context).hintColor,
                                             ),
@@ -1437,6 +1464,10 @@ class _StepperOrderBrokerScreenState extends State<StepperOrderBrokerScreen> {
                                                                   TextOverflow
                                                                       .ellipsis,
                                                               // maxLines: 2,
+                                                              style:
+                                                                  const TextStyle(
+                                                                fontSize: 17,
+                                                              ),
                                                             ),
                                                           ),
                                                         ],
@@ -1523,8 +1554,9 @@ class _StepperOrderBrokerScreenState extends State<StepperOrderBrokerScreen> {
                                           buttonStyleData: ButtonStyleData(
                                             height: 50,
                                             width: double.infinity,
-                                            padding: const EdgeInsets.only(
-                                                left: 14, right: 14),
+                                            padding: const EdgeInsets.symmetric(
+                                              horizontal: 9.0,
+                                            ),
 
                                             decoration: BoxDecoration(
                                               borderRadius:
@@ -1608,13 +1640,13 @@ class _StepperOrderBrokerScreenState extends State<StepperOrderBrokerScreen> {
                               const SizedBox(
                                 height: 24,
                               ),
-
                               Visibility(
-                                  visible: originerror,
-                                  child: const Text(
-                                    "الرجاء اختيار المنشأ",
-                                    style: TextStyle(color: Colors.red),
-                                  )),
+                                visible: originerror,
+                                child: const Text(
+                                  "الرجاء اختيار المنشأ",
+                                  style: TextStyle(color: Colors.red),
+                                ),
+                              ),
                               Visibility(
                                 visible: originerror,
                                 child: const SizedBox(
@@ -1887,17 +1919,21 @@ class _StepperOrderBrokerScreenState extends State<StepperOrderBrokerScreen> {
                                     : "قيمة التحويل بالجنيه المصري :",
                                 style: const TextStyle(fontSize: 16),
                               ),
-                              Text(syrianExchangeValue),
+                              Text(f.format(
+                                  double.parse(syrianExchangeValue).toInt())),
                               const Text(
                                 "قيمة الاجمالية بالجنيه المصري: ",
                                 style: TextStyle(fontSize: 16),
                               ),
-                              Text(syrianTotalValue),
+                              Text(f.format(
+                                  double.parse(syrianTotalValue).toInt())),
                               const Text(
                                 "قيمة البضاعة مع التأمين: ",
                                 style: TextStyle(fontSize: 16),
                               ),
-                              Text(totalValueWithEnsurance),
+                              Text(f.format(
+                                  double.parse(totalValueWithEnsurance)
+                                      .toInt())),
                               const SizedBox(
                                 height: 12,
                               ),
@@ -1926,8 +1962,9 @@ class _StepperOrderBrokerScreenState extends State<StepperOrderBrokerScreen> {
                                                 totalValueWithEnsurance !=
                                                     "0.0") {
                                               return Text(
-                                                state.result.finalTotal!
-                                                    .toStringAsFixed(2),
+                                                f.format(state
+                                                    .result.finalTotal!
+                                                    .toInt()),
                                                 style: const TextStyle(
                                                   fontSize: 16,
                                                   fontWeight: FontWeight.bold,
@@ -1938,7 +1975,7 @@ class _StepperOrderBrokerScreenState extends State<StepperOrderBrokerScreen> {
                                               return const LinearProgressIndicator();
                                             } else {
                                               return const Text(
-                                                ". . . . . . . . . . . . . . . . . . . . . . . . . . . . . . ",
+                                                " _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ ",
                                                 style: TextStyle(
                                                   fontSize: 16,
                                                   fontWeight: FontWeight.bold,
@@ -1961,7 +1998,7 @@ class _StepperOrderBrokerScreenState extends State<StepperOrderBrokerScreen> {
                                               context,
                                               MaterialPageRoute(
                                                 builder: (context) =>
-                                                    const TraderCalculatorResultScreen(),
+                                                    TraderCalculatorResultScreen(),
                                               ),
                                             );
                                           },
@@ -2085,8 +2122,8 @@ class _StepperOrderBrokerScreenState extends State<StepperOrderBrokerScreen> {
                                                                       .id!
                                                               ? AppColor
                                                                   .goldenYellow
-                                                              : Colors
-                                                                  .grey[600]!,
+                                                              : AppColor
+                                                                  .deepBlue,
                                                           width: 2.w,
                                                         ),
                                                       ),
@@ -2095,12 +2132,20 @@ class _StepperOrderBrokerScreenState extends State<StepperOrderBrokerScreen> {
                                                             MainAxisAlignment
                                                                 .center,
                                                         children: [
-                                                          CachedNetworkImage(
-                                                            imageUrl: state
+                                                          SvgPicture.network(
+                                                            state
                                                                 .packageTypes[
                                                                     index]
                                                                 .image!,
                                                             height: 50.h,
+                                                            // placeholder:
+                                                            //     Container(
+                                                            //   color: Colors
+                                                            //       .white,
+                                                            //   height:
+                                                            //       50.h,
+                                                            //   width: 50.h,
+                                                            // ),
                                                           ),
                                                           Text(
                                                             state
@@ -2130,8 +2175,8 @@ class _StepperOrderBrokerScreenState extends State<StepperOrderBrokerScreen> {
                                                                       .all(2),
                                                               decoration:
                                                                   BoxDecoration(
-                                                                color: Colors
-                                                                    .green,
+                                                                color: AppColor
+                                                                    .goldenYellow,
                                                                 borderRadius:
                                                                     BorderRadius
                                                                         .circular(
@@ -2155,8 +2200,33 @@ class _StepperOrderBrokerScreenState extends State<StepperOrderBrokerScreen> {
                                       ),
                                     );
                                   } else {
-                                    return const Center(
-                                        child: LinearProgressIndicator());
+                                    return Shimmer.fromColors(
+                                      baseColor: (Colors.grey[300])!,
+                                      highlightColor: (Colors.grey[100])!,
+                                      enabled: true,
+                                      direction: ShimmerDirection.rtl,
+                                      child: ListView.builder(
+                                        shrinkWrap: true,
+                                        scrollDirection: Axis.horizontal,
+                                        itemBuilder: (_, __) => Padding(
+                                          padding: EdgeInsets.symmetric(
+                                              horizontal: 5.w, vertical: 15.h),
+                                          child: Container(
+                                            clipBehavior: Clip.antiAlias,
+                                            decoration: BoxDecoration(
+                                              color: Colors.white,
+                                              borderRadius:
+                                                  BorderRadius.circular(10),
+                                            ),
+                                            child: SizedBox(
+                                              width: 145.w,
+                                              height: 70.h,
+                                            ),
+                                          ),
+                                        ),
+                                        itemCount: 6,
+                                      ),
+                                    );
                                   }
                                 },
                               )),
@@ -2175,27 +2245,10 @@ class _StepperOrderBrokerScreenState extends State<StepperOrderBrokerScreen> {
                               keyboardType:
                                   const TextInputType.numberWithOptions(
                                       signed: true, decimal: true),
-                              decoration: InputDecoration(
+                              inputFormatters: [DecimalFormatter()],
+                              style: const TextStyle(fontSize: 17),
+                              decoration: const InputDecoration(
                                 labelText: "عدد الطرود",
-                                labelStyle: const TextStyle(fontSize: 19),
-                                contentPadding: const EdgeInsets.symmetric(
-                                  horizontal: 9.0,
-                                  vertical: 11.0,
-                                ),
-                                border: OutlineInputBorder(
-                                    borderRadius: BorderRadius.circular(12)),
-                                errorBorder: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(12),
-                                  borderSide: const BorderSide(
-                                    color: Colors.red,
-                                  ),
-                                ),
-                                focusedErrorBorder: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(12),
-                                  borderSide: const BorderSide(
-                                    color: Colors.red,
-                                  ),
-                                ),
                               ),
                               scrollPadding: EdgeInsets.only(
                                   bottom:
@@ -2300,23 +2353,14 @@ class _StepperOrderBrokerScreenState extends State<StepperOrderBrokerScreen> {
                                     child: TextField(
                                       controller: _tabalehNumController,
                                       textAlign: TextAlign.center,
+                                      style: const TextStyle(fontSize: 17),
                                       keyboardType:
                                           const TextInputType.numberWithOptions(
-                                              decimal: true),
-                                      decoration: InputDecoration(
-                                        border: OutlineInputBorder(
-                                            borderRadius:
-                                                BorderRadius.circular(12)),
+                                              signed: true, decimal: true),
+                                      inputFormatters: [DecimalFormatter()],
+                                      decoration: const InputDecoration(
                                         labelText: "العدد",
-                                        labelStyle: TextStyle(
-                                          fontSize: 17.sp,
-                                        ),
                                         alignLabelWithHint: true,
-                                        contentPadding:
-                                            const EdgeInsets.symmetric(
-                                          horizontal: 9.0,
-                                          vertical: 11.0,
-                                        ),
                                       ),
                                       scrollPadding: EdgeInsets.only(
                                           bottom: MediaQuery.of(context)
@@ -2477,38 +2521,38 @@ class _StepperOrderBrokerScreenState extends State<StepperOrderBrokerScreen> {
                                                 setState(() {
                                                   packageError = false;
                                                 });
-                                                result.insurance = int.parse(
-                                                    totalValueWithEnsurance);
-                                                result.fee =
-                                                    selectedPackage!.fee!;
-                                                result.rawMaterial =
-                                                    rawMaterialValue ? 1 : 0;
-                                                result.industrial =
-                                                    industrialValue ? 1 : 0;
-                                                result.totalTax =
-                                                    selectedPackage!
-                                                        .totalTaxes!.totalTax!;
-                                                result.partialTax =
-                                                    selectedPackage!.totalTaxes!
-                                                        .partialTax!;
-                                                result.origin =
-                                                    selectedOrigin!.label!;
-                                                result.spendingFee =
-                                                    selectedPackage!
-                                                        .spendingFee!;
-                                                result.supportFee =
-                                                    selectedPackage!
-                                                        .supportFee!;
-                                                result.localFee =
-                                                    selectedPackage!.localFee!;
-                                                result.protectionFee =
-                                                    selectedPackage!
-                                                        .protectionFee!;
-                                                result.naturalFee =
-                                                    selectedPackage!
-                                                        .naturalFee!;
-                                                result.taxFee =
-                                                    selectedPackage!.taxFee!;
+                                                // result.insurance = int.parse(
+                                                //     totalValueWithEnsurance);
+                                                // result.fee =
+                                                //     0.01;
+                                                // result.rawMaterial =
+                                                //     rawMaterialValue ? 1 : 0;
+                                                // result.industrial =
+                                                //     industrialValue ? 1 : 0;
+                                                // result.totalTax =
+                                                //     selectedPackage!
+                                                //         .totalTaxes!.totalTax!;
+                                                // result.partialTax =
+                                                //     selectedPackage!.totalTaxes!
+                                                //         .partialTax!;
+                                                // result.origin =
+                                                //     selectedOrigin!.label!;
+                                                // result.spendingFee =
+                                                //     selectedPackage!
+                                                //         .spendingFee!;
+                                                // result.supportFee =
+                                                //     selectedPackage!
+                                                //         .supportFee!;
+                                                // result.localFee =
+                                                //     selectedPackage!.localFee!;
+                                                // result.protectionFee =
+                                                //     selectedPackage!
+                                                //         .protectionFee!;
+                                                // result.naturalFee =
+                                                //     selectedPackage!
+                                                //         .naturalFee!;
+                                                // result.taxFee =
+                                                //     selectedPackage!.taxFee!;
                                                 Navigator.push(
                                                   context,
                                                   MaterialPageRoute(
@@ -2556,21 +2600,36 @@ class _StepperOrderBrokerScreenState extends State<StepperOrderBrokerScreen> {
                                               setState(() {
                                                 calculatorError = true;
                                               });
-                                              // _ordernode.requestFocus();
+                                              Scrollable.ensureVisible(
+                                                key3.currentContext!,
+                                                duration: const Duration(
+                                                  milliseconds: 500,
+                                                ),
+                                              );
                                             }
                                           } else {
                                             setSelectedPanel(1);
                                             setState(() {
                                               selectedStateError = true;
                                             });
-                                            // _stateCustomenode.requestFocus();
+                                            Scrollable.ensureVisible(
+                                              key2.currentContext!,
+                                              duration: const Duration(
+                                                milliseconds: 500,
+                                              ),
+                                            );
                                           }
                                         } else {
                                           setSelectedPanel(0);
                                           setState(() {
                                             selectedRadioTileError = true;
                                           });
-                                          // _orderTypenode.requestFocus();
+                                          Scrollable.ensureVisible(
+                                            key1.currentContext!,
+                                            duration: const Duration(
+                                              milliseconds: 500,
+                                            ),
+                                          );
                                         }
                                       },
                                     );

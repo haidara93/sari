@@ -67,6 +67,7 @@ class _TraderAttachementScreenState extends State<TraderAttachementScreen> {
   List<Attachment> attachments = [];
   List<int> attachmentsId = [];
   List<AttachmentType> attachmentTypes = [];
+  final GlobalKey<FormState> _attachmentformkey = GlobalKey<FormState>();
 
   @override
   void initState() {
@@ -192,6 +193,7 @@ class _TraderAttachementScreenState extends State<TraderAttachementScreen> {
             return Directionality(
               textDirection: TextDirection.rtl,
               child: SimpleDialog(
+                backgroundColor: Colors.white,
                 title: const Text('إضافة مرفق'),
                 shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(15)),
@@ -351,24 +353,10 @@ class _TraderAttachementScreenState extends State<TraderAttachementScreen> {
         margin: EdgeInsets.all(5.h),
         padding: EdgeInsets.all(5.h),
         decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(25),
-          border: Border(
-            left: BorderSide(
-              color: AppColor.deepAppBarBlue,
-              width: 1.0,
-            ),
-            right: BorderSide(
-              color: AppColor.deepAppBarBlue,
-              width: 1.0,
-            ),
-            top: BorderSide(
-              color: AppColor.deepAppBarBlue,
-              width: 1.0,
-            ),
-            bottom: BorderSide(
-              color: AppColor.deepAppBarBlue,
-              width: 1.0,
-            ),
+          borderRadius: BorderRadius.circular(15),
+          border: Border.all(
+            color: AppColor.deepAppBarBlue,
+            width: 1.0,
           ),
         ),
         height: 140.h,
@@ -473,6 +461,7 @@ class _TraderAttachementScreenState extends State<TraderAttachementScreen> {
     return list;
   }
 
+  bool lastStep = false;
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -525,315 +514,286 @@ class _TraderAttachementScreenState extends State<TraderAttachementScreen> {
               },
               child: Column(
                 children: [
-                  SizedBox(
-                    height: 86.h,
-                    child: Stepper(
-                      type: StepperType.horizontal,
-                      steps: [
-                        Step(
-                            isActive: true,
-                            title: GestureDetector(
-                              onTap: () {
-                                var nav = Navigator.of(context);
-                                nav.pop();
-                                nav.pop();
-                              },
-                              child: Text(
-                                "معلومات الشحنة",
-                                style: TextStyle(fontSize: 12.sp),
-                              ),
-                            ),
-                            content: const SizedBox.shrink()),
-                        Step(
-                            isActive: true,
-                            title: GestureDetector(
+                  Form(
+                    key: _attachmentformkey,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        // Text(
+                        //   "الطلب رقم: 3475",
+                        //   style: TextStyle(color: AppColor.activeGreen),
+                        // ),
+                        SizedBox(
+                          height: 15.h,
+                        ),
+                        Card(
+                          clipBehavior: Clip.antiAlias,
+                          shape: const RoundedRectangleBorder(
+                              borderRadius: BorderRadius.all(
+                            Radius.circular(15),
+                          )),
+                          margin: EdgeInsets.symmetric(horizontal: 10.w),
+                          elevation: 1,
+                          color: Colors.white,
+                          child: Container(
+                            margin: const EdgeInsets.symmetric(vertical: 7),
+                            padding: const EdgeInsets.all(12.0),
+                            child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  const Text(
+                                    "تاريخ وصول البضاعة",
+                                    style: TextStyle(
+                                      fontSize: 19,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                  const SizedBox(
+                                    height: 15,
+                                  ),
+                                  TextFormField(
+                                    controller: _expireDate,
+                                    // enabled: false,
+                                    onTap: _showDatePicker,
+                                    autovalidateMode:
+                                        AutovalidateMode.onUserInteraction,
+                                    validator: (value) {
+                                      if (value!.isEmpty) {
+                                        return "الرجاء اختيار التاريخ..";
+                                      } else {
+                                        return null;
+                                      }
+                                    },
+                                    decoration: InputDecoration(
+                                        suffixIcon: GestureDetector(
+                                            onTap: _showDatePicker,
+                                            child:
+                                                const Icon(Icons.date_range)),
+                                        contentPadding: EdgeInsets.zero,
+                                        border: OutlineInputBorder(
+                                            borderRadius:
+                                                BorderRadius.circular(12))),
+                                  ),
+                                  SizedBox(
+                                    height: 10.h,
+                                  ),
+                                ]),
+                          ),
+                        ),
+                        SizedBox(
+                          height: 14.h,
+                        ),
+                        Card(
+                          clipBehavior: Clip.antiAlias,
+                          shape: const RoundedRectangleBorder(
+                              borderRadius: BorderRadius.all(
+                            Radius.circular(15),
+                          )),
+                          margin: EdgeInsets.symmetric(horizontal: 10.w),
+                          elevation: 1,
+                          color: Colors.white,
+                          child: Container(
+                            margin: EdgeInsets.symmetric(vertical: 7.h),
+                            padding: EdgeInsets.all(5.h),
+                            width: double.infinity,
+                            child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  const Text(
+                                    "المرفقات",
+                                    style: TextStyle(
+                                      fontSize: 19,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                  const Text(
+                                    "يرجى تحميل المرفقات المتاحة حاليا",
+                                    style: TextStyle(
+                                      fontSize: 17,
+                                    ),
+                                  ),
+                                  SizedBox(
+                                    height: 15.h,
+                                  ),
+                                  BlocBuilder<AttachmentsListBloc,
+                                      AttachmentsListState>(
+                                    builder: (context, attstate) {
+                                      if (attstate is AttachmentsListSucess) {
+                                        return Wrap(
+                                            children: _buildAttachmentslist(
+                                                attstate.attachments));
+                                      } else {
+                                        return Wrap(
+                                            children:
+                                                _buildAttachmentslist([]));
+                                      }
+                                    },
+                                  ),
+                                ]),
+                          ),
+                        ),
+                        SizedBox(
+                          height: 14.h,
+                        ),
+                        Card(
+                          clipBehavior: Clip.antiAlias,
+                          shape: const RoundedRectangleBorder(
+                              borderRadius: BorderRadius.all(
+                            Radius.circular(15),
+                          )),
+                          margin: EdgeInsets.symmetric(horizontal: 10.w),
+                          elevation: 1,
+                          color: Colors.white,
+                          child: Container(
+                            margin: const EdgeInsets.symmetric(vertical: 7),
+                            padding: const EdgeInsets.all(15.0),
+                            child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  const Text("الملاحظات",
+                                      style: TextStyle(fontSize: 18)),
+                                  SizedBox(
+                                    height: 15.h,
+                                  ),
+                                  TextFormField(
+                                    controller: _traderNotes,
+                                    maxLines: 4,
+                                    decoration: InputDecoration(
+                                        border: OutlineInputBorder(
+                                            borderRadius:
+                                                BorderRadius.circular(12)),
+                                        hintText:
+                                            "اكتب ملاحظة للمخلص الجمركي ان وجد"),
+                                  ),
+                                ]),
+                          ),
+                        ),
+
+                        SizedBox(
+                          height: 30.h,
+                        ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceAround,
+                          children: [
+                            CustomButton(
                               onTap: () {
                                 Navigator.pop(context);
                               },
-                              child: Text(
-                                "حساب الرسوم",
-                                style: TextStyle(fontSize: 12.sp),
-                              ),
+                              title: const SizedBox(
+                                  width: 100,
+                                  child: Center(child: Text("إلغاء"))),
                             ),
-                            content: const SizedBox.shrink()),
-                        Step(
-                            isActive: true,
-                            title: Text(
-                              "المرفقات",
-                              style: TextStyle(fontSize: 12.sp),
+                            BlocConsumer<OfferBloc, OfferState>(
+                              listener: (context, offerstate) {
+                                if (offerstate is OfferLoadedSuccess) {
+                                  BlocProvider.of<AttachmentsListBloc>(context)
+                                      .add(ClearAttachmentToListEvent());
+                                  Navigator.pushAndRemoveUntil(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) => const ControlView(),
+                                    ),
+                                    (route) => false,
+                                  );
+
+                                  var snackBar = SnackBar(
+                                    elevation: 0,
+                                    duration: const Duration(seconds: 4),
+                                    backgroundColor: Colors.transparent,
+                                    content: Column(
+                                      children: [
+                                        AwesomeSnackbarContent(
+                                          title: 'تم',
+                                          message:
+                                              'تم اضافة الطلب بنجاح سيتم ارساله للمخلص المختص.',
+
+                                          /// change contentType to ContentType.success, ContentType.warning or ContentType.help for variants
+                                          contentType: ContentType.success,
+                                        ),
+                                        SizedBox(
+                                          height: 90.h,
+                                        ),
+                                      ],
+                                    ),
+                                  );
+                                  ScaffoldMessenger.of(context)
+                                      .showSnackBar(snackBar);
+                                }
+                                if (offerstate is OfferLoadedFailed) {
+                                  var snackBar = SnackBar(
+                                    elevation: 0,
+                                    duration: const Duration(seconds: 4),
+                                    backgroundColor: Colors.transparent,
+                                    content: Column(
+                                      children: [
+                                        AwesomeSnackbarContent(
+                                          title: 'تنبيه',
+                                          message:
+                                              'حدث خطأ أثناء معالجة الطلب الرجاء المحاولة مرة أخرى.',
+
+                                          /// change contentType to ContentType.success, ContentType.warning or ContentType.help for variants
+                                          contentType: ContentType.warning,
+                                        ),
+                                        SizedBox(
+                                          height: 90.h,
+                                        ),
+                                      ],
+                                    ),
+                                  );
+                                  ScaffoldMessenger.of(context)
+                                      .showSnackBar(snackBar);
+                                }
+                              },
+                              builder: (context, offerstate) {
+                                if (offerstate is OfferLoadingProgress) {
+                                  return CustomButton(
+                                    onTap: () {},
+                                    title: const SizedBox(
+                                        width: 100,
+                                        child: Center(
+                                            child:
+                                                CircularProgressIndicator())),
+                                  );
+                                } else {
+                                  return CustomButton(
+                                    onTap: () {
+                                      if (_attachmentformkey.currentState!
+                                          .validate()) {
+                                        BlocProvider.of<OfferBloc>(context).add(
+                                            AddOfferEvent(
+                                                widget.offerType!,
+                                                widget.packagesNum!,
+                                                widget.tabalehNum!,
+                                                widget.weight!,
+                                                widget.price!,
+                                                widget.taxes!,
+                                                widget.customAgency,
+                                                widget.customeState,
+                                                widget.origin!,
+                                                widget.packageType!,
+                                                _expireDate.text,
+                                                _traderNotes.text,
+                                                widget.product!,
+                                                attachmentsId,
+                                                widget.rawMaterial!,
+                                                widget.industrial!));
+                                      }
+                                    },
+                                    title: const SizedBox(
+                                        width: 100,
+                                        child: Center(child: Text("طلب مخلص"))),
+                                  );
+                                }
+                              },
                             ),
-                            content: const SizedBox.shrink()),
+                          ],
+                        ),
+                        SizedBox(
+                          height: 30.h,
+                        ),
                       ],
-                      currentStep: 1,
-                      controlsBuilder: (context, details) {
-                        return const SizedBox.shrink();
-                      },
-                      onStepContinue: () => () {},
-                      onStepCancel: () => () {},
                     ),
-                  ),
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      // Text(
-                      //   "الطلب رقم: 3475",
-                      //   style: TextStyle(color: AppColor.activeGreen),
-                      // ),
-                      SizedBox(
-                        height: 15.h,
-                      ),
-                      Card(
-                        clipBehavior: Clip.antiAlias,
-                        shape: const RoundedRectangleBorder(
-                            borderRadius: BorderRadius.all(
-                          Radius.circular(15),
-                        )),
-                        margin: EdgeInsets.symmetric(horizontal: 10.w),
-                        elevation: 1,
-                        color: Colors.white,
-                        child: Container(
-                          margin: const EdgeInsets.symmetric(vertical: 7),
-                          padding: const EdgeInsets.all(12.0),
-                          child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                const Text(
-                                  "تاريخ وصول البضاعة",
-                                  style: TextStyle(
-                                    fontSize: 19,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                ),
-                                const SizedBox(
-                                  height: 15,
-                                ),
-                                TextField(
-                                  controller: _expireDate,
-                                  // enabled: false,
-                                  onTap: _showDatePicker,
-                                  decoration: InputDecoration(
-                                      suffixIcon: GestureDetector(
-                                          onTap: _showDatePicker,
-                                          child: const Icon(Icons.date_range)),
-                                      contentPadding: EdgeInsets.zero,
-                                      border: OutlineInputBorder(
-                                          borderRadius:
-                                              BorderRadius.circular(12))),
-                                ),
-                                SizedBox(
-                                  height: 10.h,
-                                ),
-                              ]),
-                        ),
-                      ),
-                      SizedBox(
-                        height: 14.h,
-                      ),
-                      Card(
-                        clipBehavior: Clip.antiAlias,
-                        shape: const RoundedRectangleBorder(
-                            borderRadius: BorderRadius.all(
-                          Radius.circular(15),
-                        )),
-                        margin: EdgeInsets.symmetric(horizontal: 10.w),
-                        elevation: 1,
-                        color: Colors.white,
-                        child: Container(
-                          margin: EdgeInsets.symmetric(vertical: 7.h),
-                          padding: EdgeInsets.all(5.h),
-                          width: double.infinity,
-                          child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                const Text(
-                                  "المرفقات",
-                                  style: TextStyle(
-                                    fontSize: 19,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                ),
-                                const Text(
-                                  "يرجى تحميل المرفقات المتاحة حاليا",
-                                  style: TextStyle(
-                                    fontSize: 17,
-                                  ),
-                                ),
-                                SizedBox(
-                                  height: 15.h,
-                                ),
-                                BlocBuilder<AttachmentsListBloc,
-                                    AttachmentsListState>(
-                                  builder: (context, attstate) {
-                                    if (attstate is AttachmentsListSucess) {
-                                      return Wrap(
-                                          children: _buildAttachmentslist(
-                                              attstate.attachments));
-                                    } else {
-                                      return Wrap(
-                                          children: _buildAttachmentslist([]));
-                                    }
-                                  },
-                                ),
-                              ]),
-                        ),
-                      ),
-                      SizedBox(
-                        height: 14.h,
-                      ),
-                      Card(
-                        clipBehavior: Clip.antiAlias,
-                        shape: const RoundedRectangleBorder(
-                            borderRadius: BorderRadius.all(
-                          Radius.circular(15),
-                        )),
-                        margin: EdgeInsets.symmetric(horizontal: 10.w),
-                        elevation: 1,
-                        color: Colors.white,
-                        child: Container(
-                          margin: const EdgeInsets.symmetric(vertical: 7),
-                          padding: const EdgeInsets.all(15.0),
-                          child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                const Text("الملاحظات",
-                                    style: TextStyle(fontSize: 18)),
-                                SizedBox(
-                                  height: 15.h,
-                                ),
-                                TextField(
-                                  controller: _traderNotes,
-                                  maxLines: 4,
-                                  decoration: InputDecoration(
-                                      border: OutlineInputBorder(
-                                          borderRadius:
-                                              BorderRadius.circular(12)),
-                                      hintText:
-                                          "اكتب ملاحظة للمخلص الجمركي ان وجد"),
-                                ),
-                              ]),
-                        ),
-                      ),
-
-                      SizedBox(
-                        height: 30.h,
-                      ),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceAround,
-                        children: [
-                          CustomButton(
-                            onTap: () {
-                              Navigator.pop(context);
-                            },
-                            title: const SizedBox(
-                                width: 100,
-                                child: Center(child: Text("إلغاء"))),
-                          ),
-                          BlocConsumer<OfferBloc, OfferState>(
-                            listener: (context, offerstate) {
-                              if (offerstate is OfferLoadedSuccess) {
-                                BlocProvider.of<AttachmentsListBloc>(context)
-                                    .add(ClearAttachmentToListEvent());
-                                Navigator.pushAndRemoveUntil(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder: (context) => const ControlView(),
-                                  ),
-                                  (route) => false,
-                                );
-
-                                var snackBar = SnackBar(
-                                  elevation: 0,
-                                  duration: const Duration(seconds: 4),
-                                  backgroundColor: Colors.transparent,
-                                  content: Column(
-                                    children: [
-                                      AwesomeSnackbarContent(
-                                        title: 'تم',
-                                        message:
-                                            'تم اضافة الطلب بنجاح سيتم ارساله للمخلص المختص.',
-
-                                        /// change contentType to ContentType.success, ContentType.warning or ContentType.help for variants
-                                        contentType: ContentType.success,
-                                      ),
-                                      SizedBox(
-                                        height: 90.h,
-                                      ),
-                                    ],
-                                  ),
-                                );
-                                ScaffoldMessenger.of(context)
-                                    .showSnackBar(snackBar);
-                              }
-                              if (offerstate is OfferLoadedFailed) {
-                                var snackBar = SnackBar(
-                                  elevation: 0,
-                                  duration: const Duration(seconds: 4),
-                                  backgroundColor: Colors.transparent,
-                                  content: Column(
-                                    children: [
-                                      AwesomeSnackbarContent(
-                                        title: 'تنبيه',
-                                        message:
-                                            'حدث خطأ أثناء معالجة الطلب الرجاء المحاولة مرة أخرى.',
-
-                                        /// change contentType to ContentType.success, ContentType.warning or ContentType.help for variants
-                                        contentType: ContentType.warning,
-                                      ),
-                                      SizedBox(
-                                        height: 90.h,
-                                      ),
-                                    ],
-                                  ),
-                                );
-                                ScaffoldMessenger.of(context)
-                                    .showSnackBar(snackBar);
-                              }
-                            },
-                            builder: (context, offerstate) {
-                              if (offerstate is OfferLoadingProgress) {
-                                return CustomButton(
-                                  onTap: () {},
-                                  title: const SizedBox(
-                                      width: 100,
-                                      child: Center(
-                                          child: CircularProgressIndicator())),
-                                );
-                              } else {
-                                return CustomButton(
-                                  onTap: () {
-                                    BlocProvider.of<OfferBloc>(context).add(
-                                        AddOfferEvent(
-                                            widget.offerType!,
-                                            widget.packagesNum!,
-                                            widget.tabalehNum!,
-                                            widget.weight!,
-                                            widget.price!,
-                                            widget.taxes!,
-                                            widget.customAgency,
-                                            widget.customeState,
-                                            widget.origin!,
-                                            widget.packageType!,
-                                            _expireDate.text,
-                                            _traderNotes.text,
-                                            widget.product!,
-                                            attachmentsId,
-                                            widget.rawMaterial!,
-                                            widget.industrial!));
-                                  },
-                                  title: const SizedBox(
-                                      width: 100,
-                                      child: Center(child: Text("طلب مخلص"))),
-                                );
-                              }
-                            },
-                          ),
-                        ],
-                      ),
-                      SizedBox(
-                        height: 30.h,
-                      ),
-                    ],
                   ),
                 ],
               ),
