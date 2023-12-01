@@ -43,6 +43,7 @@ dependencies:
   popover: ^0.2.8
   flutter_keyboard_visibility: ^5.4.1
   provider:
+  keyboard_actions: ^4.2.0
 
 dev_dependencies:
   flutter_test:

@@ -57,7 +57,7 @@ class _TraderHomeScreenState extends State<TraderHomeScreen>
   Widget currentScreen = const TraderMainScreen();
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   late TabController _tabController;
-  bool _isKeyboardVisible = false;
+
   late AnimationController _animationController;
   final panelTransation = const Duration(milliseconds: 500);
   PanelState _panelState = PanelState.hidden;
@@ -98,10 +98,6 @@ class _TraderHomeScreenState extends State<TraderHomeScreen>
   @override
   void didChangeMetrics() {
     // Check the keyboard visibility when the metrics change
-    final bottomInset = MediaQuery.of(context).viewInsets.bottom;
-    setState(() {
-      _isKeyboardVisible = bottomInset > 0;
-    });
   }
 
   void changeSelectedValue(
@@ -134,6 +130,8 @@ class _TraderHomeScreenState extends State<TraderHomeScreen>
         }
       case 2:
         {
+          print(MediaQuery.of(context).size.width);
+          print(MediaQuery.of(context).size.height);
           setState(() {
             title = "الرئيسية";
 
@@ -343,32 +341,23 @@ class _TraderHomeScreenState extends State<TraderHomeScreen>
                                   ),
                                 ),
                               ),
-                              ListTile(
-                                leading: SvgPicture.asset(
-                                  "assets/icons/log.svg",
-                                  height: 20.h,
-                                ),
-                                title: Text(
-                                  "السجل",
-                                  style: TextStyle(
-                                      color: Colors.white,
-                                      fontSize: 16.sp,
-                                      fontWeight: FontWeight.bold),
-                                ),
-                                trailing: Container(
-                                  width: 35.w,
-                                  height: 20.h,
-                                  decoration: BoxDecoration(
-                                      color: AppColor.goldenYellow,
-                                      borderRadius: BorderRadius.circular(2)),
-                                  child: Center(
-                                    child: Text(
-                                      "soon",
-                                      style: TextStyle(
+                              GestureDetector(
+                                onTap: () {
+                                  changeSelectedValue(
+                                      selectedValue: 0, contxt: context);
+                                  _scaffoldKey.currentState!.closeDrawer();
+                                },
+                                child: ListTile(
+                                  leading: SvgPicture.asset(
+                                    "assets/icons/log.svg",
+                                    height: 20.h,
+                                  ),
+                                  title: Text(
+                                    "السجل",
+                                    style: TextStyle(
                                         color: Colors.white,
-                                        fontSize: 12.sp,
-                                      ),
-                                    ),
+                                        fontSize: 16.sp,
+                                        fontWeight: FontWeight.bold),
                                   ),
                                 ),
                               ),
