@@ -87,6 +87,7 @@ class _StepperOrderBrokerScreenState extends State<StepperOrderBrokerScreen> {
   bool allowexport = false;
   bool fillorigin = false;
   bool originerror = false;
+  bool feeerror = false;
   bool isfeeequal001 = false;
   bool isBrand = false;
   bool brandValue = false;
@@ -157,6 +158,9 @@ class _StepperOrderBrokerScreenState extends State<StepperOrderBrokerScreen> {
   void selectSuggestion(Package suggestion) {
     _typeAheadController.text = suggestion.label!;
     selectedPackage = suggestion;
+    setState(() {
+      feeerror = false;
+    });
     if (suggestion.price! > 0) {
       basePrice = suggestion.price!;
 
@@ -168,7 +172,9 @@ class _StepperOrderBrokerScreenState extends State<StepperOrderBrokerScreen> {
       setState(() {
         basePrice = 0.0;
 
-        _valueController.text = "0.0";
+        if (_valueController.text.isEmpty) {
+          _valueController.text = "0.0";
+        }
         valueEnabled = true;
         syrianExchangeValue = "6565";
       });
@@ -1103,133 +1109,110 @@ class _StepperOrderBrokerScreenState extends State<StepperOrderBrokerScreen> {
                       ),
                     ),
                   ),
-                  SizedBox(
-                    height: MediaQuery.of(context).size.height * .7 +
-                        (allowexport ? 30.h : 0) +
-                        (isdropdwonVisible ? 40.h : 0) +
-                        (originerror ? 40.h : 0) +
-                        (isfeeequal001 ? 50.h : 0) +
-                        (isBrand ? 35.h : 0) +
-                        (isTubes ? 35.h : 0) +
-                        (isColored ? 35.h : 0) +
-                        (isLycra ? 35.h : 0),
-                    child: KeyboardActions(
-                      config: KeyboardActionsConfig(
-                        keyboardActionsPlatform: KeyboardActionsPlatform.ALL,
-                        keyboardBarColor: Colors.grey[200],
-                        nextFocus: true,
-                        actions: [
-                          KeyboardActionsItem(
-                            focusNode: _nodeWeight,
-                            toolbarButtons: [
-                              //button 2
-                              (node) {
-                                return GestureDetector(
-                                  onTap: () {
-                                    node.unfocus();
-                                    BlocProvider.of<BottomNavBarCubit>(context)
-                                        .emitShow();
-                                  },
-                                  child: Container(
-                                    padding: const EdgeInsets.all(8.0),
-                                    child: const Text(
-                                      "DONE",
-                                      style: TextStyle(color: Colors.blue),
-                                    ),
-                                  ),
-                                );
-                              }
-                            ],
-                          ),
-                          KeyboardActionsItem(
-                            focusNode: _nodeValue,
-                            toolbarButtons: [
-                              //button 1
-
-                              //button 2
-                              (node) {
-                                return GestureDetector(
-                                  onTap: () {
-                                    node.unfocus();
-                                    BlocProvider.of<BottomNavBarCubit>(context)
-                                        .emitShow();
-                                  },
-                                  child: Container(
-                                    padding: const EdgeInsets.all(8.0),
-                                    child: const Text(
-                                      "DONE",
-                                      style: TextStyle(color: Colors.blue),
-                                    ),
-                                  ),
-                                );
-                              }
-                            ],
-                          ),
-                        ],
+                  Card(
+                    key: key3,
+                    margin: const EdgeInsets.symmetric(vertical: 7),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                    child: Container(
+                      // margin: const EdgeInsets.symmetric(vertical: 7),
+                      clipBehavior: Clip.antiAlias,
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(10),
+                        gradient: selectedPanel == 2
+                            ? calculatorError
+                                ? LinearGradient(
+                                    colors: [
+                                        Colors.red[300]!,
+                                        Colors.white,
+                                        Colors.white,
+                                        Colors.white,
+                                        Colors.white,
+                                        Colors.white,
+                                        Colors.white,
+                                        Colors.white,
+                                        Colors.white,
+                                        Colors.white,
+                                      ],
+                                    begin: Alignment.topCenter,
+                                    end: Alignment.bottomCenter)
+                                : LinearGradient(
+                                    colors: [
+                                        AppColor.goldenYellow,
+                                        Colors.white,
+                                        Colors.white,
+                                        Colors.white,
+                                        Colors.white,
+                                        Colors.white,
+                                        Colors.white,
+                                        Colors.white,
+                                        Colors.white,
+                                        Colors.white,
+                                      ],
+                                    begin: Alignment.topCenter,
+                                    end: Alignment.bottomCenter)
+                            : null,
                       ),
-                      child: Card(
-                        key: key3,
-                        margin: const EdgeInsets.symmetric(vertical: 7),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(10),
-                        ),
-                        child: Container(
-                          // margin: const EdgeInsets.symmetric(vertical: 7),
-                          clipBehavior: Clip.antiAlias,
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(10),
-                            gradient: selectedPanel == 2
-                                ? calculatorError
-                                    ? LinearGradient(
-                                        colors: [
-                                            Colors.red[300]!,
-                                            Colors.white,
-                                            Colors.white,
-                                            Colors.white,
-                                            Colors.white,
-                                            Colors.white,
-                                            Colors.white,
-                                            Colors.white,
-                                            Colors.white,
-                                            Colors.white,
-                                          ],
-                                        begin: Alignment.topCenter,
-                                        end: Alignment.bottomCenter)
-                                    : LinearGradient(
-                                        colors: [
-                                            AppColor.goldenYellow,
-                                            Colors.white,
-                                            Colors.white,
-                                            Colors.white,
-                                            Colors.white,
-                                            Colors.white,
-                                            Colors.white,
-                                            Colors.white,
-                                            Colors.white,
-                                            Colors.white,
-                                          ],
-                                        begin: Alignment.topCenter,
-                                        end: Alignment.bottomCenter)
-                                : null,
-                          ),
-                          child: Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: Form(
-                              key: _ordercalformkey,
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
+                      child: Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Form(
+                          key: _ordercalformkey,
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Focus(
+                                focusNode: _ordernode,
+                                child: Text("نوع البضاعة",
+                                    style: TextStyle(
+                                      fontSize: 17,
+                                      fontWeight: FontWeight.bold,
+                                      color: AppColor.deepBlue,
+                                    )),
+                              ),
+
+                              Column(
                                 children: [
-                                  Focus(
-                                    focusNode: _ordernode,
-                                    child: Text("نوع البضاعة",
-                                        style: TextStyle(
-                                          fontSize: 17,
-                                          fontWeight: FontWeight.bold,
-                                          color: AppColor.deepBlue,
-                                        )),
-                                  ),
-                                  const SizedBox(
-                                    height: 15,
+                                  GestureDetector(
+                                    onTap: () {
+                                      BlocProvider.of<CalculatorPanelBloc>(
+                                              context)
+                                          .add(TariffPanelOpenEvent());
+                                      // BlocProvider.of<SectionBloc>(context)
+                                      //     .add(SectionLoadEvent());
+                                      FocusManager.instance.primaryFocus
+                                          ?.unfocus();
+                                      BlocProvider.of<BottomNavBarCubit>(
+                                              context)
+                                          .emitShow();
+                                    },
+                                    child: SizedBox(
+                                      height: 40.h,
+                                      child: Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.end,
+                                        children: [
+                                          SizedBox(
+                                            width: 30.w,
+                                            height: 30.h,
+                                            child: SvgPicture.asset(
+                                              "assets/icons/tarrif_btn.svg",
+                                            ),
+                                          ),
+                                          const SizedBox(
+                                            width: 3,
+                                          ),
+                                          Text(
+                                            "تصفح التعرفة الجمركية",
+                                            textAlign: TextAlign.center,
+                                            style: TextStyle(
+                                                color: AppColor.lightBlue,
+                                                fontSize: 13.sp,
+                                                fontWeight: FontWeight.bold),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
                                   ),
                                   Focus(
                                     focusNode: _statenode,
@@ -1273,50 +1256,6 @@ class _StepperOrderBrokerScreenState extends State<StepperOrderBrokerScreen> {
                                               const EdgeInsets.symmetric(
                                                   vertical: 11.0,
                                                   horizontal: 9.0),
-                                          suffixIcon: GestureDetector(
-                                            onTap: () {
-                                              BlocProvider.of<
-                                                          CalculatorPanelBloc>(
-                                                      context)
-                                                  .add(TariffPanelOpenEvent());
-                                              // BlocProvider.of<SectionBloc>(context)
-                                              //     .add(SectionLoadEvent());
-                                              FocusManager.instance.primaryFocus
-                                                  ?.unfocus();
-                                              BlocProvider.of<
-                                                          BottomNavBarCubit>(
-                                                      context)
-                                                  .emitShow();
-                                            },
-                                            child: Container(
-                                              margin: const EdgeInsets.all(1),
-                                              decoration: BoxDecoration(
-                                                  color: Colors.grey[350],
-                                                  borderRadius:
-                                                      const BorderRadius
-                                                          .horizontal(
-                                                    right: Radius.circular(12),
-                                                    left: Radius.circular(12),
-                                                  )),
-                                              width: 85.w,
-                                              child: Column(
-                                                mainAxisAlignment:
-                                                    MainAxisAlignment.center,
-                                                children: [
-                                                  Text(
-                                                    "التعرفة الجمركية",
-                                                    textAlign: TextAlign.center,
-                                                    style: TextStyle(
-                                                        color:
-                                                            AppColor.deepBlue,
-                                                        fontSize: 12,
-                                                        fontWeight:
-                                                            FontWeight.bold),
-                                                  ),
-                                                ],
-                                              ),
-                                            ),
-                                          ),
                                         ),
                                         onSubmitted: (value) {
                                           BlocProvider.of<BottomNavBarCubit>(
@@ -1374,8 +1313,8 @@ class _StepperOrderBrokerScreenState extends State<StepperOrderBrokerScreen> {
                                       },
                                       onSuggestionSelected: (suggestion) {
                                         setState(() {
-                                          _wieghtController.text = "0.0";
-                                          _valueController.text = "0.0";
+                                          _wieghtController.text = "";
+                                          _valueController.text = "";
                                           syrianExchangeValue = "6565";
                                           syrianTotalValue = "0.0";
                                           totalValueWithEnsurance = "0.0";
@@ -1390,1091 +1329,435 @@ class _StepperOrderBrokerScreenState extends State<StepperOrderBrokerScreen> {
                                       },
                                     ),
                                   ),
-                                  Visibility(
-                                    visible: allowexport,
-                                    child: const SizedBox(
-                                      height: 7,
-                                    ),
-                                  ),
-                                  Visibility(
-                                    visible: allowexport,
-                                    child: const Text(
-                                      "   هذا البند ممنوع من الاستيراد",
-                                      style: TextStyle(color: Colors.red),
-                                    ),
-                                  ),
-
-                                  const SizedBox(
-                                    height: 24,
-                                  ),
-                                  Visibility(
-                                    visible: isdropdwonVisible,
-                                    child: DropdownButtonHideUnderline(
-                                      child: DropdownButton2<Extras>(
-                                        isExpanded: true,
-                                        hint: Text(
-                                          _placeholder,
-                                          style: TextStyle(
-                                            fontSize: 14,
-                                            color: Theme.of(context).hintColor,
-                                          ),
-                                        ),
-                                        items: items
-                                            .map((Extras item) =>
-                                                DropdownMenuItem<Extras>(
-                                                  value: item,
-                                                  child: Text(
-                                                    item.label!,
-                                                    style: const TextStyle(
-                                                      fontSize: 14,
-                                                    ),
-                                                  ),
-                                                ))
-                                            .toList(),
-                                        value: selectedValue,
-                                        onChanged: (Extras? value) {
-                                          if (value!.countryGroup!.isEmpty) {
-                                            if (value.price! > 0) {
-                                              basePrice = value.price!;
-
-                                              _valueController.text =
-                                                  value.price!.toString();
-                                              setState(() {
-                                                valueEnabled = false;
-                                              });
-                                            } else {
-                                              setState(() {
-                                                basePrice = 0.0;
-
-                                                _valueController.text = "0.0";
-                                                valueEnabled = true;
-                                                syrianExchangeValue = "6565";
-                                              });
-                                            }
-                                            evaluatePrice();
-                                          } else {
-                                            if (value.price! > 0) {
-                                              basePrice = value.price!;
-
-                                              _valueController.text =
-                                                  value.price!.toString();
-                                              setState(() {
-                                                valueEnabled = false;
-                                              });
-                                            } else {
-                                              setState(() {
-                                                basePrice = 0.0;
-
-                                                _valueController.text = "0.0";
-                                                valueEnabled = true;
-                                                syrianExchangeValue = "6565";
-                                              });
-                                            }
-                                            evaluatePrice();
-                                          }
-                                          setState(() {
-                                            selectedValue = value;
-                                          });
-                                        },
-                                        buttonStyleData: const ButtonStyleData(
-                                          padding: EdgeInsets.symmetric(
-                                              horizontal: 16),
-                                          height: 40,
-                                          width: 140,
-                                        ),
-                                        menuItemStyleData:
-                                            const MenuItemStyleData(
-                                          height: 40,
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                                  Visibility(
-                                    visible: isdropdwonVisible,
-                                    child: const SizedBox(
-                                      height: 24,
-                                    ),
-                                  ),
-                                  BlocBuilder<FlagsBloc, FlagsState>(
-                                    builder: (context, flagstate) {
-                                      if (flagstate is FlagsLoadedSuccess) {
-                                        return DropdownButtonHideUnderline(
-                                          child: Focus(
-                                            focusNode: _statenode,
-                                            onFocusChange: (bool focus) {
-                                              if (focus) {
-                                                setSelectedPanel(2);
-                                              }
-                                            },
-                                            child: DropdownButton2<Origin>(
-                                              isExpanded: true,
-                                              hint: Text(
-                                                originPlaceholder,
-                                                style: TextStyle(
-                                                  fontSize: 18,
-                                                  color: Theme.of(context)
-                                                      .hintColor,
-                                                ),
-                                              ),
-                                              items: flagstate.origins
-                                                  .map((Origin item) =>
-                                                      DropdownMenuItem<Origin>(
-                                                        value: item,
-                                                        child: SizedBox(
-                                                          // width: 200,
-                                                          child: Row(
-                                                            children: [
-                                                              Img(
-                                                                item.imageURL!,
-                                                                height: 35,
-                                                                // semanticsLabel: 'A shark?!',
-
-                                                                placeholder:
-                                                                    const CircularProgressIndicator(),
-                                                              ),
-                                                              const SizedBox(
-                                                                  width: 7),
-                                                              Container(
-                                                                constraints:
-                                                                    BoxConstraints(
-                                                                  maxWidth:
-                                                                      280.w,
-                                                                ),
-                                                                child: Text(
-                                                                  item.label!,
-                                                                  overflow:
-                                                                      TextOverflow
-                                                                          .ellipsis,
-                                                                  // maxLines: 2,
-                                                                  style:
-                                                                      const TextStyle(
-                                                                    fontSize:
-                                                                        17,
-                                                                  ),
-                                                                ),
-                                                              ),
-                                                            ],
-                                                            // subtitle: Text('\$${suggestion['price']}'),
-                                                          ),
-                                                        ),
-                                                      ))
-                                                  .toList(),
-                                              value: selectedOrigin,
-                                              onChanged: (Origin? value) {
-                                                // setState(() {
-                                                //   selectedOrigin = value;
-                                                // });
-                                                selectOrigin(value!);
-                                              },
-                                              dropdownSearchData:
-                                                  DropdownSearchData(
-                                                searchController:
-                                                    _originController,
-                                                searchInnerWidgetHeight: 60,
-                                                searchInnerWidget: Container(
-                                                  height: 60,
-                                                  padding:
-                                                      const EdgeInsets.only(
-                                                    top: 8,
-                                                    bottom: 4,
-                                                    right: 8,
-                                                    left: 8,
-                                                  ),
-                                                  child: TextFormField(
-                                                    expands: true,
-                                                    maxLines: null,
-                                                    controller:
-                                                        _originController,
-                                                    onTap: () {
-                                                      setSelectedPanel(2);
-                                                      BlocProvider.of<
-                                                                  BottomNavBarCubit>(
-                                                              context)
-                                                          .emitHide();
-                                                      _originController
-                                                              .selection =
-                                                          TextSelection(
-                                                              baseOffset: 0,
-                                                              extentOffset:
-                                                                  _originController
-                                                                      .value
-                                                                      .text
-                                                                      .length);
-                                                    },
-                                                    decoration: InputDecoration(
-                                                      isDense: true,
-                                                      contentPadding:
-                                                          const EdgeInsets
-                                                              .symmetric(
-                                                        horizontal: 10,
-                                                        vertical: 8,
-                                                      ),
-                                                      hintText: 'اختر المنشأ',
-                                                      hintStyle:
-                                                          const TextStyle(
-                                                              fontSize: 12),
-                                                      border:
-                                                          OutlineInputBorder(
-                                                        borderRadius:
-                                                            BorderRadius
-                                                                .circular(8),
-                                                      ),
-                                                    ),
-                                                    onFieldSubmitted: (value) {
-                                                      BlocProvider.of<
-                                                                  BottomNavBarCubit>(
-                                                              context)
-                                                          .emitShow();
-                                                    },
-                                                  ),
-                                                ),
-                                                searchMatchFn:
-                                                    (item, searchValue) {
-                                                  return item.value!.label!
-                                                      .contains(searchValue);
-                                                },
-                                              ),
-                                              onMenuStateChange: (isOpen) {
-                                                if (isOpen) {
-                                                  setState(() {
-                                                    _originController.clear();
-                                                  });
-                                                }
-                                              },
-                                              buttonStyleData: ButtonStyleData(
-                                                height: 50,
-                                                width: double.infinity,
-                                                padding:
-                                                    const EdgeInsets.symmetric(
-                                                  horizontal: 9.0,
-                                                ),
-
-                                                decoration: BoxDecoration(
-                                                  borderRadius:
-                                                      BorderRadius.circular(12),
-                                                  border: Border.all(
-                                                    color: Colors.black26,
-                                                  ),
-                                                  color: Colors.white,
-                                                ),
-                                                // elevation: 2,
-                                              ),
-                                              iconStyleData:
-                                                  const IconStyleData(
-                                                icon: Icon(
-                                                  Icons
-                                                      .keyboard_arrow_down_sharp,
-                                                ),
-                                                iconSize: 20,
-                                                iconEnabledColor:
-                                                    AppColor.AccentBlue,
-                                                iconDisabledColor: Colors.grey,
-                                              ),
-                                              dropdownStyleData:
-                                                  DropdownStyleData(
-                                                width: double.infinity,
-                                                maxHeight:
-                                                    MediaQuery.of(context)
-                                                            .size
-                                                            .height -
-                                                        160.h,
-                                                padding:
-                                                    const EdgeInsets.all(8.0),
-                                                decoration: BoxDecoration(
-                                                  borderRadius:
-                                                      BorderRadius.circular(14),
-                                                  color: Colors.white,
-                                                ),
-                                                scrollbarTheme:
-                                                    ScrollbarThemeData(
-                                                  radius:
-                                                      const Radius.circular(40),
-                                                  thickness:
-                                                      MaterialStateProperty.all(
-                                                          6),
-                                                  thumbVisibility:
-                                                      MaterialStateProperty.all(
-                                                          true),
-                                                ),
-                                              ),
-                                              menuItemStyleData:
-                                                  const MenuItemStyleData(
-                                                height: 40,
-                                              ),
-                                            ),
-                                          ),
-                                        );
-                                      } else if (flagstate
-                                          is FlagsLoadingProgressState) {
-                                        return const Center(
-                                          child: LinearProgressIndicator(),
-                                        );
-                                      } else {
-                                        return Center(
-                                          child: GestureDetector(
-                                            onTap: () {
-                                              BlocProvider.of<FlagsBloc>(
-                                                      context)
-                                                  .add(FlagsLoadEvent());
-                                            },
-                                            child: const Row(
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment.center,
-                                              children: [
-                                                Text(
-                                                  "حدث خطأأثناء تحميل القائمة...  ",
-                                                  style: TextStyle(
-                                                      color: Colors.red),
-                                                ),
-                                                Icon(
-                                                  Icons.refresh,
-                                                  color: Colors.grey,
-                                                )
-                                              ],
-                                            ),
-                                          ),
-                                        );
-                                      }
-                                    },
-                                  ),
-                                  const SizedBox(
-                                    height: 24,
-                                  ),
-                                  Visibility(
-                                    visible: originerror,
-                                    child: const Text(
-                                      "الرجاء اختيار المنشأ",
-                                      style: TextStyle(color: Colors.red),
-                                    ),
-                                  ),
-                                  Visibility(
-                                    visible: originerror,
-                                    child: const SizedBox(
-                                      height: 24,
-                                    ),
-                                  ),
-                                  Focus(
-                                    focusNode: _statenode,
-                                    onFocusChange: (bool focus) {
-                                      if (!focus) {
-                                        BlocProvider.of<BottomNavBarCubit>(
-                                                context)
-                                            .emitShow();
-                                        FocusManager.instance.primaryFocus
-                                            ?.unfocus();
-                                      }
-                                    },
-                                    child: TextFormField(
-                                      controller: _wieghtController,
-                                      onTap: () {
-                                        setSelectedPanel(2);
-
-                                        BlocProvider.of<BottomNavBarCubit>(
-                                                context)
-                                            .emitHide();
-                                        _wieghtController.selection =
-                                            TextSelection(
-                                                baseOffset: 0,
-                                                extentOffset: _wieghtController
-                                                    .value.text.length);
-                                      },
-                                      focusNode: _nodeWeight,
-                                      // enabled: !valueEnabled,
-                                      scrollPadding: EdgeInsets.only(
-                                          bottom: MediaQuery.of(context)
-                                                  .viewInsets
-                                                  .bottom +
-                                              50),
-                                      keyboardType:
-                                          const TextInputType.numberWithOptions(
-                                              signed: true, decimal: true),
-                                      inputFormatters: [DecimalFormatter()],
-                                      decoration: InputDecoration(
-                                        labelText: wieghtLabel,
-                                        prefixText: showunit ? wieghtUnit : "",
-                                        prefixStyle: const TextStyle(
-                                            color: Colors.black),
-                                        contentPadding:
-                                            const EdgeInsets.symmetric(
-                                                vertical: 11.0,
-                                                horizontal: 9.0),
-                                      ),
-                                      onChanged: (value) {
-                                        if (_originController.text.isNotEmpty) {
-                                          setState(() {
-                                            originerror = false;
-                                          });
-                                          if (value.isNotEmpty) {
-                                            // calculateTotalValueWithPrice(value);
-                                            wieghtValue = double.parse(value);
-                                          } else {
-                                            wieghtValue = 0.0;
-                                          }
-                                          evaluatePrice();
-                                        } else {
-                                          setState(() {
-                                            originerror = true;
-                                          });
-                                        }
-                                      },
-                                      autovalidateMode:
-                                          AutovalidateMode.onUserInteraction,
-                                      validator: (value) {
-                                        if (value!.isEmpty) {
-                                          return "الرجاء ادخال القيمة";
-                                        }
-                                        return null;
-                                      },
-                                      onSaved: (newValue) {
-                                        _wieghtController.text = newValue!;
-                                      },
-                                      onFieldSubmitted: (value) {
-                                        BlocProvider.of<BottomNavBarCubit>(
-                                                context)
-                                            .emitShow();
-                                      },
-                                    ),
-                                  ),
-
-                                  const SizedBox(
-                                    height: 24,
-                                  ),
-                                  Focus(
-                                    focusNode: _statenode,
-                                    onFocusChange: (bool focus) {
-                                      if (!focus) {
-                                        BlocProvider.of<BottomNavBarCubit>(
-                                                context)
-                                            .emitShow();
-                                        FocusManager.instance.primaryFocus
-                                            ?.unfocus();
-                                      }
-                                    },
-                                    child: TextFormField(
-                                      controller: _valueController,
-                                      onTap: () {
-                                        BlocProvider.of<BottomNavBarCubit>(
-                                                context)
-                                            .emitHide();
-                                        _valueController.selection =
-                                            TextSelection(
-                                                baseOffset: 0,
-                                                extentOffset: _valueController
-                                                    .value.text.length);
-                                      },
-                                      focusNode: _nodeValue,
-                                      // enabled: valueEnabled,
-                                      keyboardType:
-                                          const TextInputType.numberWithOptions(
-                                              signed: true, decimal: true),
-                                      scrollPadding: EdgeInsets.only(
-                                          bottom: MediaQuery.of(context)
-                                                  .viewInsets
-                                                  .bottom +
-                                              50),
-                                      inputFormatters: [DecimalFormatter()],
-                                      decoration: InputDecoration(
-                                        labelText: valueEnabled
-                                            ? "قيمة البضاعة الاجمالية بالدولار"
-                                            : "سعر الواحدة لدى الجمارك",
-                                      ),
-                                      onChanged: (value) {
-                                        if (_originController.text.isNotEmpty) {
-                                          setState(() {
-                                            originerror = false;
-                                          });
-                                          if (value.isNotEmpty) {
-                                            basePrice = double.parse(value);
-                                            // calculateTotalValue();
-                                          } else {
-                                            basePrice = 0.0;
-                                            // calculateTotalValue();
-                                          }
-                                          evaluatePrice();
-                                        } else {
-                                          setState(() {
-                                            originerror = true;
-                                          });
-                                        }
-                                      },
-                                      autovalidateMode:
-                                          AutovalidateMode.onUserInteraction,
-                                      validator: (value) {
-                                        if (value!.isEmpty) {
-                                          return "الرجاء ادخال القيمة";
-                                        }
-                                        return null;
-                                      },
-                                      onSaved: (newValue) {
-                                        _valueController.text = newValue!;
-                                      },
-                                      onFieldSubmitted: (value) {
-                                        BlocProvider.of<BottomNavBarCubit>(
-                                                context)
-                                            .emitShow();
-                                      },
-                                    ),
-                                  ),
-                                  const SizedBox(
-                                    height: 12,
-                                  ),
-                                  Visibility(
-                                    visible: isfeeequal001,
-                                    child: CheckboxListTile(
-                                        value: rawMaterialValue,
-                                        title: const Text("هل المادة أولية؟"),
-                                        onChanged: (value) {
-                                          setState(() {
-                                            rawMaterialValue = value!;
-                                          });
-                                        }),
-                                  ),
-                                  // Visibility(
-                                  //   visible: isfeeequal001,
-                                  //   child: const SizedBox(
-                                  //     height: 12,
-                                  //   ),
-                                  // ),
-                                  Visibility(
-                                    visible: isfeeequal001,
-                                    child: CheckboxListTile(
-                                        value: industrialValue,
-                                        title: const Text("هل المادة صناعية؟"),
-                                        onChanged: (value) {
-                                          setState(() {
-                                            industrialValue = value!;
-                                          });
-                                        }),
-                                  ),
-                                  Visibility(
-                                    visible: isfeeequal001,
-                                    child: const SizedBox(
-                                      height: 12,
-                                    ),
-                                  ),
-                                  Visibility(
-                                    visible: isBrand,
-                                    child: CheckboxListTile(
-                                        value: brandValue,
-                                        title: const Text("هل البضاعة ماركة؟"),
-                                        onChanged: (value) {
-                                          calculateExtrasPrice(1.5, value!);
-                                          setState(() {
-                                            brandValue = value;
-                                          });
-                                        }),
-                                  ),
-                                  Visibility(
-                                    visible: isBrand,
-                                    child: const SizedBox(
-                                      height: 12,
-                                    ),
-                                  ),
-                                  Visibility(
-                                    visible: isTubes,
-                                    child: CheckboxListTile(
-                                        value: tubesValue,
-                                        title: const Text(
-                                            "هل قياس الأنابيب أقل أو يساوي 3inch؟"),
-                                        onChanged: (value) {
-                                          calculateExtrasPrice(.1, value!);
-                                          setState(() {
-                                            tubesValue = value;
-                                          });
-                                        }),
-                                  ),
-                                  Visibility(
-                                    visible: isTubes,
-                                    child: const SizedBox(
-                                      height: 12,
-                                    ),
-                                  ),
-                                  Visibility(
-                                    visible: isColored,
-                                    child: CheckboxListTile(
-                                        value: colorValue,
-                                        title: const Text("هل الخيوط ملونة؟"),
-                                        onChanged: (value) {
-                                          calculateExtrasPrice(.1, value!);
-                                          setState(() {
-                                            colorValue = value;
-                                          });
-                                        }),
-                                  ),
-                                  Visibility(
-                                    visible: isColored,
-                                    child: const SizedBox(
-                                      height: 12,
-                                    ),
-                                  ),
-                                  Visibility(
-                                    visible: isLycra,
-                                    child: CheckboxListTile(
-                                        value: lycraValue,
-                                        title: const Text("هل الخيوط ليكرا؟"),
-                                        onChanged: (value) {
-                                          calculateExtrasPrice(.05, value!);
-                                          setState(() {
-                                            lycraValue = value;
-                                          });
-                                        }),
-                                  ),
-                                  Visibility(
-                                    visible: isLycra,
-                                    child: const SizedBox(
-                                      height: 12,
-                                    ),
-                                  ),
-                                  Text(
-                                    !valueEnabled
-                                        ? "القيمة الاجمالية بالدولار :"
-                                        : "قيمة التحويل بالجنيه المصري :",
-                                    style: const TextStyle(fontSize: 16),
-                                  ),
-                                  Text(f.format(
-                                      double.parse(syrianExchangeValue)
-                                          .toInt())),
-                                  const Text(
-                                    "قيمة الاجمالية بالجنيه المصري: ",
-                                    style: TextStyle(fontSize: 16),
-                                  ),
-                                  Text(f.format(
-                                      double.parse(syrianTotalValue).toInt())),
-                                  const Text(
-                                    "قيمة البضاعة مع التأمين: ",
-                                    style: TextStyle(fontSize: 16),
-                                  ),
-                                  Text(f.format(
-                                      double.parse(totalValueWithEnsurance)
-                                          .toInt())),
-                                  const SizedBox(
-                                    height: 12,
-                                  ),
-                                  Row(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.center,
-                                    children: [
-                                      Row(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.center,
-                                        children: [
-                                          Text(
-                                            "الرسوم :  ",
-                                            style: TextStyle(
-                                              fontSize: 17,
-                                              fontWeight: FontWeight.bold,
-                                              color: AppColor.deepBlue,
-                                            ),
-                                          ),
-                                          SizedBox(
-                                            width: 230.w,
-                                            child: BlocBuilder<
-                                                CalculateResultBloc,
-                                                CalculateResultState>(
-                                              builder: (context, state) {
-                                                if (state
-                                                        is CalculateResultSuccessed &&
-                                                    totalValueWithEnsurance !=
-                                                        "0.0") {
-                                                  return Text(
-                                                    f.format(state
-                                                        .result.finalTotal!
-                                                        .toInt()),
-                                                    style: const TextStyle(
-                                                      fontSize: 16,
-                                                      fontWeight:
-                                                          FontWeight.bold,
-                                                    ),
-                                                  );
-                                                } else if (state
-                                                    is CalculateResultLoading) {
-                                                  return const LinearProgressIndicator();
-                                                } else {
-                                                  return const Text(
-                                                    " _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ ",
-                                                    style: TextStyle(
-                                                      fontSize: 16,
-                                                      fontWeight:
-                                                          FontWeight.bold,
-                                                    ),
-                                                  );
-                                                }
-                                              },
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                      BlocBuilder<CalculateResultBloc,
-                                          CalculateResultState>(
-                                        builder: (context, state) {
-                                          if (state
-                                                  is CalculateResultSuccessed &&
-                                              totalValueWithEnsurance !=
-                                                  "0.0") {
-                                            return GestureDetector(
-                                              onTap: () {
-                                                Navigator.push(
-                                                  context,
-                                                  MaterialPageRoute(
-                                                    builder: (context) =>
-                                                        TraderCalculatorResultScreen(),
-                                                  ),
-                                                );
-                                              },
-                                              child: SizedBox(
-                                                height: 50,
-                                                child: Column(
-                                                  mainAxisAlignment:
-                                                      MainAxisAlignment.center,
-                                                  children: [
-                                                    Text(
-                                                      "تفاصيل الرسوم",
-                                                      style: TextStyle(
-                                                        fontSize: 17,
-                                                        color:
-                                                            AppColor.deepBlue,
-                                                      ),
-                                                    ),
-                                                  ],
-                                                ),
-                                              ),
-                                            );
-                                          } else {
-                                            return const SizedBox.shrink();
-                                          }
-                                        },
-                                      )
-                                    ],
-                                  ),
                                 ],
                               ),
-                            ),
-                          ),
-                        ),
-                      ),
-                    ),
-                  ),
-                  SizedBox(
-                    height: haveTabaleh
-                        ? (MediaQuery.of(context).size.height * .5) + 55.h
-                        : MediaQuery.of(context).size.height * .5,
-                    child: KeyboardActions(
-                      config: KeyboardActionsConfig(
-                        keyboardActionsPlatform: KeyboardActionsPlatform.ALL,
-                        keyboardBarColor: Colors.grey[200],
-                        nextFocus: true,
-                        actions: [
-                          KeyboardActionsItem(
-                            focusNode: _nodePackages,
-                            toolbarButtons: [
-                              //button 2
-                              (node) {
-                                return GestureDetector(
-                                  onTap: () {
-                                    node.unfocus();
-                                    BlocProvider.of<BottomNavBarCubit>(context)
-                                        .emitShow();
-                                  },
-                                  child: Container(
-                                    padding: const EdgeInsets.all(8.0),
-                                    child: const Text(
-                                      "DONE",
-                                      style: TextStyle(color: Colors.blue),
-                                    ),
-                                  ),
-                                );
-                              }
-                            ],
-                          ),
-                          KeyboardActionsItem(
-                            focusNode: _nodeTabaleh,
-                            toolbarButtons: [
-                              //button 2
-                              (node) {
-                                return GestureDetector(
-                                  onTap: () {
-                                    node.unfocus();
-                                    BlocProvider.of<BottomNavBarCubit>(context)
-                                        .emitShow();
-                                  },
-                                  child: Container(
-                                    padding: const EdgeInsets.all(8.0),
-                                    child: const Text(
-                                      "DONE",
-                                      style: TextStyle(color: Colors.blue),
-                                    ),
-                                  ),
-                                );
-                              }
-                            ],
-                          ),
-                        ],
-                      ),
-                      child: Card(
-                        margin: const EdgeInsets.symmetric(vertical: 7),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(10),
-                        ),
-                        child: Container(
-                          clipBehavior: Clip.antiAlias,
-                          padding: const EdgeInsets.all(8.0),
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(10),
-                            gradient: selectedPanel == 3
-                                ? LinearGradient(
-                                    colors: [
-                                        AppColor.goldenYellow,
-                                        Colors.white,
-                                        Colors.white,
-                                        Colors.white,
-                                        Colors.white,
-                                        Colors.white,
-                                        Colors.white,
-                                        Colors.white,
-                                        Colors.white,
-                                        Colors.white,
-                                      ],
-                                    begin: Alignment.topCenter,
-                                    end: Alignment.bottomCenter)
-                                : null,
-                          ),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              SizedBox(
-                                height: 2.h,
-                              ),
-                              Text(
-                                "نوع الطرد",
-                                style: TextStyle(
-                                  fontSize: 19,
-                                  fontWeight: FontWeight.bold,
-                                  color: AppColor.deepBlue,
+                              Visibility(
+                                visible: allowexport,
+                                child: const SizedBox(
+                                  height: 7,
                                 ),
                               ),
-                              SizedBox(
-                                  height: 140.h,
-                                  child: BlocBuilder<PackageTypeBloc,
-                                      PackageTypeState>(
-                                    builder: (context, state) {
-                                      if (state is PackageTypeLoadedSuccess) {
-                                        return Scrollbar(
-                                          controller: _scrollController,
-                                          thumbVisibility: true,
-                                          thickness: 2.0,
-                                          child: Padding(
-                                            padding: EdgeInsets.all(2.h),
-                                            child: ListView.builder(
-                                              controller: _scrollController,
-                                              itemCount:
-                                                  state.packageTypes.length,
-                                              scrollDirection: Axis.horizontal,
-                                              shrinkWrap: true,
-                                              itemBuilder: (context, index) {
-                                                return Padding(
-                                                  padding: EdgeInsets.symmetric(
-                                                      horizontal: 5.w,
-                                                      vertical: 15.h),
-                                                  child: GestureDetector(
-                                                    onTap: () {
-                                                      setSelectedPanel(3);
-                                                      setState(() {
-                                                        packageTypeId = state
-                                                            .packageTypes[index]
-                                                            .id!;
-                                                      });
-                                                    },
-                                                    child: Stack(
-                                                      clipBehavior: Clip.none,
-                                                      children: [
-                                                        Container(
-                                                          width: 145.w,
-                                                          decoration:
-                                                              BoxDecoration(
-                                                            borderRadius:
-                                                                BorderRadius
-                                                                    .circular(
-                                                                        7),
-                                                            border: Border.all(
-                                                              color: packageTypeId ==
-                                                                      state
-                                                                          .packageTypes[
-                                                                              index]
-                                                                          .id!
-                                                                  ? AppColor
-                                                                      .goldenYellow
-                                                                  : AppColor
-                                                                      .deepBlue,
-                                                              width: 2.w,
-                                                            ),
-                                                          ),
-                                                          child: Column(
-                                                            mainAxisAlignment:
-                                                                MainAxisAlignment
-                                                                    .center,
-                                                            children: [
-                                                              SvgPicture
-                                                                  .network(
-                                                                state
-                                                                    .packageTypes[
-                                                                        index]
-                                                                    .image!,
-                                                                height: 50.h,
-                                                                // placeholder:
-                                                                //     Container(
-                                                                //   color: Colors
-                                                                //       .white,
-                                                                //   height:
-                                                                //       50.h,
-                                                                //   width: 50.h,
-                                                                // ),
-                                                              ),
-                                                              Text(
-                                                                state
-                                                                    .packageTypes[
-                                                                        index]
-                                                                    .name!,
-                                                                style:
-                                                                    TextStyle(
-                                                                  fontSize:
-                                                                      17.sp,
-                                                                  color: AppColor
-                                                                      .deepBlue,
-                                                                ),
-                                                              ),
-                                                            ],
-                                                          ),
-                                                        ),
-                                                        packageTypeId ==
-                                                                state
-                                                                    .packageTypes[
-                                                                        index]
-                                                                    .id!
-                                                            ? Positioned(
-                                                                right: -7.w,
-                                                                top: -10.h,
-                                                                child:
-                                                                    Container(
-                                                                  padding:
-                                                                      const EdgeInsets
-                                                                          .all(
-                                                                          2),
-                                                                  decoration:
-                                                                      BoxDecoration(
-                                                                    color: AppColor
-                                                                        .goldenYellow,
-                                                                    borderRadius:
-                                                                        BorderRadius.circular(
-                                                                            45),
-                                                                  ),
-                                                                  child: Icon(
-                                                                      Icons
-                                                                          .check,
-                                                                      size:
-                                                                          16.w,
-                                                                      color: Colors
-                                                                          .white),
-                                                                ),
-                                                              )
-                                                            : const SizedBox
-                                                                .shrink()
-                                                      ],
-                                                    ),
-                                                  ),
-                                                );
-                                              },
-                                            ),
-                                          ),
-                                        );
-                                      } else {
-                                        return Shimmer.fromColors(
-                                          baseColor: (Colors.grey[300])!,
-                                          highlightColor: (Colors.grey[100])!,
-                                          enabled: true,
-                                          direction: ShimmerDirection.rtl,
-                                          child: ListView.builder(
-                                            shrinkWrap: true,
-                                            scrollDirection: Axis.horizontal,
-                                            itemBuilder: (_, __) => Padding(
-                                              padding: EdgeInsets.symmetric(
-                                                  horizontal: 5.w,
-                                                  vertical: 15.h),
-                                              child: Container(
-                                                clipBehavior: Clip.antiAlias,
-                                                decoration: BoxDecoration(
-                                                  color: Colors.white,
-                                                  borderRadius:
-                                                      BorderRadius.circular(10),
-                                                ),
-                                                child: SizedBox(
-                                                  width: 145.w,
-                                                  height: 70.h,
+                              Visibility(
+                                visible: allowexport,
+                                child: const Text(
+                                  "   هذا البند ممنوع من الاستيراد",
+                                  style: TextStyle(color: Colors.red),
+                                ),
+                              ),
+                              Visibility(
+                                visible: feeerror,
+                                child: const Text(
+                                  "الرجاء اختيار البند",
+                                  style: TextStyle(
+                                    color: Colors.red,
+                                    fontSize: 13,
+                                  ),
+                                ),
+                              ),
+                              Visibility(
+                                visible: feeerror,
+                                child: const SizedBox(
+                                  height: 14,
+                                ),
+                              ),
+                              const SizedBox(
+                                height: 24,
+                              ),
+                              Visibility(
+                                visible: isdropdwonVisible,
+                                child: DropdownButtonHideUnderline(
+                                  child: DropdownButton2<Extras>(
+                                    isExpanded: true,
+                                    hint: Text(
+                                      _placeholder,
+                                      style: TextStyle(
+                                        fontSize: 14,
+                                        color: Theme.of(context).hintColor,
+                                      ),
+                                    ),
+                                    items: items
+                                        .map((Extras item) =>
+                                            DropdownMenuItem<Extras>(
+                                              value: item,
+                                              child: Text(
+                                                item.label!,
+                                                style: const TextStyle(
+                                                  fontSize: 14,
                                                 ),
                                               ),
-                                            ),
-                                            itemCount: 6,
-                                          ),
-                                        );
+                                            ))
+                                        .toList(),
+                                    value: selectedValue,
+                                    onChanged: (Extras? value) {
+                                      if (value!.countryGroup!.isEmpty) {
+                                        if (value.price! > 0) {
+                                          basePrice = value.price!;
+
+                                          _valueController.text =
+                                              value.price!.toString();
+                                          setState(() {
+                                            valueEnabled = false;
+                                          });
+                                        } else {
+                                          setState(() {
+                                            basePrice = 0.0;
+
+                                            _valueController.text = "0.0";
+                                            valueEnabled = true;
+                                            syrianExchangeValue = "6565";
+                                          });
+                                        }
+                                        evaluatePrice();
+                                      } else {
+                                        if (value.price! > 0) {
+                                          basePrice = value.price!;
+
+                                          _valueController.text =
+                                              value.price!.toString();
+                                          setState(() {
+                                            valueEnabled = false;
+                                          });
+                                        } else {
+                                          setState(() {
+                                            basePrice = 0.0;
+
+                                            _valueController.text = "0.0";
+                                            valueEnabled = true;
+                                            syrianExchangeValue = "6565";
+                                          });
+                                        }
+                                        evaluatePrice();
                                       }
+                                      setState(() {
+                                        selectedValue = value;
+                                      });
                                     },
-                                  )),
-                              SizedBox(
-                                height: 7.h,
-                              ),
-                              const Divider(),
-                              SizedBox(
-                                height: 7.h,
-                              ),
-                              Form(
-                                key: _packagesformkey,
-                                child: TextFormField(
-                                  controller: _packagesNumController,
-                                  textAlign: TextAlign.center,
-                                  focusNode: _nodePackages,
-                                  keyboardType: TextInputType.number,
-                                  inputFormatters: [DecimalFormatter()],
-                                  style: const TextStyle(fontSize: 17),
-                                  decoration: const InputDecoration(
-                                    labelText: "عدد الطرود",
+                                    buttonStyleData: const ButtonStyleData(
+                                      padding:
+                                          EdgeInsets.symmetric(horizontal: 16),
+                                      height: 40,
+                                      width: 140,
+                                    ),
+                                    menuItemStyleData: const MenuItemStyleData(
+                                      height: 40,
+                                    ),
                                   ),
+                                ),
+                              ),
+                              Visibility(
+                                visible: isdropdwonVisible,
+                                child: const SizedBox(
+                                  height: 24,
+                                ),
+                              ),
+                              BlocBuilder<FlagsBloc, FlagsState>(
+                                builder: (context, flagstate) {
+                                  if (flagstate is FlagsLoadedSuccess) {
+                                    return DropdownButtonHideUnderline(
+                                      child: Focus(
+                                        focusNode: _statenode,
+                                        onFocusChange: (bool focus) {
+                                          if (focus) {
+                                            setSelectedPanel(2);
+                                          }
+                                        },
+                                        child: DropdownButton2<Origin>(
+                                          isExpanded: true,
+                                          hint: Text(
+                                            originPlaceholder,
+                                            style: TextStyle(
+                                              fontSize: 18,
+                                              color:
+                                                  Theme.of(context).hintColor,
+                                            ),
+                                          ),
+                                          items: flagstate.origins
+                                              .map((Origin item) =>
+                                                  DropdownMenuItem<Origin>(
+                                                    value: item,
+                                                    child: SizedBox(
+                                                      // width: 200,
+                                                      child: Row(
+                                                        children: [
+                                                          Img(
+                                                            item.imageURL!,
+                                                            height: 35,
+                                                            // semanticsLabel: 'A shark?!',
+
+                                                            placeholder:
+                                                                const CircularProgressIndicator(),
+                                                          ),
+                                                          const SizedBox(
+                                                              width: 7),
+                                                          Container(
+                                                            constraints:
+                                                                BoxConstraints(
+                                                              maxWidth: 280.w,
+                                                            ),
+                                                            child: Text(
+                                                              item.label!,
+                                                              overflow:
+                                                                  TextOverflow
+                                                                      .ellipsis,
+                                                              // maxLines: 2,
+                                                              style:
+                                                                  const TextStyle(
+                                                                fontSize: 17,
+                                                              ),
+                                                            ),
+                                                          ),
+                                                        ],
+                                                        // subtitle: Text('\$${suggestion['price']}'),
+                                                      ),
+                                                    ),
+                                                  ))
+                                              .toList(),
+                                          value: selectedOrigin,
+                                          onChanged: (Origin? value) {
+                                            // setState(() {
+                                            //   selectedOrigin = value;
+                                            // });
+                                            selectOrigin(value!);
+                                          },
+                                          dropdownSearchData:
+                                              DropdownSearchData(
+                                            searchController: _originController,
+                                            searchInnerWidgetHeight: 60,
+                                            searchInnerWidget: Container(
+                                              height: 60,
+                                              padding: const EdgeInsets.only(
+                                                top: 8,
+                                                bottom: 4,
+                                                right: 8,
+                                                left: 8,
+                                              ),
+                                              child: TextFormField(
+                                                expands: true,
+                                                maxLines: null,
+                                                controller: _originController,
+                                                onTap: () {
+                                                  setSelectedPanel(2);
+                                                  BlocProvider.of<
+                                                              BottomNavBarCubit>(
+                                                          context)
+                                                      .emitHide();
+                                                  _originController.selection =
+                                                      TextSelection(
+                                                          baseOffset: 0,
+                                                          extentOffset:
+                                                              _originController
+                                                                  .value
+                                                                  .text
+                                                                  .length);
+                                                },
+                                                decoration: InputDecoration(
+                                                  isDense: true,
+                                                  contentPadding:
+                                                      const EdgeInsets
+                                                          .symmetric(
+                                                    horizontal: 10,
+                                                    vertical: 8,
+                                                  ),
+                                                  hintText: 'اختر المنشأ',
+                                                  hintStyle: const TextStyle(
+                                                      fontSize: 12),
+                                                  border: OutlineInputBorder(
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            8),
+                                                  ),
+                                                ),
+                                                onFieldSubmitted: (value) {
+                                                  BlocProvider.of<
+                                                              BottomNavBarCubit>(
+                                                          context)
+                                                      .emitShow();
+                                                },
+                                              ),
+                                            ),
+                                            searchMatchFn: (item, searchValue) {
+                                              return item.value!.label!
+                                                  .contains(searchValue);
+                                            },
+                                          ),
+                                          onMenuStateChange: (isOpen) {
+                                            if (isOpen) {
+                                              setState(() {
+                                                _originController.clear();
+                                              });
+                                            }
+                                          },
+                                          buttonStyleData: ButtonStyleData(
+                                            height: 50,
+                                            width: double.infinity,
+                                            padding: const EdgeInsets.symmetric(
+                                              horizontal: 9.0,
+                                            ),
+
+                                            decoration: BoxDecoration(
+                                              borderRadius:
+                                                  BorderRadius.circular(12),
+                                              border: Border.all(
+                                                color: Colors.black26,
+                                              ),
+                                              color: Colors.white,
+                                            ),
+                                            // elevation: 2,
+                                          ),
+                                          iconStyleData: const IconStyleData(
+                                            icon: Icon(
+                                              Icons.keyboard_arrow_down_sharp,
+                                            ),
+                                            iconSize: 20,
+                                            iconEnabledColor:
+                                                AppColor.AccentBlue,
+                                            iconDisabledColor: Colors.grey,
+                                          ),
+                                          dropdownStyleData: DropdownStyleData(
+                                            width: double.infinity,
+                                            maxHeight: MediaQuery.of(context)
+                                                    .size
+                                                    .height -
+                                                160.h,
+                                            padding: const EdgeInsets.all(8.0),
+                                            decoration: BoxDecoration(
+                                              borderRadius:
+                                                  BorderRadius.circular(14),
+                                              color: Colors.white,
+                                            ),
+                                            scrollbarTheme: ScrollbarThemeData(
+                                              radius: const Radius.circular(40),
+                                              thickness:
+                                                  MaterialStateProperty.all(6),
+                                              thumbVisibility:
+                                                  MaterialStateProperty.all(
+                                                      true),
+                                            ),
+                                          ),
+                                          menuItemStyleData:
+                                              const MenuItemStyleData(
+                                            height: 40,
+                                          ),
+                                        ),
+                                      ),
+                                    );
+                                  } else if (flagstate
+                                      is FlagsLoadingProgressState) {
+                                    return const Center(
+                                      child: LinearProgressIndicator(),
+                                    );
+                                  } else {
+                                    return Center(
+                                      child: GestureDetector(
+                                        onTap: () {
+                                          BlocProvider.of<FlagsBloc>(context)
+                                              .add(FlagsLoadEvent());
+                                        },
+                                        child: const Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.center,
+                                          children: [
+                                            Text(
+                                              "حدث خطأأثناء تحميل القائمة...  ",
+                                              style:
+                                                  TextStyle(color: Colors.red),
+                                            ),
+                                            Icon(
+                                              Icons.refresh,
+                                              color: Colors.grey,
+                                            )
+                                          ],
+                                        ),
+                                      ),
+                                    );
+                                  }
+                                },
+                              ),
+                              const SizedBox(
+                                height: 24,
+                              ),
+                              Visibility(
+                                visible: originerror,
+                                child: const Text(
+                                  "الرجاء اختيار المنشأ",
+                                  style: TextStyle(color: Colors.red),
+                                ),
+                              ),
+                              Visibility(
+                                visible: originerror,
+                                child: const SizedBox(
+                                  height: 24,
+                                ),
+                              ),
+                              Focus(
+                                focusNode: _statenode,
+                                onFocusChange: (bool focus) {
+                                  if (!focus) {
+                                    BlocProvider.of<BottomNavBarCubit>(context)
+                                        .emitShow();
+                                    FocusManager.instance.primaryFocus
+                                        ?.unfocus();
+                                  }
+                                },
+                                child: TextFormField(
+                                  controller: _wieghtController,
+                                  onTap: () {
+                                    setSelectedPanel(2);
+
+                                    BlocProvider.of<BottomNavBarCubit>(context)
+                                        .emitHide();
+                                    _wieghtController.selection = TextSelection(
+                                        baseOffset: 0,
+                                        extentOffset: _wieghtController
+                                            .value.text.length);
+                                  },
+                                  focusNode: _nodeWeight,
+                                  // enabled: !valueEnabled,
                                   scrollPadding: EdgeInsets.only(
                                       bottom: MediaQuery.of(context)
                                               .viewInsets
                                               .bottom +
                                           50),
-                                  onTap: () {
-                                    setSelectedPanel(2);
-                                    BlocProvider.of<BottomNavBarCubit>(context)
-                                        .emitHide();
-                                    _packagesNumController.selection =
-                                        TextSelection(
-                                            baseOffset: 0,
-                                            extentOffset: _packagesNumController
-                                                .value.text.length);
-                                  },
+                                  keyboardType:
+                                      const TextInputType.numberWithOptions(
+                                          signed: true, decimal: true),
+                                  inputFormatters: [DecimalFormatter()],
+                                  decoration: InputDecoration(
+                                    labelText: wieghtLabel,
+                                    prefixText: showunit ? wieghtUnit : "",
+                                    prefixStyle:
+                                        const TextStyle(color: Colors.black),
+                                    contentPadding: const EdgeInsets.symmetric(
+                                        vertical: 11.0, horizontal: 9.0),
+                                  ),
                                   onChanged: (value) {
-                                    if (value.isEmpty) {
+                                    if (_originController.text.isNotEmpty) {
                                       setState(() {
-                                        _packagesNumController.text = "0";
-                                        packageNum = 0;
+                                        originerror = false;
                                       });
+                                      if (value.isNotEmpty) {
+                                        // calculateTotalValueWithPrice(value);
+                                        wieghtValue = double.parse(value);
+                                      } else {
+                                        wieghtValue = 0.0;
+                                      }
+                                      evaluatePrice();
                                     } else {
-                                      packageNum = int.parse(double.parse(
-                                              _packagesNumController.text)
-                                          .toInt()
-                                          .toString());
+                                      setState(() {
+                                        originerror = true;
+                                      });
                                     }
                                   },
                                   autovalidateMode:
                                       AutovalidateMode.onUserInteraction,
                                   validator: (value) {
-                                    if (value!.isEmpty || value == "0") {
+                                    if (value!.isEmpty) {
                                       return "الرجاء ادخال القيمة";
                                     }
                                     return null;
                                   },
                                   onSaved: (newValue) {
-                                    _packagesNumController.text = newValue!;
+                                    _wieghtController.text = newValue!;
                                   },
                                   onFieldSubmitted: (value) {
                                     BlocProvider.of<BottomNavBarCubit>(context)
@@ -2482,273 +1765,804 @@ class _StepperOrderBrokerScreenState extends State<StepperOrderBrokerScreen> {
                                   },
                                 ),
                               ),
-                              SizedBox(
-                                height: 7.h,
-                              ),
-                              Padding(
-                                padding: EdgeInsets.symmetric(horizontal: 18.w),
-                                child: CheckboxListTile(
-                                    value: haveTabaleh,
-                                    title: const Text("مع طبالي؟"),
-                                    activeColor: AppColor.goldenYellow,
-                                    contentPadding: EdgeInsets.zero,
-                                    onChanged: (value) {
-                                      setSelectedPanel(3);
 
+                              const SizedBox(
+                                height: 24,
+                              ),
+                              Focus(
+                                focusNode: _statenode,
+                                onFocusChange: (bool focus) {
+                                  if (!focus) {
+                                    BlocProvider.of<BottomNavBarCubit>(context)
+                                        .emitShow();
+                                    FocusManager.instance.primaryFocus
+                                        ?.unfocus();
+                                  }
+                                },
+                                child: TextFormField(
+                                  controller: _valueController,
+                                  onTap: () {
+                                    BlocProvider.of<BottomNavBarCubit>(context)
+                                        .emitHide();
+                                    _valueController.selection = TextSelection(
+                                        baseOffset: 0,
+                                        extentOffset:
+                                            _valueController.value.text.length);
+                                  },
+                                  focusNode: _nodeValue,
+                                  // enabled: valueEnabled,
+                                  keyboardType:
+                                      const TextInputType.numberWithOptions(
+                                          signed: true, decimal: true),
+                                  scrollPadding: EdgeInsets.only(
+                                      bottom: MediaQuery.of(context)
+                                              .viewInsets
+                                              .bottom +
+                                          50),
+                                  inputFormatters: [DecimalFormatter()],
+                                  decoration: InputDecoration(
+                                    labelText: valueEnabled
+                                        ? "قيمة البضاعة الاجمالية بالدولار"
+                                        : "سعر الواحدة لدى الجمارك",
+                                  ),
+                                  onChanged: (value) {
+                                    if (_originController.text.isNotEmpty) {
                                       setState(() {
-                                        haveTabaleh = value!;
-                                        if (!value) {
-                                          _tabalehNumController.text = "0";
-                                          tabalehNum = 0;
-                                        }
+                                        originerror = false;
+                                      });
+                                      if (value.isNotEmpty) {
+                                        basePrice = double.parse(value);
+                                        // calculateTotalValue();
+                                      } else {
+                                        basePrice = 0.0;
+                                        // calculateTotalValue();
+                                      }
+                                      evaluatePrice();
+                                    } else {
+                                      setState(() {
+                                        originerror = true;
+                                      });
+                                    }
+                                  },
+                                  autovalidateMode:
+                                      AutovalidateMode.onUserInteraction,
+                                  validator: (value) {
+                                    if (value!.isEmpty) {
+                                      return "الرجاء ادخال القيمة";
+                                    }
+                                    return null;
+                                  },
+                                  onSaved: (newValue) {
+                                    _valueController.text = newValue!;
+                                  },
+                                  onFieldSubmitted: (value) {
+                                    BlocProvider.of<BottomNavBarCubit>(context)
+                                        .emitShow();
+                                  },
+                                ),
+                              ),
+                              const SizedBox(
+                                height: 12,
+                              ),
+                              Visibility(
+                                visible: isfeeequal001,
+                                child: CheckboxListTile(
+                                    value: rawMaterialValue,
+                                    title: const Text("هل المادة أولية؟"),
+                                    onChanged: (value) {
+                                      setState(() {
+                                        rawMaterialValue = value!;
+                                      });
+                                    }),
+                              ),
+                              // Visibility(
+                              //   visible: isfeeequal001,
+                              //   child: const SizedBox(
+                              //     height: 12,
+                              //   ),
+                              // ),
+                              Visibility(
+                                visible: isfeeequal001,
+                                child: CheckboxListTile(
+                                    value: industrialValue,
+                                    title: const Text("هل المادة صناعية؟"),
+                                    onChanged: (value) {
+                                      setState(() {
+                                        industrialValue = value!;
                                       });
                                     }),
                               ),
                               Visibility(
-                                visible: haveTabaleh,
-                                child: Padding(
-                                  padding:
-                                      EdgeInsets.symmetric(horizontal: 20.w),
-                                  child: Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
+                                visible: isfeeequal001,
+                                child: const SizedBox(
+                                  height: 12,
+                                ),
+                              ),
+                              Visibility(
+                                visible: isBrand,
+                                child: CheckboxListTile(
+                                    value: brandValue,
+                                    title: const Text("هل البضاعة ماركة؟"),
+                                    onChanged: (value) {
+                                      calculateExtrasPrice(1.5, value!);
+                                      setState(() {
+                                        brandValue = value;
+                                      });
+                                    }),
+                              ),
+                              Visibility(
+                                visible: isBrand,
+                                child: const SizedBox(
+                                  height: 12,
+                                ),
+                              ),
+                              Visibility(
+                                visible: isTubes,
+                                child: CheckboxListTile(
+                                    value: tubesValue,
+                                    title: const Text(
+                                        "هل قياس الأنابيب أقل أو يساوي 3inch؟"),
+                                    onChanged: (value) {
+                                      calculateExtrasPrice(.1, value!);
+                                      setState(() {
+                                        tubesValue = value;
+                                      });
+                                    }),
+                              ),
+                              Visibility(
+                                visible: isTubes,
+                                child: const SizedBox(
+                                  height: 12,
+                                ),
+                              ),
+                              Visibility(
+                                visible: isColored,
+                                child: CheckboxListTile(
+                                    value: colorValue,
+                                    title: const Text("هل الخيوط ملونة؟"),
+                                    onChanged: (value) {
+                                      calculateExtrasPrice(.1, value!);
+                                      setState(() {
+                                        colorValue = value;
+                                      });
+                                    }),
+                              ),
+                              Visibility(
+                                visible: isColored,
+                                child: const SizedBox(
+                                  height: 12,
+                                ),
+                              ),
+                              Visibility(
+                                visible: isLycra,
+                                child: CheckboxListTile(
+                                    value: lycraValue,
+                                    title: const Text("هل الخيوط ليكرا؟"),
+                                    onChanged: (value) {
+                                      calculateExtrasPrice(.05, value!);
+                                      setState(() {
+                                        lycraValue = value;
+                                      });
+                                    }),
+                              ),
+                              Visibility(
+                                visible: isLycra,
+                                child: const SizedBox(
+                                  height: 12,
+                                ),
+                              ),
+                              Text(
+                                !valueEnabled
+                                    ? "القيمة الاجمالية بالدولار :"
+                                    : "قيمة التحويل بالجنيه المصري :",
+                                style: const TextStyle(fontSize: 16),
+                              ),
+                              Text(f.format(
+                                  double.parse(syrianExchangeValue).toInt())),
+                              const Text(
+                                "قيمة الاجمالية بالجنيه المصري: ",
+                                style: TextStyle(fontSize: 16),
+                              ),
+                              Text(f.format(
+                                  double.parse(syrianTotalValue).toInt())),
+                              const Text(
+                                "قيمة البضاعة مع التأمين: ",
+                                style: TextStyle(fontSize: 16),
+                              ),
+                              Text(f.format(
+                                  double.parse(totalValueWithEnsurance)
+                                      .toInt())),
+                              const SizedBox(
+                                height: 12,
+                              ),
+                              Row(
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                children: [
+                                  Row(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.center,
                                     children: [
-                                      GestureDetector(
-                                        onTap: () {
-                                          setSelectedPanel(3);
-                                          setState(() {
-                                            tabalehNum++;
-                                            _tabalehNumController.text =
-                                                tabalehNum.toString();
-                                          });
-                                        },
-                                        child: Container(
-                                          padding: const EdgeInsets.all(3),
-                                          decoration: BoxDecoration(
-                                            border: Border.all(
-                                              color: Colors.grey[600]!,
-                                              width: 1,
-                                            ),
-                                            borderRadius:
-                                                BorderRadius.circular(45),
-                                          ),
-                                          child: Icon(Icons.add,
-                                              size: 40.w,
-                                              color: Colors.blue[200]!),
+                                      Text(
+                                        "الرسوم :  ",
+                                        style: TextStyle(
+                                          fontSize: 17,
+                                          fontWeight: FontWeight.bold,
+                                          color: AppColor.deepBlue,
                                         ),
                                       ),
                                       SizedBox(
-                                        width: 200.w,
-                                        height: 55.h,
-                                        child: TextField(
-                                          controller: _tabalehNumController,
-                                          focusNode: _nodeTabaleh,
-                                          textAlign: TextAlign.center,
-                                          style: const TextStyle(fontSize: 17),
-                                          keyboardType: TextInputType.number,
-                                          inputFormatters: [DecimalFormatter()],
-                                          decoration: const InputDecoration(
-                                            labelText: "العدد",
-                                            alignLabelWithHint: true,
-                                          ),
-                                          scrollPadding: EdgeInsets.only(
-                                              bottom: MediaQuery.of(context)
-                                                      .viewInsets
-                                                      .bottom +
-                                                  50),
-                                          onTap: () {
-                                            setSelectedPanel(2);
-                                            BlocProvider.of<BottomNavBarCubit>(
-                                                    context)
-                                                .emitHide();
-                                            _tabalehNumController.selection =
-                                                TextSelection(
-                                                    baseOffset: 0,
-                                                    extentOffset:
-                                                        _tabalehNumController
-                                                            .value.text.length);
-                                          },
-                                          onChanged: (value) {
-                                            if (value.isEmpty) {
-                                              setState(() {
-                                                tabalehNum = 0;
-                                              });
-                                            } else {
-                                              tabalehNum = int.parse(
-                                                  double.parse(
-                                                          _tabalehNumController
-                                                              .text)
-                                                      .toInt()
-                                                      .toString());
-                                            }
-                                          },
-                                          onSubmitted: (value) {
-                                            BlocProvider.of<BottomNavBarCubit>(
-                                                    context)
-                                                .emitShow();
-                                          },
-                                        ),
-                                      ),
-                                      // Text(
-                                      //   tabalehNum.toString(),
-                                      //   style: const TextStyle(fontSize: 30),
-                                      // ),
-                                      GestureDetector(
-                                          onTap: () {
-                                            setSelectedPanel(3);
-
-                                            if (tabalehNum > 0) {
-                                              setState(() {
-                                                tabalehNum--;
-                                                _tabalehNumController.text =
-                                                    tabalehNum.toString();
-                                              });
-                                            }
-                                          },
-                                          child: Container(
-                                            padding: const EdgeInsets.all(3),
-                                            decoration: BoxDecoration(
-                                              border: Border.all(
-                                                color: Colors.grey[600]!,
-                                                width: 1,
-                                              ),
-                                              borderRadius:
-                                                  BorderRadius.circular(45),
-                                            ),
-                                            child: Icon(Icons.remove,
-                                                size: 40.w,
-                                                color: Colors.grey[600]!),
-                                          )),
-                                    ],
-                                  ),
-                                ),
-                              ),
-                              const Divider(),
-                              SizedBox(
-                                height: 7.h,
-                              ),
-                              Visibility(
-                                visible: selectedStateError ||
-                                    selectedRadioTileError ||
-                                    calculatorError ||
-                                    packageError,
-                                child: const Padding(
-                                  padding: EdgeInsets.only(
-                                      top: 2.0,
-                                      bottom: 8.0,
-                                      right: 25.0,
-                                      left: 25.0),
-                                  child: Row(
-                                    mainAxisAlignment: MainAxisAlignment.start,
-                                    children: [
-                                      Text(
-                                        "الرجاء ملء الحقول الفارغة واستكمال باقي الخيارات",
-                                        style: TextStyle(
-                                          color: Colors.red,
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                              ),
-                              Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceAround,
-                                children: [
-                                  // CustomButton(
-                                  //   onTap: () {},
-                                  //   color: AppColor.deepYellow,
-                                  //   title: const SizedBox(
-                                  //       width: 100, child: Center(child: Text("إلغاء"))),
-                                  // ),
-                                  BlocConsumer<CalculateResultBloc,
-                                      CalculateResultState>(
-                                    listener: (context, state) {
-                                      if (state is CalculateResultSuccessed) {}
-                                    },
-                                    builder: (context, state) {
-                                      if (state is CalculateResultLoading) {
-                                        return CustomButton(
-                                            title: SizedBox(
-                                                width: 250.w,
-                                                child: const Center(
-                                                    child:
-                                                        CircularProgressIndicator())),
-                                            // color: AppColor.deepYellow,
-                                            onTap: () {});
-                                      }
-                                      if (state is CalculateResultFailed) {
-                                        return Text(state.error);
-                                      } else {
-                                        return CustomButton(
-                                          title: SizedBox(
-                                            width: 250.w,
-                                            child: const Center(
-                                              child: Text(
-                                                "التالي",
-                                                style: TextStyle(
+                                        width: 230.w,
+                                        child: BlocBuilder<CalculateResultBloc,
+                                            CalculateResultState>(
+                                          builder: (context, state) {
+                                            if (state
+                                                    is CalculateResultSuccessed &&
+                                                totalValueWithEnsurance !=
+                                                    "0.0") {
+                                              return Text(
+                                                f.format(state
+                                                    .result.finalTotal!
+                                                    .toInt()),
+                                                style: const TextStyle(
+                                                  fontSize: 16,
                                                   fontWeight: FontWeight.bold,
                                                 ),
+                                              );
+                                            } else if (state
+                                                is CalculateResultLoading) {
+                                              return const LinearProgressIndicator();
+                                            } else {
+                                              return const Text(
+                                                " _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ ",
+                                                style: TextStyle(
+                                                  fontSize: 16,
+                                                  fontWeight: FontWeight.bold,
+                                                ),
+                                              );
+                                            }
+                                          },
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                  BlocBuilder<CalculateResultBloc,
+                                      CalculateResultState>(
+                                    builder: (context, state) {
+                                      if (state is CalculateResultSuccessed &&
+                                          totalValueWithEnsurance != "0.0") {
+                                        return GestureDetector(
+                                          onTap: () {
+                                            Navigator.push(
+                                              context,
+                                              MaterialPageRoute(
+                                                builder: (context) =>
+                                                    TraderCalculatorResultScreen(),
                                               ),
+                                            );
+                                          },
+                                          child: SizedBox(
+                                            height: 50,
+                                            child: Column(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.center,
+                                              children: [
+                                                Text(
+                                                  "تفاصيل الرسوم",
+                                                  style: TextStyle(
+                                                    fontSize: 17,
+                                                    color: AppColor.deepBlue,
+                                                  ),
+                                                ),
+                                              ],
                                             ),
                                           ),
-                                          // color: AppColor.deepYellow,
-                                          onTap: () {
-                                            FocusManager.instance.primaryFocus
-                                                ?.unfocus();
-                                            if (selectedRadioTile.isNotEmpty) {
-                                              if (selectedStateCustome !=
-                                                      null &&
-                                                  selectedCustomeAgency !=
-                                                      null) {
-                                                _ordercalformkey.currentState
-                                                    ?.save();
-                                                if (_ordercalformkey
-                                                    .currentState!
-                                                    .validate()) {
+                                        );
+                                      } else {
+                                        return const SizedBox.shrink();
+                                      }
+                                    },
+                                  )
+                                ],
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                  Card(
+                    margin: const EdgeInsets.symmetric(vertical: 7),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                    child: Container(
+                      clipBehavior: Clip.antiAlias,
+                      padding: const EdgeInsets.all(8.0),
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(10),
+                        gradient: selectedPanel == 3
+                            ? LinearGradient(
+                                colors: [
+                                    AppColor.goldenYellow,
+                                    Colors.white,
+                                    Colors.white,
+                                    Colors.white,
+                                    Colors.white,
+                                    Colors.white,
+                                    Colors.white,
+                                    Colors.white,
+                                    Colors.white,
+                                    Colors.white,
+                                  ],
+                                begin: Alignment.topCenter,
+                                end: Alignment.bottomCenter)
+                            : null,
+                      ),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          SizedBox(
+                            height: 2.h,
+                          ),
+                          Text(
+                            "نوع الطرد",
+                            style: TextStyle(
+                              fontSize: 19,
+                              fontWeight: FontWeight.bold,
+                              color: AppColor.deepBlue,
+                            ),
+                          ),
+                          SizedBox(
+                              height: 140.h,
+                              child: BlocBuilder<PackageTypeBloc,
+                                  PackageTypeState>(
+                                builder: (context, state) {
+                                  if (state is PackageTypeLoadedSuccess) {
+                                    return Scrollbar(
+                                      controller: _scrollController,
+                                      thumbVisibility: true,
+                                      thickness: 2.0,
+                                      child: Padding(
+                                        padding: EdgeInsets.all(2.h),
+                                        child: ListView.builder(
+                                          controller: _scrollController,
+                                          itemCount: state.packageTypes.length,
+                                          scrollDirection: Axis.horizontal,
+                                          shrinkWrap: true,
+                                          itemBuilder: (context, index) {
+                                            return Padding(
+                                              padding: EdgeInsets.symmetric(
+                                                  horizontal: 5.w,
+                                                  vertical: 15.h),
+                                              child: GestureDetector(
+                                                onTap: () {
+                                                  setSelectedPanel(3);
                                                   setState(() {
-                                                    calculatorError = false;
+                                                    packageTypeId = state
+                                                        .packageTypes[index]
+                                                        .id!;
                                                   });
-                                                  _packagesformkey.currentState
-                                                      ?.save();
-                                                  if (_packagesformkey
-                                                      .currentState!
-                                                      .validate()) {
-                                                    setState(() {
-                                                      packageError = false;
-                                                    });
-                                                    // result.insurance = int.parse(
-                                                    //     totalValueWithEnsurance);
-                                                    // result.fee =
-                                                    //     0.01;
-                                                    // result.rawMaterial =
-                                                    //     rawMaterialValue ? 1 : 0;
-                                                    // result.industrial =
-                                                    //     industrialValue ? 1 : 0;
-                                                    // result.totalTax =
-                                                    //     selectedPackage!
-                                                    //         .totalTaxes!.totalTax!;
-                                                    // result.partialTax =
-                                                    //     selectedPackage!.totalTaxes!
-                                                    //         .partialTax!;
-                                                    // result.origin =
-                                                    //     selectedOrigin!.label!;
-                                                    // result.spendingFee =
-                                                    //     selectedPackage!
-                                                    //         .spendingFee!;
-                                                    // result.supportFee =
-                                                    //     selectedPackage!
-                                                    //         .supportFee!;
-                                                    // result.localFee =
-                                                    //     selectedPackage!.localFee!;
-                                                    // result.protectionFee =
-                                                    //     selectedPackage!
-                                                    //         .protectionFee!;
-                                                    // result.naturalFee =
-                                                    //     selectedPackage!
-                                                    //         .naturalFee!;
-                                                    // result.taxFee =
-                                                    //     selectedPackage!.taxFee!;
+                                                },
+                                                child: Stack(
+                                                  clipBehavior: Clip.none,
+                                                  children: [
+                                                    Container(
+                                                      width: 145.w,
+                                                      decoration: BoxDecoration(
+                                                        borderRadius:
+                                                            BorderRadius
+                                                                .circular(7),
+                                                        border: Border.all(
+                                                          color: packageTypeId ==
+                                                                  state
+                                                                      .packageTypes[
+                                                                          index]
+                                                                      .id!
+                                                              ? AppColor
+                                                                  .goldenYellow
+                                                              : AppColor
+                                                                  .deepBlue,
+                                                          width: 2.w,
+                                                        ),
+                                                      ),
+                                                      child: Column(
+                                                        mainAxisAlignment:
+                                                            MainAxisAlignment
+                                                                .center,
+                                                        children: [
+                                                          SvgPicture.network(
+                                                            state
+                                                                .packageTypes[
+                                                                    index]
+                                                                .image!,
+                                                            height: 50.h,
+                                                            // placeholder:
+                                                            //     Container(
+                                                            //   color: Colors
+                                                            //       .white,
+                                                            //   height:
+                                                            //       50.h,
+                                                            //   width: 50.h,
+                                                            // ),
+                                                          ),
+                                                          Text(
+                                                            state
+                                                                .packageTypes[
+                                                                    index]
+                                                                .name!,
+                                                            style: TextStyle(
+                                                              fontSize: 17.sp,
+                                                              color: AppColor
+                                                                  .deepBlue,
+                                                            ),
+                                                          ),
+                                                        ],
+                                                      ),
+                                                    ),
+                                                    packageTypeId ==
+                                                            state
+                                                                .packageTypes[
+                                                                    index]
+                                                                .id!
+                                                        ? Positioned(
+                                                            right: -7.w,
+                                                            top: -10.h,
+                                                            child: Container(
+                                                              padding:
+                                                                  const EdgeInsets
+                                                                      .all(2),
+                                                              decoration:
+                                                                  BoxDecoration(
+                                                                color: AppColor
+                                                                    .goldenYellow,
+                                                                borderRadius:
+                                                                    BorderRadius
+                                                                        .circular(
+                                                                            45),
+                                                              ),
+                                                              child: Icon(
+                                                                  Icons.check,
+                                                                  size: 16.w,
+                                                                  color: Colors
+                                                                      .white),
+                                                            ),
+                                                          )
+                                                        : const SizedBox
+                                                            .shrink()
+                                                  ],
+                                                ),
+                                              ),
+                                            );
+                                          },
+                                        ),
+                                      ),
+                                    );
+                                  } else {
+                                    return Shimmer.fromColors(
+                                      baseColor: (Colors.grey[300])!,
+                                      highlightColor: (Colors.grey[100])!,
+                                      enabled: true,
+                                      direction: ShimmerDirection.rtl,
+                                      child: ListView.builder(
+                                        shrinkWrap: true,
+                                        scrollDirection: Axis.horizontal,
+                                        itemBuilder: (_, __) => Padding(
+                                          padding: EdgeInsets.symmetric(
+                                              horizontal: 5.w, vertical: 15.h),
+                                          child: Container(
+                                            clipBehavior: Clip.antiAlias,
+                                            decoration: BoxDecoration(
+                                              color: Colors.white,
+                                              borderRadius:
+                                                  BorderRadius.circular(10),
+                                            ),
+                                            child: SizedBox(
+                                              width: 145.w,
+                                              height: 70.h,
+                                            ),
+                                          ),
+                                        ),
+                                        itemCount: 6,
+                                      ),
+                                    );
+                                  }
+                                },
+                              )),
+                          SizedBox(
+                            height: 7.h,
+                          ),
+                          const Divider(),
+                          SizedBox(
+                            height: 7.h,
+                          ),
+                          Form(
+                            key: _packagesformkey,
+                            child: TextFormField(
+                              controller: _packagesNumController,
+                              textAlign: TextAlign.center,
+                              focusNode: _nodePackages,
+                              keyboardType:
+                                  const TextInputType.numberWithOptions(
+                                      decimal: true, signed: true),
+                              inputFormatters: [DecimalFormatter()],
+                              style: const TextStyle(fontSize: 17),
+                              decoration: const InputDecoration(
+                                labelText: "عدد الطرود",
+                              ),
+                              scrollPadding: EdgeInsets.only(
+                                  bottom:
+                                      MediaQuery.of(context).viewInsets.bottom +
+                                          50),
+                              onTap: () {
+                                setSelectedPanel(2);
+                                BlocProvider.of<BottomNavBarCubit>(context)
+                                    .emitHide();
+                                _packagesNumController.selection =
+                                    TextSelection(
+                                        baseOffset: 0,
+                                        extentOffset: _packagesNumController
+                                            .value.text.length);
+                              },
+                              onChanged: (value) {
+                                if (value.isEmpty) {
+                                  setState(() {
+                                    _packagesNumController.text = "0";
+                                    packageNum = 0;
+                                  });
+                                } else {
+                                  packageNum = int.parse(
+                                      double.parse(_packagesNumController.text)
+                                          .toInt()
+                                          .toString());
+                                }
+                              },
+                              autovalidateMode:
+                                  AutovalidateMode.onUserInteraction,
+                              validator: (value) {
+                                if (value!.isEmpty || value == "0") {
+                                  return "الرجاء ادخال القيمة";
+                                }
+                                return null;
+                              },
+                              onSaved: (newValue) {
+                                _packagesNumController.text = newValue!;
+                              },
+                              onFieldSubmitted: (value) {
+                                BlocProvider.of<BottomNavBarCubit>(context)
+                                    .emitShow();
+                              },
+                            ),
+                          ),
+                          SizedBox(
+                            height: 7.h,
+                          ),
+                          Padding(
+                            padding: EdgeInsets.symmetric(horizontal: 18.w),
+                            child: CheckboxListTile(
+                                value: haveTabaleh,
+                                title: const Text("مع طبالي؟"),
+                                activeColor: AppColor.goldenYellow,
+                                contentPadding: EdgeInsets.zero,
+                                onChanged: (value) {
+                                  setSelectedPanel(3);
+
+                                  setState(() {
+                                    haveTabaleh = value!;
+                                    if (!value) {
+                                      _tabalehNumController.text = "0";
+                                      tabalehNum = 0;
+                                    }
+                                  });
+                                }),
+                          ),
+                          Visibility(
+                            visible: haveTabaleh,
+                            child: Padding(
+                              padding: EdgeInsets.symmetric(horizontal: 20.w),
+                              child: Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  GestureDetector(
+                                    onTap: () {
+                                      setSelectedPanel(3);
+                                      setState(() {
+                                        tabalehNum++;
+                                        _tabalehNumController.text =
+                                            tabalehNum.toString();
+                                      });
+                                    },
+                                    child: Container(
+                                      padding: const EdgeInsets.all(3),
+                                      decoration: BoxDecoration(
+                                        border: Border.all(
+                                          color: Colors.grey[600]!,
+                                          width: 1,
+                                        ),
+                                        borderRadius: BorderRadius.circular(45),
+                                      ),
+                                      child: Icon(Icons.add,
+                                          size: 40.w, color: Colors.blue[200]!),
+                                    ),
+                                  ),
+                                  SizedBox(
+                                    width: 200.w,
+                                    height: 55.h,
+                                    child: TextField(
+                                      controller: _tabalehNumController,
+                                      focusNode: _nodeTabaleh,
+                                      textAlign: TextAlign.center,
+                                      style: const TextStyle(fontSize: 17),
+                                      keyboardType:
+                                          const TextInputType.numberWithOptions(
+                                              decimal: true, signed: true),
+                                      inputFormatters: [DecimalFormatter()],
+                                      decoration: const InputDecoration(
+                                        labelText: "العدد",
+                                        alignLabelWithHint: true,
+                                      ),
+                                      scrollPadding: EdgeInsets.only(
+                                          bottom: MediaQuery.of(context)
+                                                  .viewInsets
+                                                  .bottom +
+                                              50),
+                                      onTap: () {
+                                        setSelectedPanel(2);
+                                        BlocProvider.of<BottomNavBarCubit>(
+                                                context)
+                                            .emitHide();
+                                        _tabalehNumController.selection =
+                                            TextSelection(
+                                                baseOffset: 0,
+                                                extentOffset:
+                                                    _tabalehNumController
+                                                        .value.text.length);
+                                      },
+                                      onChanged: (value) {
+                                        if (value.isEmpty) {
+                                          setState(() {
+                                            tabalehNum = 0;
+                                          });
+                                        } else {
+                                          tabalehNum = int.parse(double.parse(
+                                                  _tabalehNumController.text)
+                                              .toInt()
+                                              .toString());
+                                        }
+                                      },
+                                      onSubmitted: (value) {
+                                        BlocProvider.of<BottomNavBarCubit>(
+                                                context)
+                                            .emitShow();
+                                      },
+                                    ),
+                                  ),
+                                  // Text(
+                                  //   tabalehNum.toString(),
+                                  //   style: const TextStyle(fontSize: 30),
+                                  // ),
+                                  GestureDetector(
+                                      onTap: () {
+                                        setSelectedPanel(3);
+
+                                        if (tabalehNum > 0) {
+                                          setState(() {
+                                            tabalehNum--;
+                                            _tabalehNumController.text =
+                                                tabalehNum.toString();
+                                          });
+                                        }
+                                      },
+                                      child: Container(
+                                        padding: const EdgeInsets.all(3),
+                                        decoration: BoxDecoration(
+                                          border: Border.all(
+                                            color: Colors.grey[600]!,
+                                            width: 1,
+                                          ),
+                                          borderRadius:
+                                              BorderRadius.circular(45),
+                                        ),
+                                        child: Icon(Icons.remove,
+                                            size: 40.w,
+                                            color: Colors.grey[600]!),
+                                      )),
+                                ],
+                              ),
+                            ),
+                          ),
+                          const Divider(),
+                          SizedBox(
+                            height: 7.h,
+                          ),
+                          Visibility(
+                            visible: selectedStateError ||
+                                selectedRadioTileError ||
+                                calculatorError ||
+                                packageError,
+                            child: const Padding(
+                              padding: EdgeInsets.only(
+                                  top: 2.0,
+                                  bottom: 8.0,
+                                  right: 25.0,
+                                  left: 25.0),
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    "الرجاء ملء الحقول الفارغة واستكمال باقي الخيارات",
+                                    style: TextStyle(
+                                      color: Colors.red,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceAround,
+                            children: [
+                              // CustomButton(
+                              //   onTap: () {},
+                              //   color: AppColor.deepYellow,
+                              //   title: const SizedBox(
+                              //       width: 100, child: Center(child: Text("إلغاء"))),
+                              // ),
+                              BlocConsumer<CalculateResultBloc,
+                                  CalculateResultState>(
+                                listener: (context, state) {
+                                  if (state is CalculateResultSuccessed) {}
+                                },
+                                builder: (context, state) {
+                                  if (state is CalculateResultLoading) {
+                                    return CustomButton(
+                                        title: SizedBox(
+                                            width: 250.w,
+                                            child: const Center(
+                                                child:
+                                                    CircularProgressIndicator())),
+                                        // color: AppColor.deepYellow,
+                                        onTap: () {});
+                                  }
+                                  if (state is CalculateResultFailed) {
+                                    return Text(state.error);
+                                  } else {
+                                    return CustomButton(
+                                      title: SizedBox(
+                                        width: 250.w,
+                                        child: const Center(
+                                          child: Text(
+                                            "التالي",
+                                            style: TextStyle(
+                                              fontWeight: FontWeight.bold,
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                      // color: AppColor.deepYellow,
+                                      onTap: () {
+                                        FocusManager.instance.primaryFocus
+                                            ?.unfocus();
+                                        if (selectedRadioTile.isNotEmpty) {
+                                          if (selectedStateCustome != null &&
+                                              selectedCustomeAgency != null) {
+                                            _ordercalformkey.currentState
+                                                ?.save();
+                                            if (_ordercalformkey.currentState!
+                                                .validate()) {
+                                              setState(() {
+                                                calculatorError = false;
+                                              });
+                                              _packagesformkey.currentState
+                                                  ?.save();
+                                              if (_packagesformkey.currentState!
+                                                  .validate()) {
+                                                setState(() {
+                                                  packageError = false;
+                                                });
+
+                                                if (selectedOrigin != null) {
+                                                  if (selectedPackage != null) {
                                                     Navigator.push(
                                                       context,
                                                       MaterialPageRoute(
@@ -2788,18 +2602,24 @@ class _StepperOrderBrokerScreenState extends State<StepperOrderBrokerScreen> {
                                                       ),
                                                     );
                                                   } else {
-                                                    setSelectedPanel(3);
-
                                                     setState(() {
-                                                      packageError = true;
+                                                      feeerror = true;
+                                                      calculatorError = true;
                                                     });
+                                                    setSelectedPanel(2);
+                                                    Scrollable.ensureVisible(
+                                                      key3.currentContext!,
+                                                      duration: const Duration(
+                                                        milliseconds: 500,
+                                                      ),
+                                                    );
                                                   }
                                                 } else {
-                                                  setSelectedPanel(2);
-
                                                   setState(() {
+                                                    originerror = true;
                                                     calculatorError = true;
                                                   });
+                                                  setSelectedPanel(2);
                                                   Scrollable.ensureVisible(
                                                     key3.currentContext!,
                                                     duration: const Duration(
@@ -2808,42 +2628,60 @@ class _StepperOrderBrokerScreenState extends State<StepperOrderBrokerScreen> {
                                                   );
                                                 }
                                               } else {
-                                                setSelectedPanel(1);
+                                                setSelectedPanel(3);
+
                                                 setState(() {
-                                                  selectedStateError = true;
+                                                  packageError = true;
                                                 });
-                                                Scrollable.ensureVisible(
-                                                  key2.currentContext!,
-                                                  duration: const Duration(
-                                                    milliseconds: 500,
-                                                  ),
-                                                );
                                               }
                                             } else {
-                                              setSelectedPanel(0);
+                                              setSelectedPanel(2);
+
                                               setState(() {
-                                                selectedRadioTileError = true;
+                                                calculatorError = true;
                                               });
                                               Scrollable.ensureVisible(
-                                                key1.currentContext!,
+                                                key3.currentContext!,
                                                 duration: const Duration(
                                                   milliseconds: 500,
                                                 ),
                                               );
                                             }
-                                          },
-                                        );
-                                      }
-                                    },
-                                  ),
-                                ],
-                              ),
-                              SizedBox(
-                                height: 7.h,
+                                          } else {
+                                            setSelectedPanel(1);
+                                            setState(() {
+                                              selectedStateError = true;
+                                            });
+                                            Scrollable.ensureVisible(
+                                              key2.currentContext!,
+                                              duration: const Duration(
+                                                milliseconds: 500,
+                                              ),
+                                            );
+                                          }
+                                        } else {
+                                          setSelectedPanel(0);
+                                          setState(() {
+                                            selectedRadioTileError = true;
+                                          });
+                                          Scrollable.ensureVisible(
+                                            key1.currentContext!,
+                                            duration: const Duration(
+                                              milliseconds: 500,
+                                            ),
+                                          );
+                                        }
+                                      },
+                                    );
+                                  }
+                                },
                               ),
                             ],
                           ),
-                        ),
+                          SizedBox(
+                            height: 7.h,
+                          ),
+                        ],
                       ),
                     ),
                   ),

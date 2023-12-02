@@ -890,7 +890,9 @@ class _TraderHomeScreenState extends State<TraderHomeScreen>
       setState(() {
         basePrice = 0.0;
 
-        _valueController.text = "0.0";
+        if (_valueController.text.isEmpty) {
+          _valueController.text = "0.0";
+        }
         valueEnabled = true;
         syrianExchangeValue = "30";
       });
@@ -1875,6 +1877,14 @@ class _TraderHomeScreenState extends State<TraderHomeScreen>
                                                         .naturalFee!;
                                                 result.taxFee =
                                                     selectedPackage!.taxFee!;
+                                                result.weight =
+                                                    wieghtValue.toInt();
+                                                result.price =
+                                                    basePrice.toInt();
+                                                result.cnsulate = 1;
+                                                result.dolar = 6565;
+                                                result.arabic_stamp = 650;
+                                                result.import_fee = 0.01;
                                                 BlocProvider.of<
                                                             CalculateResultBloc>(
                                                         context)
