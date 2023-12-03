@@ -1626,8 +1626,8 @@ class _StepperOrderBrokerScreenState extends State<StepperOrderBrokerScreen> {
                                             width: double.infinity,
                                             maxHeight: MediaQuery.of(context)
                                                     .size
-                                                    .height *
-                                                .84,
+                                                    .height -
+                                                (160.h),
                                             padding: const EdgeInsets.all(8.0),
                                             decoration: BoxDecoration(
                                               borderRadius:

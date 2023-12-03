@@ -13,10 +13,9 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: 160.h,
+      height: 122.h,
       padding: EdgeInsets.only(bottom: 6.h),
       decoration: BoxDecoration(
-        // color: AppColor.deepBlue,
         gradient: LinearGradient(
           colors: [
             AppColor.deepAppBarBlue,
@@ -27,15 +26,10 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
           begin: Alignment.centerRight,
           end: Alignment.centerLeft,
         ),
-        // borderRadius: const BorderRadius.only(
-        //   bottomLeft: Radius.circular(20.0),
-        //   bottomRight: Radius.circular(20.0),
-        // ),
       ),
       child: Padding(
         padding: EdgeInsets.symmetric(horizontal: 12.w),
         child: Column(children: [
-          // const Spacer(),
           SizedBox(
             height: 20.h,
           ),
@@ -88,7 +82,6 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
                   InkWell(
                     // borderRadius: BorderRadius.circular(45),
                     onTap: () {
-                      print("asdasd");
                       // scaffoldKey.currentState!.openDrawer();
                     },
                     child: Padding(
