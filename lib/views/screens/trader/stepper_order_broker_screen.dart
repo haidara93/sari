@@ -1569,7 +1569,12 @@ class _StepperOrderBrokerScreenState extends State<StepperOrderBrokerScreen> {
                                                 ],
                                                 // subtitle: Text('\$${suggestion['price']}'),
                                               )
-                                            : const Text("اختر المنشأ");
+                                            : Text(
+                                                "اختر المنشأ",
+                                                style: TextStyle(
+                                                    fontSize: 18,
+                                                    color: Colors.grey[600]!),
+                                              );
                                       },
                                       dropdownButtonProps:
                                           const DropdownButtonProps(

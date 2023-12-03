@@ -858,7 +858,11 @@ class _CalculatorWidgetState extends State<CalculatorWidget> {
                                 ],
                                 // subtitle: Text('\$${suggestion['price']}'),
                               )
-                            : const Text("اختر المنشأ");
+                            : Text(
+                                "اختر المنشأ",
+                                style: TextStyle(
+                                    fontSize: 18, color: Colors.grey[600]!),
+                              );
                       },
                       dropdownButtonProps: const DropdownButtonProps(
                         icon: Icon(
