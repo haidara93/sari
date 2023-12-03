@@ -13,6 +13,7 @@ import 'package:custome_mobile/views/screens/trader/trader_calculator_result_scr
 import 'package:custome_mobile/views/widgets/custom_botton.dart';
 import 'package:custome_mobile/views/widgets/highlight_text.dart';
 import 'package:dropdown_button2/dropdown_button2.dart';
+import 'package:dropdown_search/dropdown_search.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -757,165 +758,122 @@ class _CalculatorWidgetState extends State<CalculatorWidget> {
               BlocBuilder<FlagsBloc, FlagsState>(
                 builder: (context, flagstate) {
                   if (flagstate is FlagsLoadedSuccess) {
-                    return DropdownButtonHideUnderline(
-                      child: DropdownButton2<Origin>(
-                        isExpanded: true,
-                        hint: Text(
-                          "اختر المنشأ",
-                          style: TextStyle(
-                            fontSize: 15,
-                            color: Theme.of(context).hintColor,
-                          ),
-                        ),
-                        items: flagstate.origins
-                            .map((Origin item) => DropdownMenuItem<Origin>(
-                                  value: item,
-                                  child: SizedBox(
-                                    // width: 200,
-                                    child: Row(
-                                      children: [
-                                        SizedBox(
-                                          height: 35,
-                                          width: 55,
-                                          child: SvgPicture.network(
-                                            item.imageURL!,
-                                            height: 35,
-                                            width: 55,
-                                            // semanticsLabel: 'A shark?!',
-                                            placeholderBuilder:
-                                                (BuildContext context) =>
-                                                    Container(
-                                              height: 35.h,
-                                              width: 45.w,
-                                              decoration: BoxDecoration(
-                                                color: Colors.grey[200],
-                                                borderRadius:
-                                                    BorderRadius.circular(5),
-                                              ),
-                                            ),
-                                          ),
-                                        ),
-                                        const SizedBox(width: 7),
-                                        Container(
-                                          constraints: BoxConstraints(
-                                            maxWidth: 280.w,
-                                          ),
-                                          child: Text(
-                                            item.label!,
-                                            overflow: TextOverflow.ellipsis,
-                                            // maxLines: 2,
-                                          ),
-                                        ),
-                                      ],
-                                      // subtitle: Text('\$${suggestion['price']}'),
+                    return DropdownSearch<Origin>(
+                      popupProps: PopupProps.modalBottomSheet(
+                        showSearchBox: true,
+
+                        itemBuilder: (context, item, isSelected) {
+                          return Padding(
+                            padding: EdgeInsets.symmetric(horizontal: 12.w),
+                            // width: 200,
+                            child: Row(
+                              children: [
+                                SvgPicture.network(
+                                  item.imageURL!,
+                                  height: 45.h,
+                                  width: 55.w,
+                                  placeholderBuilder: (context) => Container(
+                                    height: 45.h,
+                                    width: 55.w,
+                                    decoration: BoxDecoration(
+                                      color: Colors.grey[200],
+                                      borderRadius: BorderRadius.circular(5),
                                     ),
                                   ),
-                                ))
-                            .toList(),
-                        value: selectedOrigin,
-                        onChanged: (Origin? value) {
-                          // setState(() {
-                          //   selectedOrigin = value;
-                          // });
-                          selectOrigin(value!);
-                        },
-                        dropdownSearchData: DropdownSearchData(
-                          searchController: widget.originController,
-                          searchInnerWidgetHeight: 60,
-                          searchInnerWidget: Container(
-                            height: 60,
-                            padding: const EdgeInsets.only(
-                              top: 8,
-                              bottom: 4,
-                              right: 8,
-                              left: 8,
-                            ),
-                            child: TextFormField(
-                              expands: true,
-                              maxLines: null,
-                              controller: widget.originController,
-                              onTap: () {
-                                widget.originController!.selection =
-                                    TextSelection(
-                                        baseOffset: 0,
-                                        extentOffset: widget.originController!
-                                            .value.text.length);
-                              },
-                              decoration: InputDecoration(
-                                isDense: true,
-                                contentPadding: const EdgeInsets.symmetric(
-                                  horizontal: 10,
-                                  vertical: 8,
                                 ),
-                                labelText: 'اختر المنشأ',
-                                hintStyle: const TextStyle(fontSize: 12),
-                                border: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(8),
+                                const SizedBox(width: 12),
+                                Container(
+                                  constraints: BoxConstraints(
+                                    maxWidth: 280.w,
+                                  ),
+                                  child: Text(
+                                    item.label!,
+                                    overflow: TextOverflow.ellipsis,
+                                    // maxLines: 2,
+                                    style: const TextStyle(
+                                      fontSize: 19,
+                                    ),
+                                  ),
                                 ),
-                              ),
-                              onTapOutside: (event) {
-                                widget.unfocus;
-                                BlocProvider.of<BottomNavBarCubit>(context)
-                                    .emitShow();
-                              },
-                              onFieldSubmitted: (value) {
-                                widget.unfocus;
-                                BlocProvider.of<BottomNavBarCubit>(context)
-                                    .emitShow();
-                              },
+                              ],
+                              // subtitle: Text('\$${suggestion['price']}'),
                             ),
-                          ),
-                          searchMatchFn: (item, searchValue) {
-                            return item.value!.label!.contains(searchValue);
-                          },
-                        ),
-                        onMenuStateChange: (isOpen) {
-                          if (isOpen) {
-                            setState(() {
-                              widget.originController!.clear();
-                            });
-                          }
+                          );
                         },
-                        buttonStyleData: ButtonStyleData(
-                          height: 50,
-                          width: double.infinity,
-                          padding: const EdgeInsets.only(left: 14, right: 14),
 
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(12),
-                            border: Border.all(
-                              color: Colors.black26,
+                        modalBottomSheetProps: const ModalBottomSheetProps(
+                          padding: EdgeInsets.all(8),
+                        ),
+
+                        containerBuilder: (context, popupWidget) {
+                          return Container(
+                            height: MediaQuery.of(context).size.height - 50.h,
+                            padding: const EdgeInsets.all(8),
+                            decoration: const BoxDecoration(
+                              borderRadius: BorderRadius.zero,
                             ),
-                            color: Colors.white,
-                          ),
-                          // elevation: 2,
-                        ),
-                        iconStyleData: const IconStyleData(
-                          icon: Icon(
-                            Icons.keyboard_arrow_down_sharp,
-                          ),
-                          iconSize: 20,
-                          iconEnabledColor: AppColor.AccentBlue,
-                          iconDisabledColor: Colors.grey,
-                        ),
-                        dropdownStyleData: DropdownStyleData(
-                          width: double.infinity,
-                          maxHeight: MediaQuery.of(context).size.height * .84,
-                          padding: const EdgeInsets.all(8.0),
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(14),
-                            color: Colors.white,
-                          ),
-                          scrollbarTheme: ScrollbarThemeData(
-                            radius: const Radius.circular(40),
-                            thickness: MaterialStateProperty.all(6),
-                            thumbVisibility: MaterialStateProperty.all(true),
-                          ),
-                        ),
-                        menuItemStyleData: const MenuItemStyleData(
-                          height: 40,
+                            child: popupWidget,
+                          );
+                        },
+                        // title: Text("اختر المنشأ"),
+                      ),
+                      items: flagstate.origins,
+                      dropdownDecoratorProps: const DropDownDecoratorProps(
+                        dropdownSearchDecoration: InputDecoration(
+                          // labelText: "اختر المنشأ",
+                          hintText: "اختر المنشأ من القائمة",
                         ),
                       ),
+                      dropdownBuilder: (context, selectedItem) {
+                        return selectedItem != null
+                            ? Row(
+                                children: [
+                                  SvgPicture.network(
+                                    selectedItem!.imageURL!,
+                                    height: 35.h,
+                                    width: 45.w,
+                                    placeholderBuilder: (context) => Container(
+                                      height: 35.h,
+                                      width: 45.w,
+                                      decoration: BoxDecoration(
+                                        color: Colors.grey[200],
+                                        borderRadius: BorderRadius.circular(5),
+                                      ),
+                                    ),
+                                  ),
+                                  const SizedBox(width: 12),
+                                  Container(
+                                    constraints: BoxConstraints(
+                                      maxWidth: 280.w,
+                                    ),
+                                    child: Text(
+                                      selectedItem!.label!,
+                                      overflow: TextOverflow.ellipsis,
+                                      // maxLines: 2,
+                                      style: const TextStyle(
+                                        fontSize: 19,
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                                // subtitle: Text('\$${suggestion['price']}'),
+                              )
+                            : const Text("اختر المنشأ");
+                      },
+                      dropdownButtonProps: const DropdownButtonProps(
+                        icon: Icon(
+                          Icons.keyboard_arrow_down_sharp,
+                          color: AppColor.AccentBlue,
+                        ),
+                        iconSize: 20,
+                      ),
+                      filterFn: (item, filter) {
+                        return item.label!.contains(filter);
+                      },
+                      onChanged: (value) {
+                        selectOrigin(value!);
+                      },
+                      selectedItem: selectedOrigin,
                     );
                   } else if (flagstate is FlagsLoadingProgressState) {
                     return const Center(
@@ -946,6 +904,198 @@ class _CalculatorWidgetState extends State<CalculatorWidget> {
                   }
                 },
               ),
+              // BlocBuilder<FlagsBloc, FlagsState>(
+              //   builder: (context, flagstate) {
+              //     if (flagstate is FlagsLoadedSuccess) {
+              //       return DropdownButtonHideUnderline(
+              //         child: DropdownButton2<Origin>(
+              //           isExpanded: true,
+              //           hint: Text(
+              //             "اختر المنشأ",
+              //             style: TextStyle(
+              //               fontSize: 15,
+              //               color: Theme.of(context).hintColor,
+              //             ),
+              //           ),
+              //           items: flagstate.origins
+              //               .map((Origin item) => DropdownMenuItem<Origin>(
+              //                     value: item,
+              //                     child: SizedBox(
+              //                       // width: 200,
+              //                       child: Row(
+              //                         children: [
+              //                           SizedBox(
+              //                             height: 35,
+              //                             width: 55,
+              //                             child: SvgPicture.network(
+              //                               item.imageURL!,
+              //                               height: 35,
+              //                               width: 55,
+              //                               // semanticsLabel: 'A shark?!',
+              //                               placeholderBuilder:
+              //                                   (BuildContext context) =>
+              //                                       Container(
+              //                                 height: 35.h,
+              //                                 width: 45.w,
+              //                                 decoration: BoxDecoration(
+              //                                   color: Colors.grey[200],
+              //                                   borderRadius:
+              //                                       BorderRadius.circular(5),
+              //                                 ),
+              //                               ),
+              //                             ),
+              //                           ),
+              //                           const SizedBox(width: 7),
+              //                           Container(
+              //                             constraints: BoxConstraints(
+              //                               maxWidth: 280.w,
+              //                             ),
+              //                             child: Text(
+              //                               item.label!,
+              //                               overflow: TextOverflow.ellipsis,
+              //                               // maxLines: 2,
+              //                             ),
+              //                           ),
+              //                         ],
+              //                         // subtitle: Text('\$${suggestion['price']}'),
+              //                       ),
+              //                     ),
+              //                   ))
+              //               .toList(),
+              //           value: selectedOrigin,
+              //           onChanged: (Origin? value) {
+              //             // setState(() {
+              //             //   selectedOrigin = value;
+              //             // });
+              //             selectOrigin(value!);
+              //           },
+              //           dropdownSearchData: DropdownSearchData(
+              //             searchController: widget.originController,
+              //             searchInnerWidgetHeight: 60,
+              //             searchInnerWidget: Container(
+              //               height: 60,
+              //               padding: const EdgeInsets.only(
+              //                 top: 8,
+              //                 bottom: 4,
+              //                 right: 8,
+              //                 left: 8,
+              //               ),
+              //               child: TextFormField(
+              //                 expands: true,
+              //                 maxLines: null,
+              //                 controller: widget.originController,
+              //                 onTap: () {
+              //                   widget.originController!.selection =
+              //                       TextSelection(
+              //                           baseOffset: 0,
+              //                           extentOffset: widget.originController!
+              //                               .value.text.length);
+              //                 },
+              //                 decoration: InputDecoration(
+              //                   isDense: true,
+              //                   contentPadding: const EdgeInsets.symmetric(
+              //                     horizontal: 10,
+              //                     vertical: 8,
+              //                   ),
+              //                   labelText: 'اختر المنشأ',
+              //                   hintStyle: const TextStyle(fontSize: 12),
+              //                   border: OutlineInputBorder(
+              //                     borderRadius: BorderRadius.circular(8),
+              //                   ),
+              //                 ),
+              //                 onTapOutside: (event) {
+              //                   widget.unfocus;
+              //                   BlocProvider.of<BottomNavBarCubit>(context)
+              //                       .emitShow();
+              //                 },
+              //                 onFieldSubmitted: (value) {
+              //                   widget.unfocus;
+              //                   BlocProvider.of<BottomNavBarCubit>(context)
+              //                       .emitShow();
+              //                 },
+              //               ),
+              //             ),
+              //             searchMatchFn: (item, searchValue) {
+              //               return item.value!.label!.contains(searchValue);
+              //             },
+              //           ),
+              //           onMenuStateChange: (isOpen) {
+              //             if (isOpen) {
+              //               setState(() {
+              //                 widget.originController!.clear();
+              //               });
+              //             }
+              //           },
+              //           buttonStyleData: ButtonStyleData(
+              //             height: 50,
+              //             width: double.infinity,
+              //             padding: const EdgeInsets.only(left: 14, right: 14),
+
+              //             decoration: BoxDecoration(
+              //               borderRadius: BorderRadius.circular(12),
+              //               border: Border.all(
+              //                 color: Colors.black26,
+              //               ),
+              //               color: Colors.white,
+              //             ),
+              //             // elevation: 2,
+              //           ),
+              //           iconStyleData: const IconStyleData(
+              //             icon: Icon(
+              //               Icons.keyboard_arrow_down_sharp,
+              //             ),
+              //             iconSize: 20,
+              //             iconEnabledColor: AppColor.AccentBlue,
+              //             iconDisabledColor: Colors.grey,
+              //           ),
+              //           dropdownStyleData: DropdownStyleData(
+              //             width: double.infinity,
+              //             maxHeight: MediaQuery.of(context).size.height * .84,
+              //             padding: const EdgeInsets.all(8.0),
+              //             decoration: BoxDecoration(
+              //               borderRadius: BorderRadius.circular(14),
+              //               color: Colors.white,
+              //             ),
+              //             scrollbarTheme: ScrollbarThemeData(
+              //               radius: const Radius.circular(40),
+              //               thickness: MaterialStateProperty.all(6),
+              //               thumbVisibility: MaterialStateProperty.all(true),
+              //             ),
+              //           ),
+              //           menuItemStyleData: const MenuItemStyleData(
+              //             height: 40,
+              //           ),
+              //         ),
+              //       );
+              //     } else if (flagstate is FlagsLoadingProgressState) {
+              //       return const Center(
+              //         child: LinearProgressIndicator(),
+              //       );
+              //     } else {
+              //       return Center(
+              //         child: GestureDetector(
+              //           onTap: () {
+              //             BlocProvider.of<FlagsBloc>(context)
+              //                 .add(FlagsLoadEvent());
+              //           },
+              //           child: const Row(
+              //             mainAxisAlignment: MainAxisAlignment.center,
+              //             children: [
+              //               Text(
+              //                 "حدث خطأأثناء تحميل القائمة...  ",
+              //                 style: TextStyle(color: Colors.red),
+              //               ),
+              //               Icon(
+              //                 Icons.refresh,
+              //                 color: Colors.grey,
+              //               )
+              //             ],
+              //           ),
+              //         ),
+              //       );
+              //     }
+              //   },
+              // ),
               const SizedBox(
                 height: 14,
               ),
