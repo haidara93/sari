@@ -44,6 +44,7 @@ dependencies:
   flutter_keyboard_visibility: ^5.4.1
   provider:
   keyboard_actions: ^4.2.0
+  dropdown_search: ^5.0.6
 
 dev_dependencies:
   flutter_test:

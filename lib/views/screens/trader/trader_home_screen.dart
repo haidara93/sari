@@ -1454,12 +1454,25 @@ class _TraderHomeScreenState extends State<TraderHomeScreen>
                                                         children: [
                                                           SvgPicture.network(
                                                             item.imageURL!,
-                                                            height: 35,
+                                                            height: 35.h,
+                                                            width: 45.w,
                                                             // semanticsLabel: 'A shark?!',
                                                             placeholderBuilder:
                                                                 (BuildContext
                                                                         context) =>
-                                                                    const CircularProgressIndicator(),
+                                                                    Container(
+                                                              height: 35.h,
+                                                              width: 45.w,
+                                                              decoration:
+                                                                  BoxDecoration(
+                                                                color: Colors
+                                                                    .grey[200],
+                                                                borderRadius:
+                                                                    BorderRadius
+                                                                        .circular(
+                                                                            5),
+                                                              ),
+                                                            ),
                                                           ),
                                                           const SizedBox(
                                                               width: 7),
@@ -1484,9 +1497,6 @@ class _TraderHomeScreenState extends State<TraderHomeScreen>
                                               .toList(),
                                           value: selectedOrigin,
                                           onChanged: (Origin? value) {
-                                            // setState(() {
-                                            //   selectedOrigin = value;
-                                            // });
                                             selectOrigin(value!);
                                           },
                                           dropdownSearchData:
@@ -1551,7 +1561,6 @@ class _TraderHomeScreenState extends State<TraderHomeScreen>
                                             width: double.infinity,
                                             padding: const EdgeInsets.only(
                                                 left: 14, right: 14),
-
                                             decoration: BoxDecoration(
                                               borderRadius:
                                                   BorderRadius.circular(12),
@@ -1575,8 +1584,8 @@ class _TraderHomeScreenState extends State<TraderHomeScreen>
                                             width: double.infinity,
                                             maxHeight: MediaQuery.of(context)
                                                     .size
-                                                    .height -
-                                                160.h,
+                                                    .height *
+                                                .84,
                                             padding: const EdgeInsets.all(8.0),
                                             decoration: BoxDecoration(
                                               borderRadius:

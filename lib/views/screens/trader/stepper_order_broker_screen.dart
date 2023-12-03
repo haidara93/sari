@@ -19,8 +19,10 @@ import 'package:custome_mobile/views/screens/trader/trader_calculator_result_scr
 import 'package:custome_mobile/views/widgets/custom_botton.dart';
 import 'package:custome_mobile/views/widgets/highlight_text.dart';
 import 'package:dropdown_button2/dropdown_button2.dart';
+import 'package:dropdown_search/dropdown_search.dart';
 import 'package:ensure_visible_when_focused/ensure_visible_when_focused.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_img/flutter_img.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -1161,18 +1163,19 @@ class _StepperOrderBrokerScreenState extends State<StepperOrderBrokerScreen> {
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              Focus(
-                                focusNode: _ordernode,
-                                child: Text("نوع البضاعة",
-                                    style: TextStyle(
-                                      fontSize: 17,
-                                      fontWeight: FontWeight.bold,
-                                      color: AppColor.deepBlue,
-                                    )),
-                              ),
-
-                              Column(
+                              Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
                                 children: [
+                                  Focus(
+                                    focusNode: _ordernode,
+                                    child: Text("تفاصيل البضاعة",
+                                        style: TextStyle(
+                                          fontSize: 19,
+                                          fontWeight: FontWeight.bold,
+                                          color: AppColor.deepBlue,
+                                        )),
+                                  ),
                                   GestureDetector(
                                     onTap: () {
                                       BlocProvider.of<CalculatorPanelBloc>(
@@ -1193,8 +1196,8 @@ class _StepperOrderBrokerScreenState extends State<StepperOrderBrokerScreen> {
                                             MainAxisAlignment.end,
                                         children: [
                                           SizedBox(
-                                            width: 30.w,
-                                            height: 30.h,
+                                            width: 25.w,
+                                            height: 25.h,
                                             child: SvgPicture.asset(
                                               "assets/icons/tarrif_btn.svg",
                                             ),
@@ -1203,133 +1206,129 @@ class _StepperOrderBrokerScreenState extends State<StepperOrderBrokerScreen> {
                                             width: 3,
                                           ),
                                           Text(
-                                            "تصفح التعرفة الجمركية",
+                                            "تصفح التعرفة",
                                             textAlign: TextAlign.center,
                                             style: TextStyle(
                                                 color: AppColor.lightBlue,
-                                                fontSize: 13.sp,
+                                                fontSize: 15.sp,
                                                 fontWeight: FontWeight.bold),
                                           ),
                                         ],
                                       ),
                                     ),
                                   ),
-                                  Focus(
-                                    focusNode: _statenode,
-                                    onFocusChange: (bool focus) {
-                                      if (!focus) {
-                                        BlocProvider.of<BottomNavBarCubit>(
-                                                context)
-                                            .emitShow();
-                                        FocusManager.instance.primaryFocus
-                                            ?.unfocus();
-                                      }
-                                    },
-                                    child: TypeAheadField(
-                                      textFieldConfiguration:
-                                          TextFieldConfiguration(
-                                        // autofocus: true,
-                                        keyboardType: TextInputType.multiline,
-                                        maxLines: null,
-                                        controller: _typeAheadController,
-                                        scrollPadding: EdgeInsets.only(
-                                            bottom: MediaQuery.of(context)
-                                                    .viewInsets
-                                                    .bottom +
-                                                150),
-                                        onTap: () {
-                                          setSelectedPanel(2);
-                                          BlocProvider.of<BottomNavBarCubit>(
-                                                  context)
-                                              .emitHide();
-                                          _typeAheadController.selection =
-                                              TextSelection(
-                                                  baseOffset: 0,
-                                                  extentOffset:
-                                                      _typeAheadController
-                                                          .value.text.length);
-                                        },
-                                        style: const TextStyle(fontSize: 17),
-                                        decoration: InputDecoration(
-                                          labelText: "نوع البضاعة",
-                                          contentPadding:
-                                              const EdgeInsets.symmetric(
-                                                  vertical: 11.0,
-                                                  horizontal: 9.0),
-                                        ),
-                                        onSubmitted: (value) {
-                                          BlocProvider.of<BottomNavBarCubit>(
-                                                  context)
-                                              .emitShow();
-                                        },
-                                      ),
-                                      loadingBuilder: (context) {
-                                        return Container(
-                                          color: Colors.white,
-                                          child: const Center(
-                                            child: CircularProgressIndicator(),
-                                          ),
-                                        );
-                                      },
-                                      errorBuilder: (context, error) {
-                                        return Container(
-                                          color: Colors.white,
-                                        );
-                                      },
-                                      suggestionsCallback: (pattern) async {
-                                        // _debouncer.run(() {
-
-                                        // });
-                                        setState(() {
-                                          patternString = pattern;
-                                        });
-                                        return await CalculatorService
-                                            .getpackages(pattern);
-                                      },
-                                      itemBuilder: (context, suggestion) {
-                                        return Container(
-                                          color: Colors.white,
-                                          child: Column(
-                                            children: [
-                                              ListTile(
-                                                // leading: Icon(Icons.shopping_cart),
-                                                tileColor: Colors.white,
-                                                title: HighlightText(
-                                                  text: suggestion.label!,
-                                                  highlight: patternString,
-                                                  ignoreCase: false,
-                                                  highlightColor:
-                                                      AppColor.goldenYellow,
-                                                ),
-                                                // subtitle: Text('\$${suggestion['price']}'),
-                                              ),
-                                              Divider(
-                                                color: Colors.grey[300],
-                                                height: 3,
-                                              ),
-                                            ],
-                                          ),
-                                        );
-                                      },
-                                      onSuggestionSelected: (suggestion) {
-                                        setState(() {
-                                          _wieghtController.text = "";
-                                          _valueController.text = "";
-                                          syrianExchangeValue = "6565";
-                                          syrianTotalValue = "0.0";
-                                          totalValueWithEnsurance = "0.0";
-                                        });
-                                        selectSuggestion(suggestion);
-                                        BlocProvider.of<BottomNavBarCubit>(
-                                                context)
-                                            .emitShow();
-                                        // Navigator.of(context).push(MaterialPageRoute(
-                                        //   builder: (context) => ProductPage(product: suggestion)
-                                        // ));
-                                      },
-                                    ),
-                                  ),
                                 ],
+                              ),
+
+                              Focus(
+                                focusNode: _statenode,
+                                onFocusChange: (bool focus) {
+                                  if (!focus) {
+                                    BlocProvider.of<BottomNavBarCubit>(context)
+                                        .emitShow();
+                                    FocusManager.instance.primaryFocus
+                                        ?.unfocus();
+                                  }
+                                },
+                                child: TypeAheadField(
+                                  textFieldConfiguration:
+                                      TextFieldConfiguration(
+                                    // autofocus: true,
+                                    keyboardType: TextInputType.multiline,
+                                    maxLines: null,
+                                    controller: _typeAheadController,
+                                    scrollPadding: EdgeInsets.only(
+                                        bottom: MediaQuery.of(context)
+                                                .viewInsets
+                                                .bottom +
+                                            150),
+                                    onTap: () {
+                                      setSelectedPanel(2);
+                                      BlocProvider.of<BottomNavBarCubit>(
+                                              context)
+                                          .emitHide();
+                                      _typeAheadController.selection =
+                                          TextSelection(
+                                              baseOffset: 0,
+                                              extentOffset: _typeAheadController
+                                                  .value.text.length);
+                                    },
+                                    style: const TextStyle(fontSize: 17),
+                                    decoration: const InputDecoration(
+                                      labelText: "نوع البضاعة",
+                                      contentPadding: EdgeInsets.symmetric(
+                                          vertical: 11.0, horizontal: 9.0),
+                                    ),
+                                    onSubmitted: (value) {
+                                      BlocProvider.of<BottomNavBarCubit>(
+                                              context)
+                                          .emitShow();
+                                    },
+                                  ),
+                                  loadingBuilder: (context) {
+                                    return Container(
+                                      color: Colors.white,
+                                      child: const Center(
+                                        child: CircularProgressIndicator(),
+                                      ),
+                                    );
+                                  },
+                                  errorBuilder: (context, error) {
+                                    return Container(
+                                      color: Colors.white,
+                                    );
+                                  },
+                                  suggestionsCallback: (pattern) async {
+                                    // _debouncer.run(() {
+
+                                    // });
+                                    setState(() {
+                                      patternString = pattern;
+                                    });
+                                    return await CalculatorService.getpackages(
+                                        pattern);
+                                  },
+                                  itemBuilder: (context, suggestion) {
+                                    return Container(
+                                      color: Colors.white,
+                                      child: Column(
+                                        children: [
+                                          ListTile(
+                                            // leading: Icon(Icons.shopping_cart),
+                                            tileColor: Colors.white,
+                                            title: HighlightText(
+                                              text: suggestion.label!,
+                                              highlight: patternString,
+                                              ignoreCase: false,
+                                              highlightColor:
+                                                  AppColor.goldenYellow,
+                                            ),
+                                            // subtitle: Text('\$${suggestion['price']}'),
+                                          ),
+                                          Divider(
+                                            color: Colors.grey[300],
+                                            height: 3,
+                                          ),
+                                        ],
+                                      ),
+                                    );
+                                  },
+                                  onSuggestionSelected: (suggestion) {
+                                    setState(() {
+                                      _wieghtController.text = "";
+                                      _valueController.text = "";
+                                      syrianExchangeValue = "6565";
+                                      syrianTotalValue = "0.0";
+                                      totalValueWithEnsurance = "0.0";
+                                    });
+                                    selectSuggestion(suggestion);
+                                    BlocProvider.of<BottomNavBarCubit>(context)
+                                        .emitShow();
+                                    // Navigator.of(context).push(MaterialPageRoute(
+                                    //   builder: (context) => ProductPage(product: suggestion)
+                                    // ));
+                                  },
+                                ),
                               ),
                               Visibility(
                                 visible: allowexport,
@@ -1450,6 +1449,7 @@ class _StepperOrderBrokerScreenState extends State<StepperOrderBrokerScreen> {
                                   height: 24,
                                 ),
                               ),
+
                               BlocBuilder<FlagsBloc, FlagsState>(
                                 builder: (context, flagstate) {
                                   if (flagstate is FlagsLoadedSuccess) {
@@ -1479,13 +1479,25 @@ class _StepperOrderBrokerScreenState extends State<StepperOrderBrokerScreen> {
                                                       // width: 200,
                                                       child: Row(
                                                         children: [
-                                                          Img(
+                                                          SvgPicture.network(
                                                             item.imageURL!,
-                                                            height: 35,
-                                                            // semanticsLabel: 'A shark?!',
-
-                                                            placeholder:
-                                                                const CircularProgressIndicator(),
+                                                            height: 35.h,
+                                                            width: 45.w,
+                                                            placeholderBuilder:
+                                                                (context) =>
+                                                                    Container(
+                                                              height: 35.h,
+                                                              width: 45.w,
+                                                              decoration:
+                                                                  BoxDecoration(
+                                                                color: Colors
+                                                                    .grey[200],
+                                                                borderRadius:
+                                                                    BorderRadius
+                                                                        .circular(
+                                                                            5),
+                                                              ),
+                                                            ),
                                                           ),
                                                           const SizedBox(
                                                               width: 7),
@@ -1537,10 +1549,7 @@ class _StepperOrderBrokerScreenState extends State<StepperOrderBrokerScreen> {
                                                 controller: _originController,
                                                 onTap: () {
                                                   setSelectedPanel(2);
-                                                  BlocProvider.of<
-                                                              BottomNavBarCubit>(
-                                                          context)
-                                                      .emitHide();
+
                                                   _originController.selection =
                                                       TextSelection(
                                                           baseOffset: 0,
@@ -1617,8 +1626,8 @@ class _StepperOrderBrokerScreenState extends State<StepperOrderBrokerScreen> {
                                             width: double.infinity,
                                             maxHeight: MediaQuery.of(context)
                                                     .size
-                                                    .height -
-                                                160.h,
+                                                    .height *
+                                                .84,
                                             padding: const EdgeInsets.all(8.0),
                                             decoration: BoxDecoration(
                                               borderRadius:

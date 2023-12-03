@@ -491,18 +491,58 @@ class _CalculatorWidgetState extends State<CalculatorWidget> {
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text("نوع البضاعة",
-                  style: TextStyle(
-                    fontSize: 19,
-                    fontWeight: FontWeight.bold,
-                    color: AppColor.deepBlue,
-                  )),
-              Visibility(
-                visible: !widget.tariffButton!,
-                child: const SizedBox(
-                  height: 15,
-                ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Focus(
+                    // focusNode: _ordernode,
+                    child: Text("تفاصيل البضاعة",
+                        style: TextStyle(
+                          fontSize: 19,
+                          fontWeight: FontWeight.bold,
+                          color: AppColor.deepBlue,
+                        )),
+                  ),
+                  widget.tariffButton!
+                      ? GestureDetector(
+                          onTap: () {
+                            BlocProvider.of<CalculatorPanelBloc>(context)
+                                .add(TariffPanelOpenEvent());
+                            // BlocProvider.of<SectionBloc>(context)
+                            //     .add(SectionLoadEvent());
+                            widget.unfocus;
+                          },
+                          child: SizedBox(
+                            height: 40.h,
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.end,
+                              children: [
+                                SizedBox(
+                                  width: 25.w,
+                                  height: 25.h,
+                                  child: SvgPicture.asset(
+                                    "assets/icons/tarrif_btn.svg",
+                                  ),
+                                ),
+                                const SizedBox(
+                                  width: 3,
+                                ),
+                                Text(
+                                  "تصفح التعرفة",
+                                  textAlign: TextAlign.center,
+                                  style: TextStyle(
+                                      color: AppColor.lightBlue,
+                                      fontSize: 15.sp,
+                                      fontWeight: FontWeight.bold),
+                                ),
+                              ],
+                            ),
+                          ),
+                        )
+                      : const SizedBox.shrink(),
+                ],
               ),
+
               Focus(
                 focusNode: _statenode,
                 onFocusChange: (bool focus) {
@@ -510,117 +550,88 @@ class _CalculatorWidgetState extends State<CalculatorWidget> {
                     widget.unfocus;
                   }
                 },
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.end,
-                  children: [
-                    widget.tariffButton!
-                        ? GestureDetector(
-                            onTap: () {
-                              BlocProvider.of<CalculatorPanelBloc>(context)
-                                  .add(TariffPanelOpenEvent());
-                              // BlocProvider.of<SectionBloc>(context)
-                              //     .add(SectionLoadEvent());
-                              widget.unfocus;
-                            },
-                            child: SizedBox(
-                              height: 40.h,
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.end,
-                                children: [
-                                  SizedBox(
-                                    width: 30.w,
-                                    height: 30.h,
-                                    child: SvgPicture.asset(
-                                      "assets/icons/tarrif_btn.svg",
-                                    ),
-                                  ),
-                                  const SizedBox(
-                                    width: 3,
-                                  ),
-                                  Text(
-                                    "تصفح التعرفة الجمركية",
-                                    textAlign: TextAlign.center,
-                                    style: TextStyle(
-                                        color: AppColor.lightBlue,
-                                        fontSize: 13.sp,
-                                        fontWeight: FontWeight.bold),
-                                  ),
-                                ],
-                              ),
-                            ),
-                          )
-                        : const SizedBox.shrink(),
-                    TypeAheadField(
-                      textFieldConfiguration: TextFieldConfiguration(
-                        // autofocus: true,
-                        keyboardType: TextInputType.multiline,
-                        maxLines: null,
-                        controller: widget.typeAheadController,
-                        scrollPadding: EdgeInsets.only(
-                            bottom:
-                                MediaQuery.of(context).viewInsets.bottom + 150),
-                        onTap: () {
-                          // setSelectedPanel(2);
-                          BlocProvider.of<BottomNavBarCubit>(context)
-                              .emitHide();
-                          widget.typeAheadController!.selection = TextSelection(
-                              baseOffset: 0,
-                              extentOffset: widget
-                                  .typeAheadController!.value.text.length);
-                        },
+                child: TypeAheadField(
+                  textFieldConfiguration: TextFieldConfiguration(
+                    // autofocus: true,
+                    keyboardType: TextInputType.multiline,
+                    maxLines: null,
+                    controller: widget.typeAheadController,
+                    scrollPadding: EdgeInsets.only(
+                        bottom: MediaQuery.of(context).viewInsets.bottom + 150),
+                    onTap: () {
+                      // setSelectedPanel(2);
+                      BlocProvider.of<BottomNavBarCubit>(context).emitHide();
+                      widget.typeAheadController!.selection = TextSelection(
+                          baseOffset: 0,
+                          extentOffset:
+                              widget.typeAheadController!.value.text.length);
+                    },
 
-                        decoration: const InputDecoration(
-                          labelText: "نوع البضاعة",
-                          contentPadding: const EdgeInsets.symmetric(
-                            horizontal: 9.0,
-                            vertical: 11.0,
-                          ),
-                        ),
-                        onSubmitted: (value) {
-                          widget.unfocus;
-                        },
+                    decoration: const InputDecoration(
+                      labelText: "نوع البضاعة",
+                      contentPadding: EdgeInsets.symmetric(
+                        horizontal: 9.0,
+                        vertical: 11.0,
                       ),
-                      loadingBuilder: (context) {
-                        return const Center(
-                          child: CircularProgressIndicator(),
-                        );
-                      },
-                      suggestionsCallback: (pattern) async {
-                        setState(() {
-                          patternString = pattern;
-                        });
-                        return await CalculatorService.getpackages(pattern);
-                      },
-                      itemBuilder: (context, suggestion) {
-                        return Column(
-                          children: [
-                            ListTile(
-                              // leading: Icon(Icons.shopping_cart),
-                              title: HighlightText(
-                                text: suggestion.label!,
-                                highlight: patternString,
-                                ignoreCase: false,
-                                highlightColor: AppColor.goldenYellow,
-                              ),
-                              // subtitle: Text('\$${suggestion['price']}'),
-                            ),
-                            const Divider(),
-                          ],
-                        );
-                      },
-                      onSuggestionSelected: (suggestion) {
-                        // setState(() {
-                        //   widget.wieghtController!.text = "";
-                        //   widget.valueController!.text = "";
-                        //   syrianExchangeValue = "0.0";
-                        //   syrianTotalValue = "0.0";
-                        //   totalValueWithEnsurance = "0.0";
-                        // });
-                        selectSuggestion(suggestion);
-                        BlocProvider.of<BottomNavBarCubit>(context).emitShow();
-                      },
                     ),
-                  ],
+                    onSubmitted: (value) {
+                      widget.unfocus;
+                    },
+                  ),
+                  loadingBuilder: (context) {
+                    return Container(
+                      color: Colors.white,
+                      child: const Center(
+                        child: CircularProgressIndicator(),
+                      ),
+                    );
+                  },
+                  errorBuilder: (context, error) {
+                    return Container(
+                      color: Colors.white,
+                    );
+                  },
+                  suggestionsCallback: (pattern) async {
+                    setState(() {
+                      patternString = pattern;
+                    });
+                    return await CalculatorService.getpackages(pattern);
+                  },
+                  itemBuilder: (context, suggestion) {
+                    return Container(
+                      color: Colors.white,
+                      child: Column(
+                        children: [
+                          ListTile(
+                            // leading: Icon(Icons.shopping_cart),
+                            tileColor: Colors.white,
+                            title: HighlightText(
+                              text: suggestion.label!,
+                              highlight: patternString,
+                              ignoreCase: false,
+                              highlightColor: AppColor.goldenYellow,
+                            ),
+                            // subtitle: Text('\$${suggestion['price']}'),
+                          ),
+                          Divider(
+                            color: Colors.grey[300],
+                            height: 3,
+                          ),
+                        ],
+                      ),
+                    );
+                  },
+                  onSuggestionSelected: (suggestion) {
+                    // setState(() {
+                    //   widget.wieghtController!.text = "";
+                    //   widget.valueController!.text = "";
+                    //   syrianExchangeValue = "0.0";
+                    //   syrianTotalValue = "0.0";
+                    //   totalValueWithEnsurance = "0.0";
+                    // });
+                    selectSuggestion(suggestion);
+                    BlocProvider.of<BottomNavBarCubit>(context).emitShow();
+                  },
                 ),
               ),
               const SizedBox(
@@ -768,17 +779,20 @@ class _CalculatorWidgetState extends State<CalculatorWidget> {
                                           width: 55,
                                           child: SvgPicture.network(
                                             item.imageURL!,
-
                                             height: 35,
                                             width: 55,
                                             // semanticsLabel: 'A shark?!',
                                             placeholderBuilder:
                                                 (BuildContext context) =>
                                                     Container(
-                                                        height: 35,
-                                                        width: 55,
-                                                        color:
-                                                            Colors.grey[200]),
+                                              height: 35.h,
+                                              width: 45.w,
+                                              decoration: BoxDecoration(
+                                                color: Colors.grey[200],
+                                                borderRadius:
+                                                    BorderRadius.circular(5),
+                                              ),
+                                            ),
                                           ),
                                         ),
                                         const SizedBox(width: 7),
@@ -821,9 +835,6 @@ class _CalculatorWidgetState extends State<CalculatorWidget> {
                               maxLines: null,
                               controller: widget.originController,
                               onTap: () {
-                                // setSelectedPanel(2);
-                                BlocProvider.of<BottomNavBarCubit>(context)
-                                    .emitHide();
                                 widget.originController!.selection =
                                     TextSelection(
                                         baseOffset: 0,
@@ -889,7 +900,7 @@ class _CalculatorWidgetState extends State<CalculatorWidget> {
                         ),
                         dropdownStyleData: DropdownStyleData(
                           width: double.infinity,
-                          maxHeight: MediaQuery.of(context).size.height - 160.h,
+                          maxHeight: MediaQuery.of(context).size.height * .84,
                           padding: const EdgeInsets.all(8.0),
                           decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(14),
