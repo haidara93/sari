@@ -844,7 +844,7 @@ class _TraderHomeScreenState extends State<TraderHomeScreen>
   bool lycraValue = false;
   bool isColored = false;
   bool colorValue = false;
-  bool showunit = false;
+  bool showunit = true;
   bool isdropdwonVisible = false;
   String _placeholder = "";
 
@@ -3076,9 +3076,9 @@ class _TraderHomeScreenState extends State<TraderHomeScreen>
                         height: 5.h,
                       ),
                       index4 != (state.fees.length - 1)
-                          ? const Divider(
+                          ? Divider(
                               height: 1,
-                              color: Color.fromARGB(255, 229, 215, 94),
+                              color: AppColor.goldenYellow,
                             )
                           : const SizedBox.shrink(),
                     ],
@@ -3216,9 +3216,9 @@ class _TraderHomeScreenState extends State<TraderHomeScreen>
                       ),
                     ),
                     index3 != state.subchapters.length - 1
-                        ? const Divider(
+                        ? Divider(
                             height: 1,
-                            color: Color.fromARGB(255, 229, 215, 94),
+                            color: AppColor.goldenYellow,
                           )
                         : const SizedBox.shrink(),
                   ],
@@ -3357,9 +3357,9 @@ class _TraderHomeScreenState extends State<TraderHomeScreen>
                       ),
                     ),
                     index2 != (state.chapters.length - 1)
-                        ? const Divider(
+                        ? Divider(
                             height: 1,
-                            color: Color.fromARGB(255, 229, 215, 94),
+                            color: AppColor.goldenYellow,
                           )
                         : const SizedBox.shrink(),
                   ],

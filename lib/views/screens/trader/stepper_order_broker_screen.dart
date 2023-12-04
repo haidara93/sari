@@ -1,3 +1,6 @@
+import 'dart:async';
+import 'dart:convert';
+
 import 'package:awesome_snackbar_content/awesome_snackbar_content.dart';
 import 'package:custome_mobile/business_logic/bloc/agency_bloc.dart';
 import 'package:custome_mobile/business_logic/bloc/attachment_type_bloc.dart';
@@ -128,6 +131,8 @@ class _StepperOrderBrokerScreenState extends State<StepperOrderBrokerScreen> {
 
   final FocusNode _statenode = FocusNode();
   // final FocusNode _agencynode = FocusNode();
+  // Timer? _debounceTimer;
+
   @override
   void initState() {
     super.initState();
@@ -422,12 +427,18 @@ class _StepperOrderBrokerScreenState extends State<StepperOrderBrokerScreen> {
   }
 
   void evaluatePrice() {
-    if (valueEnabled) {
-      calculateTotalValue();
-    } else {
-      calculateTotalValueWithPrice();
+    if (selectedOrigin != null &&
+        selectedPackage != null &&
+        (_valueController.text.isNotEmpty && _valueController.text != "0.0") &&
+        (_wieghtController.text.isNotEmpty &&
+            _wieghtController.text != "0.0")) {
+      if (valueEnabled) {
+        calculateTotalValue();
+      } else {
+        calculateTotalValueWithPrice();
+      }
+      calculateTheFees();
     }
-    calculateTheFees();
   }
 
   void calculateTheFees() {
@@ -455,8 +466,9 @@ class _StepperOrderBrokerScreenState extends State<StepperOrderBrokerScreen> {
       result.price = basePrice.toInt();
       result.cnsulate = 1;
       result.dolar = 6565;
-      result.arabic_stamp = 650;
-      result.import_fee = 0.01;
+      result.arabic_stamp = selectedPackage!.totalTaxes!.arabicStamp!.toInt();
+      result.import_fee = selectedPackage!.importFee;
+      print(jsonEncode(result.toJson()));
       BlocProvider.of<CalculateResultBloc>(context)
           .add(CalculateTheResultEvent(result));
     }
@@ -1401,7 +1413,6 @@ class _StepperOrderBrokerScreenState extends State<StepperOrderBrokerScreen> {
                                         } else {
                                           setState(() {
                                             basePrice = 0.0;
-
                                             _valueController.text = "0.0";
                                             valueEnabled = true;
                                             syrianExchangeValue = "6565";
@@ -1461,23 +1472,26 @@ class _StepperOrderBrokerScreenState extends State<StepperOrderBrokerScreen> {
                                             (context, item, isSelected) {
                                           return Padding(
                                             padding: EdgeInsets.symmetric(
-                                                horizontal: 12.w),
-                                            // width: 200,
+                                                horizontal: 12.w,
+                                                vertical: 5.h),
                                             child: Row(
                                               children: [
-                                                SvgPicture.network(
-                                                  item.imageURL!,
-                                                  height: 45.h,
-                                                  width: 55.w,
-                                                  placeholderBuilder:
-                                                      (context) => Container(
-                                                    height: 45.h,
-                                                    width: 55.w,
-                                                    decoration: BoxDecoration(
-                                                      color: Colors.grey[200],
-                                                      borderRadius:
-                                                          BorderRadius.circular(
-                                                              5),
+                                                SizedBox(
+                                                  height: 40.h,
+                                                  width: 50.w,
+                                                  child: SvgPicture.network(
+                                                    item.imageURL!,
+                                                    clipBehavior:
+                                                        Clip.antiAlias,
+                                                    fit: BoxFit.cover,
+                                                    placeholderBuilder:
+                                                        (context) => Container(
+                                                      decoration: BoxDecoration(
+                                                        color: Colors.grey[200],
+                                                        borderRadius:
+                                                            BorderRadius
+                                                                .circular(5),
+                                                      ),
                                                     ),
                                                   ),
                                                 ),
@@ -1874,11 +1888,12 @@ class _StepperOrderBrokerScreenState extends State<StepperOrderBrokerScreen> {
                                 ),
                               ),
                               Focus(
-                                focusNode: _statenode,
+                                focusNode: _nodeWeight,
                                 onFocusChange: (bool focus) {
                                   if (!focus) {
                                     BlocProvider.of<BottomNavBarCubit>(context)
                                         .emitShow();
+                                    evaluatePrice();
                                     FocusManager.instance.primaryFocus
                                         ?.unfocus();
                                   }
@@ -1914,6 +1929,10 @@ class _StepperOrderBrokerScreenState extends State<StepperOrderBrokerScreen> {
                                     contentPadding: const EdgeInsets.symmetric(
                                         vertical: 11.0, horizontal: 9.0),
                                   ),
+                                  onTapOutside: (event) {},
+                                  onEditingComplete: () {
+                                    evaluatePrice();
+                                  },
                                   onChanged: (value) {
                                     if (_originController.text.isNotEmpty) {
                                       setState(() {
@@ -1946,6 +1965,8 @@ class _StepperOrderBrokerScreenState extends State<StepperOrderBrokerScreen> {
                                   onFieldSubmitted: (value) {
                                     BlocProvider.of<BottomNavBarCubit>(context)
                                         .emitShow();
+                                    FocusManager.instance.primaryFocus
+                                        ?.unfocus();
                                   },
                                 ),
                               ),
@@ -1954,11 +1975,12 @@ class _StepperOrderBrokerScreenState extends State<StepperOrderBrokerScreen> {
                                 height: 24,
                               ),
                               Focus(
-                                focusNode: _statenode,
+                                focusNode: _nodeValue,
                                 onFocusChange: (bool focus) {
                                   if (!focus) {
                                     BlocProvider.of<BottomNavBarCubit>(context)
                                         .emitShow();
+                                    evaluatePrice();
                                     FocusManager.instance.primaryFocus
                                         ?.unfocus();
                                   }
@@ -1973,6 +1995,7 @@ class _StepperOrderBrokerScreenState extends State<StepperOrderBrokerScreen> {
                                         extentOffset:
                                             _valueController.value.text.length);
                                   },
+                                  onTapOutside: (event) {},
                                   focusNode: _nodeValue,
                                   // enabled: valueEnabled,
                                   keyboardType:
@@ -1988,7 +2011,13 @@ class _StepperOrderBrokerScreenState extends State<StepperOrderBrokerScreen> {
                                     labelText: valueEnabled
                                         ? "قيمة البضاعة الاجمالية بالدولار"
                                         : "سعر الواحدة لدى الجمارك",
+                                    prefixText: "\$",
+                                    prefixStyle:
+                                        const TextStyle(color: Colors.black),
                                   ),
+                                  onEditingComplete: () {
+                                    evaluatePrice();
+                                  },
                                   onChanged: (value) {
                                     if (_originController.text.isNotEmpty) {
                                       setState(() {
@@ -2001,7 +2030,6 @@ class _StepperOrderBrokerScreenState extends State<StepperOrderBrokerScreen> {
                                         basePrice = 0.0;
                                         // calculateTotalValue();
                                       }
-                                      evaluatePrice();
                                     } else {
                                       setState(() {
                                         originerror = true;
@@ -2025,6 +2053,13 @@ class _StepperOrderBrokerScreenState extends State<StepperOrderBrokerScreen> {
                                   },
                                 ),
                               ),
+                              // const SizedBox(
+                              //   height: 12,
+                              // ),
+                              // const Text(
+                              //   "ملاحظة: الحد الأدنى للسعر الاسترشادي هو 100\$",
+                              //   style: TextStyle(color: Colors.grey),
+                              // ),
                               const SizedBox(
                                 height: 12,
                               ),
@@ -2135,27 +2170,37 @@ class _StepperOrderBrokerScreenState extends State<StepperOrderBrokerScreen> {
                                   height: 12,
                                 ),
                               ),
-                              Text(
-                                !valueEnabled
-                                    ? "القيمة الاجمالية بالدولار :"
-                                    : "قيمة التحويل بالجنيه المصري :",
-                                style: const TextStyle(fontSize: 16),
+
+                              Container(
+                                width: double.infinity,
+                                decoration: BoxDecoration(
+                                  color: Colors.grey[200],
+                                  borderRadius: BorderRadius.circular(12),
+                                ),
+                                padding: const EdgeInsets.all(10.0),
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      "قيمة التحويل بالجنيه المصري : 6565 E.P",
+                                      style: TextStyle(fontSize: 17.sp),
+                                    ),
+                                    Text(
+                                      "القيمة الاجمالية بالدولار :${f.format(double.parse(syrianExchangeValue).toInt())}\$",
+                                      style: TextStyle(fontSize: 17.sp),
+                                    ),
+                                    Text(
+                                      "القيمة الاجمالية بجنيه المصري :${f.format(double.parse(syrianTotalValue).toInt())} E.P",
+                                      style: TextStyle(fontSize: 17.sp),
+                                    ),
+                                    Text(
+                                      "قيمة البضاعة مع التأمين: ${f.format(double.parse(totalValueWithEnsurance).toInt())} E.P",
+                                      style: TextStyle(fontSize: 17.sp),
+                                    ),
+                                  ],
+                                ),
                               ),
-                              Text(f.format(
-                                  double.parse(syrianExchangeValue).toInt())),
-                              const Text(
-                                "قيمة الاجمالية بالجنيه المصري: ",
-                                style: TextStyle(fontSize: 16),
-                              ),
-                              Text(f.format(
-                                  double.parse(syrianTotalValue).toInt())),
-                              const Text(
-                                "قيمة البضاعة مع التأمين: ",
-                                style: TextStyle(fontSize: 16),
-                              ),
-                              Text(f.format(
-                                  double.parse(totalValueWithEnsurance)
-                                      .toInt())),
+
                               const SizedBox(
                                 height: 12,
                               ),
@@ -2197,7 +2242,7 @@ class _StepperOrderBrokerScreenState extends State<StepperOrderBrokerScreen> {
                                               return const LinearProgressIndicator();
                                             } else {
                                               return const Text(
-                                                " _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ ",
+                                                " _ _ _ _ _ _ _ _ _ _ _ _ _ _ ",
                                                 style: TextStyle(
                                                   fontSize: 16,
                                                   fontWeight: FontWeight.bold,

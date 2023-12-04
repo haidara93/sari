@@ -42,8 +42,7 @@ class CalculatorService {
   static Future<List<Origin>> getAllorigins() async {
     var prefs = await SharedPreferences.getInstance();
     var jwt = prefs.getString("token");
-    var url =
-        'https://across-mena.com/Fee_calculator/origin/?lang=ar&ordering=label';
+    var url = 'https://across-mena.com/Fee_calculator/origin/?lang=ar';
     var response = await http.get(Uri.parse(url), headers: {
       HttpHeaders.contentTypeHeader: 'application/json; charset=UTF-8',
       HttpHeaders.acceptHeader: 'application/json',

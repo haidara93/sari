@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:convert';
 
 import 'package:custome_mobile/business_logic/bloc/calculate_result_bloc.dart';
 import 'package:custome_mobile/business_logic/bloc/calculator_panel_bloc.dart';
@@ -484,7 +485,8 @@ class _CalculatorWidgetState extends State<CalculatorWidget> {
       },
       child: GestureDetector(
         onTap: () {
-          widget.unfocus;
+          FocusManager.instance.primaryFocus?.unfocus();
+          BlocProvider.of<BottomNavBarCubit>(context).emitShow();
         },
         child: Form(
           key: widget.calformkey,
@@ -511,7 +513,9 @@ class _CalculatorWidgetState extends State<CalculatorWidget> {
                                 .add(TariffPanelOpenEvent());
                             // BlocProvider.of<SectionBloc>(context)
                             //     .add(SectionLoadEvent());
-                            widget.unfocus;
+                            FocusManager.instance.primaryFocus?.unfocus();
+                            BlocProvider.of<BottomNavBarCubit>(context)
+                                .emitShow();
                           },
                           child: SizedBox(
                             height: 40.h,
@@ -548,7 +552,8 @@ class _CalculatorWidgetState extends State<CalculatorWidget> {
                 focusNode: _statenode,
                 onFocusChange: (bool focus) {
                   if (!focus) {
-                    widget.unfocus;
+                    FocusManager.instance.primaryFocus?.unfocus();
+                    BlocProvider.of<BottomNavBarCubit>(context).emitShow();
                   }
                 },
                 child: TypeAheadField(
@@ -576,7 +581,8 @@ class _CalculatorWidgetState extends State<CalculatorWidget> {
                       ),
                     ),
                     onSubmitted: (value) {
-                      widget.unfocus;
+                      FocusManager.instance.primaryFocus?.unfocus();
+                      BlocProvider.of<BottomNavBarCubit>(context).emitShow();
                     },
                   ),
                   loadingBuilder: (context) {
@@ -1166,7 +1172,7 @@ class _CalculatorWidgetState extends State<CalculatorWidget> {
                   return null;
                 },
                 onFieldSubmitted: (value) {
-                  widget.unfocus;
+                  FocusManager.instance.primaryFocus?.unfocus();
                   BlocProvider.of<BottomNavBarCubit>(context).emitShow();
                 },
               ),
@@ -1224,7 +1230,7 @@ class _CalculatorWidgetState extends State<CalculatorWidget> {
                   }
                 },
                 onFieldSubmitted: (value) {
-                  widget.unfocus;
+                  FocusManager.instance.primaryFocus?.unfocus();
                   BlocProvider.of<BottomNavBarCubit>(context).emitShow();
                 },
               ),
@@ -1337,14 +1343,42 @@ class _CalculatorWidgetState extends State<CalculatorWidget> {
                   height: 12,
                 ),
               ),
-              Text(!valueEnabled
-                  ? "القيمة الاجمالية بالدولار :"
-                  : "قيمة التحويل بالجنيه المصري :"),
-              Text(syrianExchangeValue),
-              const Text("قيمة الاجمالية بالجنيه المصري: "),
-              Text(syrianTotalValue),
-              const Text("قيمة البضاعة مع التأمين: "),
-              Text(totalValueWithEnsurance),
+              // const Text(
+              //   "ملاحظة: الحد الأدنى للسعر الاسترشادي هو 100\$",
+              //   style: TextStyle(color: Colors.grey),
+              // ),
+              // const SizedBox(
+              //   height: 12,
+              // ),
+              Container(
+                width: double.infinity,
+                decoration: BoxDecoration(
+                  color: Colors.grey[200],
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                padding: const EdgeInsets.all(10.0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      "قيمة التحويل بالجنيه المصري : 6565 E.P",
+                      style: TextStyle(fontSize: 17.sp),
+                    ),
+                    Text(
+                      "القيمة الاجمالية بالدولار :${f.format(double.parse(syrianExchangeValue).toInt())}\$",
+                      style: TextStyle(fontSize: 17.sp),
+                    ),
+                    Text(
+                      "القيمة الاجمالية بجنيه المصري :${f.format(double.parse(syrianTotalValue).toInt())} E.P",
+                      style: TextStyle(fontSize: 17.sp),
+                    ),
+                    Text(
+                      "قيمة البضاعة مع التأمين: ${f.format(double.parse(totalValueWithEnsurance).toInt())} E.P",
+                      style: TextStyle(fontSize: 17.sp),
+                    ),
+                  ],
+                ),
+              ),
               const SizedBox(
                 height: 12,
               ),
@@ -1373,7 +1407,10 @@ class _CalculatorWidgetState extends State<CalculatorWidget> {
                               if (widget.calformkey.currentState!.validate()) {
                                 if (selectedOrigin != null) {
                                   if (selectedPackage != null) {
-                                    widget.unfocus;
+                                    FocusManager.instance.primaryFocus
+                                        ?.unfocus();
+                                    BlocProvider.of<BottomNavBarCubit>(context)
+                                        .emitShow();
                                     result.insurance =
                                         int.parse(totalValueWithEnsurance);
                                     result.fee = selectedPackage!.fee!;
@@ -1400,8 +1437,12 @@ class _CalculatorWidgetState extends State<CalculatorWidget> {
                                     result.price = basePrice.toInt();
                                     result.cnsulate = 1;
                                     result.dolar = 6565;
-                                    result.arabic_stamp = 650;
-                                    result.import_fee = 0.01;
+                                    result.arabic_stamp = selectedPackage!
+                                        .totalTaxes!.arabicStamp!
+                                        .toInt();
+                                    result.import_fee =
+                                        selectedPackage!.importFee;
+                                    print(jsonEncode(result.toJson()));
                                     BlocProvider.of<CalculateResultBloc>(
                                             context)
                                         .add(CalculateTheResultEvent(result));

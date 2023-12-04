@@ -199,18 +199,21 @@ class Dolar {
 class TotalTaxes {
   double? totalTax;
   double? partialTax;
+  double? arabicStamp;
 
-  TotalTaxes({this.totalTax, this.partialTax});
+  TotalTaxes({this.totalTax, this.partialTax, this.arabicStamp});
 
   TotalTaxes.fromJson(Map<String, dynamic> json) {
-    totalTax = json['total_tax'];
-    partialTax = json['partial_tax'];
+    totalTax = json['total_tax'] ?? 0.0;
+    partialTax = json['partial_tax'] ?? 0.0;
+    arabicStamp = json['arabic_stamp'] ?? 0.0;
   }
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = <String, dynamic>{};
     data['total_tax'] = totalTax;
     data['partial_tax'] = partialTax;
+    data['arabic_stamp'] = partialTax;
     return data;
   }
 }
@@ -384,4 +387,27 @@ class CalculateObject {
     this.arabic_stamp,
     this.import_fee,
   });
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['insurance'] = insurance;
+    data['fee'] = fee;
+    data['rawMaterial'] = rawMaterial;
+    data['industrial'] = industrial;
+    data['origin'] = origin;
+    data['totalTax'] = totalTax;
+    data['partialTax'] = partialTax;
+    data['spendingFee'] = spendingFee;
+    data['localFee'] = localFee;
+    data['supportFee'] = supportFee;
+    data['naturalFee'] = naturalFee;
+    data['protectionFee'] = protectionFee;
+    data['taxFee'] = taxFee;
+    data['weight'] = weight;
+    data['price'] = price;
+    data['cnsulate'] = cnsulate;
+    data['dolar'] = dolar;
+    data['arabic_stamp'] = arabic_stamp;
+    data['import_fee'] = import_fee;
+    return data;
+  }
 }
