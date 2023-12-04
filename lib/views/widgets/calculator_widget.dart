@@ -1125,7 +1125,7 @@ class _CalculatorWidgetState extends State<CalculatorWidget> {
               ),
               TextFormField(
                 controller: widget.wieghtController!,
-                focusNode: _nodeWeight,
+                // focusNode: _nodeWeight,
                 onTap: () {
                   BlocProvider.of<BottomNavBarCubit>(context).emitHide();
                   widget.wieghtController!.selection = TextSelection(
@@ -1182,7 +1182,7 @@ class _CalculatorWidgetState extends State<CalculatorWidget> {
               ),
               TextFormField(
                 controller: widget.valueController!,
-                focusNode: _nodeValue,
+                // focusNode: _nodeValue,
                 onTap: () {
                   BlocProvider.of<BottomNavBarCubit>(context).emitHide();
                   widget.valueController!.selection = TextSelection(

@@ -1910,7 +1910,7 @@ class _StepperOrderBrokerScreenState extends State<StepperOrderBrokerScreen> {
                                         extentOffset: _wieghtController
                                             .value.text.length);
                                   },
-                                  focusNode: _nodeWeight,
+                                  // focusNode: _nodeWeight,
                                   // enabled: !valueEnabled,
                                   scrollPadding: EdgeInsets.only(
                                       bottom: MediaQuery.of(context)
@@ -1995,8 +1995,6 @@ class _StepperOrderBrokerScreenState extends State<StepperOrderBrokerScreen> {
                                         extentOffset:
                                             _valueController.value.text.length);
                                   },
-                                  onTapOutside: (event) {},
-                                  focusNode: _nodeValue,
                                   // enabled: valueEnabled,
                                   keyboardType:
                                       const TextInputType.numberWithOptions(
