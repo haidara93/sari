@@ -1394,7 +1394,6 @@ class _TraderHomeScreenState extends State<TraderHomeScreen>
                                             decimal: true, signed: true),
                                     inputFormatters: [
                                       DecimalFormatter(),
-                                      FilteringTextInputFormatter.digitsOnly,
                                     ],
                                     decoration: InputDecoration(
                                       suffixText: showunit ? wieghtUnit : "",
@@ -1681,7 +1680,6 @@ class _TraderHomeScreenState extends State<TraderHomeScreen>
                                             decimal: true, signed: true),
                                     inputFormatters: [
                                       DecimalFormatter(),
-                                      FilteringTextInputFormatter.digitsOnly,
                                     ],
                                     style: const TextStyle(fontSize: 18),
                                     decoration: InputDecoration(

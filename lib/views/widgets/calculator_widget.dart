@@ -1144,7 +1144,6 @@ class _CalculatorWidgetState extends State<CalculatorWidget> {
                     decimal: true, signed: true),
                 inputFormatters: [
                   DecimalFormatter(),
-                  FilteringTextInputFormatter.digitsOnly,
                 ],
                 style: const TextStyle(fontSize: 18),
                 decoration: InputDecoration(
@@ -1203,7 +1202,6 @@ class _CalculatorWidgetState extends State<CalculatorWidget> {
                     decimal: true, signed: true),
                 inputFormatters: [
                   DecimalFormatter(),
-                  FilteringTextInputFormatter.digitsOnly,
                 ],
                 scrollPadding: EdgeInsets.only(
                     bottom: MediaQuery.of(context).viewInsets.bottom + 50),
@@ -1391,118 +1389,113 @@ class _CalculatorWidgetState extends State<CalculatorWidget> {
                       "قيمة البضاعة مع التأمين: ${f.format(double.parse(totalValueWithEnsurance).toInt())} E.P",
                       style: TextStyle(fontSize: 17.sp),
                     ),
-                    Divider(color: AppColor.deepYellow),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        BlocConsumer<CalculateResultBloc, CalculateResultState>(
-                          listener: (context, state) {
-                            if (state is CalculateResultSuccessed) {}
-                          },
-                          builder: (context, state) {
-                            if (state is CalculateResultLoading) {
-                              return CustomButton(
-                                  onTap: () {},
-                                  title: SizedBox(
-                                      width: 250.w,
-                                      child: const Center(
-                                          child: CircularProgressIndicator())));
-                            }
-                            if (state is CalculateResultFailed) {
-                              return Text(state.error);
-                            } else {
-                              return CustomButton(
-                                  onTap: () {
-                                    widget.calformkey.currentState?.save();
-                                    if (widget.calformkey.currentState!
-                                        .validate()) {
-                                      if (selectedOrigin != null) {
-                                        if (selectedPackage != null) {
-                                          FocusManager.instance.primaryFocus
-                                              ?.unfocus();
-                                          BlocProvider.of<BottomNavBarCubit>(
-                                                  context)
-                                              .emitShow();
-                                          result.insurance = int.parse(
-                                              totalValueWithEnsurance);
-                                          result.fee = selectedPackage!.fee!;
-                                          result.rawMaterial =
-                                              rawMaterialValue ? 1 : 0;
-                                          result.industrial =
-                                              industrialValue ? 1 : 0;
-                                          result.totalTax = selectedPackage!
-                                              .totalTaxes!.totalTax!;
-                                          result.partialTax = selectedPackage!
-                                              .totalTaxes!.partialTax!;
-                                          result.origin =
-                                              selectedOrigin!.label!;
-                                          result.spendingFee =
-                                              selectedPackage!.spendingFee!;
-                                          result.supportFee =
-                                              selectedPackage!.supportFee!;
-                                          result.localFee =
-                                              selectedPackage!.localFee!;
-                                          result.protectionFee =
-                                              selectedPackage!.protectionFee!;
-                                          result.naturalFee =
-                                              selectedPackage!.naturalFee!;
-                                          result.taxFee =
-                                              selectedPackage!.taxFee!;
-                                          result.weight = wieghtValue.toInt();
-                                          result.price = basePrice.toInt();
-                                          result.cnsulate = 1;
-                                          result.dolar = 6565;
-                                          result.arabic_stamp = selectedPackage!
-                                              .totalTaxes!.arabicStamp!
-                                              .toInt();
-                                          result.import_fee =
-                                              selectedPackage!.importFee;
-                                          print(jsonEncode(result.toJson()));
-                                          BlocProvider.of<CalculateResultBloc>(
-                                                  context)
-                                              .add(CalculateTheResultEvent(
-                                                  result));
-                                          FocusManager.instance.primaryFocus
-                                              ?.unfocus();
-                                          BlocProvider.of<BottomNavBarCubit>(
-                                                  context)
-                                              .emitShow();
-                                          Navigator.push(
-                                              context,
-                                              MaterialPageRoute(
-                                                builder: (context) =>
-                                                    TraderCalculatorResultScreen(),
-                                              ));
-                                        } else {
-                                          setState(() {
-                                            feeerror = true;
-                                          });
-                                        }
-                                      } else {
-                                        setState(() {
-                                          originerror = true;
-                                        });
-                                      }
-                                    }
-                                  },
-                                  title: SizedBox(
-                                    width: 250.w,
-                                    child: const Center(
-                                      child: Text(
-                                        "احسب الرسم الجمركي",
-                                        style: TextStyle(
-                                          fontWeight: FontWeight.bold,
-                                        ),
-                                      ),
-                                    ),
-                                  ));
-                            }
-                          },
-                        ),
-                      ],
-                    ),
                   ],
                 ),
+              ),
+              SizedBox(
+                height: 10.h,
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  BlocConsumer<CalculateResultBloc, CalculateResultState>(
+                    listener: (context, state) {
+                      if (state is CalculateResultSuccessed) {}
+                    },
+                    builder: (context, state) {
+                      if (state is CalculateResultLoading) {
+                        return CustomButton(
+                            onTap: () {},
+                            title: SizedBox(
+                                width: 250.w,
+                                child: const Center(
+                                    child: CircularProgressIndicator())));
+                      }
+                      if (state is CalculateResultFailed) {
+                        return Text(state.error);
+                      } else {
+                        return CustomButton(
+                            onTap: () {
+                              widget.calformkey.currentState?.save();
+                              if (widget.calformkey.currentState!.validate()) {
+                                if (selectedOrigin != null) {
+                                  if (selectedPackage != null) {
+                                    FocusManager.instance.primaryFocus
+                                        ?.unfocus();
+                                    BlocProvider.of<BottomNavBarCubit>(context)
+                                        .emitShow();
+                                    result.insurance =
+                                        int.parse(totalValueWithEnsurance);
+                                    result.fee = selectedPackage!.fee!;
+                                    result.rawMaterial =
+                                        rawMaterialValue ? 1 : 0;
+                                    result.industrial = industrialValue ? 1 : 0;
+                                    result.totalTax =
+                                        selectedPackage!.totalTaxes!.totalTax!;
+                                    result.partialTax = selectedPackage!
+                                        .totalTaxes!.partialTax!;
+                                    result.origin = selectedOrigin!.label!;
+                                    result.spendingFee =
+                                        selectedPackage!.spendingFee!;
+                                    result.supportFee =
+                                        selectedPackage!.supportFee!;
+                                    result.localFee =
+                                        selectedPackage!.localFee!;
+                                    result.protectionFee =
+                                        selectedPackage!.protectionFee!;
+                                    result.naturalFee =
+                                        selectedPackage!.naturalFee!;
+                                    result.taxFee = selectedPackage!.taxFee!;
+                                    result.weight = wieghtValue.toInt();
+                                    result.price = basePrice.toInt();
+                                    result.cnsulate = 1;
+                                    result.dolar = 6565;
+                                    result.arabic_stamp = selectedPackage!
+                                        .totalTaxes!.arabicStamp!
+                                        .toInt();
+                                    result.import_fee =
+                                        selectedPackage!.importFee;
+                                    print(jsonEncode(result.toJson()));
+                                    BlocProvider.of<CalculateResultBloc>(
+                                            context)
+                                        .add(CalculateTheResultEvent(result));
+                                    FocusManager.instance.primaryFocus
+                                        ?.unfocus();
+                                    BlocProvider.of<BottomNavBarCubit>(context)
+                                        .emitShow();
+                                    Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                          builder: (context) =>
+                                              TraderCalculatorResultScreen(),
+                                        ));
+                                  } else {
+                                    setState(() {
+                                      feeerror = true;
+                                    });
+                                  }
+                                } else {
+                                  setState(() {
+                                    originerror = true;
+                                  });
+                                }
+                              }
+                            },
+                            title: SizedBox(
+                              width: 250.w,
+                              child: const Center(
+                                child: Text(
+                                  "احسب الرسم الجمركي",
+                                  style: TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                              ),
+                            ));
+                      }
+                    },
+                  ),
+                ],
               ),
             ],
           ),

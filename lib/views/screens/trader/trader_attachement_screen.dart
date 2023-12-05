@@ -813,7 +813,6 @@ class _TraderAttachementScreenState extends State<TraderAttachementScreen> {
                                           decimal: true, signed: true),
                                   inputFormatters: [
                                     DecimalFormatter(),
-                                    FilteringTextInputFormatter.digitsOnly,
                                   ],
                                   style: const TextStyle(fontSize: 17),
                                   decoration: const InputDecoration(

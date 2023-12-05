@@ -1919,7 +1919,6 @@ class _StepperOrderBrokerScreenState extends State<StepperOrderBrokerScreen> {
                                           decimal: true, signed: true),
                                   inputFormatters: [
                                     DecimalFormatter(),
-                                    FilteringTextInputFormatter.digitsOnly,
                                   ],
                                   style: const TextStyle(fontSize: 18),
                                   decoration: InputDecoration(
@@ -2006,7 +2005,6 @@ class _StepperOrderBrokerScreenState extends State<StepperOrderBrokerScreen> {
                                           50),
                                   inputFormatters: [
                                     DecimalFormatter(),
-                                    FilteringTextInputFormatter.digitsOnly,
                                   ],
                                   style: const TextStyle(fontSize: 18),
                                   decoration: InputDecoration(
