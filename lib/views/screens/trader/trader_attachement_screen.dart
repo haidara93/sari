@@ -16,6 +16,7 @@ import 'package:custome_mobile/views/widgets/custom_botton.dart';
 import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/cupertino.dart' as cupertino;
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -810,7 +811,10 @@ class _TraderAttachementScreenState extends State<TraderAttachementScreen> {
                                   keyboardType:
                                       const TextInputType.numberWithOptions(
                                           decimal: true, signed: true),
-                                  inputFormatters: [DecimalFormatter()],
+                                  inputFormatters: [
+                                    DecimalFormatter(),
+                                    FilteringTextInputFormatter.digitsOnly,
+                                  ],
                                   style: const TextStyle(fontSize: 17),
                                   decoration: const InputDecoration(
                                     labelText: "عدد الطرود",
@@ -931,7 +935,9 @@ class _TraderAttachementScreenState extends State<TraderAttachementScreen> {
                                                 .numberWithOptions(
                                                 decimal: true, signed: true),
                                             inputFormatters: [
-                                              DecimalFormatter()
+                                              DecimalFormatter(),
+                                              FilteringTextInputFormatter
+                                                  .digitsOnly,
                                             ],
                                             decoration: const InputDecoration(
                                               labelText: "العدد",

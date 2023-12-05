@@ -16,6 +16,7 @@ import 'package:custome_mobile/views/widgets/highlight_text.dart';
 import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:dropdown_search/dropdown_search.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -1141,7 +1142,10 @@ class _CalculatorWidgetState extends State<CalculatorWidget> {
                 textInputAction: TextInputAction.done,
                 keyboardType: const TextInputType.numberWithOptions(
                     decimal: true, signed: true),
-                inputFormatters: [DecimalFormatter()],
+                inputFormatters: [
+                  DecimalFormatter(),
+                  FilteringTextInputFormatter.digitsOnly,
+                ],
                 style: const TextStyle(fontSize: 18),
                 decoration: InputDecoration(
                   labelText: wieghtLabel,
@@ -1197,7 +1201,10 @@ class _CalculatorWidgetState extends State<CalculatorWidget> {
                 textInputAction: TextInputAction.done,
                 keyboardType: const TextInputType.numberWithOptions(
                     decimal: true, signed: true),
-                inputFormatters: [DecimalFormatter()],
+                inputFormatters: [
+                  DecimalFormatter(),
+                  FilteringTextInputFormatter.digitsOnly,
+                ],
                 scrollPadding: EdgeInsets.only(
                     bottom: MediaQuery.of(context).viewInsets.bottom + 50),
                 style: const TextStyle(fontSize: 18),

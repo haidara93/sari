@@ -36,6 +36,7 @@ import 'package:custome_mobile/views/widgets/pens_taxes_widget.dart';
 import 'package:custome_mobile/views/widgets/tariff_info_icon.dart';
 import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_img/flutter_img.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -1391,7 +1392,10 @@ class _TraderHomeScreenState extends State<TraderHomeScreen>
                                     keyboardType:
                                         const TextInputType.numberWithOptions(
                                             decimal: true, signed: true),
-                                    inputFormatters: [DecimalFormatter()],
+                                    inputFormatters: [
+                                      DecimalFormatter(),
+                                      FilteringTextInputFormatter.digitsOnly,
+                                    ],
                                     decoration: InputDecoration(
                                       suffixText: showunit ? wieghtUnit : "",
                                       labelText: wieghtLabel,
@@ -1675,7 +1679,10 @@ class _TraderHomeScreenState extends State<TraderHomeScreen>
                                     keyboardType:
                                         const TextInputType.numberWithOptions(
                                             decimal: true, signed: true),
-                                    inputFormatters: [DecimalFormatter()],
+                                    inputFormatters: [
+                                      DecimalFormatter(),
+                                      FilteringTextInputFormatter.digitsOnly,
+                                    ],
                                     style: const TextStyle(fontSize: 18),
                                     decoration: InputDecoration(
                                       labelText: valueEnabled

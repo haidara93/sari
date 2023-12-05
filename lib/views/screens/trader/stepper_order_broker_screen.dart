@@ -26,6 +26,7 @@ import 'package:dropdown_search/dropdown_search.dart';
 import 'package:ensure_visible_when_focused/ensure_visible_when_focused.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_img/flutter_img.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -1916,7 +1917,10 @@ class _StepperOrderBrokerScreenState extends State<StepperOrderBrokerScreen> {
                                   keyboardType:
                                       const TextInputType.numberWithOptions(
                                           decimal: true, signed: true),
-                                  inputFormatters: [DecimalFormatter()],
+                                  inputFormatters: [
+                                    DecimalFormatter(),
+                                    FilteringTextInputFormatter.digitsOnly,
+                                  ],
                                   style: const TextStyle(fontSize: 18),
                                   decoration: InputDecoration(
                                     labelText: wieghtLabel,
@@ -2000,7 +2004,10 @@ class _StepperOrderBrokerScreenState extends State<StepperOrderBrokerScreen> {
                                               .viewInsets
                                               .bottom +
                                           50),
-                                  inputFormatters: [DecimalFormatter()],
+                                  inputFormatters: [
+                                    DecimalFormatter(),
+                                    FilteringTextInputFormatter.digitsOnly,
+                                  ],
                                   style: const TextStyle(fontSize: 18),
                                   decoration: InputDecoration(
                                     labelText: valueEnabled
