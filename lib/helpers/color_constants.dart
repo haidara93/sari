@@ -6,6 +6,7 @@ import 'package:hexcolor/hexcolor.dart';
 class AppColor {
   static final lightYellow = HexColor("#C9F4A4");
   static final deepYellow = HexColor("#A3CC84");
+  static final lightGreen = HexColor("#EFF6E9");
   static final lightBlue = HexColor("#49AFCA");
   static final deepBlue = HexColor("#226595");
   static final lightAppBarBlue = HexColor("#1C5075");

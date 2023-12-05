@@ -236,23 +236,33 @@ class _LogScreenState extends State<LogScreen>
                                               'رقم العملية: SA-${state.offers[index].id!}',
                                               style: TextStyle(
                                                   // color: AppColor.lightBlue,
-                                                  fontSize: 15.sp,
+                                                  fontSize: 18.sp,
                                                   fontWeight: FontWeight.bold),
                                             ),
+                                            SizedBox(
+                                              height: 7.h,
+                                            ),
                                             Text(
-                                                'نوع العملية: ${getOfferType(state.offers[index].offerType!)}'),
+                                              'نوع العملية: ${getOfferType(state.offers[index].offerType!)}',
+                                              style: TextStyle(
+                                                // color: AppColor.lightBlue,
+                                                fontSize: 17.sp,
+                                              ),
+                                            ),
                                             Text.rich(
                                               TextSpan(
                                                   text: state.offers[index]
                                                       .origin!.label!,
                                                   style: TextStyle(
                                                     color: AppColor.lightBlue,
+                                                    fontSize: 17.sp,
                                                   ),
                                                   children: [
-                                                    const TextSpan(
+                                                    TextSpan(
                                                       text: "  --->  ",
                                                       style: TextStyle(
                                                         color: Colors.black,
+                                                        fontSize: 17.sp,
                                                       ),
                                                     ),
                                                     TextSpan(
@@ -261,6 +271,7 @@ class _LogScreenState extends State<LogScreen>
                                                       style: TextStyle(
                                                         color:
                                                             AppColor.lightBlue,
+                                                        fontSize: 17.sp,
                                                       ),
                                                     ),
                                                   ]),
@@ -294,11 +305,12 @@ class _LogScreenState extends State<LogScreen>
                                                     MainAxisAlignment.center,
                                                 children: [
                                                   Text(
-                                                    "تتبع العملية",
+                                                    "تتبع العملية   ",
                                                     style: TextStyle(
                                                       color: AppColor.lightBlue,
                                                       fontWeight:
                                                           FontWeight.bold,
+                                                      fontSize: 17.sp,
                                                     ),
                                                   )
                                                 ],

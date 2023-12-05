@@ -1,3 +1,4 @@
+import 'package:custome_mobile/helpers/color_constants.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:intl/intl.dart';
@@ -27,15 +28,17 @@ class PensTaxesWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Card(
-      clipBehavior: Clip.antiAlias,
-      shape: const RoundedRectangleBorder(
-          borderRadius: BorderRadius.all(
-        Radius.circular(15),
-      )),
+    return Container(
+      width: double.infinity,
+      decoration: BoxDecoration(
+        border: Border.all(
+          color: AppColor.deepYellow,
+          width: 2,
+        ),
+        borderRadius: BorderRadius.circular(12),
+        color: Colors.white,
+      ),
       margin: EdgeInsets.symmetric(horizontal: 10.w),
-      elevation: 1,
-      color: Colors.white,
       child: Padding(
         padding: EdgeInsets.symmetric(horizontal: 15.w),
         child: Column(
@@ -121,6 +124,7 @@ class PensTaxesWidget extends StatelessWidget {
             const SizedBox(
               height: 5,
             ),
+            Divider(color: AppColor.deepYellow),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [

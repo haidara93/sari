@@ -105,8 +105,8 @@ class _CalculatorWidgetState extends State<CalculatorWidget> {
     keyboardSubscription =
         _keyboardVisibilityController.onChange.listen((isVisible) {
       if (!isVisible) {
-        BlocProvider.of<BottomNavBarCubit>(context).emitShow();
         FocusManager.instance.primaryFocus?.unfocus();
+        BlocProvider.of<BottomNavBarCubit>(context).emitShow();
       }
     });
     // FocusScope.of(context).unfocus();
@@ -119,8 +119,9 @@ class _CalculatorWidgetState extends State<CalculatorWidget> {
   }
 
   void calculateTotalValueWithPrice() {
-    var syrianExch = double.parse(widget.wieghtController!.text) *
-        double.parse(widget.valueController!.text);
+    var syrianExch =
+        double.parse(widget.wieghtController!.text.replaceAll(",", "")) *
+            double.parse(widget.valueController!.text.replaceAll(",", ""));
     var syrianTotal = syrianExch * 6565;
     var totalEnsurance = (syrianTotal) + (syrianTotal * 0.0012);
     setState(() {
@@ -131,7 +132,8 @@ class _CalculatorWidgetState extends State<CalculatorWidget> {
   }
 
   void calculateTotalValue() {
-    var syrianTotal = double.parse(widget.valueController!.text) * 6565;
+    var syrianTotal =
+        double.parse(widget.valueController!.text.replaceAll(",", "")) * 6565;
     var totalEnsurance = (syrianTotal) + (syrianTotal * 0.0012);
     setState(() {
       syrianTotalValue = syrianTotal.round().toString();
@@ -637,6 +639,7 @@ class _CalculatorWidgetState extends State<CalculatorWidget> {
                     //   totalValueWithEnsurance = "0.0";
                     // });
                     selectSuggestion(suggestion);
+                    FocusManager.instance.primaryFocus?.unfocus();
                     BlocProvider.of<BottomNavBarCubit>(context).emitShow();
                   },
                 ),
@@ -1135,13 +1138,14 @@ class _CalculatorWidgetState extends State<CalculatorWidget> {
                 // enabled: !valueEnabled,
                 scrollPadding: EdgeInsets.only(
                     bottom: MediaQuery.of(context).viewInsets.bottom + 50),
-                keyboardType: const TextInputType.numberWithOptions(
-                    decimal: true, signed: true),
+                textInputAction: TextInputAction.done,
+                keyboardType:
+                    const TextInputType.numberWithOptions(decimal: true),
                 inputFormatters: [DecimalFormatter()],
+                style: const TextStyle(fontSize: 18),
                 decoration: InputDecoration(
                   labelText: wieghtLabel,
-                  prefixText: showunit ? wieghtUnit : "",
-                  prefixStyle: const TextStyle(color: Colors.black),
+                  suffixText: showunit ? wieghtUnit : "",
                   contentPadding: const EdgeInsets.symmetric(
                     horizontal: 9.0,
                     vertical: 11.0,
@@ -1190,12 +1194,15 @@ class _CalculatorWidgetState extends State<CalculatorWidget> {
                       extentOffset: widget.valueController!.value.text.length);
                 },
                 // enabled: valueEnabled,
-                keyboardType: const TextInputType.numberWithOptions(
-                    decimal: true, signed: true),
+                textInputAction: TextInputAction.done,
+                keyboardType:
+                    const TextInputType.numberWithOptions(decimal: true),
                 inputFormatters: [DecimalFormatter()],
                 scrollPadding: EdgeInsets.only(
                     bottom: MediaQuery.of(context).viewInsets.bottom + 50),
+                style: const TextStyle(fontSize: 18),
                 decoration: InputDecoration(
+                  suffixText: "\$",
                   labelText: valueEnabled
                       ? "قيمة البضاعة الاجمالية بالدولار"
                       : "سعر الواحدة لدى الجمارك",
@@ -1353,17 +1360,18 @@ class _CalculatorWidgetState extends State<CalculatorWidget> {
               Container(
                 width: double.infinity,
                 decoration: BoxDecoration(
-                  color: Colors.grey[200],
+                  color: AppColor.lightGreen,
+                  border: Border.all(color: Colors.black26, width: 2),
                   borderRadius: BorderRadius.circular(12),
                 ),
-                padding: const EdgeInsets.all(10.0),
+                padding: const EdgeInsets.all(15.0),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(
-                      "قيمة التحويل بالجنيه المصري : 6565 E.P",
-                      style: TextStyle(fontSize: 17.sp),
-                    ),
+                    // Text(
+                    //   "قيمة التحويل بالجنيه المصري : 6565 E.P",
+                    //   style: TextStyle(fontSize: 17.sp),
+                    // ),
                     Text(
                       "القيمة الاجمالية بالدولار :${f.format(double.parse(syrianExchangeValue).toInt())}\$",
                       style: TextStyle(fontSize: 17.sp),
@@ -1376,111 +1384,118 @@ class _CalculatorWidgetState extends State<CalculatorWidget> {
                       "قيمة البضاعة مع التأمين: ${f.format(double.parse(totalValueWithEnsurance).toInt())} E.P",
                       style: TextStyle(fontSize: 17.sp),
                     ),
+                    Divider(color: AppColor.deepYellow),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        BlocConsumer<CalculateResultBloc, CalculateResultState>(
+                          listener: (context, state) {
+                            if (state is CalculateResultSuccessed) {}
+                          },
+                          builder: (context, state) {
+                            if (state is CalculateResultLoading) {
+                              return CustomButton(
+                                  onTap: () {},
+                                  title: SizedBox(
+                                      width: 250.w,
+                                      child: const Center(
+                                          child: CircularProgressIndicator())));
+                            }
+                            if (state is CalculateResultFailed) {
+                              return Text(state.error);
+                            } else {
+                              return CustomButton(
+                                  onTap: () {
+                                    widget.calformkey.currentState?.save();
+                                    if (widget.calformkey.currentState!
+                                        .validate()) {
+                                      if (selectedOrigin != null) {
+                                        if (selectedPackage != null) {
+                                          FocusManager.instance.primaryFocus
+                                              ?.unfocus();
+                                          BlocProvider.of<BottomNavBarCubit>(
+                                                  context)
+                                              .emitShow();
+                                          result.insurance = int.parse(
+                                              totalValueWithEnsurance);
+                                          result.fee = selectedPackage!.fee!;
+                                          result.rawMaterial =
+                                              rawMaterialValue ? 1 : 0;
+                                          result.industrial =
+                                              industrialValue ? 1 : 0;
+                                          result.totalTax = selectedPackage!
+                                              .totalTaxes!.totalTax!;
+                                          result.partialTax = selectedPackage!
+                                              .totalTaxes!.partialTax!;
+                                          result.origin =
+                                              selectedOrigin!.label!;
+                                          result.spendingFee =
+                                              selectedPackage!.spendingFee!;
+                                          result.supportFee =
+                                              selectedPackage!.supportFee!;
+                                          result.localFee =
+                                              selectedPackage!.localFee!;
+                                          result.protectionFee =
+                                              selectedPackage!.protectionFee!;
+                                          result.naturalFee =
+                                              selectedPackage!.naturalFee!;
+                                          result.taxFee =
+                                              selectedPackage!.taxFee!;
+                                          result.weight = wieghtValue.toInt();
+                                          result.price = basePrice.toInt();
+                                          result.cnsulate = 1;
+                                          result.dolar = 6565;
+                                          result.arabic_stamp = selectedPackage!
+                                              .totalTaxes!.arabicStamp!
+                                              .toInt();
+                                          result.import_fee =
+                                              selectedPackage!.importFee;
+                                          print(jsonEncode(result.toJson()));
+                                          BlocProvider.of<CalculateResultBloc>(
+                                                  context)
+                                              .add(CalculateTheResultEvent(
+                                                  result));
+                                          FocusManager.instance.primaryFocus
+                                              ?.unfocus();
+                                          BlocProvider.of<BottomNavBarCubit>(
+                                                  context)
+                                              .emitShow();
+                                          Navigator.push(
+                                              context,
+                                              MaterialPageRoute(
+                                                builder: (context) =>
+                                                    TraderCalculatorResultScreen(),
+                                              ));
+                                        } else {
+                                          setState(() {
+                                            feeerror = true;
+                                          });
+                                        }
+                                      } else {
+                                        setState(() {
+                                          originerror = true;
+                                        });
+                                      }
+                                    }
+                                  },
+                                  title: SizedBox(
+                                    width: 250.w,
+                                    child: const Center(
+                                      child: Text(
+                                        "احسب الرسم الجمركي",
+                                        style: TextStyle(
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                      ),
+                                    ),
+                                  ));
+                            }
+                          },
+                        ),
+                      ],
+                    ),
                   ],
                 ),
-              ),
-              const SizedBox(
-                height: 12,
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  BlocConsumer<CalculateResultBloc, CalculateResultState>(
-                    listener: (context, state) {
-                      if (state is CalculateResultSuccessed) {}
-                    },
-                    builder: (context, state) {
-                      if (state is CalculateResultLoading) {
-                        return CustomButton(
-                            onTap: () {},
-                            title: SizedBox(
-                                width: 250.w,
-                                child: const Center(
-                                    child: CircularProgressIndicator())));
-                      }
-                      if (state is CalculateResultFailed) {
-                        return Text(state.error);
-                      } else {
-                        return CustomButton(
-                            onTap: () {
-                              widget.calformkey.currentState?.save();
-                              if (widget.calformkey.currentState!.validate()) {
-                                if (selectedOrigin != null) {
-                                  if (selectedPackage != null) {
-                                    FocusManager.instance.primaryFocus
-                                        ?.unfocus();
-                                    BlocProvider.of<BottomNavBarCubit>(context)
-                                        .emitShow();
-                                    result.insurance =
-                                        int.parse(totalValueWithEnsurance);
-                                    result.fee = selectedPackage!.fee!;
-                                    result.rawMaterial =
-                                        rawMaterialValue ? 1 : 0;
-                                    result.industrial = industrialValue ? 1 : 0;
-                                    result.totalTax =
-                                        selectedPackage!.totalTaxes!.totalTax!;
-                                    result.partialTax = selectedPackage!
-                                        .totalTaxes!.partialTax!;
-                                    result.origin = selectedOrigin!.label!;
-                                    result.spendingFee =
-                                        selectedPackage!.spendingFee!;
-                                    result.supportFee =
-                                        selectedPackage!.supportFee!;
-                                    result.localFee =
-                                        selectedPackage!.localFee!;
-                                    result.protectionFee =
-                                        selectedPackage!.protectionFee!;
-                                    result.naturalFee =
-                                        selectedPackage!.naturalFee!;
-                                    result.taxFee = selectedPackage!.taxFee!;
-                                    result.weight = wieghtValue.toInt();
-                                    result.price = basePrice.toInt();
-                                    result.cnsulate = 1;
-                                    result.dolar = 6565;
-                                    result.arabic_stamp = selectedPackage!
-                                        .totalTaxes!.arabicStamp!
-                                        .toInt();
-                                    result.import_fee =
-                                        selectedPackage!.importFee;
-                                    print(jsonEncode(result.toJson()));
-                                    BlocProvider.of<CalculateResultBloc>(
-                                            context)
-                                        .add(CalculateTheResultEvent(result));
-                                    BlocProvider.of<BottomNavBarCubit>(context)
-                                        .emitShow();
-                                    Navigator.push(
-                                        context,
-                                        MaterialPageRoute(
-                                          builder: (context) =>
-                                              TraderCalculatorResultScreen(),
-                                        ));
-                                  } else {
-                                    setState(() {
-                                      feeerror = true;
-                                    });
-                                  }
-                                } else {
-                                  setState(() {
-                                    originerror = true;
-                                  });
-                                }
-                              }
-                            },
-                            title: SizedBox(
-                              width: 250.w,
-                              child: const Center(
-                                child: Text(
-                                  "احسب الرسم الجمركي",
-                                  style: TextStyle(
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                ),
-                              ),
-                            ));
-                      }
-                    },
-                  ),
-                ],
               ),
             ],
           ),

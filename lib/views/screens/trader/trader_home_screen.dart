@@ -130,8 +130,9 @@ class _TraderHomeScreenState extends State<TraderHomeScreen>
         }
       case 2:
         {
-          print(MediaQuery.of(context).size.width);
-          print(MediaQuery.of(context).size.height);
+          // print(MediaQuery.of(context).size.width);
+          // print(DateTime.fromMillisecondsSinceEpoch((1701788289) * 100000)
+          //     .isAfter(DateTime.now()));
           setState(() {
             title = "الرئيسية";
 
@@ -267,8 +268,8 @@ class _TraderHomeScreenState extends State<TraderHomeScreen>
                   SafeArea(
                     child: GestureDetector(
                       onTap: () {
-                        BlocProvider.of<BottomNavBarCubit>(context).emitShow();
                         FocusManager.instance.primaryFocus?.unfocus();
+                        BlocProvider.of<BottomNavBarCubit>(context).emitShow();
                       },
                       child: Scaffold(
                         key: _scaffoldKey,
@@ -854,8 +855,8 @@ class _TraderHomeScreenState extends State<TraderHomeScreen>
   List<Extras> items = [];
   Extras? selectedValue;
   void calculateTotalValueWithPrice() {
-    var syrianExch = double.parse(_wieghtController.text) *
-        double.parse(_valueController.text);
+    var syrianExch = double.parse(_wieghtController.text.replaceAll(",", "")) *
+        double.parse(_valueController.text.replaceAll(",", ""));
     var syrianTotal = syrianExch * 30;
     var totalEnsurance = (syrianTotal) + (syrianTotal * 0.0012);
     setState(() {
@@ -866,7 +867,8 @@ class _TraderHomeScreenState extends State<TraderHomeScreen>
   }
 
   void calculateTotalValue() {
-    var syrianTotal = double.parse(_valueController.text) * 30;
+    var syrianTotal =
+        double.parse(_valueController.text.replaceAll(",", "")) * 30;
     var totalEnsurance = (syrianTotal) + (syrianTotal * 0.0012);
     setState(() {
       syrianTotalValue = syrianTotal.round().toString();
@@ -1220,10 +1222,6 @@ class _TraderHomeScreenState extends State<TraderHomeScreen>
                                   maxLines: null,
                                   decoration: InputDecoration(
                                     labelText: "نوع البضاعة",
-                                    prefixStyle: const TextStyle(
-                                      color: Colors.black,
-                                      fontSize: 19,
-                                    ),
                                     contentPadding: const EdgeInsets.symmetric(
                                         horizontal: 9.0, vertical: 11.0),
                                     border: OutlineInputBorder(
@@ -1389,17 +1387,14 @@ class _TraderHomeScreenState extends State<TraderHomeScreen>
                                             baseOffset: 0,
                                             extentOffset: _wieghtController
                                                 .value.text.length),
-                                    // enabled: !valueEnabled,
+                                    // enabled: !valueEnabled,textInputAction: TextInputAction.done,
                                     keyboardType:
                                         const TextInputType.numberWithOptions(
-                                            signed: true, decimal: true),
+                                            decimal: true),
                                     inputFormatters: [DecimalFormatter()],
                                     decoration: InputDecoration(
+                                      suffixText: showunit ? wieghtUnit : "",
                                       labelText: wieghtLabel,
-                                      prefixText: showunit ? wieghtUnit : "",
-                                      prefixStyle: const TextStyle(
-                                        color: Colors.black,
-                                      ),
                                       contentPadding:
                                           const EdgeInsets.symmetric(
                                               horizontal: 9.0, vertical: 11.0),
@@ -1676,14 +1671,17 @@ class _TraderHomeScreenState extends State<TraderHomeScreen>
                                             extentOffset: _valueController
                                                 .value.text.length),
                                     // enabled: valueEnabled,
+                                    textInputAction: TextInputAction.done,
                                     keyboardType:
                                         const TextInputType.numberWithOptions(
-                                            signed: true, decimal: true),
+                                            decimal: true),
                                     inputFormatters: [DecimalFormatter()],
+                                    style: const TextStyle(fontSize: 18),
                                     decoration: InputDecoration(
                                       labelText: valueEnabled
                                           ? "قيمة البضاعة الاجمالية بالدولار"
                                           : "سعر الواحدة لدى الجمارك",
+                                      suffixText: "\$",
                                       contentPadding:
                                           const EdgeInsets.symmetric(
                                               horizontal: 9.0, vertical: 11.0),
@@ -2190,9 +2188,9 @@ class _TraderHomeScreenState extends State<TraderHomeScreen>
                       focusNode: _statenode,
                       onFocusChange: (bool focus) {
                         if (!focus) {
+                          FocusManager.instance.primaryFocus?.unfocus();
                           BlocProvider.of<BottomNavBarCubit>(context)
                               .emitShow();
-                          FocusManager.instance.primaryFocus?.unfocus();
                         }
                       },
                       child:
@@ -2222,9 +2220,9 @@ class _TraderHomeScreenState extends State<TraderHomeScreen>
                             labelText: "بحث",
                             suffixIcon: InkWell(
                               onTap: () {
+                                FocusManager.instance.primaryFocus?.unfocus();
                                 BlocProvider.of<BottomNavBarCubit>(context)
                                     .emitShow();
-                                FocusManager.instance.primaryFocus?.unfocus();
 
                                 if (_searchController.text.isNotEmpty) {
                                   BlocProvider.of<SearchSectionBloc>(context)
@@ -2249,6 +2247,7 @@ class _TraderHomeScreenState extends State<TraderHomeScreen>
                             }
                           },
                           onFieldSubmitted: (value) {
+                            FocusManager.instance.primaryFocus?.unfocus();
                             BlocProvider.of<BottomNavBarCubit>(context)
                                 .emitShow();
                             _searchController.text = value;
@@ -3061,9 +3060,9 @@ class _TraderHomeScreenState extends State<TraderHomeScreen>
                               ),
                             ),
                             feeselected == index4
-                                ? const Icon(
+                                ? Icon(
                                     Icons.check_box_outlined,
-                                    color: Colors.green,
+                                    color: AppColor.deepYellow,
                                   )
                                 : Icon(
                                     Icons.check_box_outline_blank,

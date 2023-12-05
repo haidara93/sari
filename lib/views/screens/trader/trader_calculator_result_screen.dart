@@ -1,4 +1,5 @@
 import 'package:custome_mobile/business_logic/bloc/calculate_result_bloc.dart';
+import 'package:custome_mobile/helpers/color_constants.dart';
 import 'package:custome_mobile/views/widgets/calculator_loading_screen.dart';
 import 'package:custome_mobile/views/widgets/custom_app_bar.dart';
 import 'package:custome_mobile/views/widgets/custom_botton.dart';
@@ -85,15 +86,14 @@ class TraderCalculatorResultScreen extends StatelessWidget {
                     if (state is CalculateResultSuccessed) {
                       return Container(
                         padding: EdgeInsets.symmetric(horizontal: 15.w),
+                        margin: EdgeInsets.symmetric(horizontal: 10.w),
                         decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(15),
-                          gradient: const LinearGradient(
-                              colors: [
-                                Colors.white,
-                                Colors.white,
-                              ],
-                              begin: Alignment.topCenter,
-                              end: Alignment.bottomCenter),
+                          border: Border.all(
+                            color: AppColor.deepYellow,
+                            width: 2,
+                          ),
+                          borderRadius: BorderRadius.circular(12),
+                          color: Colors.white,
                         ),
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.start,
@@ -106,6 +106,7 @@ class TraderCalculatorResultScreen extends StatelessWidget {
                             const SizedBox(
                               height: 7,
                             ),
+                            Divider(color: AppColor.deepYellow),
                             Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [

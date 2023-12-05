@@ -9,6 +9,9 @@ part 'offer_state.dart';
 class OfferBloc extends Bloc<OfferEvent, OfferState> {
   late StateAgencyRepository stateAgencyRepository;
   OfferBloc({required this.stateAgencyRepository}) : super(OfferInitial()) {
+    on<OfferInit>(
+      (event, emit) => emit(OfferInitial()),
+    );
     on<AddOfferEvent>((event, emit) async {
       emit(OfferLoadingProgress());
       try {

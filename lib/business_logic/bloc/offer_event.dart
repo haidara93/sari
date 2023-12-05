@@ -7,6 +7,8 @@ class OfferEvent extends Equatable {
   List<Object> get props => [];
 }
 
+class OfferInit extends OfferEvent {}
+
 class OfferLoadEvent extends OfferEvent {}
 
 class OfferStatusUpdateEvent extends OfferEvent {

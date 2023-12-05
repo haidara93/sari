@@ -31,6 +31,7 @@ import 'package:flutter_img/flutter_img.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter_typeahead/flutter_typeahead.dart';
+import 'package:hexcolor/hexcolor.dart';
 import 'package:intl/intl.dart';
 import 'package:keyboard_actions/keyboard_actions.dart';
 import 'package:shimmer/shimmer.dart';
@@ -62,11 +63,6 @@ class _StepperOrderBrokerScreenState extends State<StepperOrderBrokerScreen> {
 
   final TextEditingController _valueController = TextEditingController();
 
-  final TextEditingController _tabalehNumController = TextEditingController();
-
-  final TextEditingController _packagesNumController = TextEditingController();
-
-  final ScrollController _scrollController = ScrollController();
   String syrianExchangeValue = "6565";
 
   String syrianTotalValue = "0.0";
@@ -111,10 +107,6 @@ class _StepperOrderBrokerScreenState extends State<StepperOrderBrokerScreen> {
   CalculateObject result = CalculateObject();
 
   int agencyId = 0;
-  int packageTypeId = 0;
-  int packageNum = 0;
-  int tabalehNum = 0;
-
   int selectedPanel = -1;
   bool showtypeError = false;
   String selectedRadioTile = "";
@@ -136,14 +128,14 @@ class _StepperOrderBrokerScreenState extends State<StepperOrderBrokerScreen> {
   @override
   void initState() {
     super.initState();
-    _tabalehNumController.text = "0";
     BlocProvider.of<AttachmentTypeBloc>(context).add(AttachmentTypeLoadEvent());
     // FocusScope.of(context).unfocus();
   }
 
   void calculateTotalValueWithPrice() {
-    var syrianExch = double.parse(_wieghtController.text) *
-        double.parse(_valueController.text);
+    var syrianExch = double.parse(_wieghtController.text.replaceAll(",", "")) *
+        double.parse(_valueController.text.replaceAll(",", ""));
+    print(syrianExch);
     var syrianTotal = syrianExch * 6565;
     var totalEnsurance = (syrianTotal) + (syrianTotal * 0.0012);
     setState(() {
@@ -154,7 +146,9 @@ class _StepperOrderBrokerScreenState extends State<StepperOrderBrokerScreen> {
   }
 
   void calculateTotalValue() {
-    var syrianTotal = double.parse(_valueController.text) * 6565;
+    var syrianTotal =
+        double.parse(_valueController.text.replaceAll(",", "")) * 6565;
+    print(syrianTotal);
     var totalEnsurance = (syrianTotal) + (syrianTotal * 0.0012);
     setState(() {
       syrianTotalValue = syrianTotal.round().toString();
@@ -498,9 +492,6 @@ class _StepperOrderBrokerScreenState extends State<StepperOrderBrokerScreen> {
 
   final FocusNode _nodeWeight = FocusNode();
   final FocusNode _nodeValue = FocusNode();
-
-  final FocusNode _nodePackages = FocusNode();
-  final FocusNode _nodeTabaleh = FocusNode();
 
   @override
   Widget build(BuildContext context) {
@@ -1236,10 +1227,10 @@ class _StepperOrderBrokerScreenState extends State<StepperOrderBrokerScreen> {
                                 focusNode: _statenode,
                                 onFocusChange: (bool focus) {
                                   if (!focus) {
-                                    BlocProvider.of<BottomNavBarCubit>(context)
-                                        .emitShow();
                                     FocusManager.instance.primaryFocus
                                         ?.unfocus();
+                                    BlocProvider.of<BottomNavBarCubit>(context)
+                                        .emitShow();
                                   }
                                 },
                                 child: TypeAheadField(
@@ -1273,6 +1264,8 @@ class _StepperOrderBrokerScreenState extends State<StepperOrderBrokerScreen> {
                                               vertical: 11.0, horizontal: 9.0),
                                     ),
                                     onSubmitted: (value) {
+                                      FocusManager.instance.primaryFocus
+                                          ?.unfocus();
                                       BlocProvider.of<BottomNavBarCubit>(
                                               context)
                                           .emitShow();
@@ -1335,6 +1328,8 @@ class _StepperOrderBrokerScreenState extends State<StepperOrderBrokerScreen> {
                                       totalValueWithEnsurance = "0.0";
                                     });
                                     selectSuggestion(suggestion);
+                                    FocusManager.instance.primaryFocus
+                                        ?.unfocus();
                                     BlocProvider.of<BottomNavBarCubit>(context)
                                         .emitShow();
                                     // Navigator.of(context).push(MaterialPageRoute(
@@ -1891,11 +1886,11 @@ class _StepperOrderBrokerScreenState extends State<StepperOrderBrokerScreen> {
                                 focusNode: _nodeWeight,
                                 onFocusChange: (bool focus) {
                                   if (!focus) {
+                                    FocusManager.instance.primaryFocus
+                                        ?.unfocus();
                                     BlocProvider.of<BottomNavBarCubit>(context)
                                         .emitShow();
                                     evaluatePrice();
-                                    FocusManager.instance.primaryFocus
-                                        ?.unfocus();
                                   }
                                 },
                                 child: TextFormField(
@@ -1917,15 +1912,15 @@ class _StepperOrderBrokerScreenState extends State<StepperOrderBrokerScreen> {
                                               .viewInsets
                                               .bottom +
                                           50),
+                                  textInputAction: TextInputAction.done,
                                   keyboardType:
                                       const TextInputType.numberWithOptions(
-                                          signed: true, decimal: true),
+                                          decimal: true),
                                   inputFormatters: [DecimalFormatter()],
+                                  style: const TextStyle(fontSize: 18),
                                   decoration: InputDecoration(
                                     labelText: wieghtLabel,
-                                    prefixText: showunit ? wieghtUnit : "",
-                                    prefixStyle:
-                                        const TextStyle(color: Colors.black),
+                                    suffixText: showunit ? wieghtUnit : "",
                                     contentPadding: const EdgeInsets.symmetric(
                                         vertical: 11.0, horizontal: 9.0),
                                   ),
@@ -1963,10 +1958,10 @@ class _StepperOrderBrokerScreenState extends State<StepperOrderBrokerScreen> {
                                     _wieghtController.text = newValue!;
                                   },
                                   onFieldSubmitted: (value) {
-                                    BlocProvider.of<BottomNavBarCubit>(context)
-                                        .emitShow();
                                     FocusManager.instance.primaryFocus
                                         ?.unfocus();
+                                    BlocProvider.of<BottomNavBarCubit>(context)
+                                        .emitShow();
                                   },
                                 ),
                               ),
@@ -1978,11 +1973,11 @@ class _StepperOrderBrokerScreenState extends State<StepperOrderBrokerScreen> {
                                 focusNode: _nodeValue,
                                 onFocusChange: (bool focus) {
                                   if (!focus) {
+                                    FocusManager.instance.primaryFocus
+                                        ?.unfocus();
                                     BlocProvider.of<BottomNavBarCubit>(context)
                                         .emitShow();
                                     evaluatePrice();
-                                    FocusManager.instance.primaryFocus
-                                        ?.unfocus();
                                   }
                                 },
                                 child: TextFormField(
@@ -1996,22 +1991,22 @@ class _StepperOrderBrokerScreenState extends State<StepperOrderBrokerScreen> {
                                             _valueController.value.text.length);
                                   },
                                   // enabled: valueEnabled,
+                                  textInputAction: TextInputAction.done,
                                   keyboardType:
                                       const TextInputType.numberWithOptions(
-                                          signed: true, decimal: true),
+                                          decimal: true),
                                   scrollPadding: EdgeInsets.only(
                                       bottom: MediaQuery.of(context)
                                               .viewInsets
                                               .bottom +
                                           50),
                                   inputFormatters: [DecimalFormatter()],
+                                  style: const TextStyle(fontSize: 18),
                                   decoration: InputDecoration(
                                     labelText: valueEnabled
                                         ? "قيمة البضاعة الاجمالية بالدولار"
                                         : "سعر الواحدة لدى الجمارك",
-                                    prefixText: "\$",
-                                    prefixStyle:
-                                        const TextStyle(color: Colors.black),
+                                    suffixText: "\$",
                                   ),
                                   onEditingComplete: () {
                                     evaluatePrice();
@@ -2046,6 +2041,8 @@ class _StepperOrderBrokerScreenState extends State<StepperOrderBrokerScreen> {
                                     _valueController.text = newValue!;
                                   },
                                   onFieldSubmitted: (value) {
+                                    FocusManager.instance.primaryFocus
+                                        ?.unfocus();
                                     BlocProvider.of<BottomNavBarCubit>(context)
                                         .emitShow();
                                   },
@@ -2172,17 +2169,15 @@ class _StepperOrderBrokerScreenState extends State<StepperOrderBrokerScreen> {
                               Container(
                                 width: double.infinity,
                                 decoration: BoxDecoration(
-                                  color: Colors.grey[200],
+                                  color: AppColor.lightGreen,
+                                  border: Border.all(
+                                      color: Colors.black26, width: 2),
                                   borderRadius: BorderRadius.circular(12),
                                 ),
-                                padding: const EdgeInsets.all(10.0),
+                                padding: const EdgeInsets.all(15.0),
                                 child: Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
-                                    Text(
-                                      "قيمة التحويل بالجنيه المصري : 6565 E.P",
-                                      style: TextStyle(fontSize: 17.sp),
-                                    ),
                                     Text(
                                       "القيمة الاجمالية بالدولار :${f.format(double.parse(syrianExchangeValue).toInt())}\$",
                                       style: TextStyle(fontSize: 17.sp),
@@ -2195,642 +2190,252 @@ class _StepperOrderBrokerScreenState extends State<StepperOrderBrokerScreen> {
                                       "قيمة البضاعة مع التأمين: ${f.format(double.parse(totalValueWithEnsurance).toInt())} E.P",
                                       style: TextStyle(fontSize: 17.sp),
                                     ),
-                                  ],
-                                ),
-                              ),
-
-                              const SizedBox(
-                                height: 12,
-                              ),
-                              Row(
-                                crossAxisAlignment: CrossAxisAlignment.center,
-                                children: [
-                                  Row(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.center,
-                                    children: [
-                                      Text(
-                                        "الرسوم :  ",
-                                        style: TextStyle(
-                                          fontSize: 17,
-                                          fontWeight: FontWeight.bold,
-                                          color: AppColor.deepBlue,
+                                    Divider(color: AppColor.deepYellow),
+                                    Row(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.center,
+                                      children: [
+                                        Row(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.center,
+                                          children: [
+                                            Text(
+                                              "الرسوم :  ",
+                                              style: TextStyle(
+                                                fontSize: 17,
+                                                fontWeight: FontWeight.bold,
+                                                color: AppColor.deepBlue,
+                                              ),
+                                            ),
+                                            SizedBox(
+                                              width: 200.w,
+                                              child: BlocBuilder<
+                                                  CalculateResultBloc,
+                                                  CalculateResultState>(
+                                                builder: (context, state) {
+                                                  if (state
+                                                          is CalculateResultSuccessed &&
+                                                      totalValueWithEnsurance !=
+                                                          "0.0") {
+                                                    return Text(
+                                                      f.format(state
+                                                          .result.finalTotal!
+                                                          .toInt()),
+                                                      style: const TextStyle(
+                                                        fontSize: 16,
+                                                        fontWeight:
+                                                            FontWeight.bold,
+                                                      ),
+                                                    );
+                                                  } else if (state
+                                                      is CalculateResultLoading) {
+                                                    return const LinearProgressIndicator();
+                                                  } else {
+                                                    return const Text(
+                                                      " _ _ _ _ _ _ _ _ _ _ _ _ _ _ ",
+                                                      style: TextStyle(
+                                                        fontSize: 16,
+                                                        fontWeight:
+                                                            FontWeight.bold,
+                                                      ),
+                                                    );
+                                                  }
+                                                },
+                                              ),
+                                            ),
+                                          ],
                                         ),
-                                      ),
-                                      SizedBox(
-                                        width: 230.w,
-                                        child: BlocBuilder<CalculateResultBloc,
+                                        BlocBuilder<CalculateResultBloc,
                                             CalculateResultState>(
                                           builder: (context, state) {
                                             if (state
                                                     is CalculateResultSuccessed &&
                                                 totalValueWithEnsurance !=
                                                     "0.0") {
-                                              return Text(
-                                                f.format(state
-                                                    .result.finalTotal!
-                                                    .toInt()),
-                                                style: const TextStyle(
-                                                  fontSize: 16,
-                                                  fontWeight: FontWeight.bold,
+                                              return GestureDetector(
+                                                onTap: () {
+                                                  Navigator.push(
+                                                    context,
+                                                    MaterialPageRoute(
+                                                      builder: (context) =>
+                                                          TraderCalculatorResultScreen(),
+                                                    ),
+                                                  );
+                                                },
+                                                child: SizedBox(
+                                                  height: 50,
+                                                  child: Column(
+                                                    mainAxisAlignment:
+                                                        MainAxisAlignment
+                                                            .center,
+                                                    children: [
+                                                      Text(
+                                                        "تفاصيل الرسوم",
+                                                        style: TextStyle(
+                                                          color: AppColor
+                                                              .lightBlue,
+                                                          fontWeight:
+                                                              FontWeight.bold,
+                                                        ),
+                                                      ),
+                                                    ],
+                                                  ),
                                                 ),
                                               );
-                                            } else if (state
-                                                is CalculateResultLoading) {
-                                              return const LinearProgressIndicator();
                                             } else {
-                                              return const Text(
-                                                " _ _ _ _ _ _ _ _ _ _ _ _ _ _ ",
-                                                style: TextStyle(
-                                                  fontSize: 16,
-                                                  fontWeight: FontWeight.bold,
-                                                ),
-                                              );
+                                              return const SizedBox.shrink();
                                             }
                                           },
+                                        )
+                                      ],
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              SizedBox(
+                                height: 7.h,
+                              ),
+                              Visibility(
+                                visible: selectedStateError ||
+                                    selectedRadioTileError ||
+                                    calculatorError
+                                // packageError,
+                                ,
+                                child: const Padding(
+                                  padding: EdgeInsets.only(
+                                      top: 2.0,
+                                      bottom: 8.0,
+                                      right: 25.0,
+                                      left: 25.0),
+                                  child: Row(
+                                    mainAxisAlignment: MainAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        "الرجاء ملء الحقول الفارغة واستكمال باقي الخيارات",
+                                        style: TextStyle(
+                                          color: Colors.red,
                                         ),
                                       ),
                                     ],
                                   ),
-                                  BlocBuilder<CalculateResultBloc,
-                                      CalculateResultState>(
-                                    builder: (context, state) {
-                                      if (state is CalculateResultSuccessed &&
-                                          totalValueWithEnsurance != "0.0") {
-                                        return GestureDetector(
-                                          onTap: () {
-                                            Navigator.push(
-                                              context,
-                                              MaterialPageRoute(
-                                                builder: (context) =>
-                                                    TraderCalculatorResultScreen(),
-                                              ),
-                                            );
-                                          },
-                                          child: SizedBox(
-                                            height: 50,
-                                            child: Column(
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment.center,
-                                              children: [
-                                                Text(
-                                                  "تفاصيل الرسوم",
-                                                  style: TextStyle(
-                                                    fontSize: 17,
-                                                    color: AppColor.deepBlue,
-                                                  ),
-                                                ),
-                                              ],
-                                            ),
-                                          ),
-                                        );
-                                      } else {
-                                        return const SizedBox.shrink();
-                                      }
-                                    },
-                                  )
-                                ],
+                                ),
                               ),
-                            ],
-                          ),
-                        ),
-                      ),
-                    ),
-                  ),
-                  Card(
-                    margin: const EdgeInsets.symmetric(vertical: 7),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(10),
-                    ),
-                    child: Container(
-                      clipBehavior: Clip.antiAlias,
-                      padding: const EdgeInsets.all(8.0),
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(10),
-                        gradient: selectedPanel == 3
-                            ? LinearGradient(
-                                colors: [
-                                    AppColor.goldenYellow,
-                                    Colors.white,
-                                    Colors.white,
-                                    Colors.white,
-                                    Colors.white,
-                                    Colors.white,
-                                    Colors.white,
-                                    Colors.white,
-                                    Colors.white,
-                                    Colors.white,
-                                  ],
-                                begin: Alignment.topCenter,
-                                end: Alignment.bottomCenter)
-                            : null,
-                      ),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          SizedBox(
-                            height: 2.h,
-                          ),
-                          Text(
-                            "نوع الطرد",
-                            style: TextStyle(
-                              fontSize: 19,
-                              fontWeight: FontWeight.bold,
-                              color: AppColor.deepBlue,
-                            ),
-                          ),
-                          SizedBox(
-                              height: 140.h,
-                              child: BlocBuilder<PackageTypeBloc,
-                                  PackageTypeState>(
-                                builder: (context, state) {
-                                  if (state is PackageTypeLoadedSuccess) {
-                                    return Scrollbar(
-                                      controller: _scrollController,
-                                      thumbVisibility: true,
-                                      thickness: 2.0,
-                                      child: Padding(
-                                        padding: EdgeInsets.all(2.h),
-                                        child: ListView.builder(
-                                          controller: _scrollController,
-                                          itemCount: state.packageTypes.length,
-                                          scrollDirection: Axis.horizontal,
-                                          shrinkWrap: true,
-                                          itemBuilder: (context, index) {
-                                            return Padding(
-                                              padding: EdgeInsets.symmetric(
-                                                  horizontal: 5.w,
-                                                  vertical: 15.h),
-                                              child: GestureDetector(
-                                                onTap: () {
-                                                  setSelectedPanel(3);
-                                                  setState(() {
-                                                    packageTypeId = state
-                                                        .packageTypes[index]
-                                                        .id!;
-                                                  });
-                                                },
-                                                child: Stack(
-                                                  clipBehavior: Clip.none,
-                                                  children: [
-                                                    Container(
-                                                      width: 145.w,
-                                                      decoration: BoxDecoration(
-                                                        borderRadius:
-                                                            BorderRadius
-                                                                .circular(7),
-                                                        border: Border.all(
-                                                          color: packageTypeId ==
-                                                                  state
-                                                                      .packageTypes[
-                                                                          index]
-                                                                      .id!
-                                                              ? AppColor
-                                                                  .goldenYellow
-                                                              : AppColor
-                                                                  .deepBlue,
-                                                          width: 2.w,
-                                                        ),
-                                                      ),
-                                                      child: Column(
-                                                        mainAxisAlignment:
-                                                            MainAxisAlignment
-                                                                .center,
-                                                        children: [
-                                                          SvgPicture.network(
-                                                            state
-                                                                .packageTypes[
-                                                                    index]
-                                                                .image!,
-                                                            height: 50.h,
-                                                            // placeholder:
-                                                            //     Container(
-                                                            //   color: Colors
-                                                            //       .white,
-                                                            //   height:
-                                                            //       50.h,
-                                                            //   width: 50.h,
-                                                            // ),
-                                                          ),
-                                                          Text(
-                                                            state
-                                                                .packageTypes[
-                                                                    index]
-                                                                .name!,
-                                                            style: TextStyle(
-                                                              fontSize: 17.sp,
-                                                              color: AppColor
-                                                                  .deepBlue,
-                                                            ),
-                                                          ),
-                                                        ],
-                                                      ),
-                                                    ),
-                                                    packageTypeId ==
-                                                            state
-                                                                .packageTypes[
-                                                                    index]
-                                                                .id!
-                                                        ? Positioned(
-                                                            right: -7.w,
-                                                            top: -10.h,
-                                                            child: Container(
-                                                              padding:
-                                                                  const EdgeInsets
-                                                                      .all(2),
-                                                              decoration:
-                                                                  BoxDecoration(
-                                                                color: AppColor
-                                                                    .goldenYellow,
-                                                                borderRadius:
-                                                                    BorderRadius
-                                                                        .circular(
-                                                                            45),
-                                                              ),
-                                                              child: Icon(
-                                                                  Icons.check,
-                                                                  size: 16.w,
-                                                                  color: Colors
-                                                                      .white),
-                                                            ),
-                                                          )
-                                                        : const SizedBox
-                                                            .shrink()
-                                                  ],
-                                                ),
-                                              ),
-                                            );
-                                          },
-                                        ),
-                                      ),
-                                    );
-                                  } else {
-                                    return Shimmer.fromColors(
-                                      baseColor: (Colors.grey[300])!,
-                                      highlightColor: (Colors.grey[100])!,
-                                      enabled: true,
-                                      direction: ShimmerDirection.rtl,
-                                      child: ListView.builder(
-                                        shrinkWrap: true,
-                                        scrollDirection: Axis.horizontal,
-                                        itemBuilder: (_, __) => Padding(
-                                          padding: EdgeInsets.symmetric(
-                                              horizontal: 5.w, vertical: 15.h),
-                                          child: Container(
-                                            clipBehavior: Clip.antiAlias,
-                                            decoration: BoxDecoration(
-                                              color: Colors.white,
-                                              borderRadius:
-                                                  BorderRadius.circular(10),
-                                            ),
-                                            child: SizedBox(
-                                              width: 145.w,
-                                              height: 70.h,
-                                            ),
-                                          ),
-                                        ),
-                                        itemCount: 6,
-                                      ),
-                                    );
-                                  }
-                                },
-                              )),
-                          SizedBox(
-                            height: 7.h,
-                          ),
-                          const Divider(),
-                          SizedBox(
-                            height: 7.h,
-                          ),
-                          Form(
-                            key: _packagesformkey,
-                            child: TextFormField(
-                              controller: _packagesNumController,
-                              textAlign: TextAlign.center,
-                              focusNode: _nodePackages,
-                              keyboardType:
-                                  const TextInputType.numberWithOptions(
-                                      decimal: true, signed: true),
-                              inputFormatters: [DecimalFormatter()],
-                              style: const TextStyle(fontSize: 17),
-                              decoration: const InputDecoration(
-                                labelText: "عدد الطرود",
-                              ),
-                              scrollPadding: EdgeInsets.only(
-                                  bottom:
-                                      MediaQuery.of(context).viewInsets.bottom +
-                                          50),
-                              onTap: () {
-                                setSelectedPanel(2);
-                                BlocProvider.of<BottomNavBarCubit>(context)
-                                    .emitHide();
-                                _packagesNumController.selection =
-                                    TextSelection(
-                                        baseOffset: 0,
-                                        extentOffset: _packagesNumController
-                                            .value.text.length);
-                              },
-                              onChanged: (value) {
-                                if (value.isEmpty) {
-                                  setState(() {
-                                    _packagesNumController.text = "0";
-                                    packageNum = 0;
-                                  });
-                                } else {
-                                  packageNum = int.parse(
-                                      double.parse(_packagesNumController.text)
-                                          .toInt()
-                                          .toString());
-                                }
-                              },
-                              autovalidateMode:
-                                  AutovalidateMode.onUserInteraction,
-                              validator: (value) {
-                                if (value!.isEmpty || value == "0") {
-                                  return "الرجاء ادخال القيمة";
-                                }
-                                return null;
-                              },
-                              onSaved: (newValue) {
-                                _packagesNumController.text = newValue!;
-                              },
-                              onFieldSubmitted: (value) {
-                                BlocProvider.of<BottomNavBarCubit>(context)
-                                    .emitShow();
-                              },
-                            ),
-                          ),
-                          SizedBox(
-                            height: 7.h,
-                          ),
-                          Padding(
-                            padding: EdgeInsets.symmetric(horizontal: 18.w),
-                            child: CheckboxListTile(
-                                value: haveTabaleh,
-                                title: const Text("مع طبالي؟"),
-                                activeColor: AppColor.goldenYellow,
-                                contentPadding: EdgeInsets.zero,
-                                onChanged: (value) {
-                                  setSelectedPanel(3);
-
-                                  setState(() {
-                                    haveTabaleh = value!;
-                                    if (!value) {
-                                      _tabalehNumController.text = "0";
-                                      tabalehNum = 0;
-                                    }
-                                  });
-                                }),
-                          ),
-                          Visibility(
-                            visible: haveTabaleh,
-                            child: Padding(
-                              padding: EdgeInsets.symmetric(horizontal: 20.w),
-                              child: Row(
+                              Row(
                                 mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
+                                    MainAxisAlignment.spaceAround,
                                 children: [
-                                  GestureDetector(
-                                    onTap: () {
-                                      setSelectedPanel(3);
-                                      setState(() {
-                                        tabalehNum++;
-                                        _tabalehNumController.text =
-                                            tabalehNum.toString();
-                                      });
-                                    },
-                                    child: Container(
-                                      padding: const EdgeInsets.all(3),
-                                      decoration: BoxDecoration(
-                                        border: Border.all(
-                                          color: Colors.grey[600]!,
-                                          width: 1,
-                                        ),
-                                        borderRadius: BorderRadius.circular(45),
-                                      ),
-                                      child: Icon(Icons.add,
-                                          size: 40.w, color: Colors.blue[200]!),
-                                    ),
-                                  ),
-                                  SizedBox(
-                                    width: 200.w,
-                                    height: 55.h,
-                                    child: TextField(
-                                      controller: _tabalehNumController,
-                                      focusNode: _nodeTabaleh,
-                                      textAlign: TextAlign.center,
-                                      style: const TextStyle(fontSize: 17),
-                                      keyboardType:
-                                          const TextInputType.numberWithOptions(
-                                              decimal: true, signed: true),
-                                      inputFormatters: [DecimalFormatter()],
-                                      decoration: const InputDecoration(
-                                        labelText: "العدد",
-                                        alignLabelWithHint: true,
-                                      ),
-                                      scrollPadding: EdgeInsets.only(
-                                          bottom: MediaQuery.of(context)
-                                                  .viewInsets
-                                                  .bottom +
-                                              50),
-                                      onTap: () {
-                                        setSelectedPanel(2);
-                                        BlocProvider.of<BottomNavBarCubit>(
-                                                context)
-                                            .emitHide();
-                                        _tabalehNumController.selection =
-                                            TextSelection(
-                                                baseOffset: 0,
-                                                extentOffset:
-                                                    _tabalehNumController
-                                                        .value.text.length);
-                                      },
-                                      onChanged: (value) {
-                                        if (value.isEmpty) {
-                                          setState(() {
-                                            tabalehNum = 0;
-                                          });
-                                        } else {
-                                          tabalehNum = int.parse(double.parse(
-                                                  _tabalehNumController.text)
-                                              .toInt()
-                                              .toString());
-                                        }
-                                      },
-                                      onSubmitted: (value) {
-                                        BlocProvider.of<BottomNavBarCubit>(
-                                                context)
-                                            .emitShow();
-                                      },
-                                    ),
-                                  ),
-                                  // Text(
-                                  //   tabalehNum.toString(),
-                                  //   style: const TextStyle(fontSize: 30),
+                                  // CustomButton(
+                                  //   onTap: () {},
+                                  //   color: AppColor.deepYellow,
+                                  //   title: const SizedBox(
+                                  //       width: 100, child: Center(child: Text("إلغاء"))),
                                   // ),
-                                  GestureDetector(
-                                      onTap: () {
-                                        setSelectedPanel(3);
-
-                                        if (tabalehNum > 0) {
-                                          setState(() {
-                                            tabalehNum--;
-                                            _tabalehNumController.text =
-                                                tabalehNum.toString();
-                                          });
-                                        }
-                                      },
-                                      child: Container(
-                                        padding: const EdgeInsets.all(3),
-                                        decoration: BoxDecoration(
-                                          border: Border.all(
-                                            color: Colors.grey[600]!,
-                                            width: 1,
-                                          ),
-                                          borderRadius:
-                                              BorderRadius.circular(45),
-                                        ),
-                                        child: Icon(Icons.remove,
-                                            size: 40.w,
-                                            color: Colors.grey[600]!),
-                                      )),
-                                ],
-                              ),
-                            ),
-                          ),
-                          const Divider(),
-                          SizedBox(
-                            height: 7.h,
-                          ),
-                          Visibility(
-                            visible: selectedStateError ||
-                                selectedRadioTileError ||
-                                calculatorError ||
-                                packageError,
-                            child: const Padding(
-                              padding: EdgeInsets.only(
-                                  top: 2.0,
-                                  bottom: 8.0,
-                                  right: 25.0,
-                                  left: 25.0),
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    "الرجاء ملء الحقول الفارغة واستكمال باقي الخيارات",
-                                    style: TextStyle(
-                                      color: Colors.red,
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceAround,
-                            children: [
-                              // CustomButton(
-                              //   onTap: () {},
-                              //   color: AppColor.deepYellow,
-                              //   title: const SizedBox(
-                              //       width: 100, child: Center(child: Text("إلغاء"))),
-                              // ),
-                              BlocConsumer<CalculateResultBloc,
-                                  CalculateResultState>(
-                                listener: (context, state) {
-                                  if (state is CalculateResultSuccessed) {}
-                                },
-                                builder: (context, state) {
-                                  if (state is CalculateResultLoading) {
-                                    return CustomButton(
-                                        title: SizedBox(
+                                  BlocConsumer<CalculateResultBloc,
+                                      CalculateResultState>(
+                                    listener: (context, state) {
+                                      if (state is CalculateResultSuccessed) {}
+                                    },
+                                    builder: (context, state) {
+                                      if (state is CalculateResultLoading) {
+                                        return CustomButton(
+                                            title: SizedBox(
+                                                width: 250.w,
+                                                child: const Center(
+                                                    child:
+                                                        CircularProgressIndicator())),
+                                            // color: AppColor.deepYellow,
+                                            onTap: () {});
+                                      }
+                                      if (state is CalculateResultFailed) {
+                                        return Text(state.error);
+                                      } else {
+                                        return CustomButton(
+                                          title: SizedBox(
                                             width: 250.w,
                                             child: const Center(
-                                                child:
-                                                    CircularProgressIndicator())),
-                                        // color: AppColor.deepYellow,
-                                        onTap: () {});
-                                  }
-                                  if (state is CalculateResultFailed) {
-                                    return Text(state.error);
-                                  } else {
-                                    return CustomButton(
-                                      title: SizedBox(
-                                        width: 250.w,
-                                        child: const Center(
-                                          child: Text(
-                                            "التالي",
-                                            style: TextStyle(
-                                              fontWeight: FontWeight.bold,
+                                              child: Text(
+                                                "التالي",
+                                                style: TextStyle(
+                                                  fontWeight: FontWeight.bold,
+                                                ),
+                                              ),
                                             ),
                                           ),
-                                        ),
-                                      ),
-                                      // color: AppColor.deepYellow,
-                                      onTap: () {
-                                        FocusManager.instance.primaryFocus
-                                            ?.unfocus();
-                                        if (selectedRadioTile.isNotEmpty) {
-                                          if (selectedStateCustome != null &&
-                                              selectedCustomeAgency != null) {
-                                            _ordercalformkey.currentState
-                                                ?.save();
-                                            if (_ordercalformkey.currentState!
-                                                .validate()) {
-                                              setState(() {
-                                                calculatorError = false;
-                                              });
-                                              _packagesformkey.currentState
-                                                  ?.save();
-                                              if (_packagesformkey.currentState!
-                                                  .validate()) {
-                                                setState(() {
-                                                  packageError = false;
-                                                });
-
-                                                if (selectedOrigin != null) {
-                                                  if (selectedPackage != null) {
-                                                    Navigator.push(
-                                                      context,
-                                                      MaterialPageRoute(
-                                                        builder: (context) =>
-                                                            TraderAttachementScreen(
-                                                          offerType:
-                                                              selectedRadioTile,
-                                                          customAgency:
-                                                              selectedCustomeAgency!
-                                                                  .id!,
-                                                          customeState:
-                                                              selectedStateCustome!
-                                                                  .id!,
-                                                          origin:
-                                                              selectedOrigin!
-                                                                  .id!,
-                                                          packageType:
-                                                              packageTypeId,
-                                                          packagesNum:
-                                                              packageNum,
-                                                          tabalehNum:
-                                                              tabalehNum,
-                                                          weight: wieghtValue
-                                                              .toInt(),
-                                                          product:
-                                                              selectedPackage!
-                                                                  .id,
-                                                          price: int.parse(
-                                                              syrianTotalValue),
-                                                          taxes: int.parse(
-                                                              totalValueWithEnsurance),
-                                                          rawMaterial: result
-                                                              .rawMaterial,
-                                                          industrial:
-                                                              result.industrial,
+                                          // color: AppColor.deepYellow,
+                                          onTap: () {
+                                            FocusManager.instance.primaryFocus
+                                                ?.unfocus();
+                                            if (selectedRadioTile.isNotEmpty) {
+                                              if (selectedStateCustome !=
+                                                      null &&
+                                                  selectedCustomeAgency !=
+                                                      null) {
+                                                _ordercalformkey.currentState
+                                                    ?.save();
+                                                if (_ordercalformkey
+                                                    .currentState!
+                                                    .validate()) {
+                                                  setState(() {
+                                                    calculatorError = false;
+                                                  });
+                                                  if (selectedOrigin != null) {
+                                                    if (selectedPackage !=
+                                                        null) {
+                                                      Navigator.push(
+                                                        context,
+                                                        MaterialPageRoute(
+                                                          builder: (context) =>
+                                                              TraderAttachementScreen(
+                                                            offerType:
+                                                                selectedRadioTile,
+                                                            customAgency:
+                                                                selectedCustomeAgency!
+                                                                    .id!,
+                                                            customeState:
+                                                                selectedStateCustome!
+                                                                    .id!,
+                                                            origin:
+                                                                selectedOrigin!
+                                                                    .id!,
+                                                            // packageType:
+                                                            //     packageTypeId,
+                                                            // packagesNum:
+                                                            //     packageNum,
+                                                            // tabalehNum:
+                                                            //     tabalehNum,
+                                                            weight: wieghtValue
+                                                                .toInt(),
+                                                            product:
+                                                                selectedPackage!
+                                                                    .id,
+                                                            price: int.parse(
+                                                                syrianTotalValue),
+                                                            taxes: int.parse(
+                                                                totalValueWithEnsurance),
+                                                            rawMaterial: result
+                                                                .rawMaterial,
+                                                            industrial: result
+                                                                .industrial,
+                                                          ),
                                                         ),
-                                                      ),
-                                                    );
+                                                      );
+                                                    } else {
+                                                      setState(() {
+                                                        feeerror = true;
+                                                        calculatorError = true;
+                                                      });
+                                                      setSelectedPanel(2);
+                                                      Scrollable.ensureVisible(
+                                                        key3.currentContext!,
+                                                        duration:
+                                                            const Duration(
+                                                          milliseconds: 500,
+                                                        ),
+                                                      );
+                                                    }
                                                   } else {
                                                     setState(() {
-                                                      feeerror = true;
+                                                      originerror = true;
                                                       calculatorError = true;
                                                     });
                                                     setSelectedPanel(2);
@@ -2842,11 +2447,11 @@ class _StepperOrderBrokerScreenState extends State<StepperOrderBrokerScreen> {
                                                     );
                                                   }
                                                 } else {
+                                                  setSelectedPanel(2);
+
                                                   setState(() {
-                                                    originerror = true;
                                                     calculatorError = true;
                                                   });
-                                                  setSelectedPanel(2);
                                                   Scrollable.ensureVisible(
                                                     key3.currentContext!,
                                                     duration: const Duration(
@@ -2855,60 +2460,42 @@ class _StepperOrderBrokerScreenState extends State<StepperOrderBrokerScreen> {
                                                   );
                                                 }
                                               } else {
-                                                setSelectedPanel(3);
-
+                                                setSelectedPanel(1);
                                                 setState(() {
-                                                  packageError = true;
+                                                  selectedStateError = true;
                                                 });
+                                                Scrollable.ensureVisible(
+                                                  key2.currentContext!,
+                                                  duration: const Duration(
+                                                    milliseconds: 500,
+                                                  ),
+                                                );
                                               }
                                             } else {
-                                              setSelectedPanel(2);
-
+                                              setSelectedPanel(0);
                                               setState(() {
-                                                calculatorError = true;
+                                                selectedRadioTileError = true;
                                               });
                                               Scrollable.ensureVisible(
-                                                key3.currentContext!,
+                                                key1.currentContext!,
                                                 duration: const Duration(
                                                   milliseconds: 500,
                                                 ),
                                               );
                                             }
-                                          } else {
-                                            setSelectedPanel(1);
-                                            setState(() {
-                                              selectedStateError = true;
-                                            });
-                                            Scrollable.ensureVisible(
-                                              key2.currentContext!,
-                                              duration: const Duration(
-                                                milliseconds: 500,
-                                              ),
-                                            );
-                                          }
-                                        } else {
-                                          setSelectedPanel(0);
-                                          setState(() {
-                                            selectedRadioTileError = true;
-                                          });
-                                          Scrollable.ensureVisible(
-                                            key1.currentContext!,
-                                            duration: const Duration(
-                                              milliseconds: 500,
-                                            ),
-                                          );
-                                        }
-                                      },
-                                    );
-                                  }
-                                },
+                                          },
+                                        );
+                                      }
+                                    },
+                                  ),
+                                ],
+                              ),
+                              SizedBox(
+                                height: 7.h,
                               ),
                             ],
                           ),
-                          SizedBox(
-                            height: 7.h,
-                          ),
-                        ],
+                        ),
                       ),
                     ),
                   ),
