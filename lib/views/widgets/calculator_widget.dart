@@ -1139,8 +1139,8 @@ class _CalculatorWidgetState extends State<CalculatorWidget> {
                 scrollPadding: EdgeInsets.only(
                     bottom: MediaQuery.of(context).viewInsets.bottom + 50),
                 textInputAction: TextInputAction.done,
-                keyboardType:
-                    const TextInputType.numberWithOptions(decimal: true),
+                keyboardType: const TextInputType.numberWithOptions(
+                    decimal: true, signed: true),
                 inputFormatters: [DecimalFormatter()],
                 style: const TextStyle(fontSize: 18),
                 decoration: InputDecoration(
@@ -1195,8 +1195,8 @@ class _CalculatorWidgetState extends State<CalculatorWidget> {
                 },
                 // enabled: valueEnabled,
                 textInputAction: TextInputAction.done,
-                keyboardType:
-                    const TextInputType.numberWithOptions(decimal: true),
+                keyboardType: const TextInputType.numberWithOptions(
+                    decimal: true, signed: true),
                 inputFormatters: [DecimalFormatter()],
                 scrollPadding: EdgeInsets.only(
                     bottom: MediaQuery.of(context).viewInsets.bottom + 50),

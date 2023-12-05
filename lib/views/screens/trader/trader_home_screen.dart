@@ -1390,7 +1390,7 @@ class _TraderHomeScreenState extends State<TraderHomeScreen>
                                     // enabled: !valueEnabled,textInputAction: TextInputAction.done,
                                     keyboardType:
                                         const TextInputType.numberWithOptions(
-                                            decimal: true),
+                                            decimal: true, signed: true),
                                     inputFormatters: [DecimalFormatter()],
                                     decoration: InputDecoration(
                                       suffixText: showunit ? wieghtUnit : "",
@@ -1674,7 +1674,7 @@ class _TraderHomeScreenState extends State<TraderHomeScreen>
                                     textInputAction: TextInputAction.done,
                                     keyboardType:
                                         const TextInputType.numberWithOptions(
-                                            decimal: true),
+                                            decimal: true, signed: true),
                                     inputFormatters: [DecimalFormatter()],
                                     style: const TextStyle(fontSize: 18),
                                     decoration: InputDecoration(

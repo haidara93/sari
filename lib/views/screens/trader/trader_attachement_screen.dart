@@ -809,7 +809,7 @@ class _TraderAttachementScreenState extends State<TraderAttachementScreen> {
                                   textInputAction: TextInputAction.done,
                                   keyboardType:
                                       const TextInputType.numberWithOptions(
-                                          decimal: true),
+                                          decimal: true, signed: true),
                                   inputFormatters: [DecimalFormatter()],
                                   style: const TextStyle(fontSize: 17),
                                   decoration: const InputDecoration(
@@ -929,7 +929,7 @@ class _TraderAttachementScreenState extends State<TraderAttachementScreen> {
                                                 TextInputAction.done,
                                             keyboardType: const TextInputType
                                                 .numberWithOptions(
-                                                decimal: true),
+                                                decimal: true, signed: true),
                                             inputFormatters: [
                                               DecimalFormatter()
                                             ],

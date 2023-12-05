@@ -1915,7 +1915,7 @@ class _StepperOrderBrokerScreenState extends State<StepperOrderBrokerScreen> {
                                   textInputAction: TextInputAction.done,
                                   keyboardType:
                                       const TextInputType.numberWithOptions(
-                                          decimal: true),
+                                          decimal: true, signed: true),
                                   inputFormatters: [DecimalFormatter()],
                                   style: const TextStyle(fontSize: 18),
                                   decoration: InputDecoration(
@@ -1994,7 +1994,7 @@ class _StepperOrderBrokerScreenState extends State<StepperOrderBrokerScreen> {
                                   textInputAction: TextInputAction.done,
                                   keyboardType:
                                       const TextInputType.numberWithOptions(
-                                          decimal: true),
+                                          decimal: true, signed: true),
                                   scrollPadding: EdgeInsets.only(
                                       bottom: MediaQuery.of(context)
                                               .viewInsets
@@ -2491,7 +2491,7 @@ class _StepperOrderBrokerScreenState extends State<StepperOrderBrokerScreen> {
                                 ],
                               ),
                               SizedBox(
-                                height: 7.h,
+                                height: 5.h,
                               ),
                             ],
                           ),
@@ -2499,9 +2499,9 @@ class _StepperOrderBrokerScreenState extends State<StepperOrderBrokerScreen> {
                       ),
                     ),
                   ),
-                  SizedBox(
-                    height: 7.h,
-                  ),
+                  // SizedBox(
+                  //   height: 5.h,
+                  // ),
                 ]),
               ),
             ],
