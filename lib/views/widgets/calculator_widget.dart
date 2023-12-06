@@ -509,6 +509,12 @@ class _CalculatorWidgetState extends State<CalculatorWidget> {
                           color: AppColor.deepBlue,
                         )),
                   ),
+                ],
+              ),
+
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.end,
+                children: [
                   widget.tariffButton!
                       ? GestureDetector(
                           onTap: () {
@@ -548,102 +554,106 @@ class _CalculatorWidgetState extends State<CalculatorWidget> {
                           ),
                         )
                       : const SizedBox.shrink(),
-                ],
-              ),
-
-              Focus(
-                focusNode: _statenode,
-                onFocusChange: (bool focus) {
-                  if (!focus) {
-                    FocusManager.instance.primaryFocus?.unfocus();
-                    BlocProvider.of<BottomNavBarCubit>(context).emitShow();
-                  }
-                },
-                child: TypeAheadField(
-                  textFieldConfiguration: TextFieldConfiguration(
-                    // autofocus: true,
-                    keyboardType: TextInputType.multiline,
-                    maxLines: null,
-                    controller: widget.typeAheadController,
-                    scrollPadding: EdgeInsets.only(
-                        bottom: MediaQuery.of(context).viewInsets.bottom + 150),
-                    onTap: () {
-                      // setSelectedPanel(2);
-                      BlocProvider.of<BottomNavBarCubit>(context).emitHide();
-                      widget.typeAheadController!.selection = TextSelection(
-                          baseOffset: 0,
-                          extentOffset:
-                              widget.typeAheadController!.value.text.length);
+                  Focus(
+                    focusNode: _statenode,
+                    onFocusChange: (bool focus) {
+                      if (!focus) {
+                        FocusManager.instance.primaryFocus?.unfocus();
+                        BlocProvider.of<BottomNavBarCubit>(context).emitShow();
+                      }
                     },
+                    child: TypeAheadField(
+                      textFieldConfiguration: TextFieldConfiguration(
+                        // autofocus: true,
+                        keyboardType: TextInputType.multiline,
+                        maxLines: null,
+                        controller: widget.typeAheadController,
+                        scrollPadding: EdgeInsets.only(
+                            bottom:
+                                MediaQuery.of(context).viewInsets.bottom + 150),
+                        onTap: () {
+                          // setSelectedPanel(2);
+                          BlocProvider.of<BottomNavBarCubit>(context)
+                              .emitHide();
+                          widget.typeAheadController!.selection = TextSelection(
+                              baseOffset: 0,
+                              extentOffset: widget
+                                  .typeAheadController!.value.text.length);
+                        },
 
-                    decoration: const InputDecoration(
-                      labelText: "نوع البضاعة",
-                      contentPadding: EdgeInsets.symmetric(
-                        horizontal: 9.0,
-                        vertical: 11.0,
+                        decoration: const InputDecoration(
+                          labelText: "نوع البضاعة",
+                          contentPadding: EdgeInsets.symmetric(
+                            horizontal: 9.0,
+                            vertical: 11.0,
+                          ),
+                        ),
+                        onSubmitted: (value) {
+                          FocusManager.instance.primaryFocus?.unfocus();
+                          BlocProvider.of<BottomNavBarCubit>(context)
+                              .emitShow();
+                        },
                       ),
+                      loadingBuilder: (context) {
+                        return Container(
+                          color: Colors.white,
+                          child: const Center(
+                            child: CircularProgressIndicator(),
+                          ),
+                        );
+                      },
+                      errorBuilder: (context, error) {
+                        return Container(
+                          color: Colors.white,
+                        );
+                      },
+                      suggestionsCallback: (pattern) async {
+                        setState(() {
+                          patternString = pattern;
+                        });
+                        return pattern.isEmpty || pattern.length == 1
+                            ? []
+                            : await CalculatorService.getpackages(pattern);
+                      },
+                      itemBuilder: (context, suggestion) {
+                        return Container(
+                          color: Colors.white,
+                          child: Column(
+                            children: [
+                              ListTile(
+                                // leading: Icon(Icons.shopping_cart),
+                                tileColor: Colors.white,
+                                title: HighlightText(
+                                  text: suggestion.label!,
+                                  highlight: patternString,
+                                  ignoreCase: false,
+                                  highlightColor: AppColor.goldenYellow,
+                                ),
+                                // subtitle: Text('\$${suggestion['price']}'),
+                              ),
+                              Divider(
+                                color: Colors.grey[300],
+                                height: 3,
+                              ),
+                            ],
+                          ),
+                        );
+                      },
+                      onSuggestionSelected: (suggestion) {
+                        // setState(() {
+                        //   widget.wieghtController!.text = "";
+                        //   widget.valueController!.text = "";
+                        //   syrianExchangeValue = "0.0";
+                        //   syrianTotalValue = "0.0";
+                        //   totalValueWithEnsurance = "0.0";
+                        // });
+                        selectSuggestion(suggestion);
+                        FocusManager.instance.primaryFocus?.unfocus();
+                        BlocProvider.of<BottomNavBarCubit>(context).emitShow();
+                      },
                     ),
-                    onSubmitted: (value) {
-                      FocusManager.instance.primaryFocus?.unfocus();
-                      BlocProvider.of<BottomNavBarCubit>(context).emitShow();
-                    },
                   ),
-                  loadingBuilder: (context) {
-                    return Container(
-                      color: Colors.white,
-                      child: const Center(
-                        child: CircularProgressIndicator(),
-                      ),
-                    );
-                  },
-                  errorBuilder: (context, error) {
-                    return Container(
-                      color: Colors.white,
-                    );
-                  },
-                  suggestionsCallback: (pattern) async {
-                    setState(() {
-                      patternString = pattern;
-                    });
-                    return await CalculatorService.getpackages(pattern);
-                  },
-                  itemBuilder: (context, suggestion) {
-                    return Container(
-                      color: Colors.white,
-                      child: Column(
-                        children: [
-                          ListTile(
-                            // leading: Icon(Icons.shopping_cart),
-                            tileColor: Colors.white,
-                            title: HighlightText(
-                              text: suggestion.label!,
-                              highlight: patternString,
-                              ignoreCase: false,
-                              highlightColor: AppColor.goldenYellow,
-                            ),
-                            // subtitle: Text('\$${suggestion['price']}'),
-                          ),
-                          Divider(
-                            color: Colors.grey[300],
-                            height: 3,
-                          ),
-                        ],
-                      ),
-                    );
-                  },
-                  onSuggestionSelected: (suggestion) {
-                    // setState(() {
-                    //   widget.wieghtController!.text = "";
-                    //   widget.valueController!.text = "";
-                    //   syrianExchangeValue = "0.0";
-                    //   syrianTotalValue = "0.0";
-                    //   totalValueWithEnsurance = "0.0";
-                    // });
-                    selectSuggestion(suggestion);
-                    FocusManager.instance.primaryFocus?.unfocus();
-                    BlocProvider.of<BottomNavBarCubit>(context).emitShow();
-                  },
-                ),
+                ],
               ),
               const SizedBox(
                 height: 14,
@@ -685,6 +695,7 @@ class _CalculatorWidgetState extends State<CalculatorWidget> {
                 child: DropdownButtonHideUnderline(
                   child: DropdownButton2<Extras>(
                     isExpanded: true,
+                    barrierLabel: _placeholder,
                     hint: Text(
                       _placeholder,
                       style: TextStyle(
@@ -748,13 +759,43 @@ class _CalculatorWidgetState extends State<CalculatorWidget> {
                         selectedValue = value;
                       });
                     },
-                    buttonStyleData: const ButtonStyleData(
-                      padding: EdgeInsets.symmetric(horizontal: 16),
-                      height: 40,
-                      width: 140,
+                    buttonStyleData: ButtonStyleData(
+                      height: 50,
+                      width: double.infinity,
+
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 9.0,
+                      ),
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(12),
+                        border: Border.all(
+                          color: Colors.black26,
+                        ),
+                        color: Colors.white,
+                      ),
+                      // elevation: 2,
                     ),
-                    menuItemStyleData: const MenuItemStyleData(
-                      height: 40,
+                    iconStyleData: const IconStyleData(
+                      icon: Icon(
+                        Icons.keyboard_arrow_down_sharp,
+                      ),
+                      iconSize: 20,
+                      iconEnabledColor: AppColor.AccentBlue,
+                      iconDisabledColor: Colors.grey,
+                    ),
+                    dropdownStyleData: DropdownStyleData(
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(14),
+                        color: Colors.white,
+                      ),
+                      scrollbarTheme: ScrollbarThemeData(
+                        radius: const Radius.circular(40),
+                        thickness: MaterialStateProperty.all(6),
+                        thumbVisibility: MaterialStateProperty.all(true),
+                      ),
+                    ),
+                    menuItemStyleData: MenuItemStyleData(
+                      height: 40.h,
                     ),
                   ),
                 ),

@@ -115,7 +115,7 @@ class _LogScreenState extends State<LogScreen>
                         break;
                       case 1:
                         BlocProvider.of<TraderLogBloc>(context)
-                            .add(const TraderLogLoadEvent("C"));
+                            .add(const TraderLogLoadEvent("P"));
                         break;
                       default:
                     }
@@ -160,7 +160,7 @@ class _LogScreenState extends State<LogScreen>
                                 : null
                             // color: AppColor.activeGreen,
                             ),
-                        child: const Center(child: Text('العمليات المنتهية')),
+                        child: const Center(child: Text('العمليات المعلقة')),
                       ),
                     ),
                   ],

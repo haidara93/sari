@@ -1180,6 +1180,12 @@ class _StepperOrderBrokerScreenState extends State<StepperOrderBrokerScreen> {
                                           color: AppColor.deepBlue,
                                         )),
                                   ),
+                                ],
+                              ),
+
+                              Column(
+                                crossAxisAlignment: CrossAxisAlignment.end,
+                                children: [
                                   GestureDetector(
                                     onTap: () {
                                       BlocProvider.of<CalculatorPanelBloc>(
@@ -1221,123 +1227,127 @@ class _StepperOrderBrokerScreenState extends State<StepperOrderBrokerScreen> {
                                       ),
                                     ),
                                   ),
-                                ],
-                              ),
-
-                              Focus(
-                                focusNode: _statenode,
-                                onFocusChange: (bool focus) {
-                                  if (!focus) {
-                                    FocusManager.instance.primaryFocus
-                                        ?.unfocus();
-                                    BlocProvider.of<BottomNavBarCubit>(context)
-                                        .emitShow();
-                                  }
-                                },
-                                child: TypeAheadField(
-                                  textFieldConfiguration:
-                                      TextFieldConfiguration(
-                                    // autofocus: true,
-                                    keyboardType: TextInputType.multiline,
-                                    maxLines: null,
-                                    controller: _typeAheadController,
-                                    scrollPadding: EdgeInsets.only(
-                                        bottom: MediaQuery.of(context)
-                                                .viewInsets
-                                                .bottom +
-                                            150),
-                                    onTap: () {
-                                      setSelectedPanel(2);
-                                      BlocProvider.of<BottomNavBarCubit>(
-                                              context)
-                                          .emitHide();
-                                      _typeAheadController.selection =
-                                          TextSelection(
-                                              baseOffset: 0,
-                                              extentOffset: _typeAheadController
-                                                  .value.text.length);
+                                  Focus(
+                                    focusNode: _statenode,
+                                    onFocusChange: (bool focus) {
+                                      if (!focus) {
+                                        FocusManager.instance.primaryFocus
+                                            ?.unfocus();
+                                        BlocProvider.of<BottomNavBarCubit>(
+                                                context)
+                                            .emitShow();
+                                      }
                                     },
-                                    style: const TextStyle(fontSize: 17),
-                                    decoration: const InputDecoration(
-                                      labelText: "نوع البضاعة",
-                                      contentPadding:
-                                          const EdgeInsets.symmetric(
+                                    child: TypeAheadField(
+                                      textFieldConfiguration:
+                                          TextFieldConfiguration(
+                                        // autofocus: true,
+                                        keyboardType: TextInputType.multiline,
+                                        maxLines: null,
+                                        controller: _typeAheadController,
+                                        scrollPadding: EdgeInsets.only(
+                                            bottom: MediaQuery.of(context)
+                                                    .viewInsets
+                                                    .bottom +
+                                                150),
+                                        onTap: () {
+                                          setSelectedPanel(2);
+                                          BlocProvider.of<BottomNavBarCubit>(
+                                                  context)
+                                              .emitHide();
+                                          _typeAheadController.selection =
+                                              TextSelection(
+                                                  baseOffset: 0,
+                                                  extentOffset:
+                                                      _typeAheadController
+                                                          .value.text.length);
+                                        },
+                                        style: const TextStyle(fontSize: 17),
+                                        decoration: const InputDecoration(
+                                          labelText: "نوع البضاعة",
+                                          contentPadding: EdgeInsets.symmetric(
                                               vertical: 11.0, horizontal: 9.0),
-                                    ),
-                                    onSubmitted: (value) {
-                                      FocusManager.instance.primaryFocus
-                                          ?.unfocus();
-                                      BlocProvider.of<BottomNavBarCubit>(
-                                              context)
-                                          .emitShow();
-                                    },
-                                  ),
-                                  loadingBuilder: (context) {
-                                    return Container(
-                                      color: Colors.white,
-                                      child: const Center(
-                                        child: CircularProgressIndicator(),
+                                        ),
+                                        onSubmitted: (value) {
+                                          FocusManager.instance.primaryFocus
+                                              ?.unfocus();
+                                          BlocProvider.of<BottomNavBarCubit>(
+                                                  context)
+                                              .emitShow();
+                                        },
                                       ),
-                                    );
-                                  },
-                                  errorBuilder: (context, error) {
-                                    return Container(
-                                      color: Colors.white,
-                                    );
-                                  },
-                                  suggestionsCallback: (pattern) async {
-                                    // _debouncer.run(() {
+                                      loadingBuilder: (context) {
+                                        return Container(
+                                          color: Colors.white,
+                                          child: const Center(
+                                            child: CircularProgressIndicator(),
+                                          ),
+                                        );
+                                      },
+                                      errorBuilder: (context, error) {
+                                        return Container(
+                                          color: Colors.white,
+                                        );
+                                      },
+                                      suggestionsCallback: (pattern) async {
+                                        // _debouncer.run(() {
 
-                                    // });
-                                    setState(() {
-                                      patternString = pattern;
-                                    });
-                                    return await CalculatorService.getpackages(
-                                        pattern);
-                                  },
-                                  itemBuilder: (context, suggestion) {
-                                    return Container(
-                                      color: Colors.white,
-                                      child: Column(
-                                        children: [
-                                          ListTile(
-                                            // leading: Icon(Icons.shopping_cart),
-                                            tileColor: Colors.white,
-                                            title: HighlightText(
-                                              text: suggestion.label!,
-                                              highlight: patternString,
-                                              ignoreCase: false,
-                                              highlightColor:
-                                                  AppColor.goldenYellow,
-                                            ),
-                                            // subtitle: Text('\$${suggestion['price']}'),
+                                        // });
+                                        setState(() {
+                                          patternString = pattern;
+                                        });
+                                        return pattern.isEmpty ||
+                                                pattern.length == 1
+                                            ? []
+                                            : await CalculatorService
+                                                .getpackages(pattern);
+                                      },
+                                      itemBuilder: (context, suggestion) {
+                                        return Container(
+                                          color: Colors.white,
+                                          child: Column(
+                                            children: [
+                                              ListTile(
+                                                // leading: Icon(Icons.shopping_cart),
+                                                tileColor: Colors.white,
+                                                title: HighlightText(
+                                                  text: suggestion.label!,
+                                                  highlight: patternString,
+                                                  ignoreCase: false,
+                                                  highlightColor:
+                                                      AppColor.goldenYellow,
+                                                ),
+                                                // subtitle: Text('\$${suggestion['price']}'),
+                                              ),
+                                              Divider(
+                                                color: Colors.grey[300],
+                                                height: 3,
+                                              ),
+                                            ],
                                           ),
-                                          Divider(
-                                            color: Colors.grey[300],
-                                            height: 3,
-                                          ),
-                                        ],
-                                      ),
-                                    );
-                                  },
-                                  onSuggestionSelected: (suggestion) {
-                                    setState(() {
-                                      _wieghtController.text = "";
-                                      _valueController.text = "";
-                                      syrianExchangeValue = "6565";
-                                      syrianTotalValue = "0.0";
-                                      totalValueWithEnsurance = "0.0";
-                                    });
-                                    selectSuggestion(suggestion);
-                                    FocusManager.instance.primaryFocus
-                                        ?.unfocus();
-                                    BlocProvider.of<BottomNavBarCubit>(context)
-                                        .emitShow();
-                                    // Navigator.of(context).push(MaterialPageRoute(
-                                    //   builder: (context) => ProductPage(product: suggestion)
-                                    // ));
-                                  },
-                                ),
+                                        );
+                                      },
+                                      onSuggestionSelected: (suggestion) {
+                                        setState(() {
+                                          _wieghtController.text = "";
+                                          _valueController.text = "";
+                                          syrianExchangeValue = "6565";
+                                          syrianTotalValue = "0.0";
+                                          totalValueWithEnsurance = "0.0";
+                                        });
+                                        selectSuggestion(suggestion);
+                                        FocusManager.instance.primaryFocus
+                                            ?.unfocus();
+                                        BlocProvider.of<BottomNavBarCubit>(
+                                                context)
+                                            .emitShow();
+                                        // Navigator.of(context).push(MaterialPageRoute(
+                                        //   builder: (context) => ProductPage(product: suggestion)
+                                        // ));
+                                      },
+                                    ),
+                                  ),
+                                ],
                               ),
                               Visibility(
                                 visible: allowexport,
@@ -1376,10 +1386,11 @@ class _StepperOrderBrokerScreenState extends State<StepperOrderBrokerScreen> {
                                 child: DropdownButtonHideUnderline(
                                   child: DropdownButton2<Extras>(
                                     isExpanded: true,
+                                    barrierLabel: _placeholder,
                                     hint: Text(
                                       _placeholder,
                                       style: TextStyle(
-                                        fontSize: 14,
+                                        fontSize: 18,
                                         color: Theme.of(context).hintColor,
                                       ),
                                     ),
@@ -1439,14 +1450,44 @@ class _StepperOrderBrokerScreenState extends State<StepperOrderBrokerScreen> {
                                         selectedValue = value;
                                       });
                                     },
-                                    buttonStyleData: const ButtonStyleData(
-                                      padding:
-                                          EdgeInsets.symmetric(horizontal: 16),
-                                      height: 40,
-                                      width: 140,
+                                    buttonStyleData: ButtonStyleData(
+                                      height: 50,
+                                      width: double.infinity,
+
+                                      padding: const EdgeInsets.symmetric(
+                                        horizontal: 9.0,
+                                      ),
+                                      decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.circular(12),
+                                        border: Border.all(
+                                          color: Colors.black26,
+                                        ),
+                                        color: Colors.white,
+                                      ),
+                                      // elevation: 2,
                                     ),
-                                    menuItemStyleData: const MenuItemStyleData(
-                                      height: 40,
+                                    iconStyleData: const IconStyleData(
+                                      icon: Icon(
+                                        Icons.keyboard_arrow_down_sharp,
+                                      ),
+                                      iconSize: 20,
+                                      iconEnabledColor: AppColor.AccentBlue,
+                                      iconDisabledColor: Colors.grey,
+                                    ),
+                                    dropdownStyleData: DropdownStyleData(
+                                      decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.circular(14),
+                                        color: Colors.white,
+                                      ),
+                                      scrollbarTheme: ScrollbarThemeData(
+                                        radius: const Radius.circular(40),
+                                        thickness: MaterialStateProperty.all(6),
+                                        thumbVisibility:
+                                            MaterialStateProperty.all(true),
+                                      ),
+                                    ),
+                                    menuItemStyleData: MenuItemStyleData(
+                                      height: 40.h,
                                     ),
                                   ),
                                 ),

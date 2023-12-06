@@ -69,65 +69,65 @@ class _CustomeTariffScreenState extends State<CustomeTariffScreen> {
                       },
                     ),
                     const SizedBox(
-                      height: 15,
-                    ),
-                    SizedBox(
-                      height: 50,
-                      child: ListView.builder(
-                        shrinkWrap: true,
-                        itemCount:
-                            state.tradeDescription.imageDescriptions!.length,
-                        // physics: const NeverScrollableScrollPhysics(),
-                        scrollDirection: Axis.horizontal,
-                        itemBuilder: (context, index4) {
-                          return Container(
-                            margin: const EdgeInsets.symmetric(horizontal: 4),
-                            // decoration: BoxDecoration(
-                            //   color: Colors.white,
-                            //   borderRadius: BorderRadius.circular(10),
-                            // ),
-                            child: Image.network(
-                              state.tradeDescription.imageDescriptions![index4]
-                                  .image!,
-                              height: 70.h,
-                              width: 70.w,
-                              loadingBuilder:
-                                  (context, child, loadingProgress) {
-                                if (loadingProgress == null) {
-                                  return child;
-                                }
-
-                                return Container(
-                                  height: 70.h,
-                                  width: 70.w,
-                                  color: Colors.grey[200],
-                                  child: Center(
-                                      child: CircularProgressIndicator(
-                                    value: loadingProgress.expectedTotalBytes !=
-                                            null
-                                        ? loadingProgress
-                                                .cumulativeBytesLoaded /
-                                            loadingProgress.expectedTotalBytes!
-                                        : null,
-                                  )),
-                                );
-                              },
-                              errorBuilder: (context, error, stackTrace) {
-                                return Container(
-                                  height: 70.h,
-                                  width: 70.w,
-                                  color: Colors.grey[300],
-                                  child: const Center(child: Text("error")),
-                                );
-                              },
-                            ),
-                          );
-                        },
-                      ),
-                    ),
-                    const SizedBox(
                       height: 7,
-                    )
+                    ),
+                    // SizedBox(
+                    //   height: 50,
+                    //   child: ListView.builder(
+                    //     shrinkWrap: true,
+                    //     itemCount:
+                    //         state.tradeDescription.imageDescriptions!.length,
+                    //     // physics: const NeverScrollableScrollPhysics(),
+                    //     scrollDirection: Axis.horizontal,
+                    //     itemBuilder: (context, index4) {
+                    //       return Container(
+                    //         margin: const EdgeInsets.symmetric(horizontal: 4),
+                    //         // decoration: BoxDecoration(
+                    //         //   color: Colors.white,
+                    //         //   borderRadius: BorderRadius.circular(10),
+                    //         // ),
+                    //         child: Image.network(
+                    //           state.tradeDescription.imageDescriptions![index4]
+                    //               .image!,
+                    //           height: 70.h,
+                    //           width: 70.w,
+                    //           loadingBuilder:
+                    //               (context, child, loadingProgress) {
+                    //             if (loadingProgress == null) {
+                    //               return child;
+                    //             }
+
+                    //             return Container(
+                    //               height: 70.h,
+                    //               width: 70.w,
+                    //               color: Colors.grey[200],
+                    //               child: Center(
+                    //                   child: CircularProgressIndicator(
+                    //                 value: loadingProgress.expectedTotalBytes !=
+                    //                         null
+                    //                     ? loadingProgress
+                    //                             .cumulativeBytesLoaded /
+                    //                         loadingProgress.expectedTotalBytes!
+                    //                     : null,
+                    //               )),
+                    //             );
+                    //           },
+                    //           errorBuilder: (context, error, stackTrace) {
+                    //             return Container(
+                    //               height: 70.h,
+                    //               width: 70.w,
+                    //               color: Colors.grey[300],
+                    //               child: const Center(child: Text("error")),
+                    //             );
+                    //           },
+                    //         ),
+                    //       );
+                    //     },
+                    //   ),
+                    // ),
+                    // const SizedBox(
+                    //   height: 7,
+                    // )
                   ],
                 );
         } else {
@@ -958,6 +958,7 @@ class _CustomeTariffScreenState extends State<CustomeTariffScreen> {
                                       arrowHeight: 15,
                                       arrowWidth: 0,
                                       barrierLabel: "ملاحظات",
+                                      radius: 15,
                                     );
                                   },
                                   child: const TariffInfoIcon(),
@@ -1158,6 +1159,7 @@ class _CustomeTariffScreenState extends State<CustomeTariffScreen> {
                                 arrowHeight: 15,
                                 arrowWidth: 0,
                                 barrierLabel: "ملاحظات",
+                                radius: 15,
                               );
                             },
                             child: const TariffInfoIcon(),
@@ -1651,8 +1653,9 @@ class _CustomeTariffScreenState extends State<CustomeTariffScreen> {
                                                               28.w,
                                                       height: 280.h,
                                                       arrowHeight: 15,
-                                                      arrowWidth: 25,
+                                                      arrowWidth: 0,
                                                       barrierLabel: "ملاحظات",
+                                                      radius: 15,
                                                     );
                                                   },
                                                   child: const TariffInfoIcon(),

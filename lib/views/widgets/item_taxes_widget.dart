@@ -32,11 +32,26 @@ class ItemTaxesWidget extends StatelessWidget {
     return Container(
       width: double.infinity,
       decoration: BoxDecoration(
-        border: Border.all(
-          color: AppColor.deepYellow,
-          width: 2,
+        border: Border(
+          top: BorderSide(
+            color: AppColor.deepYellow,
+            width: 2,
+          ),
+          right: BorderSide(
+            color: AppColor.deepYellow,
+            width: 2,
+          ),
+          left: BorderSide(
+            color: AppColor.deepYellow,
+            width: 2,
+          ),
+          bottom: BorderSide(
+            color: AppColor.deepYellow,
+            width: 1,
+          ),
         ),
-        borderRadius: BorderRadius.circular(12),
+        borderRadius: const BorderRadius.vertical(
+            bottom: Radius.zero, top: Radius.circular(12)),
         color: Colors.white,
       ),
       margin: EdgeInsets.symmetric(horizontal: 10.w),
@@ -59,7 +74,7 @@ class ItemTaxesWidget extends StatelessWidget {
                   "الرسم الجمركي",
                   maxLines: 3,
                 ),
-                Text(customsFee!.toString()),
+                Text(f.format(customsFee!.toInt())),
               ],
             ),
             Row(
@@ -69,7 +84,7 @@ class ItemTaxesWidget extends StatelessWidget {
                   "الانفاق الاستهلاكي",
                   maxLines: 3,
                 ),
-                Text(spendingFee!.toString()),
+                Text(f.format(spendingFee!.toInt())),
               ],
             ),
             Row(
@@ -79,7 +94,7 @@ class ItemTaxesWidget extends StatelessWidget {
                   "محلية عمران",
                   maxLines: 3,
                 ),
-                Text(imranLocality!.toString()),
+                Text(f.format(imranLocality!.toInt())),
               ],
             ),
             Row(
@@ -89,7 +104,7 @@ class ItemTaxesWidget extends StatelessWidget {
                   "محلية محافظة",
                   maxLines: 3,
                 ),
-                Text(conservativeLocality!.toString()),
+                Text(f.format(conservativeLocality!.toInt())),
               ],
             ),
             Row(
@@ -99,7 +114,7 @@ class ItemTaxesWidget extends StatelessWidget {
                   "دعم وتنمية الانتاج المحلي",
                   maxLines: 3,
                 ),
-                Text(feeSupportingLocalProduction!.toString()),
+                Text(f.format(feeSupportingLocalProduction!.toInt())),
               ],
             ),
             Row(
@@ -109,7 +124,7 @@ class ItemTaxesWidget extends StatelessWidget {
                   "اعادة تأهيل وحماية المدن والمنشأة :",
                   maxLines: 3,
                 ),
-                Text(citiesProtectionFee!.toString()),
+                Text(f.format(citiesProtectionFee!.toInt())),
               ],
             ),
             Row(
@@ -119,7 +134,7 @@ class ItemTaxesWidget extends StatelessWidget {
                   "صندوق الجفاف و الكوارث الطبيعية: ",
                   maxLines: 3,
                 ),
-                Text(naturalDisasterFee!.toString()),
+                Text(f.format(naturalDisasterFee!.toInt())),
               ],
             ),
             Row(
@@ -129,7 +144,7 @@ class ItemTaxesWidget extends StatelessWidget {
                   "السلفة على ضريبة الدخل:",
                   maxLines: 3,
                 ),
-                Text(incomeTaxFee!.toString()),
+                Text(f.format(incomeTaxFee!.toInt())),
               ],
             ),
             const SizedBox(

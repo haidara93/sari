@@ -132,8 +132,7 @@ class _TraderHomeScreenState extends State<TraderHomeScreen>
       case 2:
         {
           // print(MediaQuery.of(context).size.width);
-          // print(DateTime.fromMillisecondsSinceEpoch((1701788289) * 100000)
-          //     .isAfter(DateTime.now()));
+          print(DateTime.fromMillisecondsSinceEpoch((1701851497) * 100000));
           setState(() {
             title = "الرئيسية";
 
@@ -1251,6 +1250,7 @@ class _TraderHomeScreenState extends State<TraderHomeScreen>
                                   child: DropdownButtonHideUnderline(
                                     child: DropdownButton2<Extras>(
                                       isExpanded: true,
+                                      barrierLabel: _placeholder,
                                       hint: Text(
                                         _placeholder,
                                         style: TextStyle(
@@ -1330,8 +1330,9 @@ class _TraderHomeScreenState extends State<TraderHomeScreen>
                                         height: 50,
                                         width: double.infinity,
 
-                                        padding: const EdgeInsets.only(
-                                            left: 14, right: 14),
+                                        padding: const EdgeInsets.symmetric(
+                                          horizontal: 9.0,
+                                        ),
                                         decoration: BoxDecoration(
                                           borderRadius:
                                               BorderRadius.circular(12),
@@ -1363,6 +1364,9 @@ class _TraderHomeScreenState extends State<TraderHomeScreen>
                                           thumbVisibility:
                                               MaterialStateProperty.all(true),
                                         ),
+                                      ),
+                                      menuItemStyleData: MenuItemStyleData(
+                                        height: 40.h,
                                       ),
                                     ),
                                   ),

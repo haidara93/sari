@@ -252,10 +252,10 @@ class MyApp extends StatelessWidget {
                     inputDecorationTheme: InputDecorationTheme(
                       labelStyle:
                           TextStyle(fontSize: 18, color: Colors.grey[600]!),
-                      suffixStyle: TextStyle(
+                      suffixStyle: const TextStyle(
                         fontSize: 20,
                       ),
-                      floatingLabelStyle: TextStyle(
+                      floatingLabelStyle: const TextStyle(
                         fontSize: 20,
                       ),
                       contentPadding: const EdgeInsets.symmetric(

@@ -67,7 +67,7 @@ class _TraderAttachementScreenState extends State<TraderAttachementScreen> {
   final ScrollController _scrollController = ScrollController();
   int packageTypeId = 0;
   int packageNum = 0;
-  int tabalehNum = 0;
+  int tabalehNum = 1;
 
   File? _image;
   final ImagePicker _picker = ImagePicker();
@@ -82,7 +82,7 @@ class _TraderAttachementScreenState extends State<TraderAttachementScreen> {
 
   @override
   void initState() {
-    _tabalehNumController.text = "0";
+    _tabalehNumController.text = "1";
     _packagesNumController.text = "0";
 
     super.initState();
@@ -994,7 +994,7 @@ class _TraderAttachementScreenState extends State<TraderAttachementScreen> {
                                             onTap: () {
                                               // setSelectedPanel(3);
 
-                                              if (tabalehNum > 0) {
+                                              if (tabalehNum > 1) {
                                                 setState(() {
                                                   tabalehNum--;
                                                   _tabalehNumController.text =
@@ -1012,9 +1012,13 @@ class _TraderAttachementScreenState extends State<TraderAttachementScreen> {
                                                 borderRadius:
                                                     BorderRadius.circular(45),
                                               ),
-                                              child: Icon(Icons.remove,
-                                                  size: 40.w,
-                                                  color: Colors.grey[600]!),
+                                              child: tabalehNum > 1
+                                                  ? Icon(Icons.remove,
+                                                      size: 40.w,
+                                                      color: Colors.blue[200]!)
+                                                  : Icon(Icons.remove,
+                                                      size: 40.w,
+                                                      color: Colors.grey[600]!),
                                             )),
                                       ],
                                     ),

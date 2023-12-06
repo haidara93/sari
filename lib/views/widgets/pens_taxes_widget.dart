@@ -31,11 +31,27 @@ class PensTaxesWidget extends StatelessWidget {
     return Container(
       width: double.infinity,
       decoration: BoxDecoration(
-        border: Border.all(
-          color: AppColor.deepYellow,
-          width: 2,
+        border: Border(
+          top: BorderSide(
+            color: AppColor.deepYellow,
+            width: 1,
+          ),
+          right: BorderSide(
+            color: AppColor.deepYellow,
+            width: 2,
+          ),
+          left: BorderSide(
+            color: AppColor.deepYellow,
+            width: 2,
+          ),
+          bottom: BorderSide(
+            color: AppColor.deepYellow,
+            width: 1,
+          ),
         ),
-        borderRadius: BorderRadius.circular(12),
+        borderRadius: const BorderRadius.all(
+          Radius.zero,
+        ),
         color: Colors.white,
       ),
       margin: EdgeInsets.symmetric(horizontal: 10.w),
@@ -58,7 +74,7 @@ class PensTaxesWidget extends StatelessWidget {
                   "طوابع وضرائب مضافة",
                   maxLines: 3,
                 ),
-                Text(addedTaxes.toString()),
+                Text(f.format(addedTaxes.toInt())),
               ],
             ),
             Row(
@@ -68,7 +84,7 @@ class PensTaxesWidget extends StatelessWidget {
                   "شهادة جمركية",
                   maxLines: 3,
                 ),
-                Text(customsCertificate.toString()),
+                Text(f.format(customsCertificate.toInt())),
               ],
             ),
             Row(
@@ -78,7 +94,7 @@ class PensTaxesWidget extends StatelessWidget {
                   "رسم تأمين إلزامي",
                   maxLines: 3,
                 ),
-                Text(billTax.toString()),
+                Text(f.format(billTax.toInt())),
               ],
             ),
             Row(
@@ -88,7 +104,7 @@ class PensTaxesWidget extends StatelessWidget {
                   "رسم طابع",
                   maxLines: 3,
                 ),
-                Text(stampFee.toStringAsFixed(2)),
+                Text(f.format(stampFee.toInt())),
               ],
             ),
             Row(
@@ -98,7 +114,7 @@ class PensTaxesWidget extends StatelessWidget {
                   "ضريبة محلية محافظة",
                   maxLines: 3,
                 ),
-                Text(provincialLocalTax.toStringAsFixed(2)),
+                Text(f.format(provincialLocalTax.toInt())),
               ],
             ),
             Row(
@@ -108,17 +124,17 @@ class PensTaxesWidget extends StatelessWidget {
                   "السلفة على ضريبة الدخل",
                   maxLines: 3,
                 ),
-                Text(advanceIncomeTax.toStringAsFixed(2)),
+                Text(f.format(advanceIncomeTax.toInt())),
               ],
             ),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 const Text(
-                  "رسم المساهمة الوطنية لإعادة الاإعمار:",
+                  "رسم المساهمة الوطنية لإعادة الإعمار:",
                   maxLines: 3,
                 ),
-                Text(reconstructionFee.toStringAsFixed(2)),
+                Text(f.format(reconstructionFee.toInt())),
               ],
             ),
             const SizedBox(

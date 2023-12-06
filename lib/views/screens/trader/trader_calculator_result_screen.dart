@@ -52,11 +52,11 @@ class TraderCalculatorResultScreen extends StatelessWidget {
                   },
                 ),
               ),
-              const SizedBox(
-                height: 20,
-              ),
+              // const SizedBox(
+              //   height: 20,
+              // ),
               Padding(
-                padding: EdgeInsets.symmetric(horizontal: 15.w),
+                padding: EdgeInsets.symmetric(horizontal: 10.w),
                 child: BlocBuilder<CalculateResultBloc, CalculateResultState>(
                   builder: (context, state) {
                     if (state is CalculateResultSuccessed) {
@@ -76,11 +76,11 @@ class TraderCalculatorResultScreen extends StatelessWidget {
                   },
                 ),
               ),
-              const SizedBox(
-                height: 20,
-              ),
+              // const SizedBox(
+              //   height: 20,
+              // ),
               Padding(
-                padding: EdgeInsets.symmetric(horizontal: 15.w),
+                padding: EdgeInsets.symmetric(horizontal: 10.w),
                 child: BlocBuilder<CalculateResultBloc, CalculateResultState>(
                   builder: (context, state) {
                     if (state is CalculateResultSuccessed) {
@@ -88,11 +88,26 @@ class TraderCalculatorResultScreen extends StatelessWidget {
                         padding: EdgeInsets.symmetric(horizontal: 15.w),
                         margin: EdgeInsets.symmetric(horizontal: 10.w),
                         decoration: BoxDecoration(
-                          border: Border.all(
-                            color: AppColor.deepYellow,
-                            width: 2,
+                          border: Border(
+                            top: BorderSide(
+                              color: AppColor.deepYellow,
+                              width: 1,
+                            ),
+                            right: BorderSide(
+                              color: AppColor.deepYellow,
+                              width: 2,
+                            ),
+                            left: BorderSide(
+                              color: AppColor.deepYellow,
+                              width: 2,
+                            ),
+                            bottom: BorderSide(
+                              color: AppColor.deepYellow,
+                              width: 2,
+                            ),
                           ),
-                          borderRadius: BorderRadius.circular(12),
+                          borderRadius: const BorderRadius.vertical(
+                              top: Radius.zero, bottom: Radius.circular(12)),
                           color: Colors.white,
                         ),
                         child: Column(
@@ -139,7 +154,7 @@ class TraderCalculatorResultScreen extends StatelessWidget {
               const Text(
                   "هذه الرسوم تقديرية ولا تتضمن مصاريف التخليص الجمركي ورسوم الخدمات"),
               SizedBox(
-                height: 30.h,
+                height: 15.h,
               ),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceAround,

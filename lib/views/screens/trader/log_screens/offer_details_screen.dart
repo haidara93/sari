@@ -406,6 +406,26 @@ class OfferDetailsScreen extends StatelessWidget {
                             result.protectionFee = product.protectionFee!;
                             result.naturalFee = product.naturalFee!;
                             result.taxFee = product.taxFee!;
+                            result.insurance = offer.taxes!.toInt();
+                            result.fee = product.fee!;
+                            result.rawMaterial = offer.raw_material!;
+                            result.industrial = offer.industrial;
+                            result.totalTax = product.totalTaxes!.totalTax!;
+                            result.partialTax = product.totalTaxes!.partialTax!;
+                            result.origin = offer.origin!.label!;
+                            result.spendingFee = product.spendingFee!;
+                            result.supportFee = product.supportFee!;
+                            result.localFee = product.localFee!;
+                            result.protectionFee = product.protectionFee!;
+                            result.naturalFee = product.naturalFee!;
+                            result.taxFee = product.taxFee!;
+                            result.weight = offer.weight!.toInt();
+                            result.price = offer.price!.toInt();
+                            result.cnsulate = 1;
+                            result.dolar = 6565;
+                            result.arabic_stamp =
+                                product.totalTaxes!.arabicStamp!.toInt();
+                            result.import_fee = product.importFee;
                             // ignore: use_build_context_synchronously
                             BlocProvider.of<CalculateResultBloc>(context)
                                 .add(CalculateTheResultEvent(result));
