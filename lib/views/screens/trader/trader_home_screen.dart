@@ -1583,11 +1583,7 @@ class _TraderHomeScreenState extends State<TraderHomeScreen>
                                             iconDisabledColor: Colors.grey,
                                           ),
                                           dropdownStyleData: DropdownStyleData(
-                                            width: double.infinity,
-                                            maxHeight: MediaQuery.of(context)
-                                                    .size
-                                                    .height *
-                                                .84,
+                                            maxHeight: 400,
                                             padding: const EdgeInsets.all(8.0),
                                             decoration: BoxDecoration(
                                               borderRadius:
@@ -1898,7 +1894,7 @@ class _TraderHomeScreenState extends State<TraderHomeScreen>
                                                 result.price =
                                                     basePrice.toInt();
                                                 result.cnsulate = 1;
-                                                result.dolar = 6565;
+                                                result.dolar = 8585;
                                                 result.arabic_stamp = 650;
                                                 result.import_fee = 0.01;
                                                 BlocProvider.of<
@@ -1992,22 +1988,6 @@ class _TraderHomeScreenState extends State<TraderHomeScreen>
                         incomeTaxFee: state.result.incomeTaxFee!,
                         naturalDisasterFee: state.result.naturalDisasterFee!,
                         finalFee: state.result.finalTotal!,
-                      );
-                    } else {
-                      return const CalculatorLoadingScreen();
-                    }
-                  },
-                ),
-              ),
-              const SizedBox(
-                height: 20,
-              ),
-              Padding(
-                padding: EdgeInsets.symmetric(horizontal: 25.w),
-                child: BlocBuilder<CalculateResultBloc, CalculateResultState>(
-                  builder: (context, state) {
-                    if (state is CalculateResultSuccessed) {
-                      return PensTaxesWidget(
                         addedTaxes: state.result.addedTaxes!,
                         customsCertificate: state.result.customsCertificate!,
                         billTax: state.result.billTax!,
@@ -2016,6 +1996,7 @@ class _TraderHomeScreenState extends State<TraderHomeScreen>
                         advanceIncomeTax: state.result.advanceIncomeTax!,
                         reconstructionFee: state.result.reconstructionFee!,
                         finalTaxes: state.result.finalTaxes!,
+                        finalTotal: state.result.finalTotal!,
                       );
                     } else {
                       return const CalculatorLoadingScreen();
@@ -2023,72 +2004,96 @@ class _TraderHomeScreenState extends State<TraderHomeScreen>
                   },
                 ),
               ),
-              const SizedBox(
-                height: 20,
-              ),
-              Padding(
-                padding: EdgeInsets.symmetric(horizontal: 25.w),
-                child: BlocBuilder<CalculateResultBloc, CalculateResultState>(
-                  builder: (context, state) {
-                    if (state is CalculateResultSuccessed) {
-                      return Container(
-                        padding: EdgeInsets.symmetric(horizontal: 15.w),
-                        decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(25),
-                            border: const Border(
-                              left: BorderSide(
-                                color: Colors.blue,
-                                width: 1.0,
-                              ),
-                              right: BorderSide(
-                                color: Colors.blue,
-                                width: 1.0,
-                              ),
-                              top: BorderSide(
-                                color: Colors.blue,
-                                width: 1.0,
-                              ),
-                              bottom: BorderSide(
-                                color: Colors.blue,
-                                width: 1.0,
-                              ),
-                            ),
-                            color: Colors.white),
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          children: [
-                            const Text(
-                              "إجمالي الرسوم:",
-                              style: TextStyle(
-                                  fontWeight: FontWeight.bold, fontSize: 22),
-                            ),
-                            Divider(color: AppColor.goldenYellow),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                const Text(
-                                  "مجموع الضرائب والرسوم:",
-                                  maxLines: 3,
-                                ),
-                                Text(
-                                  state.result.finalTotal!.toStringAsFixed(2),
-                                  style: const TextStyle(
-                                      fontWeight: FontWeight.bold),
-                                ),
-                              ],
-                            ),
-                            const SizedBox(
-                              height: 15,
-                            ),
-                          ],
-                        ),
-                      );
-                    } else {
-                      return const CalculatorLoadingScreen();
-                    }
-                  },
-                ),
-              ),
+              // const SizedBox(
+              //   height: 20,
+              // ),
+              // Padding(
+              //   padding: EdgeInsets.symmetric(horizontal: 25.w),
+              //   child: BlocBuilder<CalculateResultBloc, CalculateResultState>(
+              //     builder: (context, state) {
+              //       if (state is CalculateResultSuccessed) {
+              //         return PensTaxesWidget(
+              //           addedTaxes: state.result.addedTaxes!,
+              //           customsCertificate: state.result.customsCertificate!,
+              //           billTax: state.result.billTax!,
+              //           stampFee: state.result.stampFee!,
+              //           provincialLocalTax: state.result.provincialLocalTax!,
+              //           advanceIncomeTax: state.result.advanceIncomeTax!,
+              //           reconstructionFee: state.result.reconstructionFee!,
+              //           finalTaxes: state.result.finalTaxes!,
+              //         );
+              //       } else {
+              //         return const CalculatorLoadingScreen();
+              //       }
+              //     },
+              //   ),
+              // ),
+              // const SizedBox(
+              //   height: 20,
+              // ),
+              // Padding(
+              //   padding: EdgeInsets.symmetric(horizontal: 25.w),
+              //   child: BlocBuilder<CalculateResultBloc, CalculateResultState>(
+              //     builder: (context, state) {
+              //       if (state is CalculateResultSuccessed) {
+              //         return Container(
+              //           padding: EdgeInsets.symmetric(horizontal: 15.w),
+              //           decoration: BoxDecoration(
+              //               borderRadius: BorderRadius.circular(25),
+              //               border: const Border(
+              //                 left: BorderSide(
+              //                   color: Colors.blue,
+              //                   width: 1.0,
+              //                 ),
+              //                 right: BorderSide(
+              //                   color: Colors.blue,
+              //                   width: 1.0,
+              //                 ),
+              //                 top: BorderSide(
+              //                   color: Colors.blue,
+              //                   width: 1.0,
+              //                 ),
+              //                 bottom: BorderSide(
+              //                   color: Colors.blue,
+              //                   width: 1.0,
+              //                 ),
+              //               ),
+              //               color: Colors.white),
+              //           child: Column(
+              //             mainAxisAlignment: MainAxisAlignment.start,
+              //             children: [
+              //               const Text(
+              //                 "إجمالي الرسوم:",
+              //                 style: TextStyle(
+              //                     fontWeight: FontWeight.bold, fontSize: 22),
+              //               ),
+              //               Divider(color: AppColor.goldenYellow),
+              //               Row(
+              //                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              //                 children: [
+              //                   const Text(
+              //                     "مجموع الضرائب والرسوم:",
+              //                     maxLines: 3,
+              //                   ),
+              //                   Text(
+              //                     state.result.finalTotal!.toStringAsFixed(2),
+              //                     style: const TextStyle(
+              //                         fontWeight: FontWeight.bold),
+              //                   ),
+              //                 ],
+              //               ),
+              //               const SizedBox(
+              //                 height: 15,
+              //               ),
+              //             ],
+              //           ),
+              //         );
+              //       } else {
+              //         return const CalculatorLoadingScreen();
+              //       }
+              //     },
+              //   ),
+              // ),
               SizedBox(
                 height: 30.h,
               ),

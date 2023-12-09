@@ -509,36 +509,7 @@ class _BrokerAttachmentsScreenState extends State<BrokerAttachmentsScreen> {
                     ),
                   ),
                   const SizedBox(
-                    height: 25,
-                  ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceAround,
-                    children: [
-                      // CustomButton(
-                      //   onTap: () {},
-                      //   color: AppColor.deepYellow,
-                      //   title: const SizedBox(
-                      //       width: 100, child: Center(child: Text("إلغاء"))),
-                      // ),
-                      CustomButton(
-                        onTap: () {
-                          Navigator.pushAndRemoveUntil(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => const ControlView(),
-                            ),
-                            (Route<dynamic> route) => false,
-                          );
-                          BlocProvider.of<TraderAdditionalAttachmentBloc>(
-                                  context)
-                              .add(ClearAdditionalAttachmentEvent());
-                        },
-                        title: SizedBox(
-                            width: 180.w,
-                            child: const Center(
-                                child: Text("الرجوع للقائمة الرئيسية"))),
-                      ),
-                    ],
+                    height: 10,
                   ),
                 ],
               ),

@@ -252,13 +252,15 @@ class _CustomeTariffScreenState extends State<CustomeTariffScreen> {
               child: Row(
                 children: [
                   Container(
-                    margin: const EdgeInsets.symmetric(horizontal: 4),
+                    height: 25.h,
+                    width: 25.h,
+                    margin: const EdgeInsets.symmetric(horizontal: 10),
                     decoration: BoxDecoration(
                       color: Colors.white,
                       borderRadius: BorderRadius.circular(10),
                     ),
                     child: Center(
-                      child: Image.asset("assets/icons/trade_description.png"),
+                      child: SvgPicture.asset("assets/icons/description.svg"),
                     ),
                   ),
                   Container(
@@ -292,13 +294,15 @@ class _CustomeTariffScreenState extends State<CustomeTariffScreen> {
               child: Row(
                 children: [
                   Container(
-                    margin: const EdgeInsets.symmetric(horizontal: 4),
+                    height: 25.h,
+                    width: 25.h,
+                    margin: const EdgeInsets.symmetric(horizontal: 10),
                     decoration: BoxDecoration(
                       color: Colors.white,
                       borderRadius: BorderRadius.circular(10),
                     ),
                     child: Center(
-                      child: Image.asset("assets/icons/import_conditions.png"),
+                      child: SvgPicture.asset("assets/icons/import.svg"),
                     ),
                   ),
                   Container(
@@ -324,8 +328,11 @@ class _CustomeTariffScreenState extends State<CustomeTariffScreen> {
                           Row(
                             mainAxisAlignment: MainAxisAlignment.start,
                             children: [
-                              Image.asset(
-                                  "assets/icons/export_restrection.png"),
+                              SizedBox(
+                                  height: 25.h,
+                                  width: 25.h,
+                                  child: SvgPicture.asset(
+                                      "assets/icons/conditions.svg")),
                               SizedBox(
                                 width: 5.w,
                               ),
@@ -353,13 +360,15 @@ class _CustomeTariffScreenState extends State<CustomeTariffScreen> {
               child: Row(
                 children: [
                   Container(
-                    margin: const EdgeInsets.symmetric(horizontal: 4),
+                    height: 25.h,
+                    width: 25.h,
+                    margin: const EdgeInsets.symmetric(horizontal: 10),
                     decoration: BoxDecoration(
                       color: Colors.white,
                       borderRadius: BorderRadius.circular(10),
                     ),
                     child: Center(
-                      child: Image.asset("assets/icons/export_conditions.png"),
+                      child: SvgPicture.asset("assets/icons/Export.svg"),
                     ),
                   ),
                   Container(
@@ -384,7 +393,11 @@ class _CustomeTariffScreenState extends State<CustomeTariffScreen> {
                     Row(
                       mainAxisAlignment: MainAxisAlignment.start,
                       children: [
-                        Image.asset("assets/icons/export_restrection.png"),
+                        SizedBox(
+                            height: 25.h,
+                            width: 25.h,
+                            child: SvgPicture.asset(
+                                "assets/icons/conditions.svg")),
                         SizedBox(
                           width: 5.w,
                         ),
@@ -420,13 +433,16 @@ class _CustomeTariffScreenState extends State<CustomeTariffScreen> {
               child: Row(
                 children: [
                   Container(
-                    margin: const EdgeInsets.symmetric(horizontal: 4),
+                    height: 25.h,
+                    width: 25.h,
+                    margin: const EdgeInsets.symmetric(horizontal: 10),
                     decoration: BoxDecoration(
                       color: Colors.white,
                       borderRadius: BorderRadius.circular(10),
                     ),
                     child: Center(
-                      child: Image.asset("assets/icons/calculate_fees.png"),
+                      child:
+                          SvgPicture.asset("assets/icons/Fee_calculation.svg"),
                     ),
                   ),
                   Container(
@@ -460,13 +476,15 @@ class _CustomeTariffScreenState extends State<CustomeTariffScreen> {
               child: Row(
                 children: [
                   Container(
-                    margin: const EdgeInsets.symmetric(horizontal: 4),
+                    height: 25.h,
+                    width: 25.h,
+                    margin: const EdgeInsets.symmetric(horizontal: 10),
                     decoration: BoxDecoration(
                       color: Colors.white,
                       borderRadius: BorderRadius.circular(10),
                     ),
                     child: Center(
-                      child: Image.asset("assets/icons/share_fee.png"),
+                      child: SvgPicture.asset("assets/icons/share.svg"),
                     ),
                   ),
                   Container(
@@ -1478,11 +1496,14 @@ class _CustomeTariffScreenState extends State<CustomeTariffScreen> {
                                 extentOffset:
                                     _searchController.value.text.length);
                           },
+                          style: TextStyle(fontSize: 18.sp),
                           scrollPadding: EdgeInsets.only(
                               bottom: MediaQuery.of(context).viewInsets.bottom +
                                   50),
                           decoration: InputDecoration(
                             labelText: "بحث",
+                            hintText: "بحث",
+                            hintStyle: TextStyle(fontSize: 18.sp),
                             suffixIcon: InkWell(
                               onTap: () {
                                 BlocProvider.of<BottomNavBarCubit>(context)

@@ -82,9 +82,6 @@ class TraderBillReview extends StatelessWidget {
                                 context,
                                 MaterialPageRoute(
                                   builder: (context) => TraderAttachementScreen(
-                                    offerType: offerType,
-                                    customAgency: customAgency,
-                                    customeState: customeState,
                                     origin: origin,
                                     price: price,
                                     taxes: taxes,
@@ -133,20 +130,7 @@ class TraderBillReview extends StatelessWidget {
                       imranLocality: state.result.imranLocality!,
                       incomeTaxFee: state.result.incomeTaxFee!,
                       naturalDisasterFee: state.result.naturalDisasterFee!,
-                      finalFee: state.result.finalTotal!,
-                    );
-                  } else {
-                    return const CalculatorLoadingScreen();
-                  }
-                },
-              ),
-              const SizedBox(
-                height: 20,
-              ),
-              BlocBuilder<CalculateResultBloc, CalculateResultState>(
-                builder: (context, state) {
-                  if (state is CalculateResultSuccessed) {
-                    return PensTaxesWidget(
+                      finalFee: state.result.finalFee!,
                       addedTaxes: state.result.addedTaxes!,
                       customsCertificate: state.result.customsCertificate!,
                       billTax: state.result.billTax!,
@@ -155,6 +139,7 @@ class TraderBillReview extends StatelessWidget {
                       advanceIncomeTax: state.result.advanceIncomeTax!,
                       reconstructionFee: state.result.reconstructionFee!,
                       finalTaxes: state.result.finalTaxes!,
+                      finalTotal: state.result.finalTotal!,
                     );
                   } else {
                     return const CalculatorLoadingScreen();
@@ -164,57 +149,78 @@ class TraderBillReview extends StatelessWidget {
               const SizedBox(
                 height: 20,
               ),
-              BlocBuilder<CalculateResultBloc, CalculateResultState>(
-                builder: (context, state) {
-                  if (state is CalculateResultSuccessed) {
-                    return Card(
-                      clipBehavior: Clip.antiAlias,
-                      shape: const RoundedRectangleBorder(
-                          borderRadius: BorderRadius.all(
-                        Radius.circular(15),
-                      )),
-                      margin: EdgeInsets.symmetric(horizontal: 10.w),
-                      elevation: 1,
-                      color: Colors.white,
-                      child: Padding(
-                        padding: EdgeInsets.symmetric(horizontal: 15.w),
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          children: [
-                            const Text(
-                              "إجمالي الرسوم:",
-                              style: TextStyle(
-                                  fontWeight: FontWeight.bold, fontSize: 22),
-                            ),
-                            const SizedBox(
-                              height: 10,
-                            ),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                const Text(
-                                  "مجموع الضرائب والرسوم:",
-                                  maxLines: 3,
-                                ),
-                                Text(
-                                  state.result.finalTotal!.toStringAsFixed(2),
-                                  style: const TextStyle(
-                                      fontWeight: FontWeight.bold),
-                                ),
-                              ],
-                            ),
-                            const SizedBox(
-                              height: 15,
-                            ),
-                          ],
-                        ),
-                      ),
-                    );
-                  } else {
-                    return const CalculatorLoadingScreen();
-                  }
-                },
-              ),
+              // BlocBuilder<CalculateResultBloc, CalculateResultState>(
+              //   builder: (context, state) {
+              //     if (state is CalculateResultSuccessed) {
+              //       return PensTaxesWidget(
+              //         addedTaxes: state.result.addedTaxes!,
+              //         customsCertificate: state.result.customsCertificate!,
+              //         billTax: state.result.billTax!,
+              //         stampFee: state.result.stampFee!,
+              //         provincialLocalTax: state.result.provincialLocalTax!,
+              //         advanceIncomeTax: state.result.advanceIncomeTax!,
+              //         reconstructionFee: state.result.reconstructionFee!,
+              //         finalTaxes: state.result.finalTaxes!,
+              //       );
+              //     } else {
+              //       return const CalculatorLoadingScreen();
+              //     }
+              //   },
+              // ),
+              // const SizedBox(
+              //   height: 20,
+              // ),
+              // BlocBuilder<CalculateResultBloc, CalculateResultState>(
+              //   builder: (context, state) {
+              //     if (state is CalculateResultSuccessed) {
+              //       return Card(
+              //         clipBehavior: Clip.antiAlias,
+              //         shape: const RoundedRectangleBorder(
+              //             borderRadius: BorderRadius.all(
+              //           Radius.circular(15),
+              //         )),
+              //         margin: EdgeInsets.symmetric(horizontal: 10.w),
+              //         elevation: 1,
+              //         color: Colors.white,
+              //         child: Padding(
+              //           padding: EdgeInsets.symmetric(horizontal: 15.w),
+              //           child: Column(
+              //             mainAxisAlignment: MainAxisAlignment.start,
+              //             children: [
+              //               const Text(
+              //                 "إجمالي الرسوم:",
+              //                 style: TextStyle(
+              //                     fontWeight: FontWeight.bold, fontSize: 22),
+              //               ),
+              //               const SizedBox(
+              //                 height: 10,
+              //               ),
+              //               Row(
+              //                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              //                 children: [
+              //                   const Text(
+              //                     "مجموع الضرائب والرسوم:",
+              //                     maxLines: 3,
+              //                   ),
+              //                   Text(
+              //                     state.result.finalTotal!.toStringAsFixed(2),
+              //                     style: const TextStyle(
+              //                         fontWeight: FontWeight.bold),
+              //                   ),
+              //                 ],
+              //               ),
+              //               const SizedBox(
+              //                 height: 15,
+              //               ),
+              //             ],
+              //           ),
+              //         ),
+              //       );
+              //     } else {
+              //       return const CalculatorLoadingScreen();
+              //     }
+              //   },
+              // ),
               SizedBox(
                 height: 23.h,
               ),
@@ -248,9 +254,6 @@ class TraderBillReview extends StatelessWidget {
                           context,
                           MaterialPageRoute(
                             builder: (context) => TraderAttachementScreen(
-                              offerType: offerType,
-                              customAgency: customAgency,
-                              customeState: customeState,
                               origin: origin,
                               price: price,
                               taxes: taxes,

@@ -1,5 +1,6 @@
 import 'package:custome_mobile/business_logic/bloc/fee_select_bloc.dart';
 import 'package:custome_mobile/business_logic/cubit/bottom_nav_bar_cubit.dart';
+import 'package:custome_mobile/business_logic/cubit/stop_scroll_cubit.dart';
 import 'package:custome_mobile/helpers/color_constants.dart';
 import 'package:custome_mobile/views/widgets/calculator_widget.dart';
 import 'package:flutter/material.dart';
@@ -29,54 +30,63 @@ class TraderCalculatorScreen extends StatelessWidget {
           body: SafeArea(
               child: Stack(
             children: [
-              SingleChildScrollView(
-                child: GestureDetector(
-                  onTap: () {
-                    FocusManager.instance.primaryFocus?.unfocus();
-                    BlocProvider.of<BottomNavBarCubit>(context).emitShow();
-                  },
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 8),
-                    child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          const SizedBox(
-                            height: 25,
-                          ),
-                          Card(
-                            clipBehavior: Clip.antiAlias,
-                            shape: const RoundedRectangleBorder(
-                                borderRadius: BorderRadius.all(
-                              Radius.circular(15),
-                            )),
-                            margin: EdgeInsets.symmetric(horizontal: 10.w),
-                            elevation: 1,
-                            color: Colors.white,
-                            child: Container(
-                              margin: const EdgeInsets.symmetric(vertical: 7),
-                              width: double.infinity,
-                              padding: const EdgeInsets.all(8.0),
-                              child: CalculatorWidget(
-                                  calformkey: _calformkey,
-                                  typeAheadController: _typeAheadController,
-                                  originController: _originController,
-                                  wieghtController: _wieghtController,
-                                  valueController: _valueController,
-                                  tariffButton: true,
-                                  unfocus: () {
-                                    FocusManager.instance.primaryFocus
-                                        ?.unfocus();
-                                    BlocProvider.of<BottomNavBarCubit>(context)
-                                        .emitShow();
-                                  }),
-                            ),
-                          ),
-                          SizedBox(
-                            height: 10.h,
-                          )
-                        ]),
-                  ),
-                ),
+              BlocBuilder<StopScrollCubit, StopScrollState>(
+                builder: (context, state) {
+                  return SingleChildScrollView(
+                    physics: (state is ScrollEnabled)
+                        ? const ClampingScrollPhysics()
+                        : const NeverScrollableScrollPhysics(),
+                    child: GestureDetector(
+                      onTap: () {
+                        FocusManager.instance.primaryFocus?.unfocus();
+                        BlocProvider.of<BottomNavBarCubit>(context).emitShow();
+                      },
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 8),
+                        child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              const SizedBox(
+                                height: 25,
+                              ),
+                              Card(
+                                clipBehavior: Clip.antiAlias,
+                                shape: const RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.all(
+                                  Radius.circular(15),
+                                )),
+                                margin: EdgeInsets.symmetric(horizontal: 10.w),
+                                elevation: 1,
+                                color: Colors.white,
+                                child: Container(
+                                  margin:
+                                      const EdgeInsets.symmetric(vertical: 7),
+                                  width: double.infinity,
+                                  padding: const EdgeInsets.all(8.0),
+                                  child: CalculatorWidget(
+                                      calformkey: _calformkey,
+                                      typeAheadController: _typeAheadController,
+                                      originController: _originController,
+                                      wieghtController: _wieghtController,
+                                      valueController: _valueController,
+                                      tariffButton: true,
+                                      unfocus: () {
+                                        FocusManager.instance.primaryFocus
+                                            ?.unfocus();
+                                        BlocProvider.of<BottomNavBarCubit>(
+                                                context)
+                                            .emitShow();
+                                      }),
+                                ),
+                              ),
+                              SizedBox(
+                                height: 10.h,
+                              )
+                            ]),
+                      ),
+                    ),
+                  );
+                },
               ),
               BlocBuilder<FeeSelectBloc, FeeSelectState>(
                 builder: (context, state) {

@@ -34,7 +34,7 @@ class PensTaxesWidget extends StatelessWidget {
         border: Border(
           top: BorderSide(
             color: AppColor.deepYellow,
-            width: 1,
+            width: 0,
           ),
           right: BorderSide(
             color: AppColor.deepYellow,
@@ -59,6 +59,7 @@ class PensTaxesWidget extends StatelessWidget {
         padding: EdgeInsets.symmetric(horizontal: 15.w),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             const Text(
               "ضرائب الأقلام",

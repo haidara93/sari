@@ -13,19 +13,37 @@ class ItemTaxesWidget extends StatelessWidget {
   final double? naturalDisasterFee;
   final double? incomeTaxFee;
   final double? finalFee;
+  final double addedTaxes;
+  final double customsCertificate;
+  final double billTax;
+  final double stampFee;
+  final double provincialLocalTax;
+  final double advanceIncomeTax;
+  final double reconstructionFee;
+  final double finalTaxes;
+  final double finalTotal;
 
-  ItemTaxesWidget(
-      {Key? key,
-      this.customsFee,
-      this.spendingFee,
-      this.imranLocality,
-      this.conservativeLocality,
-      this.feeSupportingLocalProduction,
-      this.citiesProtectionFee,
-      this.naturalDisasterFee,
-      this.incomeTaxFee,
-      this.finalFee})
-      : super(key: key);
+  ItemTaxesWidget({
+    Key? key,
+    this.customsFee,
+    this.spendingFee,
+    this.imranLocality,
+    this.conservativeLocality,
+    this.feeSupportingLocalProduction,
+    this.citiesProtectionFee,
+    this.naturalDisasterFee,
+    this.incomeTaxFee,
+    this.finalFee,
+    required this.addedTaxes,
+    required this.customsCertificate,
+    required this.billTax,
+    required this.stampFee,
+    required this.provincialLocalTax,
+    required this.advanceIncomeTax,
+    required this.reconstructionFee,
+    required this.finalTaxes,
+    required this.finalTotal,
+  }) : super(key: key);
   var f = NumberFormat("#,###", "en_US");
   @override
   Widget build(BuildContext context) {
@@ -47,11 +65,11 @@ class ItemTaxesWidget extends StatelessWidget {
           ),
           bottom: BorderSide(
             color: AppColor.deepYellow,
-            width: 1,
+            width: 2,
           ),
         ),
         borderRadius: const BorderRadius.vertical(
-            bottom: Radius.zero, top: Radius.circular(12)),
+            bottom: Radius.circular(12), top: Radius.circular(12)),
         color: Colors.white,
       ),
       margin: EdgeInsets.symmetric(horizontal: 10.w),
@@ -59,10 +77,11 @@ class ItemTaxesWidget extends StatelessWidget {
         padding: EdgeInsets.symmetric(horizontal: 10.w),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             const Text(
               "ضرائب الرسوم",
-              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 22),
+              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
             ),
             const SizedBox(
               height: 7,
@@ -150,7 +169,7 @@ class ItemTaxesWidget extends StatelessWidget {
             const SizedBox(
               height: 5,
             ),
-            Divider(color: AppColor.deepYellow),
+            Divider(color: Colors.grey[350]),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
@@ -162,6 +181,131 @@ class ItemTaxesWidget extends StatelessWidget {
                 Text(
                   f.format(finalFee!.toInt()),
                   style: const TextStyle(fontWeight: FontWeight.bold),
+                ),
+              ],
+            ),
+            const SizedBox(
+              height: 15,
+            ),
+            Divider(
+              color: Colors.grey[350],
+              thickness: 2,
+            ),
+            const Text(
+              "ضرائب الأقلام",
+              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
+            ),
+            const SizedBox(
+              height: 7,
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                const Text(
+                  "طوابع وضرائب مضافة",
+                  maxLines: 3,
+                ),
+                Text(f.format(addedTaxes.toInt())),
+              ],
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                const Text(
+                  "شهادة جمركية",
+                  maxLines: 3,
+                ),
+                Text(f.format(customsCertificate.toInt())),
+              ],
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                const Text(
+                  "رسم تأمين إلزامي",
+                  maxLines: 3,
+                ),
+                Text(f.format(billTax.toInt())),
+              ],
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                const Text(
+                  "رسم طابع",
+                  maxLines: 3,
+                ),
+                Text(f.format(stampFee.toInt())),
+              ],
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                const Text(
+                  "ضريبة محلية محافظة",
+                  maxLines: 3,
+                ),
+                Text(f.format(provincialLocalTax.toInt())),
+              ],
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                const Text(
+                  "السلفة على ضريبة الدخل",
+                  maxLines: 3,
+                ),
+                Text(f.format(advanceIncomeTax.toInt())),
+              ],
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                const Text(
+                  "رسم المساهمة الوطنية لإعادة الإعمار:",
+                  maxLines: 3,
+                ),
+                Text(f.format(reconstructionFee.toInt())),
+              ],
+            ),
+            const SizedBox(
+              height: 5,
+            ),
+            Divider(color: Colors.grey[350]),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                const Text(
+                  "مجموع الضرائب:",
+                  maxLines: 3,
+                  style: TextStyle(fontWeight: FontWeight.bold),
+                ),
+                Text(
+                  f.format(finalTaxes.toInt()),
+                  style: const TextStyle(fontWeight: FontWeight.bold),
+                ),
+              ],
+            ),
+            const SizedBox(
+              height: 15,
+            ),
+            Divider(
+              color: AppColor.deepYellow,
+              thickness: 2,
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                const Text(
+                  "إجمالي الرسوم:",
+                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
+                ),
+                Text(
+                  f.format(finalTotal.toInt()),
+                  style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    color: AppColor.deepYellow,
+                  ),
                 ),
               ],
             ),

@@ -49,18 +49,11 @@ class BrokerCostDetailsScreen extends StatelessWidget {
     // Duration diff = now.difference(offer.createdDate!);
     return SafeArea(
       child: Scaffold(
-        appBar: CustomAppBar(title: "تفاصيل المخلص"),
+        appBar: CustomAppBar(title: "الضرائب والتكاليف"),
         backgroundColor: Colors.grey[200],
         body: SingleChildScrollView(
           child: Column(
             children: [
-              SizedBox(
-                height: 20.h,
-              ),
-              Text(
-                "الضرائب والرسوم",
-                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20.sp),
-              ),
               SizedBox(
                 height: 20.h,
               ),
@@ -77,20 +70,7 @@ class BrokerCostDetailsScreen extends StatelessWidget {
                       imranLocality: state.result.imranLocality!,
                       incomeTaxFee: state.result.incomeTaxFee!,
                       naturalDisasterFee: state.result.naturalDisasterFee!,
-                      finalFee: state.result.finalTotal!,
-                    );
-                  } else {
-                    return const CalculatorLoadingScreen();
-                  }
-                },
-              ),
-              // const SizedBox(
-              //   height: 20,
-              // ),
-              BlocBuilder<CalculateResultBloc, CalculateResultState>(
-                builder: (context, state) {
-                  if (state is CalculateResultSuccessed) {
-                    return PensTaxesWidget(
+                      finalFee: state.result.finalFee!,
                       addedTaxes: state.result.addedTaxes!,
                       customsCertificate: state.result.customsCertificate!,
                       billTax: state.result.billTax!,
@@ -99,6 +79,7 @@ class BrokerCostDetailsScreen extends StatelessWidget {
                       advanceIncomeTax: state.result.advanceIncomeTax!,
                       reconstructionFee: state.result.reconstructionFee!,
                       finalTaxes: state.result.finalTaxes!,
+                      finalTotal: state.result.finalTotal!,
                     );
                   } else {
                     return const CalculatorLoadingScreen();
@@ -108,99 +89,108 @@ class BrokerCostDetailsScreen extends StatelessWidget {
               // const SizedBox(
               //   height: 20,
               // ),
-              BlocBuilder<CalculateResultBloc, CalculateResultState>(
-                builder: (context, state) {
-                  if (state is CalculateResultSuccessed) {
-                    return Container(
-                      width: double.infinity,
-                      decoration: BoxDecoration(
-                        border: Border(
-                          top: BorderSide(
-                            color: AppColor.deepYellow,
-                            width: 1,
-                          ),
-                          right: BorderSide(
-                            color: AppColor.deepYellow,
-                            width: 2,
-                          ),
-                          left: BorderSide(
-                            color: AppColor.deepYellow,
-                            width: 2,
-                          ),
-                          bottom: BorderSide(
-                            color: AppColor.deepYellow,
-                            width: 2,
-                          ),
-                        ),
-                        borderRadius: const BorderRadius.vertical(
-                            top: Radius.zero, bottom: Radius.circular(12)),
-                        color: Colors.white,
-                      ),
-                      margin: EdgeInsets.symmetric(horizontal: 10.w),
-                      child: Padding(
-                        padding: EdgeInsets.symmetric(horizontal: 15.w),
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          children: [
-                            const Text(
-                              "إجمالي الرسوم:",
-                              style: TextStyle(
-                                  fontWeight: FontWeight.bold, fontSize: 22),
-                            ),
-                            const SizedBox(
-                              height: 7,
-                            ),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                const Text(
-                                  "مجموع الضرائب والرسوم:",
-                                  style: TextStyle(fontWeight: FontWeight.bold),
-                                  maxLines: 3,
-                                ),
-                                Text(
-                                  state.result.finalTotal!.toStringAsFixed(2),
-                                  style: const TextStyle(
-                                      fontWeight: FontWeight.bold),
-                                ),
-                              ],
-                            ),
-                            const SizedBox(
-                              height: 15,
-                            ),
-                          ],
-                        ),
-                      ),
-                    );
-                  } else {
-                    return const CalculatorLoadingScreen();
-                  }
-                },
-              ),
-              SizedBox(
-                height: 15.h,
-              ),
-              Padding(
-                padding: EdgeInsets.symmetric(horizontal: 25.w),
-                child: const Text(
-                    "هذه الرسوم تقديرية ولا تتضمن مصاريف التخليص الجمركي ورسوم الخدمات"),
-              ),
+              // BlocBuilder<CalculateResultBloc, CalculateResultState>(
+              //   builder: (context, state) {
+              //     if (state is CalculateResultSuccessed) {
+              //       return PensTaxesWidget(
+              //         addedTaxes: state.result.addedTaxes!,
+              //         customsCertificate: state.result.customsCertificate!,
+              //         billTax: state.result.billTax!,
+              //         stampFee: state.result.stampFee!,
+              //         provincialLocalTax: state.result.provincialLocalTax!,
+              //         advanceIncomeTax: state.result.advanceIncomeTax!,
+              //         reconstructionFee: state.result.reconstructionFee!,
+              //         finalTaxes: state.result.finalTaxes!,
+              //       );
+              //     } else {
+              //       return const CalculatorLoadingScreen();
+              //     }
+              //   },
+              // ),
+              // // const SizedBox(
+              // //   height: 20,
+              // // ),
+              // BlocBuilder<CalculateResultBloc, CalculateResultState>(
+              //   builder: (context, state) {
+              //     if (state is CalculateResultSuccessed) {
+              //       return Container(
+              //         width: double.infinity,
+              //         decoration: BoxDecoration(
+              //           border: Border(
+              //             top: BorderSide(
+              //               color: AppColor.deepYellow,
+              //               width: 1,
+              //             ),
+              //             right: BorderSide(
+              //               color: AppColor.deepYellow,
+              //               width: 2,
+              //             ),
+              //             left: BorderSide(
+              //               color: AppColor.deepYellow,
+              //               width: 2,
+              //             ),
+              //             bottom: BorderSide(
+              //               color: AppColor.deepYellow,
+              //               width: 2,
+              //             ),
+              //           ),
+              //           borderRadius: const BorderRadius.vertical(
+              //               top: Radius.zero, bottom: Radius.circular(12)),
+              //           color: Colors.white,
+              //         ),
+              //         margin: EdgeInsets.symmetric(horizontal: 10.w),
+              //         child: Padding(
+              //           padding: EdgeInsets.symmetric(horizontal: 15.w),
+              //           child: Column(
+              //             mainAxisAlignment: MainAxisAlignment.start,
+              //             children: [
+              //               const Text(
+              //                 "إجمالي الرسوم:",
+              //                 style: TextStyle(
+              //                     fontWeight: FontWeight.bold, fontSize: 22),
+              //               ),
+              //               const SizedBox(
+              //                 height: 7,
+              //               ),
+              //               Row(
+              //                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              //                 children: [
+              //                   const Text(
+              //                     "مجموع الضرائب والرسوم:",
+              //                     style: TextStyle(fontWeight: FontWeight.bold),
+              //                     maxLines: 3,
+              //                   ),
+              //                   Text(
+              //                     state.result.finalTotal!.toStringAsFixed(2),
+              //                     style: const TextStyle(
+              //                         fontWeight: FontWeight.bold),
+              //                   ),
+              //                 ],
+              //               ),
+              //               const SizedBox(
+              //                 height: 15,
+              //               ),
+              //             ],
+              //           ),
+              //         ),
+              //       );
+              //     } else {
+              //       return const CalculatorLoadingScreen();
+              //     }
+              //   },
+              // ),
+              // SizedBox(
+              //   height: 15.h,
+              // ),
+              // Padding(
+              //   padding: EdgeInsets.symmetric(horizontal: 25.w),
+              //   child: const Text(
+              //       "هذه الرسوم تقديرية ولا تتضمن مصاريف التخليص الجمركي ورسوم الخدمات"),
+              // ),
               SizedBox(
                 height: 10.h,
               ),
-              Divider(
-                color: AppColor.deepYellow,
-              ),
-              SizedBox(
-                height: 10.h,
-              ),
-              const Text(
-                "تكاليف المخلص الجمركي",
-                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
-              ),
-              SizedBox(
-                height: 20.h,
-              ),
+
               BlocBuilder<CalculateResultBloc, CalculateResultState>(
                 builder: (context, state) {
                   if (state is CalculateResultSuccessed) {
@@ -235,9 +225,10 @@ class BrokerCostDetailsScreen extends StatelessWidget {
                         padding: EdgeInsets.symmetric(horizontal: 15.w),
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.start,
+                          crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             const Text(
-                              "تفاصيل التكاليف",
+                              "تكاليف المعاملة الجمركية",
                               style: TextStyle(
                                   fontWeight: FontWeight.bold, fontSize: 22),
                             ),
@@ -263,15 +254,17 @@ class BrokerCostDetailsScreen extends StatelessWidget {
                                 );
                               },
                             ),
-                            const SizedBox(
-                              height: 7,
+                            Divider(
+                              color: AppColor.deepYellow,
                             ),
                             Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
                                 const Text(
                                   "اجمالي التكاليف:",
-                                  style: TextStyle(fontWeight: FontWeight.bold),
+                                  style: TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 18),
                                   maxLines: 3,
                                 ),
                                 Text(
@@ -296,19 +289,7 @@ class BrokerCostDetailsScreen extends StatelessWidget {
               SizedBox(
                 height: 10.h,
               ),
-              Divider(
-                color: AppColor.deepYellow,
-              ),
-              SizedBox(
-                height: 10.h,
-              ),
-              const Text(
-                "اجمالي تكاليف العملية",
-                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
-              ),
-              SizedBox(
-                height: 7.h,
-              ),
+
               BlocBuilder<CalculateResultBloc, CalculateResultState>(
                 builder: (context, state) {
                   if (state is CalculateResultSuccessed) {
@@ -344,27 +325,25 @@ class BrokerCostDetailsScreen extends StatelessWidget {
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.start,
                           children: [
-                            Text(
-                              "اجمالي التكاليف",
-                              style: TextStyle(
-                                  fontWeight: FontWeight.bold, fontSize: 22.sp),
-                            ),
                             SizedBox(
-                              height: 7.h,
+                              height: 15.h,
                             ),
                             Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
-                                const Text(
+                                Text(
                                   "اجمالي الرسوم والتكاليف:",
-                                  style: TextStyle(fontWeight: FontWeight.bold),
+                                  style: TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 20.sp),
                                   maxLines: 3,
                                 ),
                                 Text(
                                   finaltotalCost(
                                       offer.costs, state.result.finalTotal!),
-                                  style: const TextStyle(
-                                      fontWeight: FontWeight.bold),
+                                  style: TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      color: AppColor.deepYellow),
                                 ),
                               ],
                             ),

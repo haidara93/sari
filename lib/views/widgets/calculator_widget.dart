@@ -6,6 +6,7 @@ import 'package:custome_mobile/business_logic/bloc/calculator_panel_bloc.dart';
 import 'package:custome_mobile/business_logic/bloc/fee_select_bloc.dart';
 import 'package:custome_mobile/business_logic/bloc/flags_bloc.dart';
 import 'package:custome_mobile/business_logic/cubit/bottom_nav_bar_cubit.dart';
+import 'package:custome_mobile/business_logic/cubit/stop_scroll_cubit.dart';
 import 'package:custome_mobile/data/models/package_model.dart';
 import 'package:custome_mobile/data/services/calculator_service.dart';
 import 'package:custome_mobile/helpers/color_constants.dart';
@@ -55,7 +56,7 @@ class CalculatorWidget extends StatefulWidget {
 }
 
 class _CalculatorWidgetState extends State<CalculatorWidget> {
-  String syrianExchangeValue = "6565";
+  String syrianExchangeValue = "8585";
 
   String syrianTotalValue = "0";
 
@@ -67,7 +68,7 @@ class _CalculatorWidgetState extends State<CalculatorWidget> {
   String wieghtUnit = "";
   String wieghtLabel = "الوزن";
 
-  double usTosp = 6565;
+  double usTosp = 8585;
   double basePrice = 0;
   double wieghtValue = 0;
   var f = NumberFormat("#,###", "en_US");
@@ -123,7 +124,7 @@ class _CalculatorWidgetState extends State<CalculatorWidget> {
     var syrianExch =
         double.parse(widget.wieghtController!.text.replaceAll(",", "")) *
             double.parse(widget.valueController!.text.replaceAll(",", ""));
-    var syrianTotal = syrianExch * 6565;
+    var syrianTotal = syrianExch * 8585;
     var totalEnsurance = (syrianTotal) + (syrianTotal * 0.0012);
     setState(() {
       syrianExchangeValue = syrianExch.round().toString();
@@ -134,7 +135,7 @@ class _CalculatorWidgetState extends State<CalculatorWidget> {
 
   void calculateTotalValue() {
     var syrianTotal =
-        double.parse(widget.valueController!.text.replaceAll(",", "")) * 6565;
+        double.parse(widget.valueController!.text.replaceAll(",", "")) * 8585;
     var totalEnsurance = (syrianTotal) + (syrianTotal * 0.0012);
     setState(() {
       syrianTotalValue = syrianTotal.round().toString();
@@ -163,7 +164,7 @@ class _CalculatorWidgetState extends State<CalculatorWidget> {
           widget.valueController!.text = "0.0";
         }
         valueEnabled = true;
-        syrianExchangeValue = "6565";
+        syrianExchangeValue = "8585";
       });
     }
 
@@ -371,7 +372,7 @@ class _CalculatorWidgetState extends State<CalculatorWidget> {
               basePrice = 0.0;
               widget.valueController!.text = "0.0";
               valueEnabled = true;
-              syrianExchangeValue = "6565";
+              syrianExchangeValue = "8585";
             });
           }
         }
@@ -382,7 +383,7 @@ class _CalculatorWidgetState extends State<CalculatorWidget> {
 
           widget.valueController!.text = "0.0";
           valueEnabled = true;
-          syrianExchangeValue = "6565";
+          syrianExchangeValue = "8585";
         });
       }
     }
@@ -560,6 +561,7 @@ class _CalculatorWidgetState extends State<CalculatorWidget> {
                       if (!focus) {
                         FocusManager.instance.primaryFocus?.unfocus();
                         BlocProvider.of<BottomNavBarCubit>(context).emitShow();
+                        BlocProvider.of<StopScrollCubit>(context).emitEnable();
                       }
                     },
                     child: TypeAheadField(
@@ -581,6 +583,7 @@ class _CalculatorWidgetState extends State<CalculatorWidget> {
                                   .typeAheadController!.value.text.length);
                         },
 
+                        style: const TextStyle(fontSize: 18),
                         decoration: const InputDecoration(
                           labelText: "نوع البضاعة",
                           contentPadding: EdgeInsets.symmetric(
@@ -589,6 +592,8 @@ class _CalculatorWidgetState extends State<CalculatorWidget> {
                           ),
                         ),
                         onSubmitted: (value) {
+                          BlocProvider.of<StopScrollCubit>(context)
+                              .emitEnable();
                           FocusManager.instance.primaryFocus?.unfocus();
                           BlocProvider.of<BottomNavBarCubit>(context)
                               .emitShow();
@@ -607,10 +612,27 @@ class _CalculatorWidgetState extends State<CalculatorWidget> {
                           color: Colors.white,
                         );
                       },
+                      noItemsFoundBuilder: (value) {
+                        var localizedMessage = "لم يتم العثور على أية نتائج!";
+                        return Container(
+                          width: double.infinity,
+                          color: Colors.white,
+                          child: Center(
+                            child: Text(
+                              localizedMessage,
+                              style: TextStyle(fontSize: 18.sp),
+                            ),
+                          ),
+                        );
+                      },
                       suggestionsCallback: (pattern) async {
                         setState(() {
                           patternString = pattern;
                         });
+                        if (pattern.isNotEmpty) {
+                          BlocProvider.of<StopScrollCubit>(context)
+                              .emitDisable();
+                        }
                         return pattern.isEmpty || pattern.length == 1
                             ? []
                             : await CalculatorService.getpackages(pattern);
@@ -627,7 +649,12 @@ class _CalculatorWidgetState extends State<CalculatorWidget> {
                                   text: suggestion.label!,
                                   highlight: patternString,
                                   ignoreCase: false,
-                                  highlightColor: AppColor.goldenYellow,
+                                  style: TextStyle(fontSize: 17.sp),
+                                  highlightStyle: TextStyle(
+                                    fontSize: 17.sp,
+                                    backgroundColor: AppColor.goldenYellow,
+                                    color: Colors.white,
+                                  ),
                                 ),
                                 // subtitle: Text('\$${suggestion['price']}'),
                               ),
@@ -647,6 +674,7 @@ class _CalculatorWidgetState extends State<CalculatorWidget> {
                         //   syrianTotalValue = "0.0";
                         //   totalValueWithEnsurance = "0.0";
                         // });
+                        BlocProvider.of<StopScrollCubit>(context).emitEnable();
                         selectSuggestion(suggestion);
                         FocusManager.instance.primaryFocus?.unfocus();
                         BlocProvider.of<BottomNavBarCubit>(context).emitShow();
@@ -731,7 +759,7 @@ class _CalculatorWidgetState extends State<CalculatorWidget> {
 
                             widget.valueController!.text = "0.0";
                             valueEnabled = true;
-                            syrianExchangeValue = "6565";
+                            syrianExchangeValue = "8585";
                           });
                         }
                         evaluatePrice();
@@ -750,7 +778,7 @@ class _CalculatorWidgetState extends State<CalculatorWidget> {
 
                             widget.valueController!.text = "0.0";
                             valueEnabled = true;
-                            syrianExchangeValue = "6565";
+                            syrianExchangeValue = "8585";
                           });
                         }
                         evaluatePrice();
@@ -806,321 +834,129 @@ class _CalculatorWidgetState extends State<CalculatorWidget> {
                   height: 24,
                 ),
               ),
-              BlocBuilder<FlagsBloc, FlagsState>(
-                builder: (context, flagstate) {
-                  if (flagstate is FlagsLoadedSuccess) {
-                    return DropdownSearch<Origin>(
-                      popupProps: PopupProps.modalBottomSheet(
-                        showSearchBox: true,
-
-                        itemBuilder: (context, item, isSelected) {
-                          return Padding(
-                            padding: EdgeInsets.symmetric(horizontal: 12.w),
-                            // width: 200,
-                            child: Row(
-                              children: [
-                                SvgPicture.network(
-                                  item.imageURL!,
-                                  height: 45.h,
-                                  width: 55.w,
-                                  placeholderBuilder: (context) => Container(
-                                    height: 45.h,
-                                    width: 55.w,
-                                    decoration: BoxDecoration(
-                                      color: Colors.grey[200],
-                                      borderRadius: BorderRadius.circular(5),
-                                    ),
-                                  ),
-                                ),
-                                const SizedBox(width: 12),
-                                Container(
-                                  constraints: BoxConstraints(
-                                    maxWidth: 280.w,
-                                  ),
-                                  child: Text(
-                                    item.label!,
-                                    overflow: TextOverflow.ellipsis,
-                                    // maxLines: 2,
-                                    style: const TextStyle(
-                                      fontSize: 19,
-                                    ),
-                                  ),
-                                ),
-                              ],
-                              // subtitle: Text('\$${suggestion['price']}'),
-                            ),
-                          );
-                        },
-
-                        modalBottomSheetProps: const ModalBottomSheetProps(
-                          padding: EdgeInsets.all(8),
-                        ),
-
-                        containerBuilder: (context, popupWidget) {
-                          return Container(
-                            height: MediaQuery.of(context).size.height - 50.h,
-                            padding: const EdgeInsets.all(8),
-                            decoration: const BoxDecoration(
-                              borderRadius: BorderRadius.zero,
-                            ),
-                            child: popupWidget,
-                          );
-                        },
-                        // title: Text("اختر المنشأ"),
-                      ),
-                      items: flagstate.origins,
-                      dropdownDecoratorProps: const DropDownDecoratorProps(
-                        dropdownSearchDecoration: InputDecoration(
-                          // labelText: "اختر المنشأ",
-                          hintText: "اختر المنشأ من القائمة",
-                        ),
-                      ),
-                      dropdownBuilder: (context, selectedItem) {
-                        return selectedItem != null
-                            ? Row(
-                                children: [
-                                  SvgPicture.network(
-                                    selectedItem!.imageURL!,
-                                    height: 35.h,
-                                    width: 45.w,
-                                    placeholderBuilder: (context) => Container(
-                                      height: 35.h,
-                                      width: 45.w,
-                                      decoration: BoxDecoration(
-                                        color: Colors.grey[200],
-                                        borderRadius: BorderRadius.circular(5),
-                                      ),
-                                    ),
-                                  ),
-                                  const SizedBox(width: 12),
-                                  Container(
-                                    constraints: BoxConstraints(
-                                      maxWidth: 280.w,
-                                    ),
-                                    child: Text(
-                                      selectedItem!.label!,
-                                      overflow: TextOverflow.ellipsis,
-                                      // maxLines: 2,
-                                      style: const TextStyle(
-                                        fontSize: 19,
-                                      ),
-                                    ),
-                                  ),
-                                ],
-                                // subtitle: Text('\$${suggestion['price']}'),
-                              )
-                            : Text(
-                                "اختر المنشأ",
-                                style: TextStyle(
-                                    fontSize: 18, color: Colors.grey[600]!),
-                              );
-                      },
-                      dropdownButtonProps: const DropdownButtonProps(
-                        icon: Icon(
-                          Icons.keyboard_arrow_down_sharp,
-                          color: AppColor.AccentBlue,
-                        ),
-                        iconSize: 20,
-                      ),
-                      filterFn: (item, filter) {
-                        return item.label!.contains(filter);
-                      },
-                      onChanged: (value) {
-                        selectOrigin(value!);
-                      },
-                      selectedItem: selectedOrigin,
-                    );
-                  } else if (flagstate is FlagsLoadingProgressState) {
-                    return const Center(
-                      child: LinearProgressIndicator(),
-                    );
-                  } else {
-                    return Center(
-                      child: GestureDetector(
-                        onTap: () {
-                          BlocProvider.of<FlagsBloc>(context)
-                              .add(FlagsLoadEvent());
-                        },
-                        child: const Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Text(
-                              "حدث خطأأثناء تحميل القائمة...  ",
-                              style: TextStyle(color: Colors.red),
-                            ),
-                            Icon(
-                              Icons.refresh,
-                              color: Colors.grey,
-                            )
-                          ],
-                        ),
-                      ),
-                    );
-                  }
-                },
-              ),
               // BlocBuilder<FlagsBloc, FlagsState>(
               //   builder: (context, flagstate) {
               //     if (flagstate is FlagsLoadedSuccess) {
-              //       return DropdownButtonHideUnderline(
-              //         child: DropdownButton2<Origin>(
-              //           isExpanded: true,
-              //           hint: Text(
-              //             "اختر المنشأ",
-              //             style: TextStyle(
-              //               fontSize: 15,
-              //               color: Theme.of(context).hintColor,
-              //             ),
-              //           ),
-              //           items: flagstate.origins
-              //               .map((Origin item) => DropdownMenuItem<Origin>(
-              //                     value: item,
-              //                     child: SizedBox(
-              //                       // width: 200,
-              //                       child: Row(
-              //                         children: [
-              //                           SizedBox(
-              //                             height: 35,
-              //                             width: 55,
-              //                             child: SvgPicture.network(
-              //                               item.imageURL!,
-              //                               height: 35,
-              //                               width: 55,
-              //                               // semanticsLabel: 'A shark?!',
-              //                               placeholderBuilder:
-              //                                   (BuildContext context) =>
-              //                                       Container(
-              //                                 height: 35.h,
-              //                                 width: 45.w,
-              //                                 decoration: BoxDecoration(
-              //                                   color: Colors.grey[200],
-              //                                   borderRadius:
-              //                                       BorderRadius.circular(5),
-              //                                 ),
-              //                               ),
-              //                             ),
-              //                           ),
-              //                           const SizedBox(width: 7),
-              //                           Container(
-              //                             constraints: BoxConstraints(
-              //                               maxWidth: 280.w,
-              //                             ),
-              //                             child: Text(
-              //                               item.label!,
-              //                               overflow: TextOverflow.ellipsis,
-              //                               // maxLines: 2,
-              //                             ),
-              //                           ),
-              //                         ],
-              //                         // subtitle: Text('\$${suggestion['price']}'),
+              //       return DropdownSearch<Origin>(
+              //         popupProps: PopupProps.modalBottomSheet(
+              //           showSearchBox: true,
+
+              //           itemBuilder: (context, item, isSelected) {
+              //             return Padding(
+              //               padding: EdgeInsets.symmetric(horizontal: 12.w),
+              //               // width: 200,
+              //               child: Row(
+              //                 children: [
+              //                   SvgPicture.network(
+              //                     item.imageURL!,
+              //                     height: 45.h,
+              //                     width: 55.w,
+              //                     placeholderBuilder: (context) => Container(
+              //                       height: 45.h,
+              //                       width: 55.w,
+              //                       decoration: BoxDecoration(
+              //                         color: Colors.grey[200],
+              //                         borderRadius: BorderRadius.circular(5),
               //                       ),
               //                     ),
-              //                   ))
-              //               .toList(),
-              //           value: selectedOrigin,
-              //           onChanged: (Origin? value) {
-              //             // setState(() {
-              //             //   selectedOrigin = value;
-              //             // });
-              //             selectOrigin(value!);
-              //           },
-              //           dropdownSearchData: DropdownSearchData(
-              //             searchController: widget.originController,
-              //             searchInnerWidgetHeight: 60,
-              //             searchInnerWidget: Container(
-              //               height: 60,
-              //               padding: const EdgeInsets.only(
-              //                 top: 8,
-              //                 bottom: 4,
-              //                 right: 8,
-              //                 left: 8,
-              //               ),
-              //               child: TextFormField(
-              //                 expands: true,
-              //                 maxLines: null,
-              //                 controller: widget.originController,
-              //                 onTap: () {
-              //                   widget.originController!.selection =
-              //                       TextSelection(
-              //                           baseOffset: 0,
-              //                           extentOffset: widget.originController!
-              //                               .value.text.length);
-              //                 },
-              //                 decoration: InputDecoration(
-              //                   isDense: true,
-              //                   contentPadding: const EdgeInsets.symmetric(
-              //                     horizontal: 10,
-              //                     vertical: 8,
               //                   ),
-              //                   labelText: 'اختر المنشأ',
-              //                   hintStyle: const TextStyle(fontSize: 12),
-              //                   border: OutlineInputBorder(
-              //                     borderRadius: BorderRadius.circular(8),
+              //                   const SizedBox(width: 12),
+              //                   Container(
+              //                     constraints: BoxConstraints(
+              //                       maxWidth: 280.w,
+              //                     ),
+              //                     child: Text(
+              //                       item.label!,
+              //                       overflow: TextOverflow.ellipsis,
+              //                       // maxLines: 2,
+              //                       style: const TextStyle(
+              //                         fontSize: 19,
+              //                       ),
+              //                     ),
               //                   ),
-              //                 ),
-              //                 onTapOutside: (event) {
-              //                   widget.unfocus;
-              //                   BlocProvider.of<BottomNavBarCubit>(context)
-              //                       .emitShow();
-              //                 },
-              //                 onFieldSubmitted: (value) {
-              //                   widget.unfocus;
-              //                   BlocProvider.of<BottomNavBarCubit>(context)
-              //                       .emitShow();
-              //                 },
+              //                 ],
+              //                 // subtitle: Text('\$${suggestion['price']}'),
               //               ),
-              //             ),
-              //             searchMatchFn: (item, searchValue) {
-              //               return item.value!.label!.contains(searchValue);
-              //             },
-              //           ),
-              //           onMenuStateChange: (isOpen) {
-              //             if (isOpen) {
-              //               setState(() {
-              //                 widget.originController!.clear();
-              //               });
-              //             }
+              //             );
               //           },
-              //           buttonStyleData: ButtonStyleData(
-              //             height: 50,
-              //             width: double.infinity,
-              //             padding: const EdgeInsets.only(left: 14, right: 14),
 
-              //             decoration: BoxDecoration(
-              //               borderRadius: BorderRadius.circular(12),
-              //               border: Border.all(
-              //                 color: Colors.black26,
+              //           modalBottomSheetProps: const ModalBottomSheetProps(
+              //             padding: EdgeInsets.all(8),
+              //           ),
+
+              //           containerBuilder: (context, popupWidget) {
+              //             return Container(
+              //               height: MediaQuery.of(context).size.height - 50.h,
+              //               padding: const EdgeInsets.all(8),
+              //               decoration: const BoxDecoration(
+              //                 borderRadius: BorderRadius.zero,
               //               ),
-              //               color: Colors.white,
-              //             ),
-              //             // elevation: 2,
-              //           ),
-              //           iconStyleData: const IconStyleData(
-              //             icon: Icon(
-              //               Icons.keyboard_arrow_down_sharp,
-              //             ),
-              //             iconSize: 20,
-              //             iconEnabledColor: AppColor.AccentBlue,
-              //             iconDisabledColor: Colors.grey,
-              //           ),
-              //           dropdownStyleData: DropdownStyleData(
-              //             width: double.infinity,
-              //             maxHeight: MediaQuery.of(context).size.height * .84,
-              //             padding: const EdgeInsets.all(8.0),
-              //             decoration: BoxDecoration(
-              //               borderRadius: BorderRadius.circular(14),
-              //               color: Colors.white,
-              //             ),
-              //             scrollbarTheme: ScrollbarThemeData(
-              //               radius: const Radius.circular(40),
-              //               thickness: MaterialStateProperty.all(6),
-              //               thumbVisibility: MaterialStateProperty.all(true),
-              //             ),
-              //           ),
-              //           menuItemStyleData: const MenuItemStyleData(
-              //             height: 40,
+              //               child: popupWidget,
+              //             );
+              //           },
+              //           // title: Text("اختر المنشأ"),
+              //         ),
+              //         items: flagstate.origins,
+              //         dropdownDecoratorProps: const DropDownDecoratorProps(
+              //           dropdownSearchDecoration: InputDecoration(
+              //             // labelText: "اختر المنشأ",
+              //             hintText: "اختر المنشأ من القائمة",
               //           ),
               //         ),
+              //         dropdownBuilder: (context, selectedItem) {
+              //           return selectedItem != null
+              //               ? Row(
+              //                   children: [
+              //                     SvgPicture.network(
+              //                       selectedItem!.imageURL!,
+              //                       height: 35.h,
+              //                       width: 45.w,
+              //                       placeholderBuilder: (context) => Container(
+              //                         height: 35.h,
+              //                         width: 45.w,
+              //                         decoration: BoxDecoration(
+              //                           color: Colors.grey[200],
+              //                           borderRadius: BorderRadius.circular(5),
+              //                         ),
+              //                       ),
+              //                     ),
+              //                     const SizedBox(width: 12),
+              //                     Container(
+              //                       constraints: BoxConstraints(
+              //                         maxWidth: 280.w,
+              //                       ),
+              //                       child: Text(
+              //                         selectedItem!.label!,
+              //                         overflow: TextOverflow.ellipsis,
+              //                         // maxLines: 2,
+              //                         style: const TextStyle(
+              //                           fontSize: 19,
+              //                         ),
+              //                       ),
+              //                     ),
+              //                   ],
+              //                   // subtitle: Text('\$${suggestion['price']}'),
+              //                 )
+              //               : Text(
+              //                   "اختر المنشأ",
+              //                   style: TextStyle(
+              //                       fontSize: 18, color: Colors.grey[600]!),
+              //                 );
+              //         },
+              //         dropdownButtonProps: const DropdownButtonProps(
+              //           icon: Icon(
+              //             Icons.keyboard_arrow_down_sharp,
+              //             color: AppColor.AccentBlue,
+              //           ),
+              //           iconSize: 20,
+              //         ),
+              //         filterFn: (item, filter) {
+              //           return item.label!.contains(filter);
+              //         },
+              //         onChanged: (value) {
+              //           selectOrigin(value!);
+              //         },
+              //         selectedItem: selectedOrigin,
               //       );
               //     } else if (flagstate is FlagsLoadingProgressState) {
               //       return const Center(
@@ -1151,6 +987,197 @@ class _CalculatorWidgetState extends State<CalculatorWidget> {
               //     }
               //   },
               // ),
+              BlocBuilder<FlagsBloc, FlagsState>(
+                builder: (context, flagstate) {
+                  if (flagstate is FlagsLoadedSuccess) {
+                    return DropdownButtonHideUnderline(
+                      child: DropdownButton2<Origin>(
+                        isExpanded: true,
+                        hint: Text(
+                          "اختر المنشأ",
+                          style: TextStyle(
+                            fontSize: 15,
+                            color: Theme.of(context).hintColor,
+                          ),
+                        ),
+                        items: flagstate.origins
+                            .map((Origin item) => DropdownMenuItem<Origin>(
+                                  value: item,
+                                  child: SizedBox(
+                                    // width: 200,
+                                    child: Row(
+                                      children: [
+                                        SizedBox(
+                                          height: 35,
+                                          width: 55,
+                                          child: SvgPicture.network(
+                                            item.imageURL!,
+                                            height: 35,
+                                            width: 55,
+                                            // semanticsLabel: 'A shark?!',
+                                            placeholderBuilder:
+                                                (BuildContext context) =>
+                                                    Container(
+                                              height: 35.h,
+                                              width: 45.w,
+                                              decoration: BoxDecoration(
+                                                color: Colors.grey[200],
+                                                borderRadius:
+                                                    BorderRadius.circular(5),
+                                              ),
+                                            ),
+                                          ),
+                                        ),
+                                        const SizedBox(width: 7),
+                                        Container(
+                                          constraints: BoxConstraints(
+                                            maxWidth: 280.w,
+                                          ),
+                                          child: Text(
+                                            item.label!,
+                                            overflow: TextOverflow.ellipsis,
+                                            // maxLines: 2,
+                                          ),
+                                        ),
+                                      ],
+                                      // subtitle: Text('\$${suggestion['price']}'),
+                                    ),
+                                  ),
+                                ))
+                            .toList(),
+                        value: selectedOrigin,
+                        onChanged: (Origin? value) {
+                          // setState(() {
+                          //   selectedOrigin = value;
+                          // });
+                          selectOrigin(value!);
+                        },
+                        dropdownSearchData: DropdownSearchData(
+                          searchController: widget.originController,
+                          searchInnerWidgetHeight: 60,
+                          searchInnerWidget: Container(
+                            height: 60,
+                            padding: const EdgeInsets.only(
+                              top: 8,
+                              bottom: 4,
+                              right: 8,
+                              left: 8,
+                            ),
+                            child: TextFormField(
+                              expands: true,
+                              maxLines: null,
+                              controller: widget.originController,
+                              onTap: () {
+                                widget.originController!.selection =
+                                    TextSelection(
+                                        baseOffset: 0,
+                                        extentOffset: widget.originController!
+                                            .value.text.length);
+                              },
+                              decoration: InputDecoration(
+                                isDense: true,
+                                contentPadding: const EdgeInsets.symmetric(
+                                  horizontal: 10,
+                                  vertical: 8,
+                                ),
+                                labelText: 'اختر المنشأ',
+                                hintStyle: const TextStyle(fontSize: 12),
+                                border: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(8),
+                                ),
+                              ),
+                              onTapOutside: (event) {
+                                widget.unfocus;
+                                BlocProvider.of<BottomNavBarCubit>(context)
+                                    .emitShow();
+                              },
+                              onFieldSubmitted: (value) {
+                                widget.unfocus;
+                                BlocProvider.of<BottomNavBarCubit>(context)
+                                    .emitShow();
+                              },
+                            ),
+                          ),
+                          searchMatchFn: (item, searchValue) {
+                            return item.value!.label!.contains(searchValue);
+                          },
+                        ),
+                        onMenuStateChange: (isOpen) {
+                          if (isOpen) {
+                            setState(() {
+                              widget.originController!.clear();
+                            });
+                          }
+                        },
+                        buttonStyleData: ButtonStyleData(
+                          height: 50,
+                          width: double.infinity,
+                          padding: const EdgeInsets.only(left: 14, right: 14),
+
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(12),
+                            border: Border.all(
+                              color: Colors.black26,
+                            ),
+                            color: Colors.white,
+                          ),
+                          // elevation: 2,
+                        ),
+                        iconStyleData: const IconStyleData(
+                          icon: Icon(
+                            Icons.keyboard_arrow_down_sharp,
+                          ),
+                          iconSize: 20,
+                          iconEnabledColor: AppColor.AccentBlue,
+                          iconDisabledColor: Colors.grey,
+                        ),
+                        dropdownStyleData: DropdownStyleData(
+                          maxHeight: 400,
+                          padding: const EdgeInsets.all(8.0),
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(14),
+                            color: Colors.white,
+                          ),
+                          scrollbarTheme: ScrollbarThemeData(
+                            radius: const Radius.circular(40),
+                            thickness: MaterialStateProperty.all(6),
+                            thumbVisibility: MaterialStateProperty.all(true),
+                          ),
+                        ),
+                        menuItemStyleData: const MenuItemStyleData(
+                          height: 40,
+                        ),
+                      ),
+                    );
+                  } else if (flagstate is FlagsLoadingProgressState) {
+                    return const Center(
+                      child: LinearProgressIndicator(),
+                    );
+                  } else {
+                    return Center(
+                      child: GestureDetector(
+                        onTap: () {
+                          BlocProvider.of<FlagsBloc>(context)
+                              .add(FlagsLoadEvent());
+                        },
+                        child: const Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Text(
+                              "حدث خطأأثناء تحميل القائمة...  ",
+                              style: TextStyle(color: Colors.red),
+                            ),
+                            Icon(
+                              Icons.refresh,
+                              color: Colors.grey,
+                            )
+                          ],
+                        ),
+                      ),
+                    );
+                  }
+                },
+              ),
               const SizedBox(
                 height: 14,
               ),
@@ -1294,6 +1321,7 @@ class _CalculatorWidgetState extends State<CalculatorWidget> {
                 visible: isfeeequal001,
                 child: CheckboxListTile(
                     value: rawMaterialValue,
+                    controlAffinity: ListTileControlAffinity.leading,
                     title: const Text("هل المادة أولية؟"),
                     onChanged: (value) {
                       setState(() {
@@ -1311,6 +1339,7 @@ class _CalculatorWidgetState extends State<CalculatorWidget> {
                 visible: isfeeequal001,
                 child: CheckboxListTile(
                     value: industrialValue,
+                    controlAffinity: ListTileControlAffinity.leading,
                     title: const Text("هل المادة صناعية؟"),
                     onChanged: (value) {
                       setState(() {
@@ -1328,6 +1357,7 @@ class _CalculatorWidgetState extends State<CalculatorWidget> {
                 visible: isBrand,
                 child: CheckboxListTile(
                     value: brandValue,
+                    controlAffinity: ListTileControlAffinity.leading,
                     title: const Text("هل البضاعة ماركة؟"),
                     onChanged: (value) {
                       calculateExtrasPrice(1.5, value!);
@@ -1346,6 +1376,7 @@ class _CalculatorWidgetState extends State<CalculatorWidget> {
                 visible: isTubes,
                 child: CheckboxListTile(
                     value: tubesValue,
+                    controlAffinity: ListTileControlAffinity.leading,
                     title: const Text("هل قياس الأنابيب أقل أو يساوي 3inch؟"),
                     onChanged: (value) {
                       calculateExtrasPrice(.1, value!);
@@ -1364,6 +1395,7 @@ class _CalculatorWidgetState extends State<CalculatorWidget> {
                 visible: isColored,
                 child: CheckboxListTile(
                     value: colorValue,
+                    controlAffinity: ListTileControlAffinity.leading,
                     title: const Text("هل الخيوط ملونة؟"),
                     onChanged: (value) {
                       calculateExtrasPrice(.1, value!);
@@ -1382,6 +1414,7 @@ class _CalculatorWidgetState extends State<CalculatorWidget> {
                 visible: isLycra,
                 child: CheckboxListTile(
                     value: lycraValue,
+                    controlAffinity: ListTileControlAffinity.leading,
                     title: const Text("هل الخيوط ليكرا؟"),
                     onChanged: (value) {
                       calculateExtrasPrice(.05, value!);
@@ -1415,7 +1448,7 @@ class _CalculatorWidgetState extends State<CalculatorWidget> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     // Text(
-                    //   "قيمة التحويل بالجنيه المصري : 6565 E.P",
+                    //   "قيمة التحويل بالجنيه المصري : 8585 E.P",
                     //   style: TextStyle(fontSize: 17.sp),
                     // ),
                     Text(
@@ -1490,7 +1523,7 @@ class _CalculatorWidgetState extends State<CalculatorWidget> {
                                     result.weight = wieghtValue.toInt();
                                     result.price = basePrice.toInt();
                                     result.cnsulate = 1;
-                                    result.dolar = 6565;
+                                    result.dolar = 8585;
                                     result.arabic_stamp = selectedPackage!
                                         .totalTaxes!.arabicStamp!
                                         .toInt();

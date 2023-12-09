@@ -7,23 +7,27 @@ class TariffInfoIcon extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: EdgeInsets.symmetric(vertical: 10.w, horizontal: 10.w),
-      child: SvgPicture.asset(
-        "assets/icons/expansionTileIcon.svg",
-        width: 20.w,
-        height: 20.h,
+    return AbsorbPointer(
+      absorbing: false,
+      child: Padding(
+        padding:
+            EdgeInsets.only(top: 20.w, bottom: 20.w, left: 10.w, right: 15.w),
+        child: SvgPicture.asset(
+          "assets/icons/expansionTileIcon.svg",
+          width: 20.w,
+          height: 20.h,
+        ),
+        // child: Image.asset(
+        //   "assets/icons/expansionTileIcon.png",
+        //   width: 20.w,
+        //   height: 20.h,
+        // ),
+        // child: Icon(
+        //   Icons.info_outline,
+        //   color: Colors.cyan[200],
+        //   size: 25.sp,
+        // ),
       ),
-      // child: Image.asset(
-      //   "assets/icons/expansionTileIcon.png",
-      //   width: 20.w,
-      //   height: 20.h,
-      // ),
-      // child: Icon(
-      //   Icons.info_outline,
-      //   color: Colors.cyan[200],
-      //   size: 25.sp,
-      // ),
     );
   }
 }
