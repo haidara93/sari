@@ -46,8 +46,8 @@ class TraderCalculatorScreen extends StatelessWidget {
                         child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              const SizedBox(
-                                height: 25,
+                              SizedBox(
+                                height: 12.h,
                               ),
                               Card(
                                 clipBehavior: Clip.antiAlias,

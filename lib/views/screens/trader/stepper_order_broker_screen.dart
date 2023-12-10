@@ -1120,37 +1120,145 @@ class _StepperOrderBrokerScreenState extends State<StepperOrderBrokerScreen> {
                                       });
                                     }
                                   },
-                                  child: TypeAheadField(
-                                    textFieldConfiguration:
-                                        TextFieldConfiguration(
-                                      // autofocus: true,
-                                      keyboardType: TextInputType.multiline,
-                                      maxLines: null,
-                                      controller: _typeAheadController,
-                                      scrollPadding: EdgeInsets.only(
-                                          bottom: MediaQuery.of(context)
-                                                  .viewInsets
-                                                  .bottom +
-                                              150),
-                                      onTap: () {
-                                        setSelectedPanel(2);
-                                        BlocProvider.of<BottomNavBarCubit>(
-                                                context)
-                                            .emitHide();
-                                        _typeAheadController.selection =
-                                            TextSelection(
-                                                baseOffset: 0,
-                                                extentOffset:
-                                                    _typeAheadController
-                                                        .value.text.length);
-                                      },
-                                      style: const TextStyle(fontSize: 18),
-                                      decoration: const InputDecoration(
-                                        labelText: "نوع البضاعة",
-                                        contentPadding: EdgeInsets.symmetric(
-                                            vertical: 11.0, horizontal: 9.0),
+                                  child: GestureDetector(
+                                    onTap: () {
+                                      BlocProvider.of<CalculatorPanelBloc>(
+                                              context)
+                                          .add(TariffPanelOpenEvent());
+                                      FocusManager.instance.primaryFocus
+                                          ?.unfocus();
+                                      BlocProvider.of<BottomNavBarCubit>(
+                                              context)
+                                          .emitShow();
+                                    },
+                                    child: TypeAheadField(
+                                      textFieldConfiguration:
+                                          TextFieldConfiguration(
+                                        // autofocus: true,
+                                        keyboardType: TextInputType.multiline,
+                                        maxLines: null,
+                                        enabled: false,
+                                        controller: _typeAheadController,
+                                        scrollPadding: EdgeInsets.only(
+                                            bottom: MediaQuery.of(context)
+                                                    .viewInsets
+                                                    .bottom +
+                                                150),
+                                        onTap: () {
+                                          setSelectedPanel(2);
+                                          BlocProvider.of<BottomNavBarCubit>(
+                                                  context)
+                                              .emitHide();
+                                          _typeAheadController.selection =
+                                              TextSelection(
+                                                  baseOffset: 0,
+                                                  extentOffset:
+                                                      _typeAheadController
+                                                          .value.text.length);
+                                        },
+                                        style: const TextStyle(fontSize: 18),
+                                        decoration: const InputDecoration(
+                                          labelText: "نوع البضاعة",
+                                          contentPadding: EdgeInsets.symmetric(
+                                              vertical: 11.0, horizontal: 9.0),
+                                        ),
+                                        onSubmitted: (value) {
+                                          FocusManager.instance.primaryFocus
+                                              ?.unfocus();
+                                          BlocProvider.of<BottomNavBarCubit>(
+                                                  context)
+                                              .emitShow();
+                                          setState(() {
+                                            disableScrolling = false;
+                                          });
+                                        },
                                       ),
-                                      onSubmitted: (value) {
+                                      loadingBuilder: (context) {
+                                        return Container(
+                                          color: Colors.white,
+                                          child: const Center(
+                                            child: CircularProgressIndicator(),
+                                          ),
+                                        );
+                                      },
+                                      errorBuilder: (context, error) {
+                                        return Container(
+                                          color: Colors.white,
+                                        );
+                                      },
+                                      noItemsFoundBuilder: (value) {
+                                        var localizedMessage =
+                                            "لم يتم العثور على أية نتائج!";
+                                        return Container(
+                                          width: double.infinity,
+                                          color: Colors.white,
+                                          child: Center(
+                                            child: Text(
+                                              localizedMessage,
+                                              style: TextStyle(fontSize: 18.sp),
+                                            ),
+                                          ),
+                                        );
+                                      },
+                                      suggestionsCallback: (pattern) async {
+                                        // _debouncer.run(() {
+
+                                        // });
+
+                                        setState(() {
+                                          patternString = pattern;
+                                        });
+                                        if (pattern.isNotEmpty) {
+                                          setState(() {
+                                            disableScrolling = true;
+                                          });
+                                        }
+                                        return pattern.isEmpty ||
+                                                pattern.length == 1
+                                            ? []
+                                            : await CalculatorService
+                                                .getpackages(pattern);
+                                      },
+                                      itemBuilder: (context, suggestion) {
+                                        return Container(
+                                          color: Colors.white,
+                                          child: Column(
+                                            children: [
+                                              ListTile(
+                                                // leading: Icon(Icons.shopping_cart),
+                                                tileColor: Colors.white,
+                                                title: HighlightText(
+                                                  text: suggestion.label!,
+                                                  highlight: patternString,
+                                                  ignoreCase: false,
+                                                  style: TextStyle(
+                                                      fontSize: 17.sp),
+                                                  highlightStyle: TextStyle(
+                                                    fontSize: 17.sp,
+                                                    backgroundColor:
+                                                        AppColor.goldenYellow,
+                                                    color: Colors.white,
+                                                  ),
+                                                ),
+                                                // subtitle: Text('\$${suggestion['price']}'),
+                                              ),
+                                              Divider(
+                                                color: Colors.grey[300],
+                                                height: 3,
+                                              ),
+                                            ],
+                                          ),
+                                        );
+                                      },
+                                      onSuggestionSelected: (suggestion) {
+                                        setState(() {
+                                          _wieghtController.text = "";
+                                          _valueController.text = "";
+                                          syrianExchangeValue = "8585";
+                                          syrianTotalValue = "0.0";
+                                          totalValueWithEnsurance = "0.0";
+                                        });
+                                        selectSuggestion(suggestion);
                                         FocusManager.instance.primaryFocus
                                             ?.unfocus();
                                         BlocProvider.of<BottomNavBarCubit>(
@@ -1159,106 +1267,11 @@ class _StepperOrderBrokerScreenState extends State<StepperOrderBrokerScreen> {
                                         setState(() {
                                           disableScrolling = false;
                                         });
+                                        // Navigator.of(context).push(MaterialPageRoute(
+                                        //   builder: (context) => ProductPage(product: suggestion)
+                                        // ));
                                       },
                                     ),
-                                    loadingBuilder: (context) {
-                                      return Container(
-                                        color: Colors.white,
-                                        child: const Center(
-                                          child: CircularProgressIndicator(),
-                                        ),
-                                      );
-                                    },
-                                    errorBuilder: (context, error) {
-                                      return Container(
-                                        color: Colors.white,
-                                      );
-                                    },
-                                    noItemsFoundBuilder: (value) {
-                                      var localizedMessage =
-                                          "لم يتم العثور على أية نتائج!";
-                                      return Container(
-                                        width: double.infinity,
-                                        color: Colors.white,
-                                        child: Center(
-                                          child: Text(
-                                            localizedMessage,
-                                            style: TextStyle(fontSize: 18.sp),
-                                          ),
-                                        ),
-                                      );
-                                    },
-                                    suggestionsCallback: (pattern) async {
-                                      // _debouncer.run(() {
-
-                                      // });
-
-                                      setState(() {
-                                        patternString = pattern;
-                                      });
-                                      if (pattern.isNotEmpty) {
-                                        setState(() {
-                                          disableScrolling = true;
-                                        });
-                                      }
-                                      return pattern.isEmpty ||
-                                              pattern.length == 1
-                                          ? []
-                                          : await CalculatorService.getpackages(
-                                              pattern);
-                                    },
-                                    itemBuilder: (context, suggestion) {
-                                      return Container(
-                                        color: Colors.white,
-                                        child: Column(
-                                          children: [
-                                            ListTile(
-                                              // leading: Icon(Icons.shopping_cart),
-                                              tileColor: Colors.white,
-                                              title: HighlightText(
-                                                text: suggestion.label!,
-                                                highlight: patternString,
-                                                ignoreCase: false,
-                                                style:
-                                                    TextStyle(fontSize: 17.sp),
-                                                highlightStyle: TextStyle(
-                                                  fontSize: 17.sp,
-                                                  backgroundColor:
-                                                      AppColor.goldenYellow,
-                                                  color: Colors.white,
-                                                ),
-                                              ),
-                                              // subtitle: Text('\$${suggestion['price']}'),
-                                            ),
-                                            Divider(
-                                              color: Colors.grey[300],
-                                              height: 3,
-                                            ),
-                                          ],
-                                        ),
-                                      );
-                                    },
-                                    onSuggestionSelected: (suggestion) {
-                                      setState(() {
-                                        _wieghtController.text = "";
-                                        _valueController.text = "";
-                                        syrianExchangeValue = "8585";
-                                        syrianTotalValue = "0.0";
-                                        totalValueWithEnsurance = "0.0";
-                                      });
-                                      selectSuggestion(suggestion);
-                                      FocusManager.instance.primaryFocus
-                                          ?.unfocus();
-                                      BlocProvider.of<BottomNavBarCubit>(
-                                              context)
-                                          .emitShow();
-                                      setState(() {
-                                        disableScrolling = false;
-                                      });
-                                      // Navigator.of(context).push(MaterialPageRoute(
-                                      //   builder: (context) => ProductPage(product: suggestion)
-                                      // ));
-                                    },
                                   ),
                                 ),
                               ],
@@ -1411,6 +1424,129 @@ class _StepperOrderBrokerScreenState extends State<StepperOrderBrokerScreen> {
                               child: const SizedBox(
                                 height: 24,
                               ),
+                            ),
+                            Wrap(
+                              children: [
+                                Visibility(
+                                  visible: isfeeequal001,
+                                  child: SizedBox(
+                                    width:
+                                        MediaQuery.of(context).size.width * .4,
+                                    child: CheckboxListTile(
+                                        value: rawMaterialValue,
+                                        contentPadding: EdgeInsets.zero,
+                                        controlAffinity:
+                                            ListTileControlAffinity.leading,
+                                        title: const Text("المادة أولية؟"),
+                                        onChanged: (value) {
+                                          setState(() {
+                                            rawMaterialValue = value!;
+                                          });
+                                          evaluatePrice();
+                                        }),
+                                  ),
+                                ),
+                                Visibility(
+                                  visible: isfeeequal001,
+                                  child: SizedBox(
+                                    width:
+                                        MediaQuery.of(context).size.width * .4,
+                                    child: CheckboxListTile(
+                                        value: industrialValue,
+                                        contentPadding: EdgeInsets.zero,
+                                        controlAffinity:
+                                            ListTileControlAffinity.leading,
+                                        title: const Text("المادة صناعية؟"),
+                                        onChanged: (value) {
+                                          setState(() {
+                                            industrialValue = value!;
+                                          });
+                                          evaluatePrice();
+                                        }),
+                                  ),
+                                ),
+                                Visibility(
+                                  visible: isBrand,
+                                  child: SizedBox(
+                                    width:
+                                        MediaQuery.of(context).size.width * .4,
+                                    child: CheckboxListTile(
+                                        value: brandValue,
+                                        contentPadding: EdgeInsets.zero,
+                                        controlAffinity:
+                                            ListTileControlAffinity.leading,
+                                        title: const Text("البضاعة ماركة؟"),
+                                        onChanged: (value) {
+                                          calculateExtrasPrice(1.5, value!);
+                                          setState(() {
+                                            brandValue = value;
+                                          });
+                                          evaluatePrice();
+                                        }),
+                                  ),
+                                ),
+                                Visibility(
+                                  visible: isTubes,
+                                  child: SizedBox(
+                                    width:
+                                        MediaQuery.of(context).size.width * .4,
+                                    child: CheckboxListTile(
+                                        value: tubesValue,
+                                        contentPadding: EdgeInsets.zero,
+                                        controlAffinity:
+                                            ListTileControlAffinity.leading,
+                                        title: const Text(
+                                            "قياس الأنابيب أقل أو يساوي 3inch؟"),
+                                        onChanged: (value) {
+                                          calculateExtrasPrice(.1, value!);
+                                          setState(() {
+                                            tubesValue = value;
+                                          });
+                                          evaluatePrice();
+                                        }),
+                                  ),
+                                ),
+                                Visibility(
+                                  visible: isColored,
+                                  child: SizedBox(
+                                    width:
+                                        MediaQuery.of(context).size.width * .4,
+                                    child: CheckboxListTile(
+                                        value: colorValue,
+                                        contentPadding: EdgeInsets.zero,
+                                        controlAffinity:
+                                            ListTileControlAffinity.leading,
+                                        title: const Text("الخيوط ملونة؟"),
+                                        onChanged: (value) {
+                                          calculateExtrasPrice(.1, value!);
+                                          setState(() {
+                                            colorValue = value;
+                                          });
+                                          evaluatePrice();
+                                        }),
+                                  ),
+                                ),
+                                Visibility(
+                                  visible: isLycra,
+                                  child: SizedBox(
+                                    width:
+                                        MediaQuery.of(context).size.width * .4,
+                                    child: CheckboxListTile(
+                                        value: lycraValue,
+                                        contentPadding: EdgeInsets.zero,
+                                        controlAffinity:
+                                            ListTileControlAffinity.leading,
+                                        title: const Text("الخيوط ليكرا؟"),
+                                        onChanged: (value) {
+                                          calculateExtrasPrice(.05, value!);
+                                          setState(() {
+                                            lycraValue = value;
+                                          });
+                                          evaluatePrice();
+                                        }),
+                                  ),
+                                ),
+                              ],
                             ),
                             // BlocBuilder<FlagsBloc, FlagsState>(
                             //   builder: (context, flagstate) {
@@ -1732,6 +1868,7 @@ class _StepperOrderBrokerScreenState extends State<StepperOrderBrokerScreen> {
                                             });
                                           }
                                         },
+                                        barrierColor: Colors.black45,
                                         buttonStyleData: ButtonStyleData(
                                           height: 50,
                                           width: double.infinity,
@@ -1758,7 +1895,9 @@ class _StepperOrderBrokerScreenState extends State<StepperOrderBrokerScreen> {
                                           iconDisabledColor: Colors.grey,
                                         ),
                                         dropdownStyleData: DropdownStyleData(
-                                          maxHeight: 400,
+                                          maxHeight: MediaQuery.of(context)
+                                              .size
+                                              .height,
                                           padding: const EdgeInsets.all(8.0),
                                           decoration: BoxDecoration(
                                             borderRadius:
@@ -2002,125 +2141,6 @@ class _StepperOrderBrokerScreenState extends State<StepperOrderBrokerScreen> {
                             // ),
                             const SizedBox(
                               height: 12,
-                            ),
-                            Visibility(
-                              visible: isfeeequal001,
-                              child: CheckboxListTile(
-                                  value: rawMaterialValue,
-                                  controlAffinity:
-                                      ListTileControlAffinity.leading,
-                                  title: const Text("هل المادة أولية؟"),
-                                  onChanged: (value) {
-                                    setState(() {
-                                      rawMaterialValue = value!;
-                                    });
-                                  }),
-                            ),
-                            // Visibility(
-                            //   visible: isfeeequal001,
-                            //   child: const SizedBox(
-                            //     height: 12,
-                            //   ),
-                            // ),
-                            Visibility(
-                              visible: isfeeequal001,
-                              child: CheckboxListTile(
-                                  value: industrialValue,
-                                  controlAffinity:
-                                      ListTileControlAffinity.leading,
-                                  title: const Text("هل المادة صناعية؟"),
-                                  onChanged: (value) {
-                                    setState(() {
-                                      industrialValue = value!;
-                                    });
-                                  }),
-                            ),
-                            Visibility(
-                              visible: isfeeequal001,
-                              child: const SizedBox(
-                                height: 12,
-                              ),
-                            ),
-                            Visibility(
-                              visible: isBrand,
-                              child: CheckboxListTile(
-                                  value: brandValue,
-                                  controlAffinity:
-                                      ListTileControlAffinity.leading,
-                                  title: const Text("هل البضاعة ماركة؟"),
-                                  onChanged: (value) {
-                                    calculateExtrasPrice(1.5, value!);
-                                    setState(() {
-                                      brandValue = value;
-                                    });
-                                  }),
-                            ),
-                            Visibility(
-                              visible: isBrand,
-                              child: const SizedBox(
-                                height: 12,
-                              ),
-                            ),
-                            Visibility(
-                              visible: isTubes,
-                              child: CheckboxListTile(
-                                  value: tubesValue,
-                                  controlAffinity:
-                                      ListTileControlAffinity.leading,
-                                  title: const Text(
-                                      "هل قياس الأنابيب أقل أو يساوي 3inch؟"),
-                                  onChanged: (value) {
-                                    calculateExtrasPrice(.1, value!);
-                                    setState(() {
-                                      tubesValue = value;
-                                    });
-                                  }),
-                            ),
-                            Visibility(
-                              visible: isTubes,
-                              child: const SizedBox(
-                                height: 12,
-                              ),
-                            ),
-                            Visibility(
-                              visible: isColored,
-                              child: CheckboxListTile(
-                                  value: colorValue,
-                                  controlAffinity:
-                                      ListTileControlAffinity.leading,
-                                  title: const Text("هل الخيوط ملونة؟"),
-                                  onChanged: (value) {
-                                    calculateExtrasPrice(.1, value!);
-                                    setState(() {
-                                      colorValue = value;
-                                    });
-                                  }),
-                            ),
-                            Visibility(
-                              visible: isColored,
-                              child: const SizedBox(
-                                height: 12,
-                              ),
-                            ),
-                            Visibility(
-                              visible: isLycra,
-                              child: CheckboxListTile(
-                                  value: lycraValue,
-                                  controlAffinity:
-                                      ListTileControlAffinity.leading,
-                                  title: const Text("هل الخيوط ليكرا؟"),
-                                  onChanged: (value) {
-                                    calculateExtrasPrice(.05, value!);
-                                    setState(() {
-                                      lycraValue = value;
-                                    });
-                                  }),
-                            ),
-                            Visibility(
-                              visible: isLycra,
-                              child: const SizedBox(
-                                height: 12,
-                              ),
                             ),
 
                             Container(

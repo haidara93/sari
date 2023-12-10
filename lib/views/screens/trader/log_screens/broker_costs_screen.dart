@@ -86,111 +86,9 @@ class BrokerCostDetailsScreen extends StatelessWidget {
                   }
                 },
               ),
-              // const SizedBox(
-              //   height: 20,
-              // ),
-              // BlocBuilder<CalculateResultBloc, CalculateResultState>(
-              //   builder: (context, state) {
-              //     if (state is CalculateResultSuccessed) {
-              //       return PensTaxesWidget(
-              //         addedTaxes: state.result.addedTaxes!,
-              //         customsCertificate: state.result.customsCertificate!,
-              //         billTax: state.result.billTax!,
-              //         stampFee: state.result.stampFee!,
-              //         provincialLocalTax: state.result.provincialLocalTax!,
-              //         advanceIncomeTax: state.result.advanceIncomeTax!,
-              //         reconstructionFee: state.result.reconstructionFee!,
-              //         finalTaxes: state.result.finalTaxes!,
-              //       );
-              //     } else {
-              //       return const CalculatorLoadingScreen();
-              //     }
-              //   },
-              // ),
-              // // const SizedBox(
-              // //   height: 20,
-              // // ),
-              // BlocBuilder<CalculateResultBloc, CalculateResultState>(
-              //   builder: (context, state) {
-              //     if (state is CalculateResultSuccessed) {
-              //       return Container(
-              //         width: double.infinity,
-              //         decoration: BoxDecoration(
-              //           border: Border(
-              //             top: BorderSide(
-              //               color: AppColor.deepYellow,
-              //               width: 1,
-              //             ),
-              //             right: BorderSide(
-              //               color: AppColor.deepYellow,
-              //               width: 2,
-              //             ),
-              //             left: BorderSide(
-              //               color: AppColor.deepYellow,
-              //               width: 2,
-              //             ),
-              //             bottom: BorderSide(
-              //               color: AppColor.deepYellow,
-              //               width: 2,
-              //             ),
-              //           ),
-              //           borderRadius: const BorderRadius.vertical(
-              //               top: Radius.zero, bottom: Radius.circular(12)),
-              //           color: Colors.white,
-              //         ),
-              //         margin: EdgeInsets.symmetric(horizontal: 10.w),
-              //         child: Padding(
-              //           padding: EdgeInsets.symmetric(horizontal: 15.w),
-              //           child: Column(
-              //             mainAxisAlignment: MainAxisAlignment.start,
-              //             children: [
-              //               const Text(
-              //                 "إجمالي الرسوم:",
-              //                 style: TextStyle(
-              //                     fontWeight: FontWeight.bold, fontSize: 22),
-              //               ),
-              //               const SizedBox(
-              //                 height: 7,
-              //               ),
-              //               Row(
-              //                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              //                 children: [
-              //                   const Text(
-              //                     "مجموع الضرائب والرسوم:",
-              //                     style: TextStyle(fontWeight: FontWeight.bold),
-              //                     maxLines: 3,
-              //                   ),
-              //                   Text(
-              //                     state.result.finalTotal!.toStringAsFixed(2),
-              //                     style: const TextStyle(
-              //                         fontWeight: FontWeight.bold),
-              //                   ),
-              //                 ],
-              //               ),
-              //               const SizedBox(
-              //                 height: 15,
-              //               ),
-              //             ],
-              //           ),
-              //         ),
-              //       );
-              //     } else {
-              //       return const CalculatorLoadingScreen();
-              //     }
-              //   },
-              // ),
-              // SizedBox(
-              //   height: 15.h,
-              // ),
-              // Padding(
-              //   padding: EdgeInsets.symmetric(horizontal: 25.w),
-              //   child: const Text(
-              //       "هذه الرسوم تقديرية ولا تتضمن مصاريف التخليص الجمركي ورسوم الخدمات"),
-              // ),
               SizedBox(
                 height: 10.h,
               ),
-
               BlocBuilder<CalculateResultBloc, CalculateResultState>(
                 builder: (context, state) {
                   if (state is CalculateResultSuccessed) {
@@ -260,16 +158,18 @@ class BrokerCostDetailsScreen extends StatelessWidget {
                             Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
-                                const Text(
+                                Text(
                                   "اجمالي التكاليف:",
                                   style: TextStyle(
                                       fontWeight: FontWeight.bold,
-                                      fontSize: 18),
+                                      fontSize: 20.sp),
                                   maxLines: 3,
                                 ),
                                 Text(
                                   totalCost(offer.costs),
-                                  style: const TextStyle(
+                                  style: TextStyle(
+                                      fontSize: 20.sp,
+                                      color: AppColor.deepYellow,
                                       fontWeight: FontWeight.bold),
                                 ),
                               ],
@@ -289,7 +189,6 @@ class BrokerCostDetailsScreen extends StatelessWidget {
               SizedBox(
                 height: 10.h,
               ),
-
               BlocBuilder<CalculateResultBloc, CalculateResultState>(
                 builder: (context, state) {
                   if (state is CalculateResultSuccessed) {
@@ -343,6 +242,7 @@ class BrokerCostDetailsScreen extends StatelessWidget {
                                       offer.costs, state.result.finalTotal!),
                                   style: TextStyle(
                                       fontWeight: FontWeight.bold,
+                                      fontSize: 20.sp,
                                       color: AppColor.deepYellow),
                                 ),
                               ],
@@ -374,7 +274,7 @@ class BrokerCostDetailsScreen extends StatelessWidget {
     for (var element in costs!) {
       total += element.amount!;
     }
-    return total.toString();
+    return f.format(total.toInt());
   }
 
   String finaltotalCost(List<Costs>? costs, double finaltotal) {

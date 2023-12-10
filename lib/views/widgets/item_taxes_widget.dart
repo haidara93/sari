@@ -304,6 +304,7 @@ class ItemTaxesWidget extends StatelessWidget {
                   f.format(finalTotal.toInt()),
                   style: TextStyle(
                     fontWeight: FontWeight.bold,
+                    fontSize: 20.sp,
                     color: AppColor.deepYellow,
                   ),
                 ),

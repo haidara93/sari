@@ -19,6 +19,7 @@ import 'package:custome_mobile/business_logic/cubit/bottom_nav_bar_cubit.dart';
 import 'package:custome_mobile/constants/enums.dart';
 import 'package:custome_mobile/data/models/accurdion_model.dart';
 import 'package:custome_mobile/data/models/package_model.dart';
+import 'package:custome_mobile/data/providers/calculator_provider.dart';
 import 'package:custome_mobile/enum/panel_state.dart';
 import 'package:custome_mobile/helpers/color_constants.dart';
 import 'package:custome_mobile/helpers/formatter.dart';
@@ -41,6 +42,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_img/flutter_img.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:provider/provider.dart';
 import 'package:shimmer/shimmer.dart';
 
 class TraderHomeScreen extends StatefulWidget {
@@ -64,6 +66,7 @@ class _TraderHomeScreenState extends State<TraderHomeScreen>
   PanelState _panelState = PanelState.hidden;
   final GlobalKey<FormState> _calculatorformkey = GlobalKey<FormState>();
   bool calculateFeeScreen = false;
+  CalculatorProvider? calculator_Provider;
 
   @override
   void initState() {
@@ -78,6 +81,10 @@ class _TraderHomeScreenState extends State<TraderHomeScreen>
       length: 5,
       vsync: this,
     );
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+      calculator_Provider =
+          Provider.of<CalculatorProvider>(context, listen: false);
+    });
     WidgetsBinding.instance.addObserver(this);
     _animationController = AnimationController(
       vsync: this,
@@ -122,6 +129,7 @@ class _TraderHomeScreenState extends State<TraderHomeScreen>
         }
       case 1:
         {
+          calculator_Provider!.initProvider();
           setState(() {
             title = "حاسبة الرسوم";
 
@@ -344,9 +352,9 @@ class _TraderHomeScreenState extends State<TraderHomeScreen>
                               ),
                               GestureDetector(
                                 onTap: () {
-                                  changeSelectedValue(
-                                      selectedValue: 0, contxt: context);
-                                  _scaffoldKey.currentState!.closeDrawer();
+                                  // changeSelectedValue(
+                                  //     selectedValue: 0, contxt: context);
+                                  // _scaffoldKey.currentState!.closeDrawer();
                                 },
                                 child: ListTile(
                                   leading: SvgPicture.asset(
@@ -359,6 +367,22 @@ class _TraderHomeScreenState extends State<TraderHomeScreen>
                                         color: Colors.white,
                                         fontSize: 16.sp,
                                         fontWeight: FontWeight.bold),
+                                  ),
+                                  trailing: Container(
+                                    width: 35.w,
+                                    height: 20.h,
+                                    decoration: BoxDecoration(
+                                        color: AppColor.goldenYellow,
+                                        borderRadius: BorderRadius.circular(2)),
+                                    child: Center(
+                                      child: Text(
+                                        "soon",
+                                        style: TextStyle(
+                                          color: Colors.white,
+                                          fontSize: 12.sp,
+                                        ),
+                                      ),
+                                    ),
                                   ),
                                 ),
                               ),
@@ -464,6 +488,22 @@ class _TraderHomeScreenState extends State<TraderHomeScreen>
                                       fontSize: 16.sp,
                                       fontWeight: FontWeight.bold),
                                 ),
+                                trailing: Container(
+                                  width: 35.w,
+                                  height: 20.h,
+                                  decoration: BoxDecoration(
+                                      color: AppColor.goldenYellow,
+                                      borderRadius: BorderRadius.circular(2)),
+                                  child: Center(
+                                    child: Text(
+                                      "soon",
+                                      style: TextStyle(
+                                        color: Colors.white,
+                                        fontSize: 12.sp,
+                                      ),
+                                    ),
+                                  ),
+                                ),
                               ),
                               ListTile(
                                 leading: Image.asset(
@@ -477,6 +517,22 @@ class _TraderHomeScreenState extends State<TraderHomeScreen>
                                       fontSize: 16.sp,
                                       fontWeight: FontWeight.bold),
                                 ),
+                                trailing: Container(
+                                  width: 35.w,
+                                  height: 20.h,
+                                  decoration: BoxDecoration(
+                                      color: AppColor.goldenYellow,
+                                      borderRadius: BorderRadius.circular(2)),
+                                  child: Center(
+                                    child: Text(
+                                      "soon",
+                                      style: TextStyle(
+                                        color: Colors.white,
+                                        fontSize: 12.sp,
+                                      ),
+                                    ),
+                                  ),
+                                ),
                               ),
                               ListTile(
                                 leading: SvgPicture.asset(
@@ -489,6 +545,22 @@ class _TraderHomeScreenState extends State<TraderHomeScreen>
                                       color: Colors.white,
                                       fontSize: 16.sp,
                                       fontWeight: FontWeight.bold),
+                                ),
+                                trailing: Container(
+                                  width: 35.w,
+                                  height: 20.h,
+                                  decoration: BoxDecoration(
+                                      color: AppColor.goldenYellow,
+                                      borderRadius: BorderRadius.circular(2)),
+                                  child: Center(
+                                    child: Text(
+                                      "soon",
+                                      style: TextStyle(
+                                        color: Colors.white,
+                                        fontSize: 12.sp,
+                                      ),
+                                    ),
+                                  ),
                                 ),
                               ),
                               const Divider(
@@ -1162,17 +1234,21 @@ class _TraderHomeScreenState extends State<TraderHomeScreen>
         ),
         centerTitle: true,
         leading: GestureDetector(
-            onTap: () {
-              setState(() {
-                selected = -1;
-                chapterselected = -1;
-                subchapterselected = -1;
-                feeselected = -1;
-              });
-              BlocProvider.of<CalculatorPanelBloc>(context)
-                  .add(CalculatorPanelHideEvent());
-            },
-            child: const Icon(Icons.arrow_back, color: Colors.white)),
+          onTap: () {
+            setState(() {
+              selected = -1;
+              chapterselected = -1;
+              subchapterselected = -1;
+              feeselected = -1;
+            });
+            BlocProvider.of<CalculatorPanelBloc>(context)
+                .add(CalculatorPanelHideEvent());
+          },
+          child: const Padding(
+            padding: EdgeInsets.all(8.0),
+            child: Icon(Icons.arrow_back, color: Colors.white),
+          ),
+        ),
         elevation: 0,
       ),
       body: SafeArea(
@@ -1374,63 +1450,134 @@ class _TraderHomeScreenState extends State<TraderHomeScreen>
                                 const SizedBox(
                                   height: 12,
                                 ),
-                                Focus(
-                                  focusNode: _statenode,
-                                  onFocusChange: (bool focus) {
-                                    if (!focus) {
-                                      FocusManager.instance.primaryFocus
-                                          ?.unfocus();
-                                      BlocProvider.of<BottomNavBarCubit>(
-                                              context)
-                                          .emitShow();
-                                    }
-                                  },
-                                  child: TextFormField(
-                                    controller: _wieghtController,
-                                    onTap: () => _wieghtController.selection =
-                                        TextSelection(
-                                            baseOffset: 0,
-                                            extentOffset: _wieghtController
-                                                .value.text.length),
-                                    // enabled: !valueEnabled,textInputAction: TextInputAction.done,
-                                    keyboardType:
-                                        const TextInputType.numberWithOptions(
-                                            decimal: true, signed: true),
-                                    inputFormatters: [
-                                      DecimalFormatter(),
-                                    ],
-                                    decoration: InputDecoration(
-                                      suffixText: showunit ? wieghtUnit : "",
-                                      labelText: wieghtLabel,
-                                      contentPadding:
-                                          const EdgeInsets.symmetric(
-                                              horizontal: 9.0, vertical: 11.0),
-                                      border: OutlineInputBorder(
-                                        borderRadius: BorderRadius.circular(12),
+                                Wrap(
+                                  children: [
+                                    Visibility(
+                                      visible: isfeeequal001,
+                                      child: SizedBox(
+                                        width:
+                                            MediaQuery.of(context).size.width *
+                                                .4,
+                                        child: CheckboxListTile(
+                                            value: rawMaterialValue,
+                                            contentPadding: EdgeInsets.zero,
+                                            controlAffinity:
+                                                ListTileControlAffinity.leading,
+                                            title: const Text("المادة أولية؟"),
+                                            onChanged: (value) {
+                                              setState(() {
+                                                rawMaterialValue = value!;
+                                              });
+                                              evaluatePrice();
+                                            }),
                                       ),
                                     ),
-                                    onChanged: (value) {
-                                      if (_originController.text.isNotEmpty) {
-                                        setState(() {
-                                          originerror = false;
-                                        });
-                                        if (value.isNotEmpty) {
-                                          // calculateTotalValueWithPrice(value);
-                                          wieghtValue = double.parse(value);
-                                        } else {
-                                          wieghtValue = 0.0;
-                                        }
-                                        evaluatePrice();
-                                      } else {
-                                        setState(() {
-                                          originerror = true;
-                                        });
-                                      }
-                                    },
-                                  ),
-                                ),
-                                const SizedBox(
-                                  height: 12,
+                                    Visibility(
+                                      visible: isfeeequal001,
+                                      child: SizedBox(
+                                        width:
+                                            MediaQuery.of(context).size.width *
+                                                .4,
+                                        child: CheckboxListTile(
+                                            value: industrialValue,
+                                            contentPadding: EdgeInsets.zero,
+                                            controlAffinity:
+                                                ListTileControlAffinity.leading,
+                                            title: const Text("المادة صناعية؟"),
+                                            onChanged: (value) {
+                                              setState(() {
+                                                industrialValue = value!;
+                                              });
+                                              evaluatePrice();
+                                            }),
+                                      ),
+                                    ),
+                                    Visibility(
+                                      visible: isBrand,
+                                      child: SizedBox(
+                                        width:
+                                            MediaQuery.of(context).size.width *
+                                                .4,
+                                        child: CheckboxListTile(
+                                            value: brandValue,
+                                            contentPadding: EdgeInsets.zero,
+                                            controlAffinity:
+                                                ListTileControlAffinity.leading,
+                                            title: const Text("البضاعة ماركة؟"),
+                                            onChanged: (value) {
+                                              calculateExtrasPrice(1.5, value!);
+                                              setState(() {
+                                                brandValue = value;
+                                              });
+                                              evaluatePrice();
+                                            }),
+                                      ),
+                                    ),
+                                    Visibility(
+                                      visible: isTubes,
+                                      child: SizedBox(
+                                        width:
+                                            MediaQuery.of(context).size.width *
+                                                .4,
+                                        child: CheckboxListTile(
+                                            value: tubesValue,
+                                            contentPadding: EdgeInsets.zero,
+                                            controlAffinity:
+                                                ListTileControlAffinity.leading,
+                                            title: const Text(
+                                                "قياس الأنابيب أقل أو يساوي 3inch؟"),
+                                            onChanged: (value) {
+                                              calculateExtrasPrice(.1, value!);
+                                              setState(() {
+                                                tubesValue = value;
+                                              });
+                                              evaluatePrice();
+                                            }),
+                                      ),
+                                    ),
+                                    Visibility(
+                                      visible: isColored,
+                                      child: SizedBox(
+                                        width:
+                                            MediaQuery.of(context).size.width *
+                                                .4,
+                                        child: CheckboxListTile(
+                                            value: colorValue,
+                                            contentPadding: EdgeInsets.zero,
+                                            controlAffinity:
+                                                ListTileControlAffinity.leading,
+                                            title: const Text("الخيوط ملونة؟"),
+                                            onChanged: (value) {
+                                              calculateExtrasPrice(.1, value!);
+                                              setState(() {
+                                                colorValue = value;
+                                              });
+                                              evaluatePrice();
+                                            }),
+                                      ),
+                                    ),
+                                    Visibility(
+                                      visible: isLycra,
+                                      child: SizedBox(
+                                        width:
+                                            MediaQuery.of(context).size.width *
+                                                .4,
+                                        child: CheckboxListTile(
+                                            value: lycraValue,
+                                            contentPadding: EdgeInsets.zero,
+                                            controlAffinity:
+                                                ListTileControlAffinity.leading,
+                                            title: const Text("الخيوط ليكرا؟"),
+                                            onChanged: (value) {
+                                              calculateExtrasPrice(.05, value!);
+                                              setState(() {
+                                                lycraValue = value;
+                                              });
+                                              evaluatePrice();
+                                            }),
+                                      ),
+                                    ),
+                                  ],
                                 ),
                                 BlocBuilder<FlagsBloc, FlagsState>(
                                   builder: (context, flagstate) {
@@ -1558,6 +1705,7 @@ class _TraderHomeScreenState extends State<TraderHomeScreen>
                                               });
                                             }
                                           },
+                                          barrierColor: Colors.black45,
                                           buttonStyleData: ButtonStyleData(
                                             height: 50,
                                             width: double.infinity,
@@ -1583,7 +1731,9 @@ class _TraderHomeScreenState extends State<TraderHomeScreen>
                                             iconDisabledColor: Colors.grey,
                                           ),
                                           dropdownStyleData: DropdownStyleData(
-                                            maxHeight: 400,
+                                            maxHeight: MediaQuery.of(context)
+                                                .size
+                                                .height,
                                             padding: const EdgeInsets.all(8.0),
                                             decoration: BoxDecoration(
                                               borderRadius:
@@ -1637,9 +1787,6 @@ class _TraderHomeScreenState extends State<TraderHomeScreen>
                                     }
                                   },
                                 ),
-                                const SizedBox(
-                                  height: 12,
-                                ),
                                 Visibility(
                                     visible: originerror,
                                     child: const Text(
@@ -1650,6 +1797,64 @@ class _TraderHomeScreenState extends State<TraderHomeScreen>
                                   visible: originerror,
                                   child: const SizedBox(
                                     height: 12,
+                                  ),
+                                ),
+                                const SizedBox(
+                                  height: 12,
+                                ),
+                                Focus(
+                                  focusNode: _statenode,
+                                  onFocusChange: (bool focus) {
+                                    if (!focus) {
+                                      FocusManager.instance.primaryFocus
+                                          ?.unfocus();
+                                      BlocProvider.of<BottomNavBarCubit>(
+                                              context)
+                                          .emitShow();
+                                    }
+                                  },
+                                  child: TextFormField(
+                                    controller: _wieghtController,
+                                    onTap: () => _wieghtController.selection =
+                                        TextSelection(
+                                            baseOffset: 0,
+                                            extentOffset: _wieghtController
+                                                .value.text.length),
+                                    // enabled: !valueEnabled,textInputAction: TextInputAction.done,
+                                    keyboardType:
+                                        const TextInputType.numberWithOptions(
+                                            decimal: true, signed: true),
+                                    inputFormatters: [
+                                      DecimalFormatter(),
+                                    ],
+                                    decoration: InputDecoration(
+                                      suffixText: showunit ? wieghtUnit : "",
+                                      labelText: wieghtLabel,
+                                      contentPadding:
+                                          const EdgeInsets.symmetric(
+                                              horizontal: 9.0, vertical: 11.0),
+                                      border: OutlineInputBorder(
+                                        borderRadius: BorderRadius.circular(12),
+                                      ),
+                                    ),
+                                    onChanged: (value) {
+                                      if (_originController.text.isNotEmpty) {
+                                        setState(() {
+                                          originerror = false;
+                                        });
+                                        if (value.isNotEmpty) {
+                                          // calculateTotalValueWithPrice(value);
+                                          wieghtValue = double.parse(value);
+                                        } else {
+                                          wieghtValue = 0.0;
+                                        }
+                                        evaluatePrice();
+                                      } else {
+                                        setState(() {
+                                          originerror = true;
+                                        });
+                                      }
+                                    },
                                   ),
                                 ),
                                 const SizedBox(
@@ -1717,113 +1922,6 @@ class _TraderHomeScreenState extends State<TraderHomeScreen>
                                 ),
                                 const SizedBox(
                                   height: 12,
-                                ),
-                                Visibility(
-                                  visible: isfeeequal001,
-                                  child: CheckboxListTile(
-                                      value: rawMaterialValue,
-                                      title: const Text("هل المادة أولية؟"),
-                                      onChanged: (value) {
-                                        setState(() {
-                                          rawMaterialValue = value!;
-                                        });
-                                      }),
-                                ),
-                                Visibility(
-                                  visible: isfeeequal001,
-                                  child: const SizedBox(
-                                    height: 12,
-                                  ),
-                                ),
-                                Visibility(
-                                  visible: isfeeequal001,
-                                  child: CheckboxListTile(
-                                      value: industrialValue,
-                                      title: const Text("هل المنشأ صناعية؟"),
-                                      onChanged: (value) {
-                                        setState(() {
-                                          industrialValue = value!;
-                                        });
-                                      }),
-                                ),
-                                Visibility(
-                                  visible: isfeeequal001,
-                                  child: const SizedBox(
-                                    height: 12,
-                                  ),
-                                ),
-                                Visibility(
-                                  visible: isBrand,
-                                  child: CheckboxListTile(
-                                      value: brandValue,
-                                      title: const Text("هل البضاعة ماركة؟"),
-                                      onChanged: (value) {
-                                        calculateExtrasPrice(1.5, value!);
-                                        setState(() {
-                                          brandValue = value;
-                                        });
-                                      }),
-                                ),
-                                Visibility(
-                                  visible: isBrand,
-                                  child: const SizedBox(
-                                    height: 12,
-                                  ),
-                                ),
-                                Visibility(
-                                  visible: isTubes,
-                                  child: CheckboxListTile(
-                                      value: tubesValue,
-                                      title: const Text(
-                                          "هل قياس الأنابيب أقل أو يساوي 3inch؟"),
-                                      onChanged: (value) {
-                                        calculateExtrasPrice(.1, value!);
-                                        setState(() {
-                                          tubesValue = value;
-                                        });
-                                      }),
-                                ),
-                                Visibility(
-                                  visible: isTubes,
-                                  child: const SizedBox(
-                                    height: 12,
-                                  ),
-                                ),
-                                Visibility(
-                                  visible: isColored,
-                                  child: CheckboxListTile(
-                                      value: colorValue,
-                                      title: const Text("هل الخيوط ملونة؟"),
-                                      onChanged: (value) {
-                                        calculateExtrasPrice(.1, value!);
-                                        setState(() {
-                                          colorValue = value;
-                                        });
-                                      }),
-                                ),
-                                Visibility(
-                                  visible: isColored,
-                                  child: const SizedBox(
-                                    height: 12,
-                                  ),
-                                ),
-                                Visibility(
-                                  visible: isLycra,
-                                  child: CheckboxListTile(
-                                      value: lycraValue,
-                                      title: const Text("هل الخيوط ليكرا؟"),
-                                      onChanged: (value) {
-                                        calculateExtrasPrice(.05, value!);
-                                        setState(() {
-                                          lycraValue = value;
-                                        });
-                                      }),
-                                ),
-                                Visibility(
-                                  visible: isLycra,
-                                  child: const SizedBox(
-                                    height: 12,
-                                  ),
                                 ),
                                 Text(!valueEnabled
                                     ? "القيمة الاجمالية بالدولار :"
@@ -1957,12 +2055,16 @@ class _TraderHomeScreenState extends State<TraderHomeScreen>
           ),
           centerTitle: true,
           leading: GestureDetector(
-              onTap: () {
-                setState(() {
-                  calculateFeeScreen = false;
-                });
-              },
-              child: const Icon(Icons.arrow_back, color: Colors.white)),
+            onTap: () {
+              setState(() {
+                calculateFeeScreen = false;
+              });
+            },
+            child: const Padding(
+              padding: EdgeInsets.all(8.0),
+              child: Icon(Icons.arrow_back, color: Colors.white),
+            ),
+          ),
           elevation: 0,
         ),
         body: SingleChildScrollView(
@@ -2175,17 +2277,21 @@ class _TraderHomeScreenState extends State<TraderHomeScreen>
           ),
           centerTitle: true,
           leading: GestureDetector(
-              onTap: () {
-                setState(() {
-                  selected = -1;
-                  chapterselected = -1;
-                  subchapterselected = -1;
-                  feeselected = -1;
-                });
-                BlocProvider.of<CalculatorPanelBloc>(context)
-                    .add(CalculatorPanelHideEvent());
-              },
-              child: const Icon(Icons.arrow_back, color: Colors.white)),
+            onTap: () {
+              setState(() {
+                selected = -1;
+                chapterselected = -1;
+                subchapterselected = -1;
+                feeselected = -1;
+              });
+              BlocProvider.of<CalculatorPanelBloc>(context)
+                  .add(CalculatorPanelHideEvent());
+            },
+            child: const Padding(
+              padding: EdgeInsets.all(8.0),
+              child: Icon(Icons.arrow_back, color: Colors.white),
+            ),
+          ),
           elevation: 0,
         ),
         body: Stack(

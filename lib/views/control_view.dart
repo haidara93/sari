@@ -1,4 +1,5 @@
 import 'package:custome_mobile/business_logic/bloc/auth_bloc.dart';
+import 'package:custome_mobile/business_logic/cubit/bottom_nav_bar_cubit.dart';
 import 'package:custome_mobile/business_logic/cubit/internet_cubit.dart';
 import 'package:custome_mobile/views/screens/broker/broker_home_screen.dart';
 import 'package:custome_mobile/views/screens/select_user_type.dart';
@@ -23,6 +24,7 @@ class ControlView extends StatelessWidget {
               child: Text("no internet connection"),
             );
           } else if (state is InternetConnected) {
+            BlocProvider.of<BottomNavBarCubit>(context).emitShow();
             return BlocBuilder<AuthBloc, AuthState>(
               builder: (context, state) {
                 if (state is AuthTraderSuccessState) {

@@ -316,16 +316,19 @@ class MyApp extends StatelessWidget {
                       dividerColor: Colors.grey[400],
                       scaffoldBackgroundColor: Colors.white,
                     ),
-                    home: EasySplashScreen(
-                        logoWidth: 120,
-                        logo: Image.asset('assets/images/sari_white.png'),
-                        backgroundColor: Colors.white,
-                        showLoader: false,
-                        loaderColor: const Color.fromRGBO(255, 152, 0, 1),
-                        durationInSeconds: 5,
-                        navigator: showHome
-                            ? const ControlView()
-                            : const IntroductionView()),
+                    home: Directionality(
+                      textDirection: TextDirection.rtl,
+                      child: EasySplashScreen(
+                          logoWidth: 120,
+                          logo: Image.asset('assets/images/sari_white.png'),
+                          backgroundColor: Colors.white,
+                          showLoader: false,
+                          loaderColor: const Color.fromRGBO(255, 152, 0, 1),
+                          durationInSeconds: 5,
+                          navigator: showHome
+                              ? const ControlView()
+                              : const IntroductionView()),
+                    ),
                     builder: (context, child) {
                       return MediaQuery(
                         data: MediaQuery.of(context)

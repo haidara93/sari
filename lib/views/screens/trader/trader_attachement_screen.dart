@@ -19,6 +19,7 @@ import 'package:flutter/cupertino.dart' as cupertino;
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:image_picker/image_picker.dart';
@@ -114,17 +115,25 @@ class _TraderAttachementScreenState extends State<TraderAttachementScreen> {
                   ),
                 )),
             Expanded(
-              child: cupertino.CupertinoDatePicker(
-                backgroundColor: Colors.white10,
-                initialDateTime: DateTime.now(),
-                mode: cupertino.CupertinoDatePickerMode.date,
-                minimumYear: 2023,
-                minimumDate: DateTime.now().subtract(const Duration(days: 1)),
-                maximumYear: 2030,
-                onDateTimeChanged: (value) {
-                  order_brokerProvider!.setProductDate(value);
-                  order_brokerProvider!.setDateError(false);
-                },
+              child: Localizations(
+                locale: const Locale('en', ''),
+                delegates: const [
+                  GlobalMaterialLocalizations.delegate,
+                  GlobalWidgetsLocalizations.delegate,
+                  GlobalCupertinoLocalizations.delegate,
+                ],
+                child: cupertino.CupertinoDatePicker(
+                  backgroundColor: Colors.white10,
+                  initialDateTime: DateTime.now(),
+                  mode: cupertino.CupertinoDatePickerMode.date,
+                  minimumYear: 2023,
+                  minimumDate: DateTime.now().subtract(const Duration(days: 1)),
+                  maximumYear: 2030,
+                  onDateTimeChanged: (value) {
+                    order_brokerProvider!.setProductDate(value);
+                    order_brokerProvider!.setDateError(false);
+                  },
+                ),
               ),
             ),
           ],
@@ -544,40 +553,33 @@ class _TraderAttachementScreenState extends State<TraderAttachementScreen> {
                                     const SizedBox(
                                       height: 15,
                                     ),
-                                    GestureDetector(
-                                      onTap: _showDatePicker,
-                                      child: Container(
-                                        height: 50.h,
-                                        width: double.infinity,
-                                        padding: EdgeInsets.symmetric(
-                                            horizontal: 10.w),
-                                        decoration: BoxDecoration(
-                                          borderRadius:
-                                              BorderRadius.circular(12),
-                                          border: Border.all(
-                                            color: Colors.grey[400]!,
-                                            width: 1,
+                                    Localizations(
+                                      locale: const Locale('en', 'US'),
+                                      delegates: const [
+                                        GlobalMaterialLocalizations.delegate,
+                                        GlobalWidgetsLocalizations.delegate,
+                                        GlobalCupertinoLocalizations.delegate,
+                                      ],
+                                      child: GestureDetector(
+                                        onTap: _showDatePicker,
+                                        child: Container(
+                                          height: 50.h,
+                                          width: double.infinity,
+                                          padding: EdgeInsets.symmetric(
+                                              horizontal: 10.w),
+                                          decoration: BoxDecoration(
+                                            borderRadius:
+                                                BorderRadius.circular(12),
+                                            border: Border.all(
+                                              color: Colors.grey[400]!,
+                                              width: 1,
+                                            ),
                                           ),
-                                        ),
-                                        child: Row(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.spaceBetween,
-                                          children: [
-                                            orderBrokerProvider
-                                                        .productExpireDate ==
-                                                    null
-                                                ? const Text(
-                                                    "",
-                                                  )
-                                                : Text(
-                                                    "${orderBrokerProvider.productExpireDate!.year}-${orderBrokerProvider.productExpireDate!.month}-${orderBrokerProvider.productExpireDate!.day}",
-                                                    style: const TextStyle(
-                                                      fontSize: 18,
-                                                      fontWeight:
-                                                          FontWeight.bold,
-                                                    ),
-                                                  ),
-                                            GestureDetector(
+                                          child: Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.spaceBetween,
+                                            children: [
+                                              GestureDetector(
                                                 onTap: _showDatePicker,
                                                 child: Icon(
                                                   Icons.date_range,
@@ -586,8 +588,24 @@ class _TraderAttachementScreenState extends State<TraderAttachementScreen> {
                                                           null
                                                       ? Colors.grey
                                                       : AppColor.deepYellow,
-                                                )),
-                                          ],
+                                                ),
+                                              ),
+                                              orderBrokerProvider
+                                                          .productExpireDate ==
+                                                      null
+                                                  ? const Text(
+                                                      "",
+                                                    )
+                                                  : Text(
+                                                      "${orderBrokerProvider.productExpireDate!.year}-${orderBrokerProvider.productExpireDate!.month}-${orderBrokerProvider.productExpireDate!.day}",
+                                                      style: const TextStyle(
+                                                        fontSize: 18,
+                                                        fontWeight:
+                                                            FontWeight.bold,
+                                                      ),
+                                                    ),
+                                            ],
+                                          ),
                                         ),
                                       ),
                                     ),
@@ -925,7 +943,10 @@ class _TraderAttachementScreenState extends State<TraderAttachementScreen> {
                                         EdgeInsets.symmetric(horizontal: 18.w),
                                     child: CheckboxListTile(
                                         value: orderBrokerProvider.haveTabaleh,
-                                        title: const Text("مع طبالي؟"),
+                                        title: const Text(
+                                          "مع طبالي؟",
+                                          style: TextStyle(fontSize: 18),
+                                        ),
                                         activeColor: AppColor.goldenYellow,
                                         controlAffinity:
                                             ListTileControlAffinity.leading,
@@ -1163,7 +1184,8 @@ class _TraderAttachementScreenState extends State<TraderAttachementScreen> {
                                     ),
                                     TextFormField(
                                       controller: _traderNotes,
-                                      maxLines: 4,
+                                      maxLines: 2,
+                                      textInputAction: TextInputAction.done,
                                       style: const TextStyle(fontSize: 18),
                                       onChanged: (value) {
                                         orderBrokerProvider.setNote(value);
@@ -1182,15 +1204,15 @@ class _TraderAttachementScreenState extends State<TraderAttachementScreen> {
                                       mainAxisAlignment:
                                           MainAxisAlignment.spaceAround,
                                       children: [
-                                        CustomButton(
-                                          onTap: () {
-                                            Navigator.pop(context);
-                                          },
-                                          title: const SizedBox(
-                                              width: 100,
-                                              child:
-                                                  Center(child: Text("إلغاء"))),
-                                        ),
+                                        // CustomButton(
+                                        //   onTap: () {
+                                        //     Navigator.pop(context);
+                                        //   },
+                                        //   title: const SizedBox(
+                                        //       width: 100,
+                                        //       child:
+                                        //           Center(child: Text("إلغاء"))),
+                                        // ),
                                         BlocConsumer<OfferBloc, OfferState>(
                                           listener: (context, offerstate) {
                                             if (offerstate

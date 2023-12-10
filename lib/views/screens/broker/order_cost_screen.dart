@@ -53,7 +53,7 @@ class _OrderCostScreenState extends State<OrderCostScreen> {
               child: TextFormField(
                 controller: controller,
                 validator: (value) {
-                  if (value!.isEmpty || value.length < 4) {
+                  if (value!.isEmpty) {
                     return TextConstants.emailErrorText;
                   }
                   return null;
@@ -99,7 +99,7 @@ class _OrderCostScreenState extends State<OrderCostScreen> {
               child: TextFormField(
                 controller: labelcontroller,
                 validator: (value) {
-                  if (value!.isEmpty || value.length < 4) {
+                  if (value!.isEmpty) {
                     return TextConstants.emailErrorText;
                   }
                   return null;
@@ -122,7 +122,7 @@ class _OrderCostScreenState extends State<OrderCostScreen> {
               child: TextFormField(
                 controller: controller,
                 validator: (value) {
-                  if (value!.isEmpty || value.length < 4) {
+                  if (value!.isEmpty) {
                     return TextConstants.emailErrorText;
                   }
                   return null;

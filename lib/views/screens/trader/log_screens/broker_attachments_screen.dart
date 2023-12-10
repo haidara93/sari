@@ -151,7 +151,7 @@ class _BrokerAttachmentsScreenState extends State<BrokerAttachmentsScreen> {
     List<Widget> list = [];
     for (var element in attachments) {
       var elem = SizedBox(
-        width: 200.w,
+        width: 100.w,
         child: Column(
           children: [
             GestureDetector(

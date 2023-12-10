@@ -10,6 +10,7 @@ import 'package:custome_mobile/views/widgets/custom_app_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 
 // ignore: must_be_immutable
 class OfferDetailsScreen extends StatefulWidget {
@@ -91,16 +92,16 @@ class _OfferDetailsScreenState extends State<OfferDetailsScreen> {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Text(
-                          "تتبع العملية:",
+                          "الحالة:",
                           style: TextStyle(
                             fontSize: 17.sp,
                             fontWeight: FontWeight.bold,
                           ),
                         ),
-                        Padding(
-                          padding: EdgeInsets.all(8.h),
-                          child: const Text(
-                            "تقديم البيان الجمركي",
+                        Text(
+                          "تقديم البيان الجمركي",
+                          style: TextStyle(
+                            fontSize: 17.sp,
                           ),
                         ),
                         GestureDetector(
@@ -114,9 +115,13 @@ class _OfferDetailsScreenState extends State<OfferDetailsScreen> {
                           },
                           child: Padding(
                             padding: const EdgeInsets.all(8.0),
-                            child: Icon(
-                              Icons.more_vert,
-                              color: AppColor.goldenYellow,
+                            child: Text(
+                              "تتبع العملية   ",
+                              style: TextStyle(
+                                color: AppColor.lightBlue,
+                                fontWeight: FontWeight.bold,
+                                fontSize: 17.sp,
+                              ),
                             ),
                           ),
                         ),
@@ -352,7 +357,9 @@ class _OfferDetailsScreenState extends State<OfferDetailsScreen> {
                                     ),
                                     children: [
                                       TextSpan(
-                                        text: widget.offer.weight!.toString(),
+                                        text: widget.offer.weight!
+                                            .toInt()
+                                            .toString(),
                                         style: TextStyle(
                                           color: Colors.black,
                                           fontSize: 16.sp,
@@ -377,7 +384,9 @@ class _OfferDetailsScreenState extends State<OfferDetailsScreen> {
                                   ),
                                   children: [
                                     TextSpan(
-                                      text: widget.offer.price!.toString(),
+                                      text: widget.offer.price!
+                                          .toInt()
+                                          .toString(),
                                       style: TextStyle(
                                         color: Colors.black,
                                         fontSize: 16.sp,
@@ -586,6 +595,6 @@ class _OfferDetailsScreenState extends State<OfferDetailsScreen> {
     for (var element in costs!) {
       total += element.amount!;
     }
-    return total.toString();
+    return total.toInt().toString();
   }
 }

@@ -285,7 +285,6 @@ class _OrderAttachmentScreenState extends State<OrderAttachmentScreen> {
                 const SizedBox(
                   height: 5,
                 ),
-                const Text("asd"),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceAround,
                   children: [
