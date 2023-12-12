@@ -1261,6 +1261,7 @@ class _TraderAttachementScreenState extends State<TraderAttachementScreen> {
                                             }
                                             if (offerstate
                                                 is OfferLoadedFailed) {
+                                              print(offerstate.errortext);
                                               var snackBar = SnackBar(
                                                 elevation: 0,
                                                 duration:

@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:custome_mobile/helpers/http_helper.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 // import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:http/http.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -12,13 +13,19 @@ class AuthRepository {
       {required String username, required String password}) async {
     try {
       String? firebaseToken = "";
-      // FirebaseMessaging messaging = FirebaseMessaging.instance;
+      FirebaseMessaging messaging = FirebaseMessaging.instance;
+      firebaseToken = await messaging.getToken();
       // firebaseToken = await messaging.getToken();
-      Response response = await HttpHelper.post(LOGIN_ENDPOINT,
-          {"username": username, "password": password, "fcm_token": "asd"});
+      print(firebaseToken);
+      Response response = await HttpHelper.post(LOGIN_ENDPOINT, {
+        "username": username,
+        "password": password,
+        "fcm_token": firebaseToken
+      });
       final Map<String, dynamic> data = <String, dynamic>{};
       data["status"] = response.statusCode;
       var jsonObject = jsonDecode(response.body);
+      print(response.statusCode);
 
       if (response.statusCode == 401 || response.statusCode == 400) {
         data["details"] = jsonObject["detail"];
@@ -28,6 +35,7 @@ class AuthRepository {
       }
       return data;
     } catch (e) {
+      print(e.toString());
       throw Exception(e.toString());
     }
   }
