@@ -29,6 +29,7 @@ const CHAPTER_NOTES_ENDPOINT = '${DOMAIN}tree_view/api/notes_by_chapter/';
 const SUBCHAPTER_NOTES_ENDPOINT = '${DOMAIN}tree_view/api/notes_by_subchapter/';
 const FEE_NOTES_ENDPOINT = '${DOMAIN}tree_view/api/notes_by_fee/';
 const SEARCH_QUERY_ENDPOINT = '${DOMAIN}tree_view/search/?search=';
+const NOTIFICATIONS_ENDPOINT = '${DOMAIN}clearance/notifecations/';
 
 class HttpHelper {
   static Future<http.Response> post(String url, Map<String, dynamic> body,

@@ -77,7 +77,7 @@ class OrderTrackingScreen extends StatelessWidget {
                     isPast: false,
                     imageUrl: "assets/images/step 6 blue.svg",
                     type: "svg",
-                    title: "دفع الرشوم والضرائب",
+                    title: "دفع الرسوم والضرائب",
                   ),
                   const CustomeTimeLine(
                     isFirst: false,
@@ -93,7 +93,7 @@ class OrderTrackingScreen extends StatelessWidget {
                     isPast: false,
                     imageUrl: "assets/images/step 8 blue.svg",
                     type: "svg",
-                    title: "تجميل على الشاحنة",
+                    title: "تحميل على الشاحنة",
                   ),
                 ],
               ),

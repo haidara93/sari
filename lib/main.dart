@@ -16,7 +16,9 @@ import 'package:custome_mobile/business_logic/bloc/fee_trade_description_bloc.da
 import 'package:custome_mobile/business_logic/bloc/flags_bloc.dart';
 import 'package:custome_mobile/business_logic/bloc/group_bloc.dart';
 import 'package:custome_mobile/business_logic/bloc/note_bloc.dart';
+import 'package:custome_mobile/business_logic/bloc/notification_bloc.dart';
 import 'package:custome_mobile/business_logic/bloc/offer_bloc.dart';
+import 'package:custome_mobile/business_logic/bloc/offer_details_bloc.dart';
 import 'package:custome_mobile/business_logic/bloc/package_type_bloc.dart';
 import 'package:custome_mobile/business_logic/bloc/post_bloc.dart';
 import 'package:custome_mobile/business_logic/bloc/saved_post_bloc.dart';
@@ -30,9 +32,11 @@ import 'package:custome_mobile/business_logic/cubit/bottom_nav_bar_cubit.dart';
 import 'package:custome_mobile/business_logic/cubit/internet_cubit.dart';
 import 'package:custome_mobile/business_logic/cubit/stop_scroll_cubit.dart';
 import 'package:custome_mobile/data/providers/calculator_provider.dart';
+import 'package:custome_mobile/data/providers/notification_provider.dart';
 import 'package:custome_mobile/data/providers/order_broker_provider.dart';
 import 'package:custome_mobile/data/repositories/accurdion_repository.dart';
 import 'package:custome_mobile/data/repositories/auth_repository.dart';
+import 'package:custome_mobile/data/repositories/notification_repository.dart';
 import 'package:custome_mobile/data/repositories/post_repository.dart';
 import 'package:custome_mobile/data/repositories/state_agency_repository.dart';
 import 'package:custome_mobile/firebase_options.dart';
@@ -40,6 +44,7 @@ import 'package:custome_mobile/helpers/color_constants.dart';
 import 'package:custome_mobile/views/control_view.dart';
 import 'package:easy_splash_screen/easy_splash_screen.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -49,6 +54,13 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'views/screens/introduction_screen.dart';
 
+Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
+
+  // you need to initialize firebase first
+  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform,);
+
+  print("Handling a background message: ${message.messageId}");
+}
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(
@@ -58,6 +70,7 @@ void main() async {
   final prefs = await SharedPreferences.getInstance();
   final showHome = prefs.getBool("showHome") ?? false;
   HttpOverrides.global = MyHttpOverrides();
+  FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
   runApp(MyApp(showHome: showHome));
 }
 
@@ -90,6 +103,9 @@ class MyApp extends StatelessWidget {
                 ),
                 RepositoryProvider(
                   create: (context) => StateAgencyRepository(),
+                ),
+                RepositoryProvider(
+                  create: (context) => NotificationRepository(),
                 ),
               ],
               child: MultiBlocProvider(
@@ -229,12 +245,24 @@ class MyApp extends StatelessWidget {
                   BlocProvider(create: (context) => CalculatorPanelBloc()),
                   BlocProvider(create: (context) => FeeItemBloc()),
                   BlocProvider(create: (context) => FeeSelectBloc()),
+                  BlocProvider(
+                      create: (context) => NotificationBloc(
+                          notificationRepository:
+                              RepositoryProvider.of<NotificationRepository>(
+                                  context))),
+                  BlocProvider(
+                      create: (context) => OfferDetailsBloc(
+                          notificationRepository:
+                              RepositoryProvider.of<NotificationRepository>(
+                                  context))),
                 ],
                 child: MultiProvider(
                   providers: [
                     ChangeNotifierProvider(
                         create: (_) => OrderBrokerProvider()),
                     ChangeNotifierProvider(create: (_) => CalculatorProvider()),
+                    ChangeNotifierProvider(
+                        create: (_) => NotificationProvider()),
                   ],
                   child: MaterialApp(
                     title: 'التخليص الجمركي',

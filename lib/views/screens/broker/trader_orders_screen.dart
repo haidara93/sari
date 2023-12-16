@@ -1,3 +1,4 @@
+import 'package:custome_mobile/business_logic/bloc/offer_details_bloc.dart';
 import 'package:custome_mobile/helpers/color_constants.dart';
 import 'package:custome_mobile/views/screens/broker/order_details_screen.dart';
 import 'package:flutter/material.dart';
@@ -104,13 +105,15 @@ class _TraderOrdersScreenState extends State<TraderOrdersScreen> {
                                         ),
                                         GestureDetector(
                                           onTap: () {
+                                            BlocProvider.of<OfferDetailsBloc>(
+                                                    context)
+                                                .add(OfferDetailsLoadEvent(
+                                                    state.offers[index].id!));
                                             Navigator.push(
                                                 context,
                                                 MaterialPageRoute(
                                                   builder: (context) =>
-                                                      OrderDetailsScreen(
-                                                          offer: state
-                                                              .offers[index]),
+                                                      OrderDetailsScreen(),
                                                 ));
                                           },
                                           child: Padding(

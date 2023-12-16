@@ -20,6 +20,8 @@ import 'package:custome_mobile/constants/enums.dart';
 import 'package:custome_mobile/data/models/accurdion_model.dart';
 import 'package:custome_mobile/data/models/package_model.dart';
 import 'package:custome_mobile/data/providers/calculator_provider.dart';
+import 'package:custome_mobile/data/providers/order_broker_provider.dart';
+import 'package:custome_mobile/data/services/fcm_service.dart';
 import 'package:custome_mobile/enum/panel_state.dart';
 import 'package:custome_mobile/helpers/color_constants.dart';
 import 'package:custome_mobile/helpers/formatter.dart';
@@ -36,6 +38,7 @@ import 'package:custome_mobile/views/widgets/item_taxes_widget.dart';
 import 'package:custome_mobile/views/widgets/pens_taxes_widget.dart';
 import 'package:custome_mobile/views/widgets/tariff_info_icon.dart';
 import 'package:dropdown_button2/dropdown_button2.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -67,7 +70,8 @@ class _TraderHomeScreenState extends State<TraderHomeScreen>
   final GlobalKey<FormState> _calculatorformkey = GlobalKey<FormState>();
   bool calculateFeeScreen = false;
   CalculatorProvider? calculator_Provider;
-
+  OrderBrokerProvider? order_broker_Provider;
+  NotificationServices notificationServices = NotificationServices();
   @override
   void initState() {
     super.initState();
@@ -75,6 +79,12 @@ class _TraderHomeScreenState extends State<TraderHomeScreen>
     BlocProvider.of<FlagsBloc>(context).add(FlagsLoadEvent());
     BlocProvider.of<GroupBloc>(context).add(GroupLoadEvent());
     BlocProvider.of<SectionBloc>(context).add(SectionLoadEvent());
+
+    notificationServices.requestNotificationPermission();
+    notificationServices.forgroundMessage();
+    notificationServices.firebaseInit(context);
+    notificationServices.setupInteractMessage(context);
+    notificationServices.isTokenRefresh();
 
     _tabController = TabController(
       initialIndex: 2,
@@ -84,6 +94,8 @@ class _TraderHomeScreenState extends State<TraderHomeScreen>
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
       calculator_Provider =
           Provider.of<CalculatorProvider>(context, listen: false);
+      order_broker_Provider =
+          Provider.of<OrderBrokerProvider>(context, listen: false);
     });
     WidgetsBinding.instance.addObserver(this);
     _animationController = AnimationController(
@@ -93,6 +105,8 @@ class _TraderHomeScreenState extends State<TraderHomeScreen>
       ),
     );
   }
+
+  // init();
 
   @override
   void dispose() {
@@ -161,6 +175,7 @@ class _TraderHomeScreenState extends State<TraderHomeScreen>
         }
       case 4:
         {
+          order_broker_Provider!.initProvider();
           setState(() {
             title = "طلب مخلص";
 

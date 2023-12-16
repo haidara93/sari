@@ -1,3 +1,4 @@
+import 'package:custome_mobile/business_logic/bloc/offer_details_bloc.dart';
 import 'package:custome_mobile/business_logic/bloc/trader_log_bloc.dart';
 import 'package:custome_mobile/helpers/color_constants.dart';
 import 'package:custome_mobile/views/screens/trader/log_screens/offer_details_screen.dart';
@@ -198,12 +199,14 @@ class _LogScreenState extends State<LogScreen>
                                   child: ListTile(
                                     contentPadding: EdgeInsets.zero,
                                     onTap: () {
+                                      BlocProvider.of<OfferDetailsBloc>(context)
+                                          .add(OfferDetailsLoadEvent(
+                                              state.offers[index].id!));
                                       Navigator.push(
                                           context,
                                           MaterialPageRoute(
                                             builder: (context) =>
-                                                OfferDetailsScreen(
-                                                    offer: state.offers[index]),
+                                                OfferDetailsScreen(),
                                           ));
                                     },
                                     leading: Container(

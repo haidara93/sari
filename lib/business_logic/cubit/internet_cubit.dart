@@ -18,6 +18,8 @@ class InternetCubit extends Cubit<InternetState> {
         emitInternetConnected(ConnectionType.Wifi);
       } else if (connectionResult == ConnectivityResult.mobile) {
         emit(const InternetConnected(connectionType: ConnectionType.Mobile));
+      } else if (connectionResult == ConnectivityResult.vpn) {
+        emit(const InternetConnected(connectionType: ConnectionType.Mobile));
       } else if (connectionResult == ConnectivityResult.none) {
         emit(InternetDisConnected());
       }

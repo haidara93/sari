@@ -14,7 +14,15 @@ class AuthRepository {
       {required String username, required String password}) async {
     try {
       String? firebaseToken = "";
-      FirebaseMessaging.instance.requestPermission();
+      FirebaseMessaging.instance.requestPermission(
+        alert: true,
+        announcement: true,
+        badge: true,
+        carPlay: true,
+        criticalAlert: true,
+        provisional: true,
+        sound: true,
+      );
       FirebaseMessaging messaging = FirebaseMessaging.instance;
       firebaseToken = await messaging.getToken();
       // if (Platform.isIOS) {
@@ -88,6 +96,6 @@ class AuthRepository {
   Future<void> deleteToken() async {
     var prefs = await SharedPreferences.getInstance();
     prefs.remove("token");
-    prefs.clear();
+    // prefs.clear();
   }
 }
