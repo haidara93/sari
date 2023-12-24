@@ -4,14 +4,24 @@ import 'package:custome_mobile/data/providers/notification_provider.dart';
 import 'package:custome_mobile/data/services/fcm_service.dart';
 import 'package:custome_mobile/helpers/color_constants.dart';
 import 'package:custome_mobile/views/screens/broker/order_details_screen.dart';
+import 'package:custome_mobile/views/screens/trader/log_screens/offer_details_screen.dart';
 import 'package:custome_mobile/views/widgets/custom_app_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
-class NotificationScreen extends StatelessWidget {
-  const NotificationScreen({Key? key}) : super(key: key);
+class NotificationScreen extends StatefulWidget {
+  NotificationScreen({Key? key}) : super(key: key);
+
+  @override
+  State<NotificationScreen> createState() => _NotificationScreenState();
+}
+
+class _NotificationScreenState extends State<NotificationScreen> {
+  String usertype = "Trader";
+
   String diffText(Duration diff) {
     if (diff.inSeconds < 60) {
       return "منذ ${diff.inSeconds.toString()} ثانية";
@@ -22,6 +32,17 @@ class NotificationScreen extends StatelessWidget {
     } else {
       return "منذ ${diff.inDays.toString()} يوم";
     }
+  }
+
+  getUserType() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    usertype = prefs.getString("userType") ?? "";
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    getUserType();
   }
 
   @override
@@ -68,11 +89,35 @@ class NotificationScreen extends StatelessWidget {
                               BlocProvider.of<OfferDetailsBloc>(context).add(
                                   OfferDetailsLoadEvent(notificationProvider
                                       .notifications[index].offer!));
-                              Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder: (context) => OrderDetailsScreen(),
-                                  ));
+
+                              if (usertype == "Trader") {
+                                if (notificationProvider.notifications[index]
+                                            .noteficationType! ==
+                                        "A" ||
+                                    notificationProvider.notifications[index]
+                                            .noteficationType! ==
+                                        "T") {
+                                  Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) =>
+                                            OfferDetailsScreen(
+                                          type: "trader",
+                                        ),
+                                      ));
+                                }
+                              } else if (usertype == "Broker") {
+                                if (notificationProvider.notifications[index]
+                                        .noteficationType! ==
+                                    "O") {
+                                  Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) =>
+                                            OrderDetailsScreen(),
+                                      ));
+                                }
+                              }
                               if (!notificationProvider
                                   .notifications[index].isread!) {
                                 NotificationServices.markNotificationasRead(

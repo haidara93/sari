@@ -8,6 +8,7 @@ import 'package:custome_mobile/business_logic/bloc/offer_bloc.dart';
 import 'package:custome_mobile/business_logic/bloc/package_type_bloc.dart';
 import 'package:custome_mobile/business_logic/cubit/bottom_nav_bar_cubit.dart';
 import 'package:custome_mobile/data/models/attachments_models.dart';
+import 'package:custome_mobile/data/providers/add_attachment_provider.dart';
 import 'package:custome_mobile/data/providers/order_broker_provider.dart';
 import 'package:custome_mobile/helpers/color_constants.dart';
 import 'package:custome_mobile/helpers/formatter.dart';
@@ -57,13 +58,18 @@ class _TraderAttachementScreenState extends State<TraderAttachementScreen> {
   final TextEditingController _traderNotes = TextEditingController();
   final TextEditingController _tabalehNumController = TextEditingController();
   final TextEditingController _packagesNumController = TextEditingController();
+  final TextEditingController _otherAttachmentController =
+      TextEditingController();
 
   var key1 = GlobalKey();
   var key2 = GlobalKey();
 
   final ScrollController _scrollController = ScrollController();
+  final ScrollController _attachmentsScrollController = ScrollController();
 
   File? _image;
+  List<File>? _images = [];
+  List<File>? _files = [];
   final ImagePicker _picker = ImagePicker();
   AttachmentType? selectedAttachmentType;
   List<AttachmentType> attachmentTypes = [];
@@ -71,14 +77,18 @@ class _TraderAttachementScreenState extends State<TraderAttachementScreen> {
   final FocusNode _nodePackages = FocusNode();
   final FocusNode _nodeTabaleh = FocusNode();
   OrderBrokerProvider? order_brokerProvider;
+  AddAttachmentProvider? attachment_Provider;
   @override
   void initState() {
     super.initState();
     _tabalehNumController.text = "1";
     _packagesNumController.text = "0";
+    _otherAttachmentController.text = "";
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
       order_brokerProvider =
           Provider.of<OrderBrokerProvider>(context, listen: false);
+      attachment_Provider =
+          Provider.of<AddAttachmentProvider>(context, listen: false);
       setState(() {
         _tabalehNumController.text =
             order_brokerProvider!.tabalehNum.toString();
@@ -142,35 +152,6 @@ class _TraderAttachementScreenState extends State<TraderAttachementScreen> {
     );
   }
 
-  imageButtonPressed(ImageSource source, {bool isMultiImage = false}) async {
-    if (isMultiImage) {
-      try {
-        // final List<XFile>? pickedFileList = await _picker.pickMultiImage();
-        // _imageFileList = pickedFileList;
-      } catch (e) {
-        // _pickImageError = e;
-      }
-    } else {
-      // _image = await _picker.pickImage(source: source);
-    }
-  }
-
-  Widget _buildimagelist() {
-    return Image.file(File(_image!.path));
-  }
-
-  Widget _previewImages() {
-    if (_image != null) {
-      return _buildimagelist();
-    } else {
-      return const Text(
-        'الرجاء اختيار صورة لرفعها.',
-        textAlign: TextAlign.center,
-        style: TextStyle(color: Colors.black),
-      );
-    }
-  }
-
   String attachmentName(int attachmentType) {
     for (var element in attachmentTypes) {
       if (element.id! == attachmentType) {
@@ -197,7 +178,7 @@ class _TraderAttachementScreenState extends State<TraderAttachementScreen> {
                     borderRadius: BorderRadius.circular(15)),
                 contentPadding: EdgeInsets.all(8.h),
                 children: [
-                  _previewImages(),
+                  // _previewImages(),
                   const SizedBox(
                     height: 7,
                   ),
@@ -331,10 +312,13 @@ class _TraderAttachementScreenState extends State<TraderAttachementScreen> {
                                     width: 90,
                                     child: Center(child: Text("حفظ"))),
                                 onTap: () {
-                                  BlocProvider.of<AttachmentBloc>(context).add(
-                                      AddAttachmentEvent(
-                                          selectedAttachmentType!.id!,
-                                          _image!));
+                                  BlocProvider.of<AttachmentBloc>(context)
+                                      .add(AddAttachmentEvent(
+                                    selectedAttachmentType!.id!,
+                                    "",
+                                    _images!,
+                                    _files!,
+                                  ));
                                 }),
                           ],
                         );
@@ -425,25 +409,25 @@ class _TraderAttachementScreenState extends State<TraderAttachementScreen> {
             SizedBox(
               height: 5.h,
             ),
-            Image.network(
-              element.image!,
-              fit: BoxFit.cover,
-              height: 75.h,
-              width: 75.w,
-              loadingBuilder: (context, child, loadingProgress) {
-                if (loadingProgress == null) {
-                  return child;
-                }
-                return Center(
-                  child: CircularProgressIndicator(
-                    value: loadingProgress.expectedTotalBytes != null
-                        ? loadingProgress.cumulativeBytesLoaded /
-                            loadingProgress.expectedTotalBytes!
-                        : null,
-                  ),
-                );
-              },
-            ),
+            // Image.network(
+            //   element.image!,
+            //   fit: BoxFit.cover,
+            //   height: 75.h,
+            //   width: 75.w,
+            //   loadingBuilder: (context, child, loadingProgress) {
+            //     if (loadingProgress == null) {
+            //       return child;
+            //     }
+            //     return Center(
+            //       child: CircularProgressIndicator(
+            //         value: loadingProgress.expectedTotalBytes != null
+            //             ? loadingProgress.cumulativeBytesLoaded /
+            //                 loadingProgress.expectedTotalBytes!
+            //             : null,
+            //       ),
+            //     );
+            //   },
+            // ),
             const SizedBox(
               height: 3,
             ),
@@ -455,6 +439,66 @@ class _TraderAttachementScreenState extends State<TraderAttachementScreen> {
         ),
       );
       list.add(elem);
+    }
+    return list;
+  }
+
+  List<Widget> _buildAttachmentImages(List<AttachmentImage>? images) {
+    List<Widget> list = [];
+    var restofImagesNum = 0;
+    if (images != null) {
+      for (var i = 0; i < images!.length; i++) {
+        if (i < 3) {
+          var elem = Container(
+            decoration: BoxDecoration(
+              border: Border.all(
+                color: Colors.grey,
+                width: 1,
+              ),
+            ),
+            width: 58.w,
+            height: 68.h,
+            child: Image.network(
+                width: 58.w, height: 68.h, fit: BoxFit.fill, images![i].image!),
+          );
+          list.add(elem);
+        } else {
+          restofImagesNum = images!.length - 3;
+          var elem = Stack(
+            alignment: Alignment.center,
+            children: [
+              Container(
+                decoration: BoxDecoration(
+                  border: Border.all(
+                    color: Colors.grey,
+                    width: 1,
+                  ),
+                ),
+                width: 58.w,
+                height: 68.h,
+                child: Image.network(
+                    width: 58.w,
+                    height: 68.h,
+                    fit: BoxFit.fill,
+                    images![i].image!),
+              ),
+              Container(
+                color: Colors.white70,
+                width: 58.w,
+                height: 68.h,
+                child: Center(
+                  child: Text(
+                    "+$restofImagesNum",
+                    style: TextStyle(color: AppColor.deepBlue, fontSize: 18.sp),
+                  ),
+                ),
+              ),
+            ],
+          );
+          list.add(elem);
+          break;
+        }
+      }
     }
     return list;
   }
@@ -471,13 +515,11 @@ class _TraderAttachementScreenState extends State<TraderAttachementScreen> {
             listener: (context, state) {
               if (state is AttachmentLoadedSuccess) {
                 Navigator.pop(context);
-                order_brokerProvider!.addAttachment(state.attachment);
-                order_brokerProvider!.addAttachmentId(state.attachment.id!);
-                setState(() {
-                  _image = null;
-                });
-                BlocProvider.of<AttachmentsListBloc>(context)
-                    .add(AddAttachmentToListEvent(state.attachment));
+                // order_brokerProvider!.addAttachment(state.attachment);
+                // order_brokerProvider!.addAttachmentId(state.attachment.id!);
+
+                // BlocProvider.of<AttachmentsListBloc>(context)
+                //     .add(AddAttachmentToListEvent(state.attachment));
               }
               if (state is AttachmentLoadedFailed) {
                 Navigator.pop(context);
@@ -1152,9 +1194,402 @@ class _TraderAttachementScreenState extends State<TraderAttachementScreen> {
                                     SizedBox(
                                       height: 15.h,
                                     ),
-                                    Wrap(
-                                      children: _buildAttachmentslist(
-                                          orderBrokerProvider.attachments),
+                                    // Wrap(
+                                    //   children: _buildAttachmentslist(
+                                    //       orderBrokerProvider.attachments),
+                                    // ),
+                                    SizedBox(
+                                      height: 185.h,
+                                      child: BlocBuilder<AttachmentTypeBloc,
+                                          AttachmentTypeState>(
+                                        builder:
+                                            (context, attachmentTypeState) {
+                                          if (attachmentTypeState
+                                              is AttachmentTypeLoadedSuccess) {
+                                            return ListView.builder(
+                                              itemCount: attachmentTypeState
+                                                  .attachmentTypes.length,
+                                              scrollDirection: Axis.horizontal,
+                                              shrinkWrap: true,
+                                              itemBuilder: (context, index) {
+                                                return InkWell(
+                                                  onTap: () {
+                                                    showDialog(
+                                                      context: context,
+                                                      builder: (context) =>
+                                                          StatefulBuilder(
+                                                              builder: (context,
+                                                                  StateSetter
+                                                                      setState2) {
+                                                        return Directionality(
+                                                          textDirection:
+                                                              TextDirection.rtl,
+                                                          child: SimpleDialog(
+                                                            backgroundColor:
+                                                                Colors.white,
+                                                            title: const Text(
+                                                                'إضافة مرفق'),
+                                                            shape:
+                                                                RoundedRectangleBorder(
+                                                              borderRadius:
+                                                                  BorderRadius
+                                                                      .circular(
+                                                                          15),
+                                                            ),
+                                                            contentPadding:
+                                                                EdgeInsets.all(
+                                                                    8.h),
+                                                            children: [
+                                                              Row(
+                                                                mainAxisAlignment:
+                                                                    MainAxisAlignment
+                                                                        .spaceEvenly,
+                                                                children: [
+                                                                  Padding(
+                                                                    padding: EdgeInsets.symmetric(
+                                                                        horizontal:
+                                                                            5.w,
+                                                                        vertical:
+                                                                            15.h),
+                                                                    child:
+                                                                        InkWell(
+                                                                      child:
+                                                                          Stack(
+                                                                        clipBehavior:
+                                                                            Clip.none,
+                                                                        children: [
+                                                                          Card(
+                                                                            elevation:
+                                                                                1,
+                                                                            child:
+                                                                                Padding(
+                                                                              padding: const EdgeInsets.all(8.0),
+                                                                              child: Center(
+                                                                                child: SizedBox(
+                                                                                  height: 55.h,
+                                                                                  width: 50.w,
+                                                                                  child: SvgPicture.asset("assets/icons/pdf_icon.svg"),
+                                                                                ),
+                                                                              ),
+                                                                            ),
+                                                                          ),
+                                                                          _files!.isNotEmpty
+                                                                              ? Positioned(
+                                                                                  right: -7.w,
+                                                                                  top: -10.h,
+                                                                                  child: Container(
+                                                                                    height: 25.h,
+                                                                                    width: 25.h,
+                                                                                    padding: const EdgeInsets.all(2),
+                                                                                    decoration: BoxDecoration(
+                                                                                      color: AppColor.goldenYellow,
+                                                                                      borderRadius: BorderRadius.circular(45),
+                                                                                    ),
+                                                                                    child: Center(
+                                                                                      child: Text(
+                                                                                        _files!.length.toString(),
+                                                                                        style: const TextStyle(
+                                                                                          color: Colors.white,
+                                                                                        ),
+                                                                                      ),
+                                                                                    ),
+                                                                                  ),
+                                                                                )
+                                                                              : const SizedBox.shrink()
+                                                                        ],
+                                                                      ),
+                                                                    ),
+                                                                  ),
+                                                                  Padding(
+                                                                    padding: EdgeInsets.symmetric(
+                                                                        horizontal:
+                                                                            5.w,
+                                                                        vertical:
+                                                                            15.h),
+                                                                    child:
+                                                                        InkWell(
+                                                                      onTap:
+                                                                          () async {
+                                                                        var pickedImages =
+                                                                            await _picker.pickMultiImage();
+                                                                        for (var element
+                                                                            in pickedImages) {
+                                                                          _images!
+                                                                              .add(File(element!.path));
+                                                                        }
+                                                                        setState2(
+                                                                          () {},
+                                                                        );
+                                                                      },
+                                                                      child:
+                                                                          Stack(
+                                                                        clipBehavior:
+                                                                            Clip.none,
+                                                                        children: [
+                                                                          Card(
+                                                                            elevation:
+                                                                                1,
+                                                                            child:
+                                                                                Padding(
+                                                                              padding: const EdgeInsets.all(8.0),
+                                                                              child: Center(
+                                                                                child: cupertino.SizedBox(
+                                                                                  height: 55.h,
+                                                                                  width: 50.w,
+                                                                                  child: SvgPicture.asset("assets/icons/photo_icon.svg"),
+                                                                                ),
+                                                                              ),
+                                                                            ),
+                                                                          ),
+                                                                          _images!.isNotEmpty
+                                                                              ? Positioned(
+                                                                                  right: -7.w,
+                                                                                  top: -10.h,
+                                                                                  child: Container(
+                                                                                    height: 25.h,
+                                                                                    width: 25.h,
+                                                                                    padding: const EdgeInsets.all(2),
+                                                                                    decoration: BoxDecoration(
+                                                                                      color: AppColor.goldenYellow,
+                                                                                      borderRadius: BorderRadius.circular(45),
+                                                                                    ),
+                                                                                    child: Center(
+                                                                                      child: Text(
+                                                                                        _images!.length.toString(),
+                                                                                        style: const TextStyle(
+                                                                                          color: Colors.white,
+                                                                                        ),
+                                                                                      ),
+                                                                                    ),
+                                                                                  ),
+                                                                                )
+                                                                              : const SizedBox.shrink()
+                                                                        ],
+                                                                      ),
+                                                                    ),
+                                                                  ),
+                                                                ],
+                                                              ),
+                                                              // _previewImages(),
+                                                              Visibility(
+                                                                visible: attachmentTypeState
+                                                                        .attachmentTypes[
+                                                                            index]
+                                                                        .number !=
+                                                                    200,
+                                                                child:
+                                                                    const SizedBox(
+                                                                  height: 15,
+                                                                ),
+                                                              ),
+                                                              Visibility(
+                                                                visible: attachmentTypeState
+                                                                        .attachmentTypes[
+                                                                            index]
+                                                                        .number ==
+                                                                    200,
+                                                                child: Padding(
+                                                                    padding: EdgeInsets.symmetric(
+                                                                        vertical:
+                                                                            7.h,
+                                                                        horizontal: 15
+                                                                            .w),
+                                                                    child:
+                                                                        TextField(
+                                                                      controller:
+                                                                          _otherAttachmentController,
+                                                                      decoration:
+                                                                          InputDecoration(
+                                                                        isDense:
+                                                                            true,
+                                                                        contentPadding:
+                                                                            const EdgeInsets.symmetric(
+                                                                          horizontal:
+                                                                              10,
+                                                                          vertical:
+                                                                              8,
+                                                                        ),
+                                                                        labelText:
+                                                                            'أدخل اسم المرفق',
+                                                                        border:
+                                                                            OutlineInputBorder(
+                                                                          borderRadius:
+                                                                              BorderRadius.circular(8),
+                                                                        ),
+                                                                      ),
+                                                                      style: const TextStyle(
+                                                                          fontSize:
+                                                                              18),
+                                                                    )),
+                                                              ),
+
+                                                              BlocConsumer<
+                                                                  AttachmentBloc,
+                                                                  AttachmentState>(
+                                                                listener:
+                                                                    (context,
+                                                                        state) {
+                                                                  if (state
+                                                                      is AttachmentLoadedSuccess) {
+                                                                    orderBrokerProvider!
+                                                                        .addAttachmentId(state
+                                                                            .attachment
+                                                                            .id!);
+                                                                    orderBrokerProvider
+                                                                        .addAttachment(
+                                                                            state.attachment);
+                                                                    setState2(
+                                                                        () {
+                                                                      _images =
+                                                                          [];
+                                                                      _files =
+                                                                          [];
+                                                                      _otherAttachmentController
+                                                                          .text = "";
+                                                                    });
+                                                                  }
+                                                                },
+                                                                builder:
+                                                                    (context,
+                                                                        state) {
+                                                                  if (state
+                                                                      is AttachmentLoadingProgress) {
+                                                                    return const Row(
+                                                                      mainAxisAlignment:
+                                                                          MainAxisAlignment
+                                                                              .center,
+                                                                      children: [
+                                                                        Center(
+                                                                            child:
+                                                                                CircularProgressIndicator()),
+                                                                      ],
+                                                                    );
+                                                                  } else {
+                                                                    return Row(
+                                                                      mainAxisAlignment:
+                                                                          MainAxisAlignment
+                                                                              .spaceAround,
+                                                                      children: [
+                                                                        CustomButton(
+                                                                            title:
+                                                                                const SizedBox(
+                                                                              width: 90,
+                                                                              child: Center(child: Text("إغلاق")),
+                                                                            ),
+                                                                            onTap:
+                                                                                () {
+                                                                              Navigator.pop(context);
+                                                                            }),
+                                                                        CustomButton(
+                                                                            title:
+                                                                                const SizedBox(width: 90, child: Center(child: Text("حفظ"))),
+                                                                            onTap: () {
+                                                                              BlocProvider.of<AttachmentBloc>(context).add(AddAttachmentEvent(
+                                                                                attachmentTypeState.attachmentTypes[index].id!,
+                                                                                _otherAttachmentController.text,
+                                                                                _images!,
+                                                                                _files!,
+                                                                              ));
+                                                                            }),
+                                                                      ],
+                                                                    );
+                                                                  }
+                                                                },
+                                                              )
+                                                            ],
+                                                          ),
+                                                        );
+                                                      }),
+                                                    );
+                                                  },
+                                                  child: Column(
+                                                    children: [
+                                                      Container(
+                                                        margin:
+                                                            EdgeInsets.all(5.h),
+                                                        decoration:
+                                                            BoxDecoration(
+                                                          borderRadius:
+                                                              BorderRadius
+                                                                  .circular(15),
+                                                          border: Border.all(
+                                                            color: AppColor
+                                                                .deepAppBarBlue,
+                                                            width: 1.0,
+                                                          ),
+                                                        ),
+                                                        height: 140.h,
+                                                        width: 120.w,
+                                                        clipBehavior:
+                                                            Clip.antiAlias,
+                                                        child: ClipRRect(
+                                                          borderRadius:
+                                                              BorderRadius
+                                                                  .circular(15),
+                                                          child: orderBrokerProvider
+                                                                      .attachments
+                                                                      .singleWhere(
+                                                                          (it) =>
+                                                                              it!.attachmentType ==
+                                                                              attachmentTypeState
+                                                                                  .attachmentTypes[
+                                                                                      index]
+                                                                                  .id,
+                                                                          orElse: () => Attachment(
+                                                                              id:
+                                                                                  0))
+                                                                      .id !=
+                                                                  Attachment(
+                                                                          id: 0)
+                                                                      .id
+                                                              ? SizedBox(
+                                                                  height: 137.h,
+                                                                  width: 120.w,
+                                                                  child: Wrap(
+                                                                    children: _buildAttachmentImages(orderBrokerProvider
+                                                                        .attachments
+                                                                        .singleWhere(
+                                                                            (it) =>
+                                                                                it!.attachmentType ==
+                                                                                attachmentTypeState.attachmentTypes[index].id,
+                                                                            orElse: () => Attachment(id: 0))
+                                                                        .image),
+                                                                  ),
+                                                                )
+                                                              : SizedBox(
+                                                                  height: 137.h,
+                                                                  width: 120.w,
+                                                                  child: SvgPicture
+                                                                      .asset(
+                                                                          "assets/icons/cloud.svg")),
+                                                        ),
+                                                      ),
+                                                      Text(
+                                                        attachmentTypeState
+                                                            .attachmentTypes[
+                                                                index]
+                                                            .name!,
+                                                        style: TextStyle(
+                                                          fontSize: 18.sp,
+                                                        ),
+                                                      ),
+                                                    ],
+                                                  ),
+                                                );
+                                              },
+                                            );
+                                          } else if (attachmentTypeState
+                                              is AttachmentTypeLoadingProgress) {
+                                            return SizedBox(
+                                                height: 185.h,
+                                                child: const Center(
+                                                    child:
+                                                        LinearProgressIndicator()));
+                                          } else {
+                                            return Container();
+                                          }
+                                        },
+                                      ),
                                     ),
                                   ]),
                             ),
@@ -1261,7 +1696,7 @@ class _TraderAttachementScreenState extends State<TraderAttachementScreen> {
                                             }
                                             if (offerstate
                                                 is OfferLoadedFailed) {
-                                              print(offerstate.errortext);
+                                              // print(offerstate.errortext);
                                               var snackBar = SnackBar(
                                                 elevation: 0,
                                                 duration:

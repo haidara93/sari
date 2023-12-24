@@ -17,8 +17,8 @@ class AttachmentBloc extends Bloc<AttachmentEvent, AttachmentState> {
     on<AddAttachmentEvent>((event, emit) async {
       emit(AttachmentLoadingProgress());
       try {
-        var result =
-            await stateAgencyRepository.postAttachment(event.image, event.type);
+        var result = await stateAgencyRepository.postAttachment(
+            event.images, event.files, event.type, event.other_attachment_name);
 
         emit(AttachmentLoadedSuccess(result!));
       } catch (e) {

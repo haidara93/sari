@@ -2,6 +2,8 @@ import 'package:custome_mobile/business_logic/bloc/calculate_result_bloc.dart';
 import 'package:custome_mobile/business_logic/bloc/offer_details_bloc.dart';
 import 'package:custome_mobile/data/models/offer_model.dart';
 import 'package:custome_mobile/data/models/package_model.dart';
+import 'package:custome_mobile/data/providers/broker_offer_provider.dart';
+import 'package:custome_mobile/data/providers/trader_offer_provider.dart';
 import 'package:custome_mobile/data/services/calculator_service.dart';
 import 'package:custome_mobile/helpers/color_constants.dart';
 import 'package:custome_mobile/views/screens/trader/log_screens/broker_attachments_screen.dart';
@@ -12,11 +14,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:provider/provider.dart';
 
 // ignore: must_be_immutable
 class OfferDetailsScreen extends StatefulWidget {
   // final Offer offer;
-  OfferDetailsScreen({Key? key}) : super(key: key);
+  final String type;
+  OfferDetailsScreen({Key? key, required this.type}) : super(key: key);
 
   @override
   State<OfferDetailsScreen> createState() => _OfferDetailsScreenState();
@@ -24,7 +28,8 @@ class OfferDetailsScreen extends StatefulWidget {
 
 class _OfferDetailsScreenState extends State<OfferDetailsScreen> {
   CalculateObject result = CalculateObject();
-
+  TraderOfferProvider? trader_offerProvider;
+  BrokerOfferProvider? broker_offerProvider;
   String getOfferType(String offer) {
     switch (offer) {
       case "I":
@@ -57,6 +62,12 @@ class _OfferDetailsScreenState extends State<OfferDetailsScreen> {
   @override
   void initState() {
     super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+      trader_offerProvider =
+          Provider.of<TraderOfferProvider>(context, listen: false);
+      broker_offerProvider =
+          Provider.of<BrokerOfferProvider>(context, listen: false);
+    });
   }
 
   @override
@@ -69,7 +80,16 @@ class _OfferDetailsScreenState extends State<OfferDetailsScreen> {
         child: Scaffold(
           appBar: CustomAppBar(title: "تفاصيل العملية"),
           backgroundColor: Colors.grey[200],
-          body: BlocBuilder<OfferDetailsBloc, OfferDetailsState>(
+          body: BlocConsumer<OfferDetailsBloc, OfferDetailsState>(
+            listener: (context, offersstate) {
+              if (offersstate is OfferDetailsLoadedSuccess) {
+                trader_offerProvider!
+                    .initAttachment(offersstate.offer.attachments!);
+                trader_offerProvider!.initAdditionalAttachment(
+                    offersstate.offer.additional_attachments!);
+                broker_offerProvider!.initOffer(offersstate.offer);
+              }
+            },
             builder: (context, offerstate) {
               if (offerstate is OfferDetailsLoadedSuccess) {
                 getProductInfo(offerstate.offer.product!.id!);
@@ -116,7 +136,8 @@ class _OfferDetailsScreenState extends State<OfferDetailsScreen> {
                                       MaterialPageRoute(
                                         builder: (context) =>
                                             OrderTrackingScreen(
-                                                offernum: offerstate.offer.id!),
+                                                type: widget.type,
+                                                offer: offerstate.offer),
                                       ));
                                 },
                                 child: Padding(
@@ -159,7 +180,7 @@ class _OfferDetailsScreenState extends State<OfferDetailsScreen> {
                                 height: 7.h,
                               ),
                               Text(
-                                'رقم العملية: SA-${offerstate.offer.id!}',
+                                'رقم العملية: SA-${broker_offerProvider!.id!}',
                                 style: TextStyle(
                                   color: AppColor.lightBlue,
                                   fontSize: 18.sp,
@@ -182,7 +203,7 @@ class _OfferDetailsScreenState extends State<OfferDetailsScreen> {
                                       children: [
                                         TextSpan(
                                           text: getOfferType(
-                                              offerstate.offer.offerType!),
+                                              broker_offerProvider!.offerType!),
                                           style: TextStyle(
                                             color: Colors.black,
                                             fontSize: 16.sp,
@@ -233,8 +254,8 @@ class _OfferDetailsScreenState extends State<OfferDetailsScreen> {
                                       ),
                                       children: [
                                         TextSpan(
-                                          text:
-                                              offerstate.offer.product!.label!,
+                                          text: broker_offerProvider!
+                                              .product!.label!,
                                           style: TextStyle(
                                             color: Colors.black,
                                             fontSize: 16.sp,
@@ -345,7 +366,8 @@ class _OfferDetailsScreenState extends State<OfferDetailsScreen> {
                                         ),
                                         children: [
                                           TextSpan(
-                                            text: offerstate.offer.packagesNum!
+                                            text: broker_offerProvider!
+                                                .packagesNum!
                                                 .toString(),
                                             style: TextStyle(
                                               color: Colors.black,
@@ -375,7 +397,8 @@ class _OfferDetailsScreenState extends State<OfferDetailsScreen> {
                                           ),
                                           children: [
                                             TextSpan(
-                                              text: offerstate.offer.weight!
+                                              text: broker_offerProvider!
+                                                  .weight!
                                                   .toInt()
                                                   .toString(),
                                               style: TextStyle(
@@ -402,7 +425,7 @@ class _OfferDetailsScreenState extends State<OfferDetailsScreen> {
                                         ),
                                         children: [
                                           TextSpan(
-                                            text: offerstate.offer.price!
+                                            text: broker_offerProvider!.price!
                                                 .toInt()
                                                 .toString(),
                                             style: TextStyle(
@@ -431,7 +454,7 @@ class _OfferDetailsScreenState extends State<OfferDetailsScreen> {
                                     children: [
                                       TextSpan(
                                         text:
-                                            '${offerstate.offer.expectedArrivalDate!.day}-${offerstate.offer.expectedArrivalDate!.month}-${offerstate.offer.expectedArrivalDate!.year}',
+                                            '${broker_offerProvider!.expectedArrivalDate!.day}-${broker_offerProvider!.expectedArrivalDate!.month}-${broker_offerProvider!.expectedArrivalDate!.year}',
                                         style: TextStyle(
                                           color: Colors.black,
                                           fontSize: 16.sp,
@@ -473,7 +496,7 @@ class _OfferDetailsScreenState extends State<OfferDetailsScreen> {
                                 ),
                               ),
                               Text(
-                                totalCost(offerstate.offer.costs),
+                                totalCost(broker_offerProvider!.costs),
                                 style: TextStyle(
                                   color: AppColor.lightBlue,
                                   fontSize: 15.sp,
@@ -486,23 +509,23 @@ class _OfferDetailsScreenState extends State<OfferDetailsScreen> {
                                       MaterialPageRoute(
                                         builder: (context) =>
                                             BrokerCostDetailsScreen(
-                                          offer: offerstate.offer,
+                                          costs: broker_offerProvider!.costs,
                                         ),
                                       ));
 
                                   result.insurance =
-                                      offerstate.offer.taxes!.toInt();
+                                      broker_offerProvider!.taxes!.toInt();
                                   result.fee = product!.fee!;
                                   result.rawMaterial =
-                                      offerstate.offer.raw_material!;
+                                      broker_offerProvider!.raw_material!;
                                   result.industrial =
-                                      offerstate.offer.industrial;
+                                      broker_offerProvider!.industrial;
                                   result.totalTax =
                                       product!.totalTaxes!.totalTax!;
                                   result.partialTax =
                                       product!.totalTaxes!.partialTax!;
                                   result.origin =
-                                      offerstate.offer.origin!.label!;
+                                      broker_offerProvider!.origin!.label!;
                                   result.spendingFee = product!.spendingFee!;
                                   result.supportFee = product!.supportFee!;
                                   result.localFee = product!.localFee!;
@@ -511,18 +534,18 @@ class _OfferDetailsScreenState extends State<OfferDetailsScreen> {
                                   result.naturalFee = product!.naturalFee!;
                                   result.taxFee = product!.taxFee!;
                                   result.insurance =
-                                      offerstate.offer.taxes!.toInt();
+                                      broker_offerProvider!.taxes!.toInt();
                                   result.fee = product!.fee!;
                                   result.rawMaterial =
-                                      offerstate.offer.raw_material!;
+                                      broker_offerProvider!.raw_material!;
                                   result.industrial =
-                                      offerstate.offer.industrial;
+                                      broker_offerProvider!.industrial;
                                   result.totalTax =
                                       product!.totalTaxes!.totalTax!;
                                   result.partialTax =
                                       product!.totalTaxes!.partialTax!;
                                   result.origin =
-                                      offerstate.offer.origin!.label!;
+                                      broker_offerProvider!.origin!.label!;
                                   result.spendingFee = product!.spendingFee!;
                                   result.supportFee = product!.supportFee!;
                                   result.localFee = product!.localFee!;
@@ -531,9 +554,9 @@ class _OfferDetailsScreenState extends State<OfferDetailsScreen> {
                                   result.naturalFee = product!.naturalFee!;
                                   result.taxFee = product!.taxFee!;
                                   result.weight =
-                                      offerstate.offer.weight!.toInt();
+                                      broker_offerProvider!.weight!.toInt();
                                   result.price =
-                                      offerstate.offer.price!.toInt();
+                                      broker_offerProvider!.price!.toInt();
                                   result.cnsulate = 1;
                                   result.dolar = 8585;
                                   result.arabic_stamp =
@@ -591,14 +614,11 @@ class _OfferDetailsScreenState extends State<OfferDetailsScreen> {
                                       MaterialPageRoute(
                                         builder: (context) =>
                                             BrokerAttachmentsScreen(
-                                                attachments: offerstate
-                                                    .offer.attachments!,
-                                                additionalAttachments: offerstate
-                                                    .offer
-                                                    .additional_attachments!,
-                                                offerId: offerstate.offer.id!,
-                                                offerState: offerstate
-                                                    .offer.orderStatus!),
+                                                offerId:
+                                                    broker_offerProvider!.id!,
+                                                offerState:
+                                                    broker_offerProvider!
+                                                        .orderStatus!),
                                       ));
                                 },
                                 child: Padding(

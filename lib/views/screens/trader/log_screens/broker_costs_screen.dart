@@ -13,8 +13,8 @@ import 'package:intl/intl.dart';
 
 // ignore: must_be_immutable
 class BrokerCostDetailsScreen extends StatelessWidget {
-  final Offer offer;
-  BrokerCostDetailsScreen({Key? key, required this.offer}) : super(key: key);
+  final List<Costs>? costs;
+  BrokerCostDetailsScreen({Key? key, required this.costs}) : super(key: key);
   CalculateObject result = CalculateObject();
   double finaltotalcost = 0.0;
 
@@ -135,7 +135,7 @@ class BrokerCostDetailsScreen extends StatelessWidget {
                             ),
                             ListView.builder(
                               shrinkWrap: true,
-                              itemCount: offer.costs!.length,
+                              itemCount: costs!.length,
                               physics: const NeverScrollableScrollPhysics(),
                               itemBuilder: (context, index) {
                                 return Row(
@@ -143,11 +143,11 @@ class BrokerCostDetailsScreen extends StatelessWidget {
                                       MainAxisAlignment.spaceBetween,
                                   children: [
                                     Text(
-                                      offer.costs![index].description!,
+                                      costs![index].description!,
                                       maxLines: 3,
                                     ),
-                                    Text(f.format(
-                                        offer.costs![index].amount!.toInt())),
+                                    Text(f
+                                        .format(costs![index].amount!.toInt())),
                                   ],
                                 );
                               },
@@ -166,7 +166,7 @@ class BrokerCostDetailsScreen extends StatelessWidget {
                                   maxLines: 3,
                                 ),
                                 Text(
-                                  totalCost(offer.costs),
+                                  totalCost(costs),
                                   style: TextStyle(
                                       fontSize: 20.sp,
                                       color: AppColor.deepYellow,
@@ -239,7 +239,7 @@ class BrokerCostDetailsScreen extends StatelessWidget {
                                 ),
                                 Text(
                                   finaltotalCost(
-                                      offer.costs, state.result.finalTotal!),
+                                      costs, state.result.finalTotal!),
                                   style: TextStyle(
                                       fontWeight: FontWeight.bold,
                                       fontSize: 20.sp,

@@ -1529,7 +1529,6 @@ class _CalculatorWidget2State extends State<CalculatorWidget2> {
                                         .toInt();
                                     result.import_fee =
                                         selectedPackage!.importFee;
-                                    print(jsonEncode(result.toJson()));
                                     BlocProvider.of<CalculateResultBloc>(
                                             context)
                                         .add(CalculateTheResultEvent(result));

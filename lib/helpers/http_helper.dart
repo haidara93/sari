@@ -16,6 +16,7 @@ const STATE_CUSTOMES_ENDPOINT = '${DOMAIN}clearance/statecustomes/';
 const PACKAGE_TYPES_ENDPOINT = '${DOMAIN}clearance/package_types/';
 const ATTACHMENT_TYPES_ENDPOINT = '${DOMAIN}clearance/attachments_types/';
 const OFFERS_ENDPOINT = '${DOMAIN}clearance/offers/';
+const TRACKING_OFFER_ENDPOINT = '${DOMAIN}clearance/trackoffers/';
 const ATTACHMENTS_ENDPOINT = '${DOMAIN}clearance/attachments/';
 const ACCURDION_SECTION_ENDPOINT = '${DOMAIN}tree_view/sections/';
 const ACCURDION_CHAPTERS_ENDPOINT = '${DOMAIN}tree_view/api/section/';

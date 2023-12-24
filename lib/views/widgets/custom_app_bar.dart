@@ -160,6 +160,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
                   children: [
                     Text(
                       title,
+                      // overflow: TextOver,
                       style: TextStyle(
                           color: Colors.white,
                           fontSize: 28.sp,

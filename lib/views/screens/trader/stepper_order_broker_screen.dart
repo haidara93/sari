@@ -118,7 +118,6 @@ class _StepperOrderBrokerScreenState extends State<StepperOrderBrokerScreen> {
   @override
   void initState() {
     super.initState();
-    BlocProvider.of<AttachmentTypeBloc>(context).add(AttachmentTypeLoadEvent());
     // FocusScope.of(context).unfocus();
   }
 

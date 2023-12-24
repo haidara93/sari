@@ -28,12 +28,16 @@ import 'package:custome_mobile/business_logic/bloc/state_custome_bloc.dart';
 import 'package:custome_mobile/business_logic/bloc/sub_chapter_bloc.dart';
 import 'package:custome_mobile/business_logic/bloc/trader_additional_attachment_bloc.dart';
 import 'package:custome_mobile/business_logic/bloc/trader_log_bloc.dart';
+import 'package:custome_mobile/business_logic/bloc/update_track_offer_bloc.dart';
 import 'package:custome_mobile/business_logic/cubit/bottom_nav_bar_cubit.dart';
 import 'package:custome_mobile/business_logic/cubit/internet_cubit.dart';
 import 'package:custome_mobile/business_logic/cubit/stop_scroll_cubit.dart';
+import 'package:custome_mobile/data/providers/add_attachment_provider.dart';
+import 'package:custome_mobile/data/providers/broker_offer_provider.dart';
 import 'package:custome_mobile/data/providers/calculator_provider.dart';
 import 'package:custome_mobile/data/providers/notification_provider.dart';
 import 'package:custome_mobile/data/providers/order_broker_provider.dart';
+import 'package:custome_mobile/data/providers/trader_offer_provider.dart';
 import 'package:custome_mobile/data/repositories/accurdion_repository.dart';
 import 'package:custome_mobile/data/repositories/auth_repository.dart';
 import 'package:custome_mobile/data/repositories/notification_repository.dart';
@@ -55,12 +59,14 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 import 'views/screens/introduction_screen.dart';
 
 Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
-
   // you need to initialize firebase first
-  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform,);
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
 
   print("Handling a background message: ${message.messageId}");
 }
+
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(
@@ -226,6 +232,12 @@ class MyApp extends StatelessWidget {
                                 context)),
                   ),
                   BlocProvider(
+                    create: (context) => UpdateTrackOfferBloc(
+                        stateAgencyRepository:
+                            RepositoryProvider.of<StateAgencyRepository>(
+                                context)),
+                  ),
+                  BlocProvider(
                     create: (context) => AttachmentsListBloc(),
                   ),
                   BlocProvider(
@@ -263,6 +275,12 @@ class MyApp extends StatelessWidget {
                     ChangeNotifierProvider(create: (_) => CalculatorProvider()),
                     ChangeNotifierProvider(
                         create: (_) => NotificationProvider()),
+                    ChangeNotifierProvider(
+                        create: (_) => AddAttachmentProvider()),
+                    ChangeNotifierProvider(
+                        create: (_) => TraderOfferProvider()),
+                    ChangeNotifierProvider(
+                        create: (_) => BrokerOfferProvider()),
                   ],
                   child: MaterialApp(
                     title: 'التخليص الجمركي',

@@ -38,6 +38,25 @@ class OrderBrokerProvider extends ChangeNotifier {
   List<int> _attachmentsId = [];
   List<int> get attachmentsId => _attachmentsId;
 
+  List<AttachmentType> _attachmentTypes = [];
+  List<AttachmentType> get attachmentTypes => _attachmentTypes;
+
+  initAttachmentType(List<AttachmentType> types) {
+    _attachmentTypes = [];
+    _attachmentTypes = types;
+    notifyListeners();
+  }
+
+  addAttachment(Attachment attachment) {
+    _attachments.add(attachment);
+    notifyListeners();
+  }
+
+  removeAttachment(Attachment attachment) {
+    _attachments.remove(attachment);
+    notifyListeners();
+  }
+
   initProvider() {
     _selectedRadioTile = "";
     _selectedRadioTileError = false;
@@ -54,6 +73,7 @@ class OrderBrokerProvider extends ChangeNotifier {
     _packageError = false;
     _attachments = [];
     _attachmentsId = [];
+    _attachmentTypes = [];
     notifyListeners();
   }
 
@@ -132,11 +152,6 @@ class OrderBrokerProvider extends ChangeNotifier {
 
   setNote(String value) {
     _note = value;
-    notifyListeners();
-  }
-
-  addAttachment(Attachment value) {
-    _attachments.add(value);
     notifyListeners();
   }
 

@@ -140,7 +140,9 @@ class NotificationServices {
       Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (context) => OfferDetailsScreen(),
+            builder: (context) => OfferDetailsScreen(
+              type: "trader",
+            ),
           ));
     } else if (message.data['notefication_type'] == "O") {
       BlocProvider.of<OfferDetailsBloc>(context)
@@ -149,6 +151,16 @@ class NotificationServices {
           context,
           MaterialPageRoute(
             builder: (context) => OrderDetailsScreen(),
+          ));
+    } else if (message.data['notefication_type'] == "T") {
+      BlocProvider.of<OfferDetailsBloc>(context)
+          .add(OfferDetailsLoadEvent(int.parse(message.data['offerId'])));
+      Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => OfferDetailsScreen(
+              type: "trader",
+            ),
           ));
     }
   }

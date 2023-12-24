@@ -16,79 +16,36 @@ class TraderAdditionalAttachmentBloc extends Bloc<
   TraderAdditionalAttachmentBloc({required this.stateAgencyRepository})
       : super(TraderAdditionalAttachmentInitial()) {
     on<AddAdditionalAttachmentEvent>((event, emit) async {
-      if (state is TraderAdditionalAttachmentInitial) {
-        // TraderAdditionalAttachmentInitial currentState =
-        //     state as TraderAdditionalAttachmentInitial;
-        emit(TraderAdditionalAttachmentLoadingProgress());
-        try {
-          var result = await stateAgencyRepository.postAttachment(
-              event.image, event.type);
-          List<Attachment> attachments = [];
-          attachments = [];
-          attachments.add(result!);
-          List<int> newattachments = event.attachments;
-          newattachments.add(result.id!);
+      emit(TraderAdditionalAttachmentLoadingProgress());
+      try {
+        var result = await stateAgencyRepository.postAttachment(
+            event.images, event.files, event.type, event.otherAttachName);
+        List<Attachment> attachments = [];
+        attachments = [];
+        attachments.add(result!);
+        List<int> newattachments = event.attachments;
+        newattachments.add(result.id!);
 
-          List<int> newaddattachments = [];
-          for (var element in event.additionalattachments) {
-            newaddattachments.add(element.id!);
-          }
-          newaddattachments.remove(event.type);
-
-          // ignore: unused_local_variable
-          var offer =
-              await stateAgencyRepository.updateOfferAditionalAttachments(
-                  newattachments, newaddattachments, event.offerId);
-          List<AttachmentType> newAdditional = event.additionalattachments;
-          for (var element in newAdditional) {
-            if (element.id! == event.type) {
-              newAdditional.remove(element);
-              break;
-            }
-          }
-          emit(TraderAdditionalAttachmentLoadedSuccess(
-              result, attachments, newAdditional));
-        } catch (e) {
-          emit(TraderAdditionalAttachmentLoadedFailed(e.toString()));
+        List<int> newaddattachments = [];
+        for (var element in event.additionalattachments) {
+          newaddattachments.add(element.id!);
         }
-      } else {
-        TraderAdditionalAttachmentLoadedSuccess currentState =
-            state as TraderAdditionalAttachmentLoadedSuccess;
-        emit(TraderAdditionalAttachmentLoadingProgress());
-        try {
-          var result = await stateAgencyRepository.postAttachment(
-              event.image, event.type);
-          List<Attachment> attachments = [];
-          // ignore: unnecessary_null_comparison
-          if (currentState != null) {
-            attachments = currentState.attachments;
-          }
+        newaddattachments.remove(event.type);
 
-          attachments.add(result!);
-          List<int> newattachments = event.attachments;
-          newattachments.add(result.id!);
-
-          List<int> newaddattachments = [];
-          for (var element in event.additionalattachments) {
-            newaddattachments.add(element.id!);
+        // ignore: unused_local_variable
+        var offer = await stateAgencyRepository.updateOfferAditionalAttachments(
+            newattachments, newaddattachments, event.offerId);
+        List<AttachmentType> newAdditional = event.additionalattachments;
+        for (var element in newAdditional) {
+          if (element.id! == event.type) {
+            newAdditional.remove(element);
+            break;
           }
-          newaddattachments.remove(event.type);
-
-          var offer =
-              await stateAgencyRepository.updateOfferAditionalAttachments(
-                  newattachments, newaddattachments, event.offerId);
-          List<AttachmentType> newAdditional = event.additionalattachments;
-          for (var element in newAdditional) {
-            if (element.id! == event.type) {
-              newAdditional.remove(element);
-              break;
-            }
-          }
-          emit(TraderAdditionalAttachmentLoadedSuccess(
-              result, attachments, newAdditional));
-        } catch (e) {
-          emit(TraderAdditionalAttachmentLoadedFailed(e.toString()));
         }
+        emit(TraderAdditionalAttachmentLoadedSuccess(
+            result, attachments, newAdditional));
+      } catch (e) {
+        emit(TraderAdditionalAttachmentLoadedFailed(e.toString()));
       }
     });
     on<ClearAdditionalAttachmentEvent>(

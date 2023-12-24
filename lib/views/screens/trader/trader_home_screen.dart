@@ -136,7 +136,6 @@ class _TraderHomeScreenState extends State<TraderHomeScreen>
               .add(const TraderLogLoadEvent("R"));
           setState(() {
             title = "السجل";
-
             currentScreen = const LogScreen();
           });
           break;

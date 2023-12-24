@@ -9,8 +9,11 @@ class AttachmentEvent extends Equatable {
 
 class AddAttachmentEvent extends AttachmentEvent {
   final int type;
-  final File image;
-  // final File file;
+  final String other_attachment_name;
+  final List<File> images;
+  final List<File> files;
 
-  const AddAttachmentEvent(this.type, this.image);
+  AddAttachmentEvent(
+      this.type, this.other_attachment_name, this.images, this.files);
+  // final File file;
 }

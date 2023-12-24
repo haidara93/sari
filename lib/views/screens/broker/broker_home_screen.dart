@@ -6,7 +6,9 @@ import 'package:custome_mobile/business_logic/bloc/package_type_bloc.dart';
 import 'package:custome_mobile/business_logic/bloc/post_bloc.dart';
 import 'package:custome_mobile/business_logic/bloc/section_bloc.dart';
 import 'package:custome_mobile/business_logic/bloc/state_custome_bloc.dart';
+import 'package:custome_mobile/business_logic/bloc/trader_log_bloc.dart';
 import 'package:custome_mobile/helpers/color_constants.dart';
+import 'package:custome_mobile/views/screens/broker/log_screens/broker_log_screen.dart';
 import 'package:custome_mobile/views/screens/trader/custome_tariff_screen.dart';
 import 'package:custome_mobile/views/screens/trader/log_screens/log_screen.dart';
 import 'package:custome_mobile/views/screens/broker/trader_orders_screen.dart';
@@ -96,10 +98,11 @@ class _BrokerHomeScreenState extends State<BrokerHomeScreen>
         }
       case 4:
         {
+          BlocProvider.of<TraderLogBloc>(context)
+              .add(const TraderLogLoadEvent("R"));
           setState(() {
             title = "السجل";
-
-            currentScreen = const LogScreen();
+            currentScreen = const BrokerLogScreen();
           });
           break;
         }

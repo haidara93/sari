@@ -26,6 +26,7 @@ class Offer {
   DateTime? createdDate;
   List<Costs>? costs;
   List<AttachmentType>? additional_attachments;
+  TrackOffer? track_offer;
 
   Offer({
     this.id,
@@ -51,6 +52,7 @@ class Offer {
     this.createdDate,
     this.costs,
     this.additional_attachments,
+    this.track_offer,
   });
 
   Offer.fromJson(Map<String, dynamic> json) {
@@ -67,6 +69,9 @@ class Offer {
         : null;
     product =
         json['product'] != null ? Product.fromJson(json['product']) : null;
+    track_offer = json['track_offer'] != null
+        ? TrackOffer.fromJson(json['track_offer'])
+        : null;
     origin = json['origin'] != null ? Origin.fromJson(json['origin']) : null;
     packageType = json['package_type'];
     packagesNum = json['packages_num'];
@@ -350,6 +355,55 @@ class OfferResult {
     }
     data['notes'] = notes;
     data['created_date'] = createdDate;
+    return data;
+  }
+}
+
+class TrackOffer {
+  int? id;
+  bool? attachmentRecivment;
+  bool? unloadDistenation;
+  bool? deliveryPermit;
+  bool? customeDeclration;
+  bool? previewGoods;
+  bool? payFeesTaxes;
+  bool? issuingExitPermit;
+  bool? loadDistenation;
+
+  TrackOffer(
+      {this.id,
+      this.attachmentRecivment,
+      this.unloadDistenation,
+      this.deliveryPermit,
+      this.customeDeclration,
+      this.previewGoods,
+      this.payFeesTaxes,
+      this.issuingExitPermit,
+      this.loadDistenation});
+
+  TrackOffer.fromJson(Map<String, dynamic> json) {
+    id = json['id'];
+    attachmentRecivment = json['attachment_recivment'];
+    unloadDistenation = json['unload_distenation'];
+    deliveryPermit = json['delivery_permit'];
+    customeDeclration = json['custome_declration'];
+    previewGoods = json['preview_goods'];
+    payFeesTaxes = json['pay_fees_taxes'];
+    issuingExitPermit = json['Issuing_exit_permit'];
+    loadDistenation = json['load_distenation'];
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['id'] = this.id;
+    data['attachment_recivment'] = this.attachmentRecivment;
+    data['unload_distenation'] = this.unloadDistenation;
+    data['delivery_permit'] = this.deliveryPermit;
+    data['custome_declration'] = this.customeDeclration;
+    data['preview_goods'] = this.previewGoods;
+    data['pay_fees_taxes'] = this.payFeesTaxes;
+    data['Issuing_exit_permit'] = this.issuingExitPermit;
+    data['load_distenation'] = this.loadDistenation;
     return data;
   }
 }

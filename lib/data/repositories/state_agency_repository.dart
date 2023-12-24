@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 
@@ -86,7 +87,16 @@ class StateAgencyRepository {
     return attachmentTypes;
   }
 
-  Future<Attachment?> postAttachment(File image, int attachmentTypeId) async {
+  static HttpClient getHttpClient() {
+    HttpClient httpClient = new HttpClient()
+      ..connectionTimeout = const Duration(seconds: 30);
+    // ..badCertificateCallback = ((X509Certificate cert, String host, int port) => trustSelfSigned);
+
+    return httpClient;
+  }
+
+  Future<Attachment?> postAttachment(List<File> images, List<File> files,
+      int attachmentTypeId, String otherName) async {
     var prefs = await SharedPreferences.getInstance();
     var token = prefs.getString("token");
     var jwt = token!.split(".");
@@ -99,35 +109,75 @@ class StateAgencyRepository {
       HttpHeaders.authorizationHeader: "JWT $token",
       HttpHeaders.contentTypeHeader: "multipart/form-data"
     });
-    // for (var img in _imageFileList!) {
-    //   var result = await FlutterImageCompress.compressAndGetFile(
-    //     img.path,
-    //     img.path + "temp.jpg",
-    //     quality: 85,
-    //   );
-    //   var multipartFile = await http.MultipartFile.fromPath(
-    //     'real_estate_images[]',
-    //     result!.path,
-    //     filename: img.path.split('/').last,
-    //   );
-    //   newList.add(multipartFile);
-    // }
-    var multipartFile = await http.MultipartFile.fromPath(
-      'image',
-      image.path,
-      filename: image.path.split('/').last,
-    );
-    request.files.add(multipartFile);
+
+    int byteCount = 0;
+
+    final uploadImages = <http.MultipartFile>[];
+    for (final imageFiles in images) {
+      uploadImages.add(
+        await http.MultipartFile.fromPath(
+          'images',
+          imageFiles.path,
+          filename: imageFiles.path.split('/').last,
+        ),
+      );
+    }
+    for (var element in uploadImages) {
+      request.files.add(element);
+    }
+    final uploadFiles = <http.MultipartFile>[];
+    for (final file in files) {
+      uploadFiles.add(
+        await http.MultipartFile.fromPath(
+          'files',
+          file.path,
+          filename: file.path.split('/').last,
+        ),
+      );
+    }
+    for (var element in uploadFiles) {
+      request.files.add(element);
+    }
 
     request.fields['attachment_type'] = attachmentTypeId.toString();
     request.fields['user'] = payload["user_id"].toString();
+    request.fields['other_attachment_name'] = otherName;
     var response = await request.send();
+
     if (response.statusCode == 201) {
       final respStr = await response.stream.bytesToString();
+      print(respStr);
       var res = jsonDecode(respStr);
       return Attachment.fromJson(res);
     } else {
       final respStr = await response.stream.bytesToString();
+      return null;
+    }
+  }
+
+  Future<TrackOffer?> updateTracking(TrackOffer value, String message) async {
+    var prefs = await SharedPreferences.getInstance();
+    var jwt = prefs.getString("token");
+    var response = await HttpHelper.patch(
+      "${TRACKING_OFFER_ENDPOINT + value.id!.toString()}/",
+      {
+        "attachment_recivment": value.attachmentRecivment!,
+        "unload_distenation": value.unloadDistenation!,
+        "delivery_permit": value.deliveryPermit!,
+        "custome_declration": value.customeDeclration!,
+        "preview_goods": value.previewGoods!,
+        "pay_fees_taxes": value.payFeesTaxes!,
+        "Issuing_exit_permit": value.issuingExitPermit!,
+        "load_distenation": value.loadDistenation!,
+        "message": message
+      },
+      apiToken: jwt,
+    );
+    var myDataString = utf8.decode(response.bodyBytes);
+    var json = jsonDecode(myDataString);
+    if (response.statusCode == 200) {
+      return TrackOffer.fromJson(json);
+    } else {
       return null;
     }
   }
@@ -144,11 +194,8 @@ class StateAgencyRepository {
       HttpHeaders.authorizationHeader: 'JWT $jwt'
     });
     var myDataString = utf8.decode(response.bodyBytes);
-    print(myDataString);
     var json = jsonDecode(myDataString);
     var result = CalculatorResult.fromJson(json);
-    print(
-        '${result.customsFee}\n${result.finalTaxes}\n${result.finalTotal}\n${result.reconstructionFee}\n${result.finalFee}');
     return result;
   }
 
@@ -284,10 +331,11 @@ class StateAgencyRepository {
     var prefs = await SharedPreferences.getInstance();
     var jwt = prefs.getString("token");
     var response = await HttpHelper.patch(
-      "$OFFERS_ENDPOINT$offerId/",
+      "$OFFERS_ENDPOINT$offerId/add_additional_attachments/",
       {"attachments": attachments, "aditional_attachments": additional},
       apiToken: jwt,
     );
+    print(response.statusCode);
     if (response.statusCode == 200) {
       return true;
     } else {

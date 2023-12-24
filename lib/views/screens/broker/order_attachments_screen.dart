@@ -137,25 +137,25 @@ class _OrderAttachmentScreenState extends State<OrderAttachmentScreen> {
             const SizedBox(
               height: 7,
             ),
-            Image.network(
-              element.image!,
-              fit: BoxFit.cover,
-              height: 75.h,
-              width: 75.w,
-              loadingBuilder: (context, child, loadingProgress) {
-                if (loadingProgress == null) {
-                  return child;
-                }
-                return Center(
-                  child: CircularProgressIndicator(
-                    value: loadingProgress.expectedTotalBytes != null
-                        ? loadingProgress.cumulativeBytesLoaded /
-                            loadingProgress.expectedTotalBytes!
-                        : null,
-                  ),
-                );
-              },
-            ),
+            // Image.network(
+            //   element.image!,
+            //   fit: BoxFit.cover,
+            //   height: 75.h,
+            //   width: 75.w,
+            //   loadingBuilder: (context, child, loadingProgress) {
+            //     if (loadingProgress == null) {
+            //       return child;
+            //     }
+            //     return Center(
+            //       child: CircularProgressIndicator(
+            //         value: loadingProgress.expectedTotalBytes != null
+            //             ? loadingProgress.cumulativeBytesLoaded /
+            //                 loadingProgress.expectedTotalBytes!
+            //             : null,
+            //       ),
+            //     );
+            //   },
+            // ),
             const SizedBox(
               height: 3,
             ),

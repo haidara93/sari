@@ -9,15 +9,23 @@ class TraderAdditionalAttachmentEvent extends Equatable {
 
 class AddAdditionalAttachmentEvent extends TraderAdditionalAttachmentEvent {
   final int type;
-  final File image;
+  final List<File> images;
+  final List<File> files;
   final int offerId;
   final String offerState;
+  final String otherAttachName;
   final List<int> attachments;
   final List<AttachmentType> additionalattachments;
-  // final File file;
 
-  const AddAdditionalAttachmentEvent(this.type, this.image, this.offerId,
-      this.offerState, this.attachments, this.additionalattachments);
+  AddAdditionalAttachmentEvent(
+      this.type,
+      this.images,
+      this.files,
+      this.offerId,
+      this.offerState,
+      this.otherAttachName,
+      this.attachments,
+      this.additionalattachments);
 }
 
 class ClearAdditionalAttachmentEvent extends TraderAdditionalAttachmentEvent {}
