@@ -234,7 +234,7 @@ class Origin {
 
   Origin.fromJson(Map<String, dynamic> json) {
     id = json['id'];
-    label = json['label'];
+    label = json['label_ar'];
     imageURL = json['ImageURL'];
     countriesCode = json['countries_code'];
     countryGroups = json['countryGroups'].cast<int>();
