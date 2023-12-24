@@ -98,7 +98,7 @@ class _LogScreenState extends State<LogScreen>
     if (track.loadDistenation!) {
       percentage++;
     }
-    return (percentage / 8) * 100;
+    return (percentage / 8);
   }
 
   @override
@@ -321,70 +321,73 @@ class _LogScreenState extends State<LogScreen>
                                                 //     'نوع البضاعة: ${state.offers[index].product!.label!}'),
                                               ],
                                             ),
-                                            SizedBox(
-                                              height: 80.h,
-                                              child: GestureDetector(
-                                                onTap: () {
-                                                  Navigator.push(
-                                                      context,
-                                                      MaterialPageRoute(
-                                                        builder: (context) =>
-                                                            OrderTrackingScreen(
-                                                                type: "trader",
-                                                                offer: state
-                                                                        .offers[
-                                                                    index]),
-                                                      ));
-                                                },
-                                                child: Padding(
-                                                  padding: const EdgeInsets
-                                                      .symmetric(
-                                                      vertical: 6.0,
-                                                      horizontal: 3.0),
-                                                  child: Column(
-                                                    mainAxisSize:
-                                                        MainAxisSize.min,
-                                                    mainAxisAlignment:
-                                                        MainAxisAlignment
-                                                            .center,
-                                                    children: [
-                                                      Text(
-                                                        "تتبع العملية   ",
-                                                        style: TextStyle(
-                                                          color: AppColor
-                                                              .lightBlue,
-                                                          fontWeight:
-                                                              FontWeight.bold,
-                                                          fontSize: 17.sp,
-                                                        ),
-                                                      )
-                                                    ],
-                                                  ),
-                                                ),
-                                              ),
-                                            ),
                                           ],
                                         ),
                                         dense: false,
                                       ),
-                                      Padding(
-                                        padding: EdgeInsets.all(10.0),
-                                        child: LinearPercentIndicator(
-                                          width: MediaQuery.of(context)
-                                                  .size
-                                                  .width -
-                                              50,
-                                          animation: true,
-                                          lineHeight: 20.0,
-                                          animationDuration: 2000,
-                                          percent: showPercentage(
-                                              state.offers[index].track_offer!),
-                                          center: Text(
-                                              "${showPercentage(state.offers[index].track_offer!).toString()}%"),
-                                          linearStrokeCap:
-                                              LinearStrokeCap.roundAll,
-                                          progressColor: AppColor.deepYellow,
-                                        ),
+                                      Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.end,
+                                        children: [
+                                          GestureDetector(
+                                            onTap: () {
+                                              BlocProvider.of<OfferDetailsBloc>(
+                                                      context)
+                                                  .add(OfferDetailsLoadEvent(
+                                                      state.offers[index].id!));
+                                              Navigator.push(
+                                                  context,
+                                                  MaterialPageRoute(
+                                                    builder: (context) =>
+                                                        OrderTrackingScreen(
+                                                            type: "trader",
+                                                            offer: state
+                                                                .offers[index]),
+                                                  ));
+                                            },
+                                            child: Padding(
+                                              padding:
+                                                  const EdgeInsets.symmetric(
+                                                      horizontal: 3.0),
+                                              child: Column(
+                                                mainAxisSize: MainAxisSize.min,
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment.end,
+                                                children: [
+                                                  Text(
+                                                    "تتبع العملية   ",
+                                                    style: TextStyle(
+                                                      color: AppColor.lightBlue,
+                                                      fontWeight:
+                                                          FontWeight.bold,
+                                                      fontSize: 17.sp,
+                                                    ),
+                                                  )
+                                                ],
+                                              ),
+                                            ),
+                                          ),
+                                          Padding(
+                                            padding: EdgeInsets.all(3.0),
+                                            child: LinearPercentIndicator(
+                                              // width: MediaQuery.of(context)
+                                              //         .size
+                                              //         .width -
+                                              //     50,
+                                              animation: true,
+                                              lineHeight: 20.0,
+                                              animationDuration: 2000,
+                                              percent: showPercentage(state
+                                                  .offers[index].track_offer!),
+                                              center: Text(
+                                                  "${(showPercentage(state.offers[index].track_offer!) * 100).toString()}%"),
+                                              linearStrokeCap:
+                                                  LinearStrokeCap.roundAll,
+                                              progressColor:
+                                                  AppColor.deepYellow,
+                                            ),
+                                          ),
+                                        ],
                                       ),
                                     ],
                                   ),
