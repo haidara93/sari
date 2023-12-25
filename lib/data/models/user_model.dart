@@ -17,10 +17,10 @@ class UserProfile {
   UserProfile.fromJson(Map<String, dynamic> json) {
     id = json['id'];
     username = json['username'];
-    firstName = json['first_name'];
-    lastName = json['last_name'];
-    image = json['image'];
-    trader = json['trader'];
+    firstName = json['first_name'] ?? "";
+    lastName = json['last_name'] ?? "";
+    image = json['image'] ?? "";
+    trader = json['trader'] ?? 0;
   }
 
   Map<String, dynamic> toJson() {
