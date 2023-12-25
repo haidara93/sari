@@ -361,28 +361,28 @@ class _TraderSigninScreenState extends State<TraderSigninScreen> {
                                         ScaffoldMessenger.of(context)
                                             .showSnackBar(snackBar);
                                       }
-                                      if (state is AuthFailureState) {
-                                        var snackBar = SnackBar(
-                                          elevation: 0,
-                                          duration: const Duration(seconds: 3),
-                                          backgroundColor: Colors.transparent,
-                                          content: Column(
-                                            children: [
-                                              AwesomeSnackbarContent(
-                                                title: 'خطأ',
-                                                message: state.errorMessage,
-                                                contentType:
-                                                    ContentType.failure,
-                                              ),
-                                              SizedBox(
-                                                height: 30.h,
-                                              ),
-                                            ],
-                                          ),
-                                        );
-                                        ScaffoldMessenger.of(context)
-                                            .showSnackBar(snackBar);
-                                      }
+                                      // if (state is AuthFailureState) {
+                                      //   var snackBar = SnackBar(
+                                      //     elevation: 0,
+                                      //     duration: const Duration(seconds: 3),
+                                      //     backgroundColor: Colors.transparent,
+                                      //     content: Column(
+                                      //       children: [
+                                      //         AwesomeSnackbarContent(
+                                      //           title: 'خطأ',
+                                      //           message: state.errorMessage,
+                                      //           contentType:
+                                      //               ContentType.failure,
+                                      //         ),
+                                      //         SizedBox(
+                                      //           height: 30.h,
+                                      //         ),
+                                      //       ],
+                                      //     ),
+                                      //   );
+                                      //   ScaffoldMessenger.of(context)
+                                      //       .showSnackBar(snackBar);
+                                      // }
                                     },
                                     builder: (context, state) {
                                       if (state is AuthLoggingInProgressState) {

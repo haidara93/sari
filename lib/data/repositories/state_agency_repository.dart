@@ -222,9 +222,10 @@ class StateAgencyRepository {
     var jwt = token!.split(".");
     var payload =
         json.decode(ascii.decode(base64.decode(base64.normalize(jwt[1]))));
+    var trader = prefs.getInt("trader");
     var response = await HttpHelper.post(OFFERS_ENDPOINT, apiToken: token, {
       "offer_type": offerType,
-      "trader": payload["user_id"].toInt(),
+      "trader": trader,
       "costumeagency": costumeagency,
       "costumestate": costumestate,
       "product": product,
@@ -242,25 +243,6 @@ class StateAgencyRepository {
       "notes": notes
     });
 
-    // print(jsonEncode({
-    //   "offer_type": offerType,
-    //   "trader": payload["user_id"].toInt(),
-    //   "costumeagency": costumeagency,
-    //   "costumestate": costumestate,
-    //   "product": product,
-    //   "origin": origin,
-    //   "package_type": packageType,
-    //   "packages_num": packagesNum,
-    //   "tabaleh_num": tabalehNum,
-    //   "raw_material": rawMaterial,
-    //   "industrial": industrial,
-    //   "weight": weight,
-    //   "price": price,
-    //   "taxes": taxes,
-    //   "expected_arrival_date": expectedArrivalDate,
-    //   "attachments": attachments,
-    //   "notes": notes
-    // }));
     var jsonObject = jsonDecode(response.body);
     if (response.statusCode == 201) {
       return Offer.fromJson(jsonObject);

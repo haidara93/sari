@@ -522,8 +522,8 @@ class _TraderAttachementScreenState extends State<TraderAttachementScreen> {
                 //     .add(AddAttachmentToListEvent(state.attachment));
               }
               if (state is AttachmentLoadedFailed) {
+                print(state.errortext);
                 Navigator.pop(context);
-
                 var snackBar = SnackBar(
                   elevation: 0,
                   duration: const Duration(seconds: 4),
@@ -1696,7 +1696,7 @@ class _TraderAttachementScreenState extends State<TraderAttachementScreen> {
                                             }
                                             if (offerstate
                                                 is OfferLoadedFailed) {
-                                              // print(offerstate.errortext);
+                                              print(offerstate.errortext);
                                               var snackBar = SnackBar(
                                                 elevation: 0,
                                                 duration:

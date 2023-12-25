@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:custome_mobile/data/models/user_model.dart';
 import 'package:custome_mobile/helpers/http_helper.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 // import 'package:firebase_messaging/firebase_messaging.dart';
@@ -31,7 +32,7 @@ class AuthRepository {
       // }
 
       // firebaseToken = await messaging.getToken();
-      print(firebaseToken);
+      // print(firebaseToken);
       Response response = await HttpHelper.post(LOGIN_ENDPOINT, {
         "username": username,
         "password": password,
@@ -46,6 +47,20 @@ class AuthRepository {
         data["details"] = jsonObject["detail"];
       } else {
         presisteToken(jsonObject);
+        print(jsonObject["access"]);
+        Response userresponse = await HttpHelper.get(PROFILE_ENDPOINT,
+            apiToken: jsonObject["access"]);
+        if (userresponse.statusCode == 200) {
+          var prefs = await SharedPreferences.getInstance();
+          var trader = prefs.getString("userType") ?? "";
+          if (trader.isNotEmpty) {
+            var myDataString = utf8.decode(userresponse.bodyBytes);
+            print(myDataString);
+            var result = jsonDecode(myDataString);
+            var userProfile = UserProfile.fromJson(result);
+            prefs.setInt("trader", userProfile.trader!);
+          }
+        }
         data["token"] = jsonObject["access"];
       }
       return data;
@@ -96,6 +111,8 @@ class AuthRepository {
   Future<void> deleteToken() async {
     var prefs = await SharedPreferences.getInstance();
     prefs.remove("token");
+    prefs.remove("refresh");
+    prefs.remove("userType");
     // prefs.clear();
   }
 }
