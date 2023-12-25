@@ -408,7 +408,15 @@ class _TraderSigninScreenState extends State<TraderSigninScreen> {
                                               color: Colors.white,
                                               onTap: () {
                                                 _formKey.currentState?.save();
-
+                                                ScaffoldMessenger.of(context)
+                                                    .showSnackBar(SnackBar(
+                                                  content: Text(_formKey
+                                                      .currentState!
+                                                      .validate()
+                                                      .toString()),
+                                                  duration:
+                                                      Duration(seconds: 2),
+                                                ));
                                                 if (_formKey.currentState!
                                                     .validate()) {
                                                   _login();
