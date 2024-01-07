@@ -32,7 +32,7 @@ class ListItems extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Center(
-                      child: Text("لايوجد ملاحظات"),
+                      child: Text("no notes"),
                     ),
                   ],
                 ),

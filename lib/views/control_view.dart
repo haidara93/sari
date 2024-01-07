@@ -1,4 +1,4 @@
-import 'package:custome_mobile/business_logic/bloc/attachment_type_bloc.dart';
+import 'package:custome_mobile/business_logic/bloc/attachment/attachment_type_bloc.dart';
 import 'package:custome_mobile/business_logic/bloc/auth_bloc.dart';
 import 'package:custome_mobile/business_logic/bloc/notification_bloc.dart';
 import 'package:custome_mobile/business_logic/cubit/bottom_nav_bar_cubit.dart';

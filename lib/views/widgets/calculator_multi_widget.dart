@@ -30,7 +30,7 @@ import 'package:keyboard_actions/keyboard_actions.dart';
 import 'package:provider/provider.dart';
 
 // ignore: must_be_immutable
-class CalculatorWidget extends StatefulWidget {
+class CalculatorMultiWidget extends StatefulWidget {
   GlobalKey<FormState> calformkey;
 
   TextEditingController? typeAheadController;
@@ -43,7 +43,7 @@ class CalculatorWidget extends StatefulWidget {
   bool? tariffButton;
   final Function()? unfocus;
 
-  CalculatorWidget({
+  CalculatorMultiWidget({
     Key? key,
     required this.calformkey,
     required this.typeAheadController,
@@ -55,16 +55,24 @@ class CalculatorWidget extends StatefulWidget {
   }) : super(key: key);
 
   @override
-  State<CalculatorWidget> createState() => _CalculatorWidgetState();
+  State<CalculatorMultiWidget> createState() => _CalculatorMultiWidgetState();
 }
 
-class _CalculatorWidgetState extends State<CalculatorWidget> {
+class _CalculatorMultiWidgetState extends State<CalculatorMultiWidget> {
   var f = NumberFormat("#,###", "en_US");
 
   CalculateObject result = CalculateObject();
   final FocusNode _statenode = FocusNode();
   late final KeyboardVisibilityController _keyboardVisibilityController;
   late StreamSubscription<bool> keyboardSubscription;
+
+  List<CalculateObject> objetcs = [];
+  List<Widget> _children = [];
+
+  List<TextEditingController> controllers = [];
+  List<TextEditingController> labelsControllers = [];
+  //the controllers list
+  int _count = 0;
 
   final FocusNode _nodeWeight = FocusNode();
   final FocusNode _nodeValue = FocusNode();
@@ -86,58 +94,6 @@ class _CalculatorWidgetState extends State<CalculatorWidget> {
   void dispose() {
     keyboardSubscription.cancel();
     super.dispose();
-  }
-
-  KeyboardActionsConfig _buildConfig(BuildContext context) {
-    return KeyboardActionsConfig(
-      keyboardActionsPlatform: KeyboardActionsPlatform.ALL,
-      keyboardBarColor: Colors.grey[200],
-      nextFocus: true,
-      actions: [
-        KeyboardActionsItem(
-          focusNode: _nodeWeight,
-          toolbarButtons: [
-            //button 2
-            (node) {
-              return GestureDetector(
-                onTap: () {
-                  node.unfocus();
-                  BlocProvider.of<BottomNavBarCubit>(context).emitShow();
-                },
-                child: Container(
-                  padding: const EdgeInsets.all(8.0),
-                  child: const Text(
-                    "DONE",
-                    style: TextStyle(color: Colors.blue),
-                  ),
-                ),
-              );
-            }
-          ],
-        ),
-        KeyboardActionsItem(
-          focusNode: _nodeValue,
-          toolbarButtons: [
-            //button 2
-            (node) {
-              return GestureDetector(
-                onTap: () {
-                  node.unfocus();
-                  BlocProvider.of<BottomNavBarCubit>(context).emitShow();
-                },
-                child: Container(
-                  padding: const EdgeInsets.all(8.0),
-                  child: const Text(
-                    "DONE",
-                    style: TextStyle(color: Colors.blue),
-                  ),
-                ),
-              );
-            }
-          ],
-        ),
-      ],
-    );
   }
 
   @override

@@ -1,3 +1,4 @@
+import 'package:custome_mobile/Localization/app_localizations.dart';
 import 'package:custome_mobile/helpers/color_constants.dart';
 import 'package:custome_mobile/views/control_view.dart';
 import 'package:custome_mobile/views/widgets/custom_botton.dart';
@@ -43,7 +44,7 @@ class TraderConfirmScreen extends StatelessWidget {
                 height: 30.h,
               ),
               Text(
-                "شكراً لانضمامك معنا..",
+                AppLocalizations.of(context)!.translate('thanks_for_joining'),
                 style: TextStyle(
                     fontSize: 26.sp,
                     fontWeight: FontWeight.bold,
@@ -56,7 +57,7 @@ class TraderConfirmScreen extends StatelessWidget {
                 padding: EdgeInsets.symmetric(horizontal: 62.w),
                 child: CustomButton(
                   title: Text(
-                    "الرئيسية",
+                    AppLocalizations.of(context)!.translate('home'),
                     style: TextStyle(
                       color: AppColor.deepBlue,
                       fontSize: 19.sp,

@@ -24,7 +24,7 @@ class NotificationRepository {
         notifications.add(NotificationModel.fromJson(element));
       }
     }
-    return notifications;
+    return notifications.reversed.toList();
   }
 
   Future<bool> readNotification(int id) async {

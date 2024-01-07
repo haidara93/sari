@@ -66,6 +66,7 @@ flutter:
   assets:
     - assets/images/
     - assets/icons/
+    - lang/
   #
   # fonts:
   #   - family: Schyler

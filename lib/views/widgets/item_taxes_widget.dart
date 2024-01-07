@@ -1,3 +1,4 @@
+import 'package:custome_mobile/Localization/app_localizations.dart';
 import 'package:custome_mobile/helpers/color_constants.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -50,23 +51,9 @@ class ItemTaxesWidget extends StatelessWidget {
     return Container(
       width: double.infinity,
       decoration: BoxDecoration(
-        border: Border(
-          top: BorderSide(
-            color: AppColor.deepYellow,
-            width: 2,
-          ),
-          right: BorderSide(
-            color: AppColor.deepYellow,
-            width: 2,
-          ),
-          left: BorderSide(
-            color: AppColor.deepYellow,
-            width: 2,
-          ),
-          bottom: BorderSide(
-            color: AppColor.deepYellow,
-            width: 2,
-          ),
+        border: Border.all(
+          color: AppColor.deepYellow,
+          width: 2,
         ),
         borderRadius: const BorderRadius.vertical(
             bottom: Radius.circular(12), top: Radius.circular(12)),
@@ -79,90 +66,182 @@ class ItemTaxesWidget extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const Text(
-              "ضرائب الرسوم",
-              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
+            Text(
+              AppLocalizations.of(context)!.translate('customs_fees_taxes'),
+              style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
             ),
             const SizedBox(
               height: 7,
             ),
+            Divider(
+              height: 4,
+              color: Colors.grey[300]!,
+            ),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                const Text(
-                  "الرسم الجمركي",
-                  maxLines: 3,
+                SizedBox(
+                  child: Text(
+                    AppLocalizations.of(context)!.translate('customs_fees'),
+                    maxLines: 3,
+                  ),
                 ),
+                // SizedBox(
+                //   height: 25.h,
+                //   child: VerticalDivider(
+                //     color: Colors.grey[300],
+                //   ),
+                // ),
                 Text(f.format(customsFee!.toInt())),
               ],
             ),
+            Divider(
+              height: 4,
+              color: Colors.grey[300]!,
+            ),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                const Text(
-                  "الانفاق الاستهلاكي",
+                Text(
+                  AppLocalizations.of(context)!.translate('consumption_fee'),
                   maxLines: 3,
                 ),
+                // SizedBox(
+                //   height: 25.h,
+                //   child: VerticalDivider(
+                //     color: Colors.grey[300],
+                //   ),
+                // ),
                 Text(f.format(spendingFee!.toInt())),
               ],
             ),
+            Divider(
+              height: 4,
+              color: Colors.grey[300]!,
+            ),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                const Text(
-                  "محلية عمران",
+                Text(
+                  AppLocalizations.of(context)!.translate('local_construction'),
                   maxLines: 3,
                 ),
+                // SizedBox(
+                //   height: 25.h,
+                //   child: VerticalDivider(
+                //     color: Colors.grey[300],
+                //   ),
+                // ),
                 Text(f.format(imranLocality!.toInt())),
               ],
             ),
+            Divider(
+              height: 4,
+              color: Colors.grey[300]!,
+            ),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                const Text(
-                  "محلية محافظة",
+                Text(
+                  AppLocalizations.of(context)!.translate('local_governorate'),
                   maxLines: 3,
                 ),
+                // SizedBox(
+                //   height: 25.h,
+                //   child: VerticalDivider(
+                //     color: Colors.grey[300],
+                //   ),
+                // ),
                 Text(f.format(conservativeLocality!.toInt())),
               ],
             ),
+            Divider(
+              height: 4,
+              color: Colors.grey[300]!,
+            ),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                const Text(
-                  "دعم وتنمية الانتاج المحلي",
-                  maxLines: 3,
+                SizedBox(
+                  width: MediaQuery.of(context).size.width * .7,
+                  child: Text(
+                    AppLocalizations.of(context)!.translate(
+                        'support_and_development_of_local_production'),
+                    maxLines: 3,
+                  ),
                 ),
+                // SizedBox(
+                //   height: 25.h,
+                //   child: VerticalDivider(
+                //     color: Colors.grey[300],
+                //   ),
+                // ),
                 Text(f.format(feeSupportingLocalProduction!.toInt())),
               ],
             ),
+            Divider(
+              height: 4,
+              color: Colors.grey[300]!,
+            ),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                const Text(
-                  "اعادة تأهيل وحماية المدن والمنشأة :",
-                  maxLines: 3,
+                SizedBox(
+                  width: MediaQuery.of(context).size.width * .7,
+                  child: Text(
+                    AppLocalizations.of(context)!.translate(
+                        'rehabilitation_and_protection_of_cities_and_facilities'),
+                    maxLines: 3,
+                  ),
                 ),
+                // SizedBox(
+                //   height: 25.h,
+                //   child: VerticalDivider(
+                //     color: Colors.grey[300],
+                //   ),
+                // ),
                 Text(f.format(citiesProtectionFee!.toInt())),
               ],
             ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                const Text(
-                  "صندوق الجفاف و الكوارث الطبيعية: ",
-                  maxLines: 3,
-                ),
-                Text(f.format(naturalDisasterFee!.toInt())),
-              ],
+            Divider(
+              height: 4,
+              color: Colors.grey[300]!,
             ),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                const Text(
-                  "السلفة على ضريبة الدخل:",
+                Text(
+                  AppLocalizations.of(context)!
+                      .translate('drought_and_natural_disaster_fund'),
                   maxLines: 3,
                 ),
+                // SizedBox(
+                //   height: 25.h,
+                //   child: VerticalDivider(
+                //     color: Colors.grey[300],
+                //   ),
+                // ),
+                Text(f.format(naturalDisasterFee!.toInt())),
+              ],
+            ),
+            Divider(
+              height: 4,
+              color: Colors.grey[300]!,
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  AppLocalizations.of(context)!
+                      .translate('advance_on_income_tax'),
+                  maxLines: 3,
+                ),
+                // SizedBox(
+                //   height: 25.h,
+                //   child: VerticalDivider(
+                //     color: Colors.grey[300],
+                //   ),
+                // ),
                 Text(f.format(incomeTaxFee!.toInt())),
               ],
             ),
@@ -173,10 +252,10 @@ class ItemTaxesWidget extends StatelessWidget {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                const Text(
-                  "مجموع الرسوم:",
+                Text(
+                  AppLocalizations.of(context)!.translate('total_fees'),
                   maxLines: 3,
-                  style: TextStyle(fontWeight: FontWeight.bold),
+                  style: const TextStyle(fontWeight: FontWeight.bold),
                 ),
                 Text(
                   f.format(finalFee!.toInt()),
@@ -191,80 +270,159 @@ class ItemTaxesWidget extends StatelessWidget {
               color: Colors.grey[350],
               thickness: 2,
             ),
-            const Text(
-              "ضرائب الأقلام",
+            Text(
+              AppLocalizations.of(context)!.translate('records_taxes'),
               style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
             ),
             const SizedBox(
               height: 7,
             ),
+            Divider(
+              height: 4,
+              color: Colors.grey[300]!,
+            ),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                const Text(
-                  "طوابع وضرائب مضافة",
+                Text(
+                  AppLocalizations.of(context)!
+                      .translate('stamps_and_value-added_taxes'),
                   maxLines: 3,
                 ),
+                // SizedBox(
+                //   height: 25.h,
+                //   child: VerticalDivider(
+                //     color: Colors.grey[300],
+                //   ),
+                // ),
                 Text(f.format(addedTaxes.toInt())),
               ],
             ),
+            Divider(
+              height: 4,
+              color: Colors.grey[300]!,
+            ),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                const Text(
-                  "شهادة جمركية",
+                Text(
+                  AppLocalizations.of(context)!
+                      .translate('customs_certificate'),
                   maxLines: 3,
                 ),
+                // SizedBox(
+                //   height: 25.h,
+                //   child: VerticalDivider(
+                //     color: Colors.grey[300],
+                //   ),
+                // ),
                 Text(f.format(customsCertificate.toInt())),
               ],
             ),
+            Divider(
+              height: 4,
+              color: Colors.grey[300]!,
+            ),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                const Text(
-                  "رسم تأمين إلزامي",
+                Text(
+                  AppLocalizations.of(context)!
+                      .translate('mandatory_insurance_fee'),
                   maxLines: 3,
                 ),
+                // SizedBox(
+                //   height: 25.h,
+                //   child: VerticalDivider(
+                //     color: Colors.grey[300],
+                //   ),
+                // ),
                 Text(f.format(billTax.toInt())),
               ],
             ),
+            Divider(
+              height: 4,
+              color: Colors.grey[300]!,
+            ),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                const Text(
-                  "رسم طابع",
+                Text(
+                  AppLocalizations.of(context)!.translate('stamp_fee'),
                   maxLines: 3,
                 ),
+                // SizedBox(
+                //   height: 25.h,
+                //   child: VerticalDivider(
+                //     color: Colors.grey[300],
+                //   ),
+                // ),
                 Text(f.format(stampFee.toInt())),
               ],
             ),
+            Divider(
+              height: 4,
+              color: Colors.grey[300]!,
+            ),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                const Text(
-                  "ضريبة محلية محافظة",
+                Text(
+                  AppLocalizations.of(context)!
+                      .translate('Local_governorate_tax'),
                   maxLines: 3,
                 ),
+                // SizedBox(
+                //   height: 25.h,
+                //   child: VerticalDivider(
+                //     color: Colors.grey[300],
+                //   ),
+                // ),
                 Text(f.format(provincialLocalTax.toInt())),
               ],
             ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                const Text(
-                  "السلفة على ضريبة الدخل",
-                  maxLines: 3,
-                ),
-                Text(f.format(advanceIncomeTax.toInt())),
-              ],
+            Divider(
+              height: 4,
+              color: Colors.grey[300]!,
             ),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                const Text(
-                  "رسم المساهمة الوطنية لإعادة الإعمار:",
+                Text(
+                  AppLocalizations.of(context)!
+                      .translate('advance_on_income_tax'),
                   maxLines: 3,
                 ),
+                // SizedBox(
+                //   height: 25.h,
+                //   child: VerticalDivider(
+                //     color: Colors.grey[300],
+                //   ),
+                // ),
+                Text(f.format(advanceIncomeTax.toInt())),
+              ],
+            ),
+            Divider(
+              height: 4,
+              color: Colors.grey[300]!,
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                SizedBox(
+                  width: MediaQuery.of(context).size.width * .7,
+                  child: Text(
+                    AppLocalizations.of(context)!.translate(
+                        'national_contribution_fee_for_reconstruction'),
+                    maxLines: 3,
+                  ),
+                ),
+                // SizedBox(
+                //   height: 25.h,
+                //   child: VerticalDivider(
+                //     color: Colors.grey[300],
+                //   ),
+                // ),
                 Text(f.format(reconstructionFee.toInt())),
               ],
             ),
@@ -275,8 +433,8 @@ class ItemTaxesWidget extends StatelessWidget {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                const Text(
-                  "مجموع الضرائب:",
+                Text(
+                  AppLocalizations.of(context)!.translate('total_taxes'),
                   maxLines: 3,
                   style: TextStyle(fontWeight: FontWeight.bold),
                 ),
@@ -296,8 +454,8 @@ class ItemTaxesWidget extends StatelessWidget {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                const Text(
-                  "إجمالي الرسوم:",
+                Text(
+                  AppLocalizations.of(context)!.translate('total_fees'),
                   style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
                 ),
                 Text(

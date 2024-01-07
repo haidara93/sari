@@ -1,18 +1,21 @@
 import 'dart:io';
 import 'package:connectivity_plus/connectivity_plus.dart';
-import 'package:custome_mobile/business_logic/bloc/additional_attachment_bloc.dart';
-import 'package:custome_mobile/business_logic/bloc/attachment_bloc.dart';
-import 'package:custome_mobile/business_logic/bloc/attachment_type_bloc.dart';
-import 'package:custome_mobile/business_logic/bloc/attachments_list_bloc.dart';
+import 'package:custome_mobile/Localization/app_localizations_setup.dart';
+import 'package:custome_mobile/business_logic/bloc/attachment/additional_attachment_bloc.dart';
+import 'package:custome_mobile/business_logic/bloc/attachment/attachment_bloc.dart';
+import 'package:custome_mobile/business_logic/bloc/attachment/attachment_type_bloc.dart';
+import 'package:custome_mobile/business_logic/bloc/attachment/attachments_list_bloc.dart';
 import 'package:custome_mobile/business_logic/bloc/auth_bloc.dart';
-import 'package:custome_mobile/business_logic/bloc/calculate_result_bloc.dart';
-import 'package:custome_mobile/business_logic/bloc/calculator_panel_bloc.dart';
+import 'package:custome_mobile/business_logic/bloc/calculate_result/calculate_multi_result_dart_bloc.dart';
+import 'package:custome_mobile/business_logic/bloc/calculate_result/calculate_result_bloc.dart';
+import 'package:custome_mobile/business_logic/bloc/calculate_result/calculator_panel_bloc.dart';
 import 'package:custome_mobile/business_logic/bloc/chapter_bloc.dart';
 import 'package:custome_mobile/business_logic/bloc/cost_bloc.dart';
-import 'package:custome_mobile/business_logic/bloc/fee_bloc.dart';
-import 'package:custome_mobile/business_logic/bloc/fee_item_bloc.dart';
-import 'package:custome_mobile/business_logic/bloc/fee_select_bloc.dart';
-import 'package:custome_mobile/business_logic/bloc/fee_trade_description_bloc.dart';
+import 'package:custome_mobile/business_logic/bloc/fee/fee_add_loading_bloc.dart';
+import 'package:custome_mobile/business_logic/bloc/fee/fee_bloc.dart';
+import 'package:custome_mobile/business_logic/bloc/fee/fee_item_bloc.dart';
+import 'package:custome_mobile/business_logic/bloc/fee/fee_select_bloc.dart';
+import 'package:custome_mobile/business_logic/bloc/fee/fee_trade_description_bloc.dart';
 import 'package:custome_mobile/business_logic/bloc/flags_bloc.dart';
 import 'package:custome_mobile/business_logic/bloc/group_bloc.dart';
 import 'package:custome_mobile/business_logic/bloc/note_bloc.dart';
@@ -31,10 +34,12 @@ import 'package:custome_mobile/business_logic/bloc/trader_log_bloc.dart';
 import 'package:custome_mobile/business_logic/bloc/update_track_offer_bloc.dart';
 import 'package:custome_mobile/business_logic/cubit/bottom_nav_bar_cubit.dart';
 import 'package:custome_mobile/business_logic/cubit/internet_cubit.dart';
+import 'package:custome_mobile/business_logic/cubit/locale_cubit.dart';
 import 'package:custome_mobile/business_logic/cubit/stop_scroll_cubit.dart';
 import 'package:custome_mobile/data/providers/add_attachment_provider.dart';
 import 'package:custome_mobile/data/providers/broker_offer_provider.dart';
 import 'package:custome_mobile/data/providers/calculator_provider.dart';
+import 'package:custome_mobile/data/providers/fee_add_provider.dart';
 import 'package:custome_mobile/data/providers/notification_provider.dart';
 import 'package:custome_mobile/data/providers/order_broker_provider.dart';
 import 'package:custome_mobile/data/providers/trader_offer_provider.dart';
@@ -55,7 +60,6 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:flutter_localizations/flutter_localizations.dart';
 import 'views/screens/introduction_screen.dart';
 
 Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
@@ -247,6 +251,12 @@ class MyApp extends StatelessWidget {
                                 context)),
                   ),
                   BlocProvider(
+                    create: (context) => CalculateMultiResultBloc(
+                        stateAgencyRepository:
+                            RepositoryProvider.of<StateAgencyRepository>(
+                                context)),
+                  ),
+                  BlocProvider(
                     create: (context) => FlagsBloc(),
                   ),
                   BlocProvider(
@@ -254,9 +264,11 @@ class MyApp extends StatelessWidget {
                           InternetCubit(connectivity: connectivity)),
                   BlocProvider(create: (context) => BottomNavBarCubit()),
                   BlocProvider(create: (context) => StopScrollCubit()),
+                  BlocProvider(create: (context) => LocaleCubit()),
                   BlocProvider(create: (context) => CalculatorPanelBloc()),
                   BlocProvider(create: (context) => FeeItemBloc()),
                   BlocProvider(create: (context) => FeeSelectBloc()),
+                  BlocProvider(create: (context) => FeeAddLoadingBloc()),
                   BlocProvider(
                       create: (context) => NotificationBloc(
                           notificationRepository:
@@ -281,105 +293,105 @@ class MyApp extends StatelessWidget {
                         create: (_) => TraderOfferProvider()),
                     ChangeNotifierProvider(
                         create: (_) => BrokerOfferProvider()),
+                    ChangeNotifierProvider(create: (_) => FeeAddProvider()),
                   ],
-                  child: MaterialApp(
-                    title: 'التخليص الجمركي',
-                    debugShowCheckedModeBanner: false,
-                    localizationsDelegates: const [
-                      GlobalMaterialLocalizations.delegate,
-                      GlobalWidgetsLocalizations.delegate,
-                      GlobalCupertinoLocalizations.delegate,
-                    ],
-                    supportedLocales: const [
-                      Locale('en', 'US'), //code
-                      Locale('ar', 'SY'), // arabic, no country code
-                    ],
-                    locale: const Locale("ar", "SY"),
-                    scrollBehavior: ScrollConfiguration.of(context).copyWith(
-                      physics: const ClampingScrollPhysics(
-                        parent: AlwaysScrollableScrollPhysics(),
-                      ),
-                    ),
-                    theme: ThemeData(
-                      useMaterial3: true,
-                      colorScheme: ColorScheme.fromSwatch().copyWith(
-                        primary: AppColor.deepBlue,
-                        // secondary: Colors.white,
-                        primaryContainer: Colors.white,
-                      ),
-                      cardTheme: const CardTheme(
-                        surfaceTintColor: Colors.white,
-                        clipBehavior: Clip.antiAlias,
-                      ),
-                      inputDecorationTheme: InputDecorationTheme(
-                        labelStyle:
-                            TextStyle(fontSize: 18, color: Colors.grey[600]!),
-                        suffixStyle: const TextStyle(
-                          fontSize: 20,
-                        ),
-                        floatingLabelStyle: const TextStyle(
-                          fontSize: 20,
-                        ),
-                        contentPadding: const EdgeInsets.symmetric(
-                            vertical: 11.0, horizontal: 9.0),
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(12),
-                        ),
-                        enabledBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(12),
-                          borderSide: const BorderSide(
-                            color: Colors.black26,
+                  child: BlocBuilder<LocaleCubit, LocaleState>(
+                    buildWhen: (previous, current) => previous != current,
+                    builder: (context, localeState) {
+                      return MaterialApp(
+                        title: 'SARI',
+                        debugShowCheckedModeBanner: false,
+                        localizationsDelegates:
+                            AppLocalizationsSetup.localizationsDelegates,
+                        supportedLocales:
+                            AppLocalizationsSetup.supportedLocales,
+                        // localeResolutionCallback: AppLocalizationsSetup.,
+                        locale: localeState.value,
+                        scrollBehavior:
+                            ScrollConfiguration.of(context).copyWith(
+                          physics: const ClampingScrollPhysics(
+                            parent: AlwaysScrollableScrollPhysics(),
                           ),
                         ),
-                        focusedBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(12),
-                          borderSide: BorderSide(
-                            color: AppColor.deepBlue,
+                        theme: ThemeData(
+                          useMaterial3: true,
+                          colorScheme: ColorScheme.fromSwatch().copyWith(
+                            primary: AppColor.deepBlue,
+                            // secondary: Colors.white,
+                            primaryContainer: Colors.white,
                           ),
-                        ),
-                        errorBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(12),
-                          borderSide: const BorderSide(
-                            color: Colors.red,
+                          cardTheme: const CardTheme(
+                            surfaceTintColor: Colors.white,
+                            clipBehavior: Clip.antiAlias,
                           ),
-                        ),
-                        focusedErrorBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(12),
-                          borderSide: const BorderSide(
-                            color: Colors.red,
+                          inputDecorationTheme: InputDecorationTheme(
+                            labelStyle: TextStyle(
+                                fontSize: 18, color: Colors.grey[600]!),
+                            suffixStyle: const TextStyle(
+                              fontSize: 20,
+                            ),
+                            floatingLabelStyle: const TextStyle(
+                              fontSize: 20,
+                            ),
+                            contentPadding: const EdgeInsets.symmetric(
+                                vertical: 11.0, horizontal: 9.0),
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(12),
+                            ),
+                            enabledBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(12),
+                              borderSide: const BorderSide(
+                                color: Colors.black26,
+                              ),
+                            ),
+                            focusedBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(12),
+                              borderSide: BorderSide(
+                                color: AppColor.deepBlue,
+                              ),
+                            ),
+                            errorBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(12),
+                              borderSide: const BorderSide(
+                                color: Colors.red,
+                              ),
+                            ),
+                            focusedErrorBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(12),
+                              borderSide: const BorderSide(
+                                color: Colors.red,
+                              ),
+                            ),
+                            disabledBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(12),
+                              borderSide: const BorderSide(
+                                color: Colors.grey,
+                              ),
+                            ),
                           ),
-                        ),
-                        disabledBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(12),
-                          borderSide: const BorderSide(
-                            color: Colors.grey,
+                          textTheme: GoogleFonts.notoNaskhArabicTextTheme(
+                            Theme.of(context).textTheme,
                           ),
+                          dividerColor: Colors.grey[400],
+                          scaffoldBackgroundColor: Colors.white,
                         ),
-                      ),
-                      textTheme: GoogleFonts.notoNaskhArabicTextTheme(
-                        Theme.of(context).textTheme,
-                      ),
-                      dividerColor: Colors.grey[400],
-                      scaffoldBackgroundColor: Colors.white,
-                    ),
-                    home: Directionality(
-                      textDirection: TextDirection.rtl,
-                      child: EasySplashScreen(
-                          logoWidth: 120,
-                          logo: Image.asset('assets/images/sari_white.png'),
-                          backgroundColor: Colors.white,
-                          showLoader: false,
-                          loaderColor: const Color.fromRGBO(255, 152, 0, 1),
-                          durationInSeconds: 5,
-                          navigator: showHome
-                              ? const ControlView()
-                              : const IntroductionView()),
-                    ),
-                    builder: (context, child) {
-                      return MediaQuery(
-                        data: MediaQuery.of(context)
-                            .copyWith(textScaleFactor: 1.0),
-                        child: child!,
+                        home: EasySplashScreen(
+                            logoWidth: 120,
+                            logo: Image.asset('assets/images/sari_white.png'),
+                            backgroundColor: Colors.white,
+                            showLoader: false,
+                            loaderColor: const Color.fromRGBO(255, 152, 0, 1),
+                            durationInSeconds: 5,
+                            navigator: showHome
+                                ? const ControlView()
+                                : const IntroductionView()),
+                        builder: (context, child) {
+                          return MediaQuery(
+                            data: MediaQuery.of(context)
+                                .copyWith(textScaleFactor: 1.0),
+                            child: child!,
+                          );
+                        },
                       );
                     },
                   ),

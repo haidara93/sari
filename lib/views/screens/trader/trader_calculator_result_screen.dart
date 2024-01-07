@@ -1,10 +1,9 @@
-import 'package:custome_mobile/business_logic/bloc/calculate_result_bloc.dart';
-import 'package:custome_mobile/helpers/color_constants.dart';
+import 'package:custome_mobile/Localization/app_localizations.dart';
+import 'package:custome_mobile/business_logic/bloc/calculate_result/calculate_multi_result_dart_bloc.dart';
 import 'package:custome_mobile/views/widgets/calculator_loading_screen.dart';
 import 'package:custome_mobile/views/widgets/custom_app_bar.dart';
 import 'package:custome_mobile/views/widgets/custom_botton.dart';
 import 'package:custome_mobile/views/widgets/item_taxes_widget.dart';
-import 'package:custome_mobile/views/widgets/pens_taxes_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -20,7 +19,7 @@ class TraderCalculatorResultScreen extends StatelessWidget {
       child: Scaffold(
         backgroundColor: Colors.grey[200],
         appBar: CustomAppBar(
-          title: "الضرائب والرسوم",
+          title: AppLocalizations.of(context)!.translate('fees_taxes'),
         ),
         body: SingleChildScrollView(
           child: Column(
@@ -30,30 +29,38 @@ class TraderCalculatorResultScreen extends StatelessWidget {
               ),
               Padding(
                 padding: EdgeInsets.symmetric(horizontal: 10.w),
-                child: BlocBuilder<CalculateResultBloc, CalculateResultState>(
+                child: BlocBuilder<CalculateMultiResultBloc,
+                    CalculateMultiResultState>(
                   builder: (context, state) {
-                    if (state is CalculateResultSuccessed) {
+                    if (state is CalculateMultiResultSuccessed) {
                       return ItemTaxesWidget(
-                        customsFee: state.result.customsFee!,
-                        spendingFee: state.result.spendingFee!,
-                        conservativeLocality:
-                            state.result.conservativeLocality!,
-                        citiesProtectionFee: state.result.citiesProtectionFee!,
-                        feeSupportingLocalProduction:
-                            state.result.feeSupportingLocalProduction!,
-                        imranLocality: state.result.imranLocality!,
-                        incomeTaxFee: state.result.incomeTaxFee!,
-                        naturalDisasterFee: state.result.naturalDisasterFee!,
-                        finalFee: state.result.finalFee!,
-                        addedTaxes: state.result.addedTaxes!,
-                        customsCertificate: state.result.customsCertificate!,
-                        billTax: state.result.billTax!,
-                        stampFee: state.result.stampFee!,
-                        provincialLocalTax: state.result.provincialLocalTax!,
-                        advanceIncomeTax: state.result.advanceIncomeTax!,
-                        reconstructionFee: state.result.reconstructionFee!,
-                        finalTaxes: state.result.finalTaxes!,
-                        finalTotal: state.result.finalTotal!,
+                        customsFee: double.parse(state.result.totalCustomsFee!),
+                        spendingFee:
+                            double.parse(state.result.totalSpendingFee!),
+                        conservativeLocality: double.parse(
+                            state.result.totalConservativeLocality!),
+                        citiesProtectionFee: double.parse(
+                            state.result.totalCitiesProtectionFee!),
+                        feeSupportingLocalProduction: double.parse(
+                            state.result.totalFeeSupportingLocalProduction!),
+                        imranLocality: double.parse("0.0"),
+                        incomeTaxFee:
+                            double.parse(state.result.totalIncomeTaxFee!),
+                        naturalDisasterFee:
+                            double.parse(state.result.totalNaturalDisasterFee!),
+                        finalFee: double.parse(state.result.totalFinalFee!),
+                        addedTaxes: double.parse(state.result.totalAddedTaxes!),
+                        customsCertificate: double.parse("0.0"),
+                        billTax: double.parse("0.0"),
+                        stampFee: double.parse(state.result.totalStampFee!),
+                        provincialLocalTax:
+                            double.parse(state.result.totalProvincialLocalTax!),
+                        advanceIncomeTax:
+                            double.parse(state.result.totalAdvanceIncomeTax!),
+                        reconstructionFee:
+                            double.parse(state.result.totalReconstructionFee!),
+                        finalTaxes: double.parse(state.result.totalFinalTaxes!),
+                        finalTotal: double.parse(state.result.totalFinalTotal!),
                       );
                     } else {
                       return const CalculatorLoadingScreen();
@@ -160,8 +167,7 @@ class TraderCalculatorResultScreen extends StatelessWidget {
               SizedBox(
                 height: 30.h,
               ),
-              const Text(
-                  "هذه الرسوم تقديرية ولا تتضمن مصاريف التخليص الجمركي ورسوم الخدمات"),
+              Text(AppLocalizations.of(context)!.translate('calculater_hint')),
               SizedBox(
                 height: 15.h,
               ),
@@ -172,8 +178,11 @@ class TraderCalculatorResultScreen extends StatelessWidget {
                     onTap: () {
                       Navigator.pop(context);
                     },
-                    title: const SizedBox(
-                        width: 100, child: Center(child: Text("رجوع"))),
+                    title: SizedBox(
+                        width: 100,
+                        child: Center(
+                            child: Text(AppLocalizations.of(context)!
+                                .translate('back')))),
                   ),
                   // CustomButton(
                   //   onTap: () {

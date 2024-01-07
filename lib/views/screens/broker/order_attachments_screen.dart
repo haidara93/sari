@@ -2,9 +2,9 @@
 
 import 'package:awesome_snackbar_content/awesome_snackbar_content.dart';
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:custome_mobile/business_logic/bloc/additional_attachment_bloc.dart';
-import 'package:custome_mobile/business_logic/bloc/attachment_bloc.dart';
-import 'package:custome_mobile/business_logic/bloc/attachment_type_bloc.dart';
+import 'package:custome_mobile/business_logic/bloc/attachment/additional_attachment_bloc.dart';
+import 'package:custome_mobile/business_logic/bloc/attachment/attachment_bloc.dart';
+import 'package:custome_mobile/business_logic/bloc/attachment/attachment_type_bloc.dart';
 import 'package:custome_mobile/data/models/attachments_models.dart';
 import 'package:custome_mobile/data/models/offer_model.dart';
 import 'package:custome_mobile/helpers/color_constants.dart';

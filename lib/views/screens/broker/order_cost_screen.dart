@@ -20,9 +20,8 @@ class OrderCostScreen extends StatefulWidget {
 
 class _OrderCostScreenState extends State<OrderCostScreen> {
   final TextEditingController _noteController = TextEditingController();
-  List<Widget> _children = [];
-  // List<Widget> _labels = [];
   List<Cost> costs = [];
+  List<Widget> _children = [];
 
   List<TextEditingController> controllers = [];
   List<TextEditingController> labelsControllers = [];
@@ -42,39 +41,41 @@ class _OrderCostScreenState extends State<OrderCostScreen> {
         .add(labelcontroller); //adding the current controller to the list
 
     _children = List.from(_children)
-      ..add(Padding(
-        padding: const EdgeInsets.symmetric(vertical: 4.0),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceAround,
-          children: [
-            SizedBox(width: 150.w, child: const Text("مصروف البيان")),
-            SizedBox(
-              width: 230.w,
-              child: TextFormField(
-                controller: controller,
-                validator: (value) {
-                  if (value!.isEmpty) {
-                    return TextConstants.emailErrorText;
-                  }
-                  return null;
-                },
-                onTap: () {
-                  controller.selection = TextSelection(
-                      baseOffset: 0,
-                      extentOffset: controller.value.text.length);
-                },
-                keyboardType: TextInputType.number,
-                decoration: InputDecoration(
-                  label: const Text("  أدخل قيمة الرسم"),
-                  border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(12)),
-                  contentPadding: EdgeInsets.zero,
+      ..add(
+        Padding(
+          padding: const EdgeInsets.symmetric(vertical: 4.0),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            children: [
+              SizedBox(width: 150.w, child: const Text("مصروف البيان")),
+              SizedBox(
+                width: 230.w,
+                child: TextFormField(
+                  controller: controller,
+                  validator: (value) {
+                    if (value!.isEmpty) {
+                      return TextConstants.emailErrorText;
+                    }
+                    return null;
+                  },
+                  onTap: () {
+                    controller.selection = TextSelection(
+                        baseOffset: 0,
+                        extentOffset: controller.value.text.length);
+                  },
+                  keyboardType: TextInputType.number,
+                  decoration: InputDecoration(
+                    label: const Text("  أدخل قيمة الرسم"),
+                    border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(12)),
+                    contentPadding: EdgeInsets.zero,
+                  ),
                 ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
-      ));
+      );
 
     setState(() => ++_count);
     super.initState();
@@ -89,61 +90,63 @@ class _OrderCostScreenState extends State<OrderCostScreen> {
         .add(labelcontroller); //adding the current controller to the list
 
     _children = List.from(_children)
-      ..add(Padding(
-        padding: const EdgeInsets.symmetric(vertical: 4.0),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceAround,
-          children: [
-            SizedBox(
-              width: 150.w,
-              child: TextFormField(
-                controller: labelcontroller,
-                validator: (value) {
-                  if (value!.isEmpty) {
-                    return TextConstants.emailErrorText;
-                  }
-                  return null;
-                },
-                onTap: () {
-                  labelcontroller.selection = TextSelection(
-                      baseOffset: 0,
-                      extentOffset: labelcontroller.value.text.length);
-                },
-                decoration: InputDecoration(
-                  label: const Text("أدخل وصف الرسم"),
-                  border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(12)),
-                  contentPadding: EdgeInsets.zero,
+      ..add(
+        Padding(
+          padding: const EdgeInsets.symmetric(vertical: 4.0),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            children: [
+              SizedBox(
+                width: 150.w,
+                child: TextFormField(
+                  controller: labelcontroller,
+                  validator: (value) {
+                    if (value!.isEmpty) {
+                      return TextConstants.emailErrorText;
+                    }
+                    return null;
+                  },
+                  onTap: () {
+                    labelcontroller.selection = TextSelection(
+                        baseOffset: 0,
+                        extentOffset: labelcontroller.value.text.length);
+                  },
+                  decoration: InputDecoration(
+                    label: const Text("أدخل وصف الرسم"),
+                    border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(12)),
+                    contentPadding: EdgeInsets.zero,
+                  ),
                 ),
               ),
-            ),
-            SizedBox(
-              width: 230.w,
-              child: TextFormField(
-                controller: controller,
-                validator: (value) {
-                  if (value!.isEmpty) {
-                    return TextConstants.emailErrorText;
-                  }
-                  return null;
-                },
-                onTap: () {
-                  controller.selection = TextSelection(
-                      baseOffset: 0,
-                      extentOffset: controller.value.text.length);
-                },
-                keyboardType: TextInputType.number,
-                decoration: InputDecoration(
-                  label: const Text("أدخل قيمة الرسم"),
-                  border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(12)),
-                  contentPadding: EdgeInsets.zero,
+              SizedBox(
+                width: 230.w,
+                child: TextFormField(
+                  controller: controller,
+                  validator: (value) {
+                    if (value!.isEmpty) {
+                      return TextConstants.emailErrorText;
+                    }
+                    return null;
+                  },
+                  onTap: () {
+                    controller.selection = TextSelection(
+                        baseOffset: 0,
+                        extentOffset: controller.value.text.length);
+                  },
+                  keyboardType: TextInputType.number,
+                  decoration: InputDecoration(
+                    label: const Text("أدخل قيمة الرسم"),
+                    border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(12)),
+                    contentPadding: EdgeInsets.zero,
+                  ),
                 ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
-      ));
+      );
     setState(() => ++_count);
   }
 

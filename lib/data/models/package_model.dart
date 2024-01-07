@@ -345,12 +345,112 @@ class CalculatorResult {
   }
 }
 
+class CalculateMultiResult {
+  String? totalCustomsFee;
+  String? totalConservativeLocality;
+  String? totalFeeSupportingLocalProduction;
+  String? totalCitiesProtectionFee;
+  String? totalNaturalDisasterFee;
+  String? totalImportLicenseFee;
+  String? totalIncomeTaxFee;
+  String? totalSpendingFee;
+  String? totalCategoryPrice;
+  String? totalConsulateFee;
+  String? totalConsulateTax;
+  String? totalFinalFee;
+  String? totalAddedTaxes;
+  String? totalInsuranceFee;
+  String? totalStampFee;
+  String? totalGrantingImportLicense;
+  String? totalProvincialLocalTax;
+  String? totalAdvanceIncomeTax;
+  String? totalReconstructionFee;
+  String? totalFinalTaxes;
+  String? totalFinalTotal;
+
+  CalculateMultiResult(
+      {this.totalCustomsFee,
+      this.totalConservativeLocality,
+      this.totalFeeSupportingLocalProduction,
+      this.totalCitiesProtectionFee,
+      this.totalNaturalDisasterFee,
+      this.totalImportLicenseFee,
+      this.totalIncomeTaxFee,
+      this.totalSpendingFee,
+      this.totalCategoryPrice,
+      this.totalConsulateFee,
+      this.totalConsulateTax,
+      this.totalFinalFee,
+      this.totalAddedTaxes,
+      this.totalInsuranceFee,
+      this.totalStampFee,
+      this.totalGrantingImportLicense,
+      this.totalProvincialLocalTax,
+      this.totalAdvanceIncomeTax,
+      this.totalReconstructionFee,
+      this.totalFinalTaxes,
+      this.totalFinalTotal});
+
+  CalculateMultiResult.fromJson(Map<String, dynamic> json) {
+    totalCustomsFee = json['total_customs_fee'];
+    totalConservativeLocality = json['total_conservative_locality'];
+    totalFeeSupportingLocalProduction =
+        json['total_fee_supporting_local_production'];
+    totalCitiesProtectionFee = json['total_cities_protection_fee'];
+    totalNaturalDisasterFee = json['total_natural_disaster_fee'];
+    totalImportLicenseFee = json['total_import_license_fee'];
+    totalIncomeTaxFee = json['total_income_tax_fee'];
+    totalSpendingFee = json['total_spending_fee'];
+    totalCategoryPrice = json['total_category_price'];
+    totalConsulateFee = json['total_consulate_fee'];
+    totalConsulateTax = json['total_consulate_tax'];
+    totalFinalFee = json['total_final_fee'];
+    totalAddedTaxes = json['total_added_taxes'];
+    totalInsuranceFee = json['total_insurance_fee'];
+    totalStampFee = json['total_stamp_fee'];
+    totalGrantingImportLicense = json['total_Granting_import_license'];
+    totalProvincialLocalTax = json['total_provincial_local_tax'];
+    totalAdvanceIncomeTax = json['total_advance_income_tax'];
+    totalReconstructionFee = json['total_reconstruction_fee'];
+    totalFinalTaxes = json['total_final_taxes'];
+    totalFinalTotal = json['total_final_total'];
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['total_customs_fee'] = this.totalCustomsFee;
+    data['total_conservative_locality'] = this.totalConservativeLocality;
+    data['total_fee_supporting_local_production'] =
+        this.totalFeeSupportingLocalProduction;
+    data['total_cities_protection_fee'] = this.totalCitiesProtectionFee;
+    data['total_natural_disaster_fee'] = this.totalNaturalDisasterFee;
+    data['total_import_license_fee'] = this.totalImportLicenseFee;
+    data['total_income_tax_fee'] = this.totalIncomeTaxFee;
+    data['total_spending_fee'] = this.totalSpendingFee;
+    data['total_category_price'] = this.totalCategoryPrice;
+    data['total_consulate_fee'] = this.totalConsulateFee;
+    data['total_consulate_tax'] = this.totalConsulateTax;
+    data['total_final_fee'] = this.totalFinalFee;
+    data['total_added_taxes'] = this.totalAddedTaxes;
+    data['total_insurance_fee'] = this.totalInsuranceFee;
+    data['total_stamp_fee'] = this.totalStampFee;
+    data['total_Granting_import_license'] = this.totalGrantingImportLicense;
+    data['total_provincial_local_tax'] = this.totalProvincialLocalTax;
+    data['total_advance_income_tax'] = this.totalAdvanceIncomeTax;
+    data['total_reconstruction_fee'] = this.totalReconstructionFee;
+    data['total_final_taxes'] = this.totalFinalTaxes;
+    data['total_final_total'] = this.totalFinalTotal;
+    return data;
+  }
+}
+
 class CalculateObject {
   int? insurance;
   double? fee;
   int? rawMaterial;
   int? industrial;
   String? origin;
+  String? source;
   double? totalTax;
   double? partialTax;
   double? spendingFee;
@@ -372,6 +472,7 @@ class CalculateObject {
     this.rawMaterial,
     this.industrial,
     this.origin,
+    this.source,
     this.totalTax,
     this.partialTax,
     this.spendingFee,
@@ -394,6 +495,7 @@ class CalculateObject {
     data['rawMaterial'] = rawMaterial;
     data['industrial'] = industrial;
     data['origin'] = origin;
+    data['source'] = source;
     data['totalTax'] = totalTax;
     data['partialTax'] = partialTax;
     data['spendingFee'] = spendingFee;

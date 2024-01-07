@@ -1,10 +1,9 @@
-import 'package:custome_mobile/business_logic/bloc/calculate_result_bloc.dart';
+import 'package:custome_mobile/business_logic/bloc/calculate_result/calculate_result_bloc.dart';
 import 'package:custome_mobile/views/screens/trader/trader_attachement_screen.dart';
 import 'package:custome_mobile/views/widgets/calculator_loading_screen.dart';
 import 'package:custome_mobile/views/widgets/custom_app_bar.dart';
 import 'package:custome_mobile/views/widgets/custom_botton.dart';
 import 'package:custome_mobile/views/widgets/item_taxes_widget.dart';
-import 'package:custome_mobile/views/widgets/pens_taxes_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';

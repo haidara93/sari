@@ -1,8 +1,10 @@
 import 'dart:io';
 
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:custome_mobile/business_logic/bloc/attachment_type_bloc.dart';
+import 'package:custome_mobile/Localization/app_localizations.dart';
+import 'package:custome_mobile/business_logic/bloc/attachment/attachment_type_bloc.dart';
 import 'package:custome_mobile/business_logic/bloc/trader_additional_attachment_bloc.dart';
+import 'package:custome_mobile/business_logic/cubit/locale_cubit.dart';
 import 'package:custome_mobile/data/models/attachments_models.dart';
 import 'package:custome_mobile/data/providers/trader_offer_provider.dart';
 import 'package:custome_mobile/helpers/color_constants.dart';
@@ -65,7 +67,7 @@ class _BrokerAttachmentsScreenState extends State<BrokerAttachmentsScreen> {
         return element.name!;
       }
     }
-    return "مرفق";
+    return "attachment";
   }
 
   List<Widget> _buildAttachmentImages(List<AttachmentImage>? images) {
@@ -328,7 +330,8 @@ class _BrokerAttachmentsScreenState extends State<BrokerAttachmentsScreen> {
                                       horizontal: 10,
                                       vertical: 8,
                                     ),
-                                    labelText: 'أدخل اسم المرفق',
+                                    labelText: AppLocalizations.of(context)!
+                                        .translate('enter_attachment_name'),
                                     border: OutlineInputBorder(
                                       borderRadius: BorderRadius.circular(8),
                                     ),
@@ -376,17 +379,23 @@ class _BrokerAttachmentsScreenState extends State<BrokerAttachmentsScreen> {
                                       MainAxisAlignment.spaceAround,
                                   children: [
                                     CustomButton(
-                                        title: const SizedBox(
+                                        title: SizedBox(
                                           width: 90,
-                                          child: Center(child: Text("إغلاق")),
+                                          child: Center(
+                                              child: Text(
+                                                  AppLocalizations.of(context)!
+                                                      .translate('close'))),
                                         ),
                                         onTap: () {
                                           Navigator.pop(context);
                                         }),
                                     CustomButton(
-                                        title: const SizedBox(
+                                        title: SizedBox(
                                             width: 90,
-                                            child: Center(child: Text("حفظ"))),
+                                            child: Center(
+                                                child: Text(AppLocalizations.of(
+                                                        context)!
+                                                    .translate('save')))),
                                         onTap: () {
                                           attachmentIds = [];
                                           additionalattachmentIds = [];
@@ -447,115 +456,132 @@ class _BrokerAttachmentsScreenState extends State<BrokerAttachmentsScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Directionality(
-      textDirection: TextDirection.rtl,
-      child: SafeArea(
-        child: Scaffold(
-          appBar: CustomAppBar(title: "تفاصيل المرفقات"),
-          backgroundColor: Colors.grey[200],
-          body: SingleChildScrollView(
-            child: Consumer<TraderOfferProvider>(
-                builder: (context, traderofferProvider, child) {
-              return BlocListener<TraderAdditionalAttachmentBloc,
-                  TraderAdditionalAttachmentState>(
-                listener: (context, state) {
-                  if (state is TraderAdditionalAttachmentLoadedSuccess &&
-                      additionalattachmentsucees) {}
-                },
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    SizedBox(
-                      height: 10.h,
+    return BlocBuilder<LocaleCubit, LocaleState>(
+      builder: (context, localeState) {
+        return Directionality(
+          textDirection: localeState.value.languageCode == 'en'
+              ? TextDirection.ltr
+              : TextDirection.rtl,
+          child: SafeArea(
+            child: Scaffold(
+              appBar: CustomAppBar(
+                  title: AppLocalizations.of(context)!
+                      .translate('attachments_details')),
+              backgroundColor: Colors.grey[200],
+              body: SingleChildScrollView(
+                child: Consumer<TraderOfferProvider>(
+                    builder: (context, traderofferProvider, child) {
+                  return BlocListener<TraderAdditionalAttachmentBloc,
+                      TraderAdditionalAttachmentState>(
+                    listener: (context, state) {
+                      if (state is TraderAdditionalAttachmentLoadedSuccess &&
+                          additionalattachmentsucees) {}
+                    },
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        SizedBox(
+                          height: 10.h,
+                        ),
+                        Card(
+                          clipBehavior: Clip.antiAlias,
+                          shape: const RoundedRectangleBorder(
+                              borderRadius: BorderRadius.all(
+                            Radius.circular(15),
+                          )),
+                          margin: EdgeInsets.symmetric(horizontal: 10.w),
+                          elevation: 1,
+                          color: Colors.white,
+                          child: Container(
+                            margin: const EdgeInsets.symmetric(vertical: 7),
+                            width: double.infinity,
+                            padding: const EdgeInsets.all(8.0),
+                            child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    AppLocalizations.of(context)!
+                                        .translate('uploaded_attachments'),
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 18,
+                                    ),
+                                  ),
+                                  const SizedBox(
+                                    height: 5,
+                                  ),
+                                  traderofferProvider.attachments.isEmpty
+                                      ? Center(
+                                          child: Text(AppLocalizations.of(
+                                                  context)!
+                                              .translate(
+                                                  'no_uploaded_attachments')),
+                                        )
+                                      : Wrap(
+                                          children: _buildAttachmentslist(
+                                              traderofferProvider.attachments)),
+                                ]),
+                          ),
+                        ),
+                        SizedBox(
+                          height: 10.h,
+                        ),
+                        Card(
+                          clipBehavior: Clip.antiAlias,
+                          shape: const RoundedRectangleBorder(
+                              borderRadius: BorderRadius.all(
+                            Radius.circular(15),
+                          )),
+                          margin: EdgeInsets.symmetric(horizontal: 10.w),
+                          elevation: 1,
+                          color: Colors.white,
+                          child: Container(
+                            margin: const EdgeInsets.symmetric(vertical: 7),
+                            width: double.infinity,
+                            padding: const EdgeInsets.all(8.0),
+                            child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    AppLocalizations.of(context)!.translate(
+                                        'additional_required_attachments'),
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 18,
+                                    ),
+                                  ),
+                                  const SizedBox(
+                                    height: 5,
+                                  ),
+                                  traderofferProvider
+                                          .additionalAttachments.isEmpty
+                                      ? Center(
+                                          child: Text(AppLocalizations.of(
+                                                  context)!
+                                              .translate(
+                                                  'no_additional_attachments')),
+                                        )
+                                      : Wrap(
+                                          children: _buildAttachmentsTypelist(
+                                              traderofferProvider
+                                                  .additionalAttachments,
+                                              context)),
+                                ]),
+                          ),
+                        ),
+                        SizedBox(
+                          height: 10.h,
+                        ),
+                      ],
                     ),
-                    Card(
-                      clipBehavior: Clip.antiAlias,
-                      shape: const RoundedRectangleBorder(
-                          borderRadius: BorderRadius.all(
-                        Radius.circular(15),
-                      )),
-                      margin: EdgeInsets.symmetric(horizontal: 10.w),
-                      elevation: 1,
-                      color: Colors.white,
-                      child: Container(
-                        margin: const EdgeInsets.symmetric(vertical: 7),
-                        width: double.infinity,
-                        padding: const EdgeInsets.all(8.0),
-                        child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              const Text(
-                                "الأوراق المحملة",
-                                style: TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 18,
-                                ),
-                              ),
-                              const SizedBox(
-                                height: 5,
-                              ),
-                              traderofferProvider.attachments.isEmpty
-                                  ? const Center(
-                                      child: Text("لم يتم تحميل أية مرفقات."),
-                                    )
-                                  : Wrap(
-                                      children: _buildAttachmentslist(
-                                          traderofferProvider.attachments)),
-                            ]),
-                      ),
-                    ),
-                    SizedBox(
-                      height: 10.h,
-                    ),
-                    Card(
-                      clipBehavior: Clip.antiAlias,
-                      shape: const RoundedRectangleBorder(
-                          borderRadius: BorderRadius.all(
-                        Radius.circular(15),
-                      )),
-                      margin: EdgeInsets.symmetric(horizontal: 10.w),
-                      elevation: 1,
-                      color: Colors.white,
-                      child: Container(
-                        margin: const EdgeInsets.symmetric(vertical: 7),
-                        width: double.infinity,
-                        padding: const EdgeInsets.all(8.0),
-                        child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              const Text(
-                                "الأوراق الاضافية المطلوبة",
-                                style: TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 18,
-                                ),
-                              ),
-                              const SizedBox(
-                                height: 5,
-                              ),
-                              traderofferProvider.additionalAttachments.isEmpty
-                                  ? const Center(
-                                      child: Text("لا يوجدأية مرفقات إضافية"),
-                                    )
-                                  : Wrap(
-                                      children: _buildAttachmentsTypelist(
-                                          traderofferProvider
-                                              .additionalAttachments,
-                                          context)),
-                            ]),
-                      ),
-                    ),
-                    SizedBox(
-                      height: 10.h,
-                    ),
-                  ],
-                ),
-              );
-            }),
+                  );
+                }),
+              ),
+            ),
           ),
-        ),
-      ),
+        );
+      },
     );
   }
 }

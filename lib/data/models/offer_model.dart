@@ -369,17 +369,20 @@ class TrackOffer {
   bool? payFeesTaxes;
   bool? issuingExitPermit;
   bool? loadDistenation;
+  String? message;
 
-  TrackOffer(
-      {this.id,
-      this.attachmentRecivment,
-      this.unloadDistenation,
-      this.deliveryPermit,
-      this.customeDeclration,
-      this.previewGoods,
-      this.payFeesTaxes,
-      this.issuingExitPermit,
-      this.loadDistenation});
+  TrackOffer({
+    this.id,
+    this.attachmentRecivment,
+    this.unloadDistenation,
+    this.deliveryPermit,
+    this.customeDeclration,
+    this.previewGoods,
+    this.payFeesTaxes,
+    this.issuingExitPermit,
+    this.loadDistenation,
+    this.message,
+  });
 
   TrackOffer.fromJson(Map<String, dynamic> json) {
     id = json['id'];
@@ -391,6 +394,7 @@ class TrackOffer {
     payFeesTaxes = json['pay_fees_taxes'];
     issuingExitPermit = json['Issuing_exit_permit'];
     loadDistenation = json['load_distenation'];
+    message = json['message'];
   }
 
   Map<String, dynamic> toJson() {

@@ -199,6 +199,54 @@ class StateAgencyRepository {
     return result;
   }
 
+  Future<CalculateMultiResult> getCalculatorMultiResult(
+      List<CalculateObject> cal) async {
+    var prefs = await SharedPreferences.getInstance();
+    var jwt = prefs.getString("token");
+
+    List<Map<String, dynamic>> objects = [];
+
+    for (var element in cal) {
+      var obj = {
+        "insurance": element.insurance,
+        "origin": element.origin,
+        "source": element.origin,
+        "fee": element.fee,
+        "spending_fee": element.spendingFee,
+        "support_fee": element.supportFee,
+        "protection_fee": element.protectionFee,
+        "natural_fee": element.naturalFee,
+        "tax_fee": element.taxFee,
+        "import_fee": element.import_fee,
+        "raw_material": element.rawMaterial,
+        "industrial": element.industrial,
+        "total_tax": element.totalTax,
+        "partial_tax": element.partialTax,
+        "arabic_stamp": element.arabic_stamp,
+        "weight": element.weight,
+        "cnsulate": element.cnsulate,
+        "price": element.price,
+        "dolar": element.dolar
+      };
+      objects.add(obj);
+    }
+
+    var response = await http.post(Uri.parse(CALCULATE_MULTI_ENDPOINT),
+        body: jsonEncode(objects),
+        headers: {
+          HttpHeaders.contentTypeHeader: 'application/json; charset=UTF-8',
+          HttpHeaders.acceptHeader: 'application/json',
+          HttpHeaders.authorizationHeader: 'JWT $jwt'
+        });
+
+    var myDataString = utf8.decode(response.bodyBytes);
+    var json = jsonDecode(myDataString);
+
+    var result = CalculateMultiResult.fromJson(json);
+    print(jsonEncode(result.toJson()));
+    return result;
+  }
+
   Future<Offer?> postOffer(
     String? offerType,
     int? packagesNum,
@@ -256,7 +304,7 @@ class StateAgencyRepository {
     var prefs = await SharedPreferences.getInstance();
     var jwt = prefs.getString("token");
     var response = await HttpHelper.get(
-      OFFERS_ENDPOINT,
+      "$OFFERS_ENDPOINT?order_status=P",
       apiToken: jwt,
     );
     var myDataString = utf8.decode(response.bodyBytes);
@@ -266,7 +314,7 @@ class StateAgencyRepository {
         offers.add(Offer.fromJson(element));
       }
 
-      return offers;
+      return offers.reversed.toList();
     } else {
       return offers;
     }
@@ -287,7 +335,7 @@ class StateAgencyRepository {
         offers.add(Offer.fromJson(element));
       }
 
-      return offers;
+      return offers.reversed.toList();
     } else {
       return offers;
     }

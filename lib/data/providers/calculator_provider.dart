@@ -364,7 +364,7 @@ class CalculatorProvider extends ChangeNotifier {
   void calculateTotalValueWithPrice() {
     var syrianExch = _weight * _basePrice;
     var syrianTotal = syrianExch * 8585;
-    var totalEnsurance = (syrianTotal) + (syrianTotal * 0.0012);
+    var totalEnsurance = (syrianTotal * 0.0012);
     _syrianExchangeValue = syrianExch.round().toString();
     _syrianTotalValue = syrianTotal.round().toString();
     _totalValueWithEnsurance = totalEnsurance.round().toString();
@@ -373,7 +373,7 @@ class CalculatorProvider extends ChangeNotifier {
 
   void calculateTotalValue() {
     var syrianTotal = _weight * 8585;
-    var totalEnsurance = (syrianTotal) + (syrianTotal * 0.0012);
+    var totalEnsurance = (syrianTotal * 0.0012);
     _syrianTotalValue = syrianTotal.round().toString();
     _totalValueWithEnsurance = totalEnsurance.round().toString();
     notifyListeners();

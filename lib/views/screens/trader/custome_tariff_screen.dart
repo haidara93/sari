@@ -1,10 +1,11 @@
 import 'dart:convert';
 
-import 'package:custome_mobile/business_logic/bloc/calculator_panel_bloc.dart';
+import 'package:custome_mobile/Localization/app_localizations.dart';
+import 'package:custome_mobile/business_logic/bloc/calculate_result/calculator_panel_bloc.dart';
 import 'package:custome_mobile/business_logic/bloc/chapter_bloc.dart';
-import 'package:custome_mobile/business_logic/bloc/fee_bloc.dart';
-import 'package:custome_mobile/business_logic/bloc/fee_item_bloc.dart';
-import 'package:custome_mobile/business_logic/bloc/fee_trade_description_bloc.dart';
+import 'package:custome_mobile/business_logic/bloc/fee/fee_bloc.dart';
+import 'package:custome_mobile/business_logic/bloc/fee/fee_item_bloc.dart';
+import 'package:custome_mobile/business_logic/bloc/fee/fee_trade_description_bloc.dart';
 import 'package:custome_mobile/business_logic/bloc/note_bloc.dart';
 import 'package:custome_mobile/business_logic/bloc/section_bloc.dart';
 import 'package:custome_mobile/business_logic/bloc/sub_chapter_bloc.dart';
@@ -44,8 +45,9 @@ class _CustomeTariffScreenState extends State<CustomeTariffScreen> {
       builder: (context, state) {
         if (state is FeeTradeDescriptionLoadedSuccess) {
           return state.tradeDescription.commercialDescriptions!.isEmpty
-              ? const Center(
-                  child: Text("لا يوجد وصف تجاري لهذا البند"),
+              ? Center(
+                  child: Text(AppLocalizations.of(context)!
+                      .translate('no_trade_description')),
                 )
               : Column(
                   children: [
@@ -176,12 +178,13 @@ class _CustomeTariffScreenState extends State<CustomeTariffScreen> {
                 SizedBox(
                   width: 5.w,
                 ),
-                const Text("شروط الاستيراد:"),
+                Text(AppLocalizations.of(context)!
+                    .translate('import_conditions')),
                 const Icon(
                   Icons.check,
                   color: Colors.green,
                 ),
-                const Text("مسموح الاستيراد"),
+                Text(AppLocalizations.of(context)!.translate('import_allowed')),
               ],
             ),
           ],
@@ -221,7 +224,8 @@ class _CustomeTariffScreenState extends State<CustomeTariffScreen> {
                     SizedBox(
                       width: 5.w,
                     ),
-                    const Text("الحجر الزراعي للاستيراد:"),
+                    Text(AppLocalizations.of(context)!
+                        .translate('import_farming_stone')),
                     Text(element.stonImport!),
                   ],
                 ),
@@ -269,8 +273,9 @@ class _CustomeTariffScreenState extends State<CustomeTariffScreen> {
                       color: Colors.white,
                       borderRadius: BorderRadius.circular(10),
                     ),
-                    child: const Text(
-                      "الوصف التجاري",
+                    child: Text(
+                      AppLocalizations.of(context)!
+                          .translate('trade_description'),
                     ),
                   ),
                 ],
@@ -311,8 +316,9 @@ class _CustomeTariffScreenState extends State<CustomeTariffScreen> {
                       color: Colors.white,
                       borderRadius: BorderRadius.circular(10),
                     ),
-                    child: const Text(
-                      "شروط الاستيراد",
+                    child: Text(
+                      AppLocalizations.of(context)!
+                          .translate('import_conditions'),
                     ),
                   ),
                 ],
@@ -336,12 +342,14 @@ class _CustomeTariffScreenState extends State<CustomeTariffScreen> {
                               SizedBox(
                                 width: 5.w,
                               ),
-                              const Text("شروط الاستيراد:"),
+                              Text(AppLocalizations.of(context)!
+                                  .translate('import_conditions')),
                               const Icon(
                                 Icons.close,
                                 color: Colors.red,
                               ),
-                              const Text("ممنوع الاستيراد"),
+                              Text(AppLocalizations.of(context)!
+                                  .translate('import_not_allowed')),
                             ],
                           ),
                         ],
@@ -401,8 +409,11 @@ class _CustomeTariffScreenState extends State<CustomeTariffScreen> {
                         SizedBox(
                           width: 5.w,
                         ),
-                        const Text("شروط التصدير:"),
-                        fe.export! == "مسموح التصدير"
+                        Text(AppLocalizations.of(context)!
+                            .translate('export_conditions')),
+                        fe.export! ==
+                                AppLocalizations.of(context)!
+                                    .translate('export_allowed')
                             ? const Icon(
                                 Icons.check,
                                 color: Colors.green,
@@ -451,8 +462,8 @@ class _CustomeTariffScreenState extends State<CustomeTariffScreen> {
                       color: Colors.white,
                       borderRadius: BorderRadius.circular(10),
                     ),
-                    child: const Text(
-                      "حساب الرسوم",
+                    child: Text(
+                      AppLocalizations.of(context)!.translate('fee_calculate'),
                     ),
                   ),
                 ],
@@ -493,8 +504,8 @@ class _CustomeTariffScreenState extends State<CustomeTariffScreen> {
                       color: Colors.white,
                       borderRadius: BorderRadius.circular(10),
                     ),
-                    child: const Text(
-                      "مشاركة",
+                    child: Text(
+                      AppLocalizations.of(context)!.translate('share'),
                     ),
                   ),
                 ],
@@ -975,7 +986,9 @@ class _CustomeTariffScreenState extends State<CustomeTariffScreen> {
                                       height: 280.h,
                                       arrowHeight: 15,
                                       arrowWidth: 0,
-                                      barrierLabel: "ملاحظات",
+                                      barrierLabel:
+                                          AppLocalizations.of(context)!
+                                              .translate('notes'),
                                       radius: 15,
                                     );
                                   },
@@ -1176,7 +1189,8 @@ class _CustomeTariffScreenState extends State<CustomeTariffScreen> {
                                 height: 280.h,
                                 arrowHeight: 15,
                                 arrowWidth: 0,
-                                barrierLabel: "ملاحظات",
+                                barrierLabel: AppLocalizations.of(context)!
+                                    .translate('notes'),
                                 radius: 15,
                               );
                             },
@@ -1501,8 +1515,10 @@ class _CustomeTariffScreenState extends State<CustomeTariffScreen> {
                               bottom: MediaQuery.of(context).viewInsets.bottom +
                                   50),
                           decoration: InputDecoration(
-                            labelText: "بحث",
-                            hintText: "بحث",
+                            labelText: AppLocalizations.of(context)!
+                                .translate('search'),
+                            hintText: AppLocalizations.of(context)!
+                                .translate('search'),
                             hintStyle: TextStyle(fontSize: 18.sp),
                             suffixIcon: InkWell(
                               onTap: () {
@@ -1553,18 +1569,19 @@ class _CustomeTariffScreenState extends State<CustomeTariffScreen> {
                           builder: (context, state) {
                             if (state is SearchSectionLoadedSuccess) {
                               return state.sections.isEmpty
-                                  ? const Center(
+                                  ? Center(
                                       child: Row(
                                         mainAxisAlignment:
                                             MainAxisAlignment.center,
                                         children: [
                                           Text(
-                                            "لم يتم العثور على نتائج موافقة للبحث...  ",
+                                            AppLocalizations.of(context)!
+                                                .translate('no_result_found'),
                                             maxLines: 2,
-                                            style:
-                                                TextStyle(color: Colors.grey),
+                                            style: const TextStyle(
+                                                color: Colors.grey),
                                           ),
-                                          Icon(
+                                          const Icon(
                                             Icons.warning_rounded,
                                             color: Colors.grey,
                                           )
@@ -1675,7 +1692,11 @@ class _CustomeTariffScreenState extends State<CustomeTariffScreen> {
                                                       height: 280.h,
                                                       arrowHeight: 15,
                                                       arrowWidth: 0,
-                                                      barrierLabel: "ملاحظات",
+                                                      barrierLabel:
+                                                          AppLocalizations.of(
+                                                                  context)!
+                                                              .translate(
+                                                                  'notes'),
                                                       radius: 15,
                                                     );
                                                   },
@@ -1784,14 +1805,16 @@ class _CustomeTariffScreenState extends State<CustomeTariffScreen> {
                                     // BlocProvider.of<SectionBloc>(context)
                                     //     .add(SectionLoadEvent());
                                   },
-                                  child: const Row(
+                                  child: Row(
                                     mainAxisAlignment: MainAxisAlignment.center,
                                     children: [
                                       Text(
-                                        "حدث خطأأثناء تحميل القائمة...  ",
-                                        style: TextStyle(color: Colors.red),
+                                        AppLocalizations.of(context)!
+                                            .translate('list_error'),
+                                        style:
+                                            const TextStyle(color: Colors.red),
                                       ),
-                                      Icon(
+                                      const Icon(
                                         Icons.refresh,
                                         color: Colors.grey,
                                       )
@@ -1903,7 +1926,10 @@ class _CustomeTariffScreenState extends State<CustomeTariffScreen> {
                                                   height: 280.h,
                                                   arrowHeight: 15,
                                                   arrowWidth: 0,
-                                                  barrierLabel: "ملاحظات",
+                                                  barrierLabel:
+                                                      AppLocalizations.of(
+                                                              context)!
+                                                          .translate('notes'),
                                                   radius: 15,
                                                 );
                                                 // BlocProvider.of<NoteBloc>(context)

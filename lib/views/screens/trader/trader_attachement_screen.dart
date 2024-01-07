@@ -1,9 +1,10 @@
 import 'dart:io';
 
 import 'package:awesome_snackbar_content/awesome_snackbar_content.dart';
-import 'package:custome_mobile/business_logic/bloc/attachment_bloc.dart';
-import 'package:custome_mobile/business_logic/bloc/attachment_type_bloc.dart';
-import 'package:custome_mobile/business_logic/bloc/attachments_list_bloc.dart';
+import 'package:custome_mobile/Localization/app_localizations.dart';
+import 'package:custome_mobile/business_logic/bloc/attachment/attachment_bloc.dart';
+import 'package:custome_mobile/business_logic/bloc/attachment/attachment_type_bloc.dart';
+import 'package:custome_mobile/business_logic/bloc/attachment/attachments_list_bloc.dart';
 import 'package:custome_mobile/business_logic/bloc/offer_bloc.dart';
 import 'package:custome_mobile/business_logic/bloc/package_type_bloc.dart';
 import 'package:custome_mobile/business_logic/cubit/bottom_nav_bar_cubit.dart';
@@ -15,7 +16,6 @@ import 'package:custome_mobile/helpers/formatter.dart';
 import 'package:custome_mobile/views/control_view.dart';
 import 'package:custome_mobile/views/widgets/custom_app_bar.dart';
 import 'package:custome_mobile/views/widgets/custom_botton.dart';
-import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/cupertino.dart' as cupertino;
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -113,17 +113,18 @@ class _TraderAttachementScreenState extends State<TraderAttachementScreen> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             TextButton(
-                onPressed: () {
-                  Navigator.pop(context);
-                },
-                child: Text(
-                  "تم",
-                  style: TextStyle(
-                    color: AppColor.lightBlue,
-                    fontSize: 20,
-                    fontWeight: FontWeight.bold,
-                  ),
-                )),
+              onPressed: () {
+                Navigator.pop(context);
+              },
+              child: Text(
+                "تم",
+                style: TextStyle(
+                  color: AppColor.lightBlue,
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ),
             Expanded(
               child: Localizations(
                 locale: const Locale('en', ''),
@@ -158,289 +159,7 @@ class _TraderAttachementScreenState extends State<TraderAttachementScreen> {
         return element.name!;
       }
     }
-    return "مرفق";
-  }
-
-  List<Widget> _buildAttachmentslist(List<Attachment> attachments) {
-    List<Widget> list = [];
-    var firstelem = GestureDetector(
-      onTap: () {
-        showDialog(
-          context: context,
-          builder: (context) =>
-              StatefulBuilder(builder: (context, StateSetter setState) {
-            return Directionality(
-              textDirection: TextDirection.rtl,
-              child: SimpleDialog(
-                backgroundColor: Colors.white,
-                title: const Text('إضافة مرفق'),
-                shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(15)),
-                contentPadding: EdgeInsets.all(8.h),
-                children: [
-                  // _previewImages(),
-                  const SizedBox(
-                    height: 7,
-                  ),
-                  CustomButton(
-                    title: const Text("رفع صورة"),
-                    color: AppColor.deepYellow,
-                    onTap: () async {
-                      var pickedImage =
-                          await _picker.pickImage(source: ImageSource.gallery);
-                      setState(() {
-                        _image = File(pickedImage!.path);
-                      });
-                    },
-                  ),
-                  // const SizedBox(
-                  //   height: 7,
-                  // ),
-                  // CustomButton(
-                  //     title: const Text("رفع ملف"),
-                  //     color: AppColor.deepYellow,
-                  //     onTap: () {}),
-                  const SizedBox(
-                    height: 15,
-                  ),
-                  BlocBuilder<AttachmentTypeBloc, AttachmentTypeState>(
-                    builder: (context, state2) {
-                      if (state2 is AttachmentTypeLoadedSuccess) {
-                        attachmentTypes = state2.attachmentTypes;
-                        return DropdownButtonHideUnderline(
-                          child: DropdownButton2<AttachmentType>(
-                            isExpanded: true,
-                            hint: Text(
-                              "اختر نوع المرفق",
-                              style: TextStyle(
-                                fontSize: 14,
-                                color: Theme.of(context).hintColor,
-                              ),
-                            ),
-                            items: state2.attachmentTypes
-                                .map((AttachmentType item) =>
-                                    DropdownMenuItem<AttachmentType>(
-                                      value: item,
-                                      child: Text(
-                                        item.name!,
-                                        style: const TextStyle(
-                                          fontSize: 14,
-                                        ),
-                                      ),
-                                    ))
-                                .toList(),
-                            value: selectedAttachmentType,
-                            onChanged: (AttachmentType? value) {
-                              setState(() {
-                                selectedAttachmentType = value;
-                              });
-                            },
-                            buttonStyleData: ButtonStyleData(
-                              height: 50,
-                              width: double.infinity,
-                              padding:
-                                  const EdgeInsets.only(left: 14, right: 14),
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(12),
-                                border: Border.all(
-                                  color: Colors.black26,
-                                ),
-                                color: Colors.white,
-                              ),
-                              elevation: 2,
-                            ),
-                            iconStyleData: const IconStyleData(
-                              icon: Icon(
-                                Icons.keyboard_arrow_down,
-                              ),
-                              iconSize: 20,
-                              iconEnabledColor: AppColor.AccentGreen,
-                              iconDisabledColor: Colors.grey,
-                            ),
-                            dropdownStyleData: DropdownStyleData(
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(14),
-                                color: Colors.white,
-                              ),
-                              scrollbarTheme: ScrollbarThemeData(
-                                radius: const Radius.circular(40),
-                                thickness: MaterialStateProperty.all(6),
-                                thumbVisibility:
-                                    MaterialStateProperty.all(true),
-                              ),
-                            ),
-                            menuItemStyleData: const MenuItemStyleData(
-                              height: 40,
-                            ),
-                          ),
-                        );
-                      } else if (state2 is AttachmentTypeLoadingProgress) {
-                        return const Center(
-                          child: CircularProgressIndicator(),
-                        );
-                      } else {
-                        return Container();
-                      }
-                    },
-                  ),
-                  const SizedBox(
-                    height: 15,
-                  ),
-                  BlocBuilder<AttachmentBloc, AttachmentState>(
-                    builder: (context, state) {
-                      if (state is AttachmentLoadingProgress) {
-                        return const Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Center(child: CircularProgressIndicator()),
-                          ],
-                        );
-                      } else {
-                        return Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceAround,
-                          children: [
-                            CustomButton(
-                                title: const SizedBox(
-                                  width: 90,
-                                  child: Center(child: Text("إغلاق")),
-                                ),
-                                onTap: () {
-                                  Navigator.pop(context);
-                                }),
-                            CustomButton(
-                                title: const SizedBox(
-                                    width: 90,
-                                    child: Center(child: Text("حفظ"))),
-                                onTap: () {
-                                  BlocProvider.of<AttachmentBloc>(context)
-                                      .add(AddAttachmentEvent(
-                                    selectedAttachmentType!.id!,
-                                    "",
-                                    _images!,
-                                    _files!,
-                                  ));
-                                }),
-                          ],
-                        );
-                      }
-                    },
-                  )
-                ],
-              ),
-            );
-          }),
-        );
-      },
-      child: Container(
-        margin: EdgeInsets.all(5.h),
-        padding: EdgeInsets.all(5.h),
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(15),
-          border: Border.all(
-            color: AppColor.deepAppBarBlue,
-            width: 1.0,
-          ),
-        ),
-        height: 140.h,
-        width: 120.w,
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            SizedBox(
-              height: 5.h,
-            ),
-            Text(
-              "إضافة مرفق",
-              style: TextStyle(
-                fontSize: 18.sp,
-              ),
-            ),
-            SizedBox(
-              height: 5.h,
-            ),
-            Icon(
-              Icons.add,
-              size: 50.h,
-              weight: 5,
-            )
-            // GestureDetector(
-            //   onTap: () {},
-            //   child: const Text("تعديل"),
-            // )
-          ],
-        ),
-      ),
-    );
-    list.add(firstelem);
-    for (var element in attachments) {
-      var elem = Container(
-        margin: EdgeInsets.all(5.h),
-        padding: EdgeInsets.all(5.h),
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(25),
-          border: Border(
-            left: BorderSide(
-              color: AppColor.deepAppBarBlue,
-              width: 1.0,
-            ),
-            right: BorderSide(
-              color: AppColor.deepAppBarBlue,
-              width: 1.0,
-            ),
-            top: BorderSide(
-              color: AppColor.deepAppBarBlue,
-              width: 1.0,
-            ),
-            bottom: BorderSide(
-              color: AppColor.deepAppBarBlue,
-              width: 1.0,
-            ),
-          ),
-        ),
-        height: 140.h,
-        width: 120.w,
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            SizedBox(
-              height: 5.h,
-            ),
-            Text(attachmentName(element.attachmentType!)),
-            SizedBox(
-              height: 5.h,
-            ),
-            // Image.network(
-            //   element.image!,
-            //   fit: BoxFit.cover,
-            //   height: 75.h,
-            //   width: 75.w,
-            //   loadingBuilder: (context, child, loadingProgress) {
-            //     if (loadingProgress == null) {
-            //       return child;
-            //     }
-            //     return Center(
-            //       child: CircularProgressIndicator(
-            //         value: loadingProgress.expectedTotalBytes != null
-            //             ? loadingProgress.cumulativeBytesLoaded /
-            //                 loadingProgress.expectedTotalBytes!
-            //             : null,
-            //       ),
-            //     );
-            //   },
-            // ),
-            const SizedBox(
-              height: 3,
-            ),
-            // GestureDetector(
-            //   onTap: () {},
-            //   child: const Text("تعديل"),
-            // )
-          ],
-        ),
-      );
-      list.add(elem);
-    }
-    return list;
+    return "attachment";
   }
 
   List<Widget> _buildAttachmentImages(List<AttachmentImage>? images) {
@@ -508,7 +227,9 @@ class _TraderAttachementScreenState extends State<TraderAttachementScreen> {
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
-        appBar: CustomAppBar(title: "طلب مخلص"),
+        appBar: CustomAppBar(
+            title:
+                AppLocalizations.of(context)!.translate('broker_order_title')),
         backgroundColor: Colors.grey[200],
         body: SingleChildScrollView(
           child: BlocListener<AttachmentBloc, AttachmentState>(
@@ -531,9 +252,9 @@ class _TraderAttachementScreenState extends State<TraderAttachementScreen> {
                   content: Column(
                     children: [
                       AwesomeSnackbarContent(
-                        title: 'خطأ',
-                        message:
-                            'حدث خطأ أثناء تحميل المرفق سنحاول حل المشكلة.',
+                        title: AppLocalizations.of(context)!.translate('error'),
+                        message: AppLocalizations.of(context)!
+                            .translate('attachment_error'),
 
                         /// change contentType to ContentType.success, ContentType.warning or ContentType.help for variants
                         contentType: ContentType.failure,
@@ -562,10 +283,6 @@ class _TraderAttachementScreenState extends State<TraderAttachementScreen> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         mainAxisSize: MainAxisSize.min,
                         children: [
-                          // Text(
-                          //   "الطلب رقم: 3475",
-                          //   style: TextStyle(color: AppColor.activeGreen),
-                          // ),
                           SizedBox(
                             height: 15.h,
                           ),
@@ -585,9 +302,10 @@ class _TraderAttachementScreenState extends State<TraderAttachementScreen> {
                               child: Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
-                                    const Text(
-                                      "تاريخ وصول البضاعة",
-                                      style: TextStyle(
+                                    Text(
+                                      AppLocalizations.of(context)!
+                                          .translate('expected_arrival_date'),
+                                      style: const TextStyle(
                                         fontSize: 19,
                                         fontWeight: FontWeight.bold,
                                       ),
@@ -660,9 +378,11 @@ class _TraderAttachementScreenState extends State<TraderAttachementScreen> {
                                           SizedBox(
                                             height: 4.h,
                                           ),
-                                          const Text(
-                                            "الرجاء تحديد تاريخ وصول البضاعة",
-                                            style: TextStyle(
+                                          Text(
+                                            AppLocalizations.of(context)!
+                                                .translate(
+                                                    'select_arrival_date_error'),
+                                            style: const TextStyle(
                                               color: Colors.red,
                                             ),
                                           ),
@@ -698,7 +418,8 @@ class _TraderAttachementScreenState extends State<TraderAttachementScreen> {
                                     height: 2.h,
                                   ),
                                   Text(
-                                    "نوع الطرد",
+                                    AppLocalizations.of(context)!
+                                        .translate('package_type'),
                                     style: TextStyle(
                                       fontSize: 19,
                                       fontWeight: FontWeight.bold,
@@ -896,8 +617,10 @@ class _TraderAttachementScreenState extends State<TraderAttachementScreen> {
                                         SizedBox(
                                           height: 4.h,
                                         ),
-                                        const Text(
-                                          "الرجاء اختيار نوع الطرد",
+                                        Text(
+                                          AppLocalizations.of(context)!
+                                              .translate(
+                                                  'select_package_type_error'),
                                           style: TextStyle(
                                             color: Colors.red,
                                           ),
@@ -924,8 +647,9 @@ class _TraderAttachementScreenState extends State<TraderAttachementScreen> {
                                       DecimalFormatter(),
                                     ],
                                     style: const TextStyle(fontSize: 18),
-                                    decoration: const InputDecoration(
-                                      labelText: "عدد الطرود",
+                                    decoration: InputDecoration(
+                                      labelText: AppLocalizations.of(context)!
+                                          .translate('packages_number'),
                                     ),
                                     scrollPadding: EdgeInsets.only(
                                         bottom: MediaQuery.of(context)
@@ -962,7 +686,8 @@ class _TraderAttachementScreenState extends State<TraderAttachementScreen> {
                                         AutovalidateMode.onUserInteraction,
                                     validator: (value) {
                                       if (value!.isEmpty || value == "0") {
-                                        return "الرجاء ادخال القيمة";
+                                        return AppLocalizations.of(context)!
+                                            .translate('insert_value_validate');
                                       }
                                       return null;
                                     },
@@ -985,9 +710,10 @@ class _TraderAttachementScreenState extends State<TraderAttachementScreen> {
                                         EdgeInsets.symmetric(horizontal: 18.w),
                                     child: CheckboxListTile(
                                         value: orderBrokerProvider.haveTabaleh,
-                                        title: const Text(
-                                          "مع طبالي؟",
-                                          style: TextStyle(fontSize: 18),
+                                        title: Text(
+                                          AppLocalizations.of(context)!
+                                              .translate('with_tabaleh'),
+                                          style: const TextStyle(fontSize: 18),
                                         ),
                                         activeColor: AppColor.goldenYellow,
                                         controlAffinity:
@@ -1059,8 +785,10 @@ class _TraderAttachementScreenState extends State<TraderAttachementScreen> {
                                               inputFormatters: [
                                                 DecimalFormatter(),
                                               ],
-                                              decoration: const InputDecoration(
-                                                labelText: "العدد",
+                                              decoration: InputDecoration(
+                                                labelText: AppLocalizations.of(
+                                                        context)!
+                                                    .translate('quantity'),
                                                 alignLabelWithHint: true,
                                               ),
                                               scrollPadding: EdgeInsets.only(
@@ -1178,16 +906,18 @@ class _TraderAttachementScreenState extends State<TraderAttachementScreen> {
                               child: Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
-                                    const Text(
-                                      "المرفقات",
-                                      style: TextStyle(
+                                    Text(
+                                      AppLocalizations.of(context)!
+                                          .translate('attachments'),
+                                      style: const TextStyle(
                                         fontSize: 19,
                                         fontWeight: FontWeight.bold,
                                       ),
                                     ),
-                                    const Text(
-                                      "يرجى تحميل المرفقات المتاحة حاليا",
-                                      style: TextStyle(
+                                    Text(
+                                      AppLocalizations.of(context)!.translate(
+                                          'please_upload_attachments'),
+                                      style: const TextStyle(
                                         fontSize: 17,
                                       ),
                                     ),
@@ -1410,7 +1140,7 @@ class _TraderAttachementScreenState extends State<TraderAttachementScreen> {
                                                                               8,
                                                                         ),
                                                                         labelText:
-                                                                            'أدخل اسم المرفق',
+                                                                            AppLocalizations.of(context)!.translate('enter_attachment_name'),
                                                                         border:
                                                                             OutlineInputBorder(
                                                                           borderRadius:
@@ -1472,9 +1202,9 @@ class _TraderAttachementScreenState extends State<TraderAttachementScreen> {
                                                                       children: [
                                                                         CustomButton(
                                                                             title:
-                                                                                const SizedBox(
+                                                                                SizedBox(
                                                                               width: 90,
-                                                                              child: Center(child: Text("إغلاق")),
+                                                                              child: Center(child: Text(AppLocalizations.of(context)!.translate('close'))),
                                                                             ),
                                                                             onTap:
                                                                                 () {
@@ -1612,8 +1342,10 @@ class _TraderAttachementScreenState extends State<TraderAttachementScreen> {
                               child: Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
-                                    const Text("الملاحظات",
-                                        style: TextStyle(fontSize: 18)),
+                                    Text(
+                                        AppLocalizations.of(context)!
+                                            .translate('notes'),
+                                        style: const TextStyle(fontSize: 18)),
                                     SizedBox(
                                       height: 15.h,
                                     ),
@@ -1630,7 +1362,8 @@ class _TraderAttachementScreenState extends State<TraderAttachementScreen> {
                                               borderRadius:
                                                   BorderRadius.circular(12)),
                                           hintText:
-                                              "اكتب ملاحظة للمخلص الجمركي ان وجد"),
+                                              AppLocalizations.of(context)!
+                                                  .translate('nots_hint')),
                                     ),
                                     SizedBox(
                                       height: 15.h,
@@ -1675,9 +1408,13 @@ class _TraderAttachementScreenState extends State<TraderAttachementScreen> {
                                                 content: Column(
                                                   children: [
                                                     AwesomeSnackbarContent(
-                                                      title: 'تم',
-                                                      message:
-                                                          'تم اضافة الطلب بنجاح سيتم ارساله للمخلص المختص.',
+                                                      title: AppLocalizations
+                                                              .of(context)!
+                                                          .translate('done'),
+                                                      message: AppLocalizations
+                                                              .of(context)!
+                                                          .translate(
+                                                              'order_success_message'),
 
                                                       /// change contentType to ContentType.success, ContentType.warning or ContentType.help for variants
                                                       contentType:
@@ -1696,7 +1433,6 @@ class _TraderAttachementScreenState extends State<TraderAttachementScreen> {
                                             }
                                             if (offerstate
                                                 is OfferLoadedFailed) {
-                                              print(offerstate.errortext);
                                               var snackBar = SnackBar(
                                                 elevation: 0,
                                                 duration:
@@ -1706,9 +1442,13 @@ class _TraderAttachementScreenState extends State<TraderAttachementScreen> {
                                                 content: Column(
                                                   children: [
                                                     AwesomeSnackbarContent(
-                                                      title: 'تنبيه',
-                                                      message:
-                                                          'حدث خطأ أثناء معالجة الطلب الرجاء المحاولة مرة أخرى.',
+                                                      title: AppLocalizations
+                                                              .of(context)!
+                                                          .translate('warning'),
+                                                      message: AppLocalizations
+                                                              .of(context)!
+                                                          .translate(
+                                                              'order_waring_message'),
 
                                                       /// change contentType to ContentType.success, ContentType.warning or ContentType.help for variants
                                                       contentType:
@@ -1811,11 +1551,14 @@ class _TraderAttachementScreenState extends State<TraderAttachementScreen> {
                                                     );
                                                   }
                                                 },
-                                                title: const SizedBox(
+                                                title: SizedBox(
                                                     width: 100,
                                                     child: Center(
-                                                        child:
-                                                            Text("طلب مخلص"))),
+                                                        child: Text(
+                                                            AppLocalizations.of(
+                                                                    context)!
+                                                                .translate(
+                                                                    'broker_order')))),
                                               );
                                             }
                                           },
@@ -1825,7 +1568,6 @@ class _TraderAttachementScreenState extends State<TraderAttachementScreen> {
                                   ]),
                             ),
                           ),
-
                           SizedBox(
                             height: 30.h,
                           ),

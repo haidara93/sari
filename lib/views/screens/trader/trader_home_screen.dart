@@ -1,11 +1,12 @@
 // import 'package:custome_mobile/business_logic/bloc/attachment_type_bloc.dart';
+import 'package:custome_mobile/Localization/app_localizations.dart';
 import 'package:custome_mobile/business_logic/bloc/auth_bloc.dart';
-import 'package:custome_mobile/business_logic/bloc/calculate_result_bloc.dart';
-import 'package:custome_mobile/business_logic/bloc/calculator_panel_bloc.dart';
+import 'package:custome_mobile/business_logic/bloc/calculate_result/calculate_result_bloc.dart';
+import 'package:custome_mobile/business_logic/bloc/calculate_result/calculator_panel_bloc.dart';
 import 'package:custome_mobile/business_logic/bloc/chapter_bloc.dart';
-import 'package:custome_mobile/business_logic/bloc/fee_bloc.dart';
-import 'package:custome_mobile/business_logic/bloc/fee_item_bloc.dart';
-import 'package:custome_mobile/business_logic/bloc/fee_select_bloc.dart';
+import 'package:custome_mobile/business_logic/bloc/fee/fee_bloc.dart';
+import 'package:custome_mobile/business_logic/bloc/fee/fee_item_bloc.dart';
+import 'package:custome_mobile/business_logic/bloc/fee/fee_select_bloc.dart';
 import 'package:custome_mobile/business_logic/bloc/flags_bloc.dart';
 import 'package:custome_mobile/business_logic/bloc/group_bloc.dart';
 import 'package:custome_mobile/business_logic/bloc/package_type_bloc.dart';
@@ -16,6 +17,7 @@ import 'package:custome_mobile/business_logic/bloc/state_custome_bloc.dart';
 import 'package:custome_mobile/business_logic/bloc/sub_chapter_bloc.dart';
 import 'package:custome_mobile/business_logic/bloc/trader_log_bloc.dart';
 import 'package:custome_mobile/business_logic/cubit/bottom_nav_bar_cubit.dart';
+import 'package:custome_mobile/business_logic/cubit/locale_cubit.dart';
 import 'package:custome_mobile/constants/enums.dart';
 import 'package:custome_mobile/data/models/accurdion_model.dart';
 import 'package:custome_mobile/data/models/package_model.dart';
@@ -28,6 +30,7 @@ import 'package:custome_mobile/helpers/formatter.dart';
 import 'package:custome_mobile/views/screens/trader/custome_tariff_screen.dart';
 import 'package:custome_mobile/views/screens/trader/log_screens/log_screen.dart';
 import 'package:custome_mobile/views/screens/trader/order_broker_screen.dart';
+import 'package:custome_mobile/views/screens/trader/trader_calculator_multi_screen.dart';
 import 'package:custome_mobile/views/screens/trader/trader_calculator_screen.dart';
 import 'package:custome_mobile/views/screens/trader/trader_main_screen.dart';
 import 'package:custome_mobile/views/widgets/calculator_loading_screen.dart';
@@ -35,16 +38,14 @@ import 'package:custome_mobile/views/widgets/custom_app_bar.dart';
 import 'package:custome_mobile/views/widgets/custom_botton.dart';
 import 'package:custome_mobile/views/widgets/highlight_text.dart';
 import 'package:custome_mobile/views/widgets/item_taxes_widget.dart';
-import 'package:custome_mobile/views/widgets/pens_taxes_widget.dart';
-import 'package:custome_mobile/views/widgets/tariff_info_icon.dart';
 import 'package:dropdown_button2/dropdown_button2.dart';
-import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_img/flutter_img.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:intl/intl.dart' as intel;
 import 'package:provider/provider.dart';
 import 'package:shimmer/shimmer.dart';
 
@@ -59,7 +60,7 @@ class _TraderHomeScreenState extends State<TraderHomeScreen>
     with TickerProviderStateMixin, WidgetsBindingObserver {
   int currentIndex = 2;
   int navigationValue = 2;
-  String title = "الرئيسية";
+  String title = "Home";
   Widget currentScreen = const TraderMainScreen();
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   late TabController _tabController;
@@ -91,7 +92,11 @@ class _TraderHomeScreenState extends State<TraderHomeScreen>
       length: 5,
       vsync: this,
     );
+
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+      setState(() {
+        title = AppLocalizations.of(context)!.translate('home');
+      });
       calculator_Provider =
           Provider.of<CalculatorProvider>(context, listen: false);
       order_broker_Provider =
@@ -135,7 +140,7 @@ class _TraderHomeScreenState extends State<TraderHomeScreen>
           BlocProvider.of<TraderLogBloc>(context)
               .add(const TraderLogLoadEvent("R"));
           setState(() {
-            title = "السجل";
+            title = AppLocalizations.of(context)!.translate('trader_log_title');
             currentScreen = const LogScreen();
           });
           break;
@@ -144,9 +149,9 @@ class _TraderHomeScreenState extends State<TraderHomeScreen>
         {
           calculator_Provider!.initProvider();
           setState(() {
-            title = "حاسبة الرسوم";
+            title = AppLocalizations.of(context)!.translate('calculator_title');
 
-            currentScreen = TraderCalculatorScreen();
+            currentScreen = TraderCalculatorMultiScreen();
           });
           break;
         }
@@ -155,7 +160,7 @@ class _TraderHomeScreenState extends State<TraderHomeScreen>
           // print(MediaQuery.of(context).size.width);
           print(DateTime.fromMillisecondsSinceEpoch((1701851497) * 100000));
           setState(() {
-            title = "الرئيسية";
+            title = AppLocalizations.of(context)!.translate('home');
 
             BlocProvider.of<PostBloc>(context).add(PostLoadEvent());
 
@@ -166,7 +171,7 @@ class _TraderHomeScreenState extends State<TraderHomeScreen>
       case 3:
         {
           setState(() {
-            title = "التعرفة الجمركية";
+            title = AppLocalizations.of(context)!.translate('tariff_title');
 
             currentScreen = const CustomeTariffScreen();
           });
@@ -176,7 +181,8 @@ class _TraderHomeScreenState extends State<TraderHomeScreen>
         {
           order_broker_Provider!.initProvider();
           setState(() {
-            title = "طلب مخلص";
+            title =
+                AppLocalizations.of(context)!.translate('broker_order_title');
 
             BlocProvider.of<StateCustomeBloc>(context)
                 .add(StateCustomeLoadEvent());
@@ -280,585 +286,736 @@ class _TraderHomeScreenState extends State<TraderHomeScreen>
           return Future.value(true);
         }
       },
-      child: Directionality(
-        textDirection: TextDirection.rtl,
-        child: AnimatedBuilder(
-            animation: _animationController,
-            builder: (context, _) {
-              return Stack(
-                children: [
-                  SafeArea(
-                    child: GestureDetector(
-                      onTap: () {
-                        FocusManager.instance.primaryFocus?.unfocus();
-                        BlocProvider.of<BottomNavBarCubit>(context).emitShow();
-                      },
-                      child: Scaffold(
-                        key: _scaffoldKey,
-                        resizeToAvoidBottomInset: false,
-                        appBar: CustomAppBar(
-                          title: title,
-                          scaffoldKey: _scaffoldKey,
-                          onTap: () => changeSelectedValue(
-                              selectedValue: 2, contxt: context),
-                        ),
-                        drawer: Drawer(
-                          backgroundColor: AppColor.deepAppBarBlue,
-                          elevation: 1,
-                          width: 250.w,
-                          child: Padding(
-                            padding: EdgeInsets.symmetric(horizontal: 12.w),
-                            child: ListView(children: [
-                              SizedBox(
-                                height: 35.h,
-                              ),
-                              Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceAround,
-                                children: [
-                                  CircleAvatar(
-                                    backgroundColor: AppColor.goldenYellow,
-                                    radius: 35.h,
+      child: BlocBuilder<LocaleCubit, LocaleState>(
+        builder: (context, localeState) {
+          return Directionality(
+            textDirection: TextDirection.rtl,
+            child: AnimatedBuilder(
+                animation: _animationController,
+                builder: (context, _) {
+                  return Stack(
+                    children: [
+                      SafeArea(
+                        child: GestureDetector(
+                          onTap: () {
+                            FocusManager.instance.primaryFocus?.unfocus();
+                            BlocProvider.of<BottomNavBarCubit>(context)
+                                .emitShow();
+                          },
+                          child: Scaffold(
+                            key: _scaffoldKey,
+                            resizeToAvoidBottomInset: false,
+                            appBar: CustomAppBar(
+                              title: title,
+                              scaffoldKey: _scaffoldKey,
+                              onTap: () => changeSelectedValue(
+                                  selectedValue: 2, contxt: context),
+                            ),
+                            drawer: Drawer(
+                              backgroundColor: AppColor.deepAppBarBlue,
+                              elevation: 1,
+                              width: 300.w,
+                              child: Padding(
+                                padding: EdgeInsets.symmetric(horizontal: 12.w),
+                                child: ListView(children: [
+                                  SizedBox(
+                                    height: 35.h,
                                   ),
-                                  Text(
-                                    "Morad",
-                                    style: TextStyle(
-                                        color: Colors.white,
-                                        fontSize: 26.sp,
-                                        fontWeight: FontWeight.bold),
-                                  )
-                                ],
-                              ),
-                              SizedBox(
-                                height: 15.h,
-                              ),
-                              const Divider(
-                                color: Colors.white,
-                              ),
-                              ListTile(
-                                leading: SvgPicture.asset(
-                                  "assets/icons/profile.svg",
-                                  height: 20.h,
-                                ),
-                                title: Text(
-                                  "الملف الشخصي",
-                                  style: TextStyle(
-                                      color: Colors.white,
-                                      fontSize: 14.sp,
-                                      fontWeight: FontWeight.bold),
-                                ),
-                                trailing: Container(
-                                  width: 35.w,
-                                  height: 20.h,
-                                  decoration: BoxDecoration(
-                                      color: AppColor.goldenYellow,
-                                      borderRadius: BorderRadius.circular(2)),
-                                  child: Center(
-                                    child: Text(
-                                      "soon",
-                                      style: TextStyle(
-                                        color: Colors.white,
-                                        fontSize: 12.sp,
+                                  Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceAround,
+                                    children: [
+                                      CircleAvatar(
+                                        backgroundColor: AppColor.goldenYellow,
+                                        radius: 35.h,
                                       ),
-                                    ),
-                                  ),
-                                ),
-                              ),
-                              GestureDetector(
-                                onTap: () {
-                                  // changeSelectedValue(
-                                  //     selectedValue: 0, contxt: context);
-                                  // _scaffoldKey.currentState!.closeDrawer();
-                                },
-                                child: ListTile(
-                                  leading: SvgPicture.asset(
-                                    "assets/icons/log.svg",
-                                    height: 20.h,
-                                  ),
-                                  title: Text(
-                                    "السجل",
-                                    style: TextStyle(
-                                        color: Colors.white,
-                                        fontSize: 16.sp,
-                                        fontWeight: FontWeight.bold),
-                                  ),
-                                  trailing: Container(
-                                    width: 35.w,
-                                    height: 20.h,
-                                    decoration: BoxDecoration(
-                                        color: AppColor.goldenYellow,
-                                        borderRadius: BorderRadius.circular(2)),
-                                    child: Center(
-                                      child: Text(
-                                        "soon",
+                                      Text(
+                                        "Morad",
                                         style: TextStyle(
+                                            color: Colors.white,
+                                            fontSize: 26.sp,
+                                            fontWeight: FontWeight.bold),
+                                      )
+                                    ],
+                                  ),
+                                  SizedBox(
+                                    height: 15.h,
+                                  ),
+                                  const Divider(
+                                    color: Colors.white,
+                                  ),
+                                  ListTile(
+                                    leading: SvgPicture.asset(
+                                      "assets/icons/profile.svg",
+                                      height: 20.h,
+                                    ),
+                                    title: Text(
+                                      AppLocalizations.of(context)!
+                                          .translate('profile'),
+                                      style: TextStyle(
                                           color: Colors.white,
-                                          fontSize: 12.sp,
+                                          fontSize: 14.sp,
+                                          fontWeight: FontWeight.bold),
+                                    ),
+                                    trailing: Container(
+                                      width: 35.w,
+                                      height: 20.h,
+                                      decoration: BoxDecoration(
+                                          color: AppColor.goldenYellow,
+                                          borderRadius:
+                                              BorderRadius.circular(2)),
+                                      child: Center(
+                                        child: Text(
+                                          "soon",
+                                          style: TextStyle(
+                                            color: Colors.white,
+                                            fontSize: 12.sp,
+                                          ),
                                         ),
                                       ),
                                     ),
                                   ),
-                                ),
-                              ),
-                              ListTile(
-                                leading: Image.asset(
-                                  "assets/icons/favorite.png",
-                                  height: 20.h,
-                                ),
-                                title: Text(
-                                  "المحفوظات",
-                                  style: TextStyle(
-                                      color: Colors.white,
-                                      fontSize: 16.sp,
-                                      fontWeight: FontWeight.bold),
-                                ),
-                                trailing: Container(
-                                  width: 35.w,
-                                  height: 20.h,
-                                  decoration: BoxDecoration(
-                                      color: AppColor.goldenYellow,
-                                      borderRadius: BorderRadius.circular(2)),
-                                  child: Center(
-                                    child: Text(
-                                      "soon",
-                                      style: TextStyle(
-                                        color: Colors.white,
-                                        fontSize: 12.sp,
+                                  GestureDetector(
+                                    onTap: () {
+                                      // changeSelectedValue(
+                                      //     selectedValue: 0, contxt: context);
+                                      // _scaffoldKey.currentState!.closeDrawer();
+                                    },
+                                    child: ListTile(
+                                      leading: SvgPicture.asset(
+                                        "assets/icons/log.svg",
+                                        height: 20.h,
+                                      ),
+                                      title: Text(
+                                        AppLocalizations.of(context)!
+                                            .translate('log'),
+                                        style: TextStyle(
+                                            color: Colors.white,
+                                            fontSize: 16.sp,
+                                            fontWeight: FontWeight.bold),
+                                      ),
+                                      trailing: Container(
+                                        width: 35.w,
+                                        height: 20.h,
+                                        decoration: BoxDecoration(
+                                            color: AppColor.goldenYellow,
+                                            borderRadius:
+                                                BorderRadius.circular(2)),
+                                        child: Center(
+                                          child: Text(
+                                            "soon",
+                                            style: TextStyle(
+                                              color: Colors.white,
+                                              fontSize: 12.sp,
+                                            ),
+                                          ),
+                                        ),
                                       ),
                                     ),
                                   ),
-                                ),
-                              ),
-                              ListTile(
-                                leading: SvgPicture.asset(
-                                  "assets/icons/calculator.svg",
-                                  height: 20.h,
-                                ),
-                                title: Text(
-                                  "حساباتي ",
-                                  style: TextStyle(
-                                      color: Colors.white,
-                                      fontSize: 16.sp,
-                                      fontWeight: FontWeight.bold),
-                                ),
-                                trailing: Container(
-                                  width: 35.w,
-                                  height: 20.h,
-                                  decoration: BoxDecoration(
-                                      color: AppColor.goldenYellow,
-                                      borderRadius: BorderRadius.circular(2)),
-                                  child: Center(
-                                    child: Text(
-                                      "soon",
+                                  ListTile(
+                                    leading: Image.asset(
+                                      "assets/icons/favorite.png",
+                                      height: 20.h,
+                                    ),
+                                    title: Text(
+                                      AppLocalizations.of(context)!
+                                          .translate('saved'),
                                       style: TextStyle(
-                                        color: Colors.white,
-                                        fontSize: 12.sp,
+                                          color: Colors.white,
+                                          fontSize: 16.sp,
+                                          fontWeight: FontWeight.bold),
+                                    ),
+                                    trailing: Container(
+                                      width: 35.w,
+                                      height: 20.h,
+                                      decoration: BoxDecoration(
+                                          color: AppColor.goldenYellow,
+                                          borderRadius:
+                                              BorderRadius.circular(2)),
+                                      child: Center(
+                                        child: Text(
+                                          "soon",
+                                          style: TextStyle(
+                                            color: Colors.white,
+                                            fontSize: 12.sp,
+                                          ),
+                                        ),
                                       ),
                                     ),
                                   ),
-                                ),
-                              ),
-                              ListTile(
-                                leading: SvgPicture.asset(
-                                  "assets/icons/tasks.svg",
-                                  height: 20.h,
-                                ),
-                                title: Text(
-                                  "المهام",
-                                  style: TextStyle(
-                                      color: Colors.white,
-                                      fontSize: 16.sp,
-                                      fontWeight: FontWeight.bold),
-                                ),
-                                trailing: Container(
-                                  width: 35.w,
-                                  height: 20.h,
-                                  decoration: BoxDecoration(
-                                      color: AppColor.goldenYellow,
-                                      borderRadius: BorderRadius.circular(2)),
-                                  child: Center(
-                                    child: Text(
-                                      "soon",
+                                  ListTile(
+                                    leading: SvgPicture.asset(
+                                      "assets/icons/calculator.svg",
+                                      height: 20.h,
+                                    ),
+                                    title: Text(
+                                      AppLocalizations.of(context)!
+                                          .translate('my_calculates'),
                                       style: TextStyle(
-                                        color: Colors.white,
-                                        fontSize: 12.sp,
+                                          color: Colors.white,
+                                          fontSize: 16.sp,
+                                          fontWeight: FontWeight.bold),
+                                    ),
+                                    trailing: Container(
+                                      width: 35.w,
+                                      height: 20.h,
+                                      decoration: BoxDecoration(
+                                          color: AppColor.goldenYellow,
+                                          borderRadius:
+                                              BorderRadius.circular(2)),
+                                      child: Center(
+                                        child: Text(
+                                          "soon",
+                                          style: TextStyle(
+                                            color: Colors.white,
+                                            fontSize: 12.sp,
+                                          ),
+                                        ),
                                       ),
                                     ),
                                   ),
-                                ),
-                              ),
-                              const Divider(
-                                color: Colors.white,
-                              ),
-                              ListTile(
-                                leading: SvgPicture.asset(
-                                  "assets/icons/privacy.svg",
-                                  height: 20.h,
-                                ),
-                                title: Text(
-                                  "سياسة الخصوصية",
-                                  style: TextStyle(
-                                      color: Colors.white,
-                                      fontSize: 16.sp,
-                                      fontWeight: FontWeight.bold),
-                                ),
-                                trailing: Container(
-                                  width: 35.w,
-                                  height: 20.h,
-                                  decoration: BoxDecoration(
-                                      color: AppColor.goldenYellow,
-                                      borderRadius: BorderRadius.circular(2)),
-                                  child: Center(
-                                    child: Text(
-                                      "soon",
+                                  ListTile(
+                                    leading: SvgPicture.asset(
+                                      "assets/icons/tasks.svg",
+                                      height: 20.h,
+                                    ),
+                                    title: Text(
+                                      AppLocalizations.of(context)!
+                                          .translate('tasks'),
                                       style: TextStyle(
-                                        color: Colors.white,
-                                        fontSize: 12.sp,
+                                          color: Colors.white,
+                                          fontSize: 16.sp,
+                                          fontWeight: FontWeight.bold),
+                                    ),
+                                    trailing: Container(
+                                      width: 35.w,
+                                      height: 20.h,
+                                      decoration: BoxDecoration(
+                                          color: AppColor.goldenYellow,
+                                          borderRadius:
+                                              BorderRadius.circular(2)),
+                                      child: Center(
+                                        child: Text(
+                                          "soon",
+                                          style: TextStyle(
+                                            color: Colors.white,
+                                            fontSize: 12.sp,
+                                          ),
+                                        ),
                                       ),
                                     ),
                                   ),
-                                ),
-                              ),
-                              ListTile(
-                                leading: Image.asset(
-                                  "assets/icons/settings.png",
-                                  height: 20.h,
-                                ),
-                                title: Text(
-                                  "الاعدادات",
-                                  style: TextStyle(
-                                      color: Colors.white,
-                                      fontSize: 16.sp,
-                                      fontWeight: FontWeight.bold),
-                                ),
-                                trailing: Container(
-                                  width: 35.w,
-                                  height: 20.h,
-                                  decoration: BoxDecoration(
-                                      color: AppColor.goldenYellow,
-                                      borderRadius: BorderRadius.circular(2)),
-                                  child: Center(
-                                    child: Text(
-                                      "soon",
+                                  const Divider(
+                                    color: Colors.white,
+                                  ),
+                                  ListTile(
+                                    leading: SvgPicture.asset(
+                                      "assets/icons/privacy.svg",
+                                      height: 20.h,
+                                    ),
+                                    title: Text(
+                                      AppLocalizations.of(context)!
+                                          .translate('policy'),
                                       style: TextStyle(
-                                        color: Colors.white,
-                                        fontSize: 12.sp,
+                                          color: Colors.white,
+                                          fontSize: 16.sp,
+                                          fontWeight: FontWeight.bold),
+                                    ),
+                                    trailing: Container(
+                                      width: 35.w,
+                                      height: 20.h,
+                                      decoration: BoxDecoration(
+                                          color: AppColor.goldenYellow,
+                                          borderRadius:
+                                              BorderRadius.circular(2)),
+                                      child: Center(
+                                        child: Text(
+                                          "soon",
+                                          style: TextStyle(
+                                            color: Colors.white,
+                                            fontSize: 12.sp,
+                                          ),
+                                        ),
                                       ),
                                     ),
                                   ),
-                                ),
-                              ),
-                              ListTile(
-                                leading: SvgPicture.asset(
-                                  "assets/icons/help.svg",
-                                  height: 20.h,
-                                ),
-                                title: Text(
-                                  "مساعدة",
-                                  style: TextStyle(
-                                      color: Colors.white,
-                                      fontSize: 16.sp,
-                                      fontWeight: FontWeight.bold),
-                                ),
-                                trailing: Container(
-                                  width: 35.w,
-                                  height: 20.h,
-                                  decoration: BoxDecoration(
-                                      color: AppColor.goldenYellow,
-                                      borderRadius: BorderRadius.circular(2)),
-                                  child: Center(
-                                    child: Text(
-                                      "soon",
+                                  GestureDetector(
+                                    onTap: () {
+                                      if (AppLocalizations.of(context)!
+                                          .isEnLocale!) {
+                                        BlocProvider.of<LocaleCubit>(context)
+                                            .toArabic();
+                                      } else {
+                                        BlocProvider.of<LocaleCubit>(context)
+                                            .toEnglish();
+                                      }
+                                      _scaffoldKey.currentState!.closeDrawer();
+                                    },
+                                    child: ListTile(
+                                      leading: const Icon(Icons.language,
+                                          color: Colors.white),
+                                      title: Text(
+                                        localeState.value.languageCode == 'en'
+                                            ? "language: English"
+                                            : "اللغة: العربية",
+                                        style: TextStyle(
+                                            color: Colors.white,
+                                            fontSize: 16.sp,
+                                            fontWeight: FontWeight.bold),
+                                      ),
+                                      // trailing: Container(
+                                      //   width: 35.w,
+                                      //   height: 20.h,
+                                      //   decoration: BoxDecoration(
+                                      //       color: AppColor.goldenYellow,
+                                      //       borderRadius:
+                                      //           BorderRadius.circular(2)),
+                                      //   child: Center(
+                                      //     child: Text(
+                                      //       "soon",
+                                      //       style: TextStyle(
+                                      //         color: Colors.white,
+                                      //         fontSize: 12.sp,
+                                      //       ),
+                                      //     ),
+                                      //   ),
+                                      // ),
+                                    ),
+                                  ),
+                                  ListTile(
+                                    leading: SvgPicture.asset(
+                                      "assets/icons/help.svg",
+                                      height: 20.h,
+                                    ),
+                                    title: Text(
+                                      AppLocalizations.of(context)!
+                                          .translate('help'),
                                       style: TextStyle(
-                                        color: Colors.white,
-                                        fontSize: 12.sp,
+                                          color: Colors.white,
+                                          fontSize: 16.sp,
+                                          fontWeight: FontWeight.bold),
+                                    ),
+                                    trailing: Container(
+                                      width: 35.w,
+                                      height: 20.h,
+                                      decoration: BoxDecoration(
+                                          color: AppColor.goldenYellow,
+                                          borderRadius:
+                                              BorderRadius.circular(2)),
+                                      child: Center(
+                                        child: Text(
+                                          "soon",
+                                          style: TextStyle(
+                                            color: Colors.white,
+                                            fontSize: 12.sp,
+                                          ),
+                                        ),
                                       ),
                                     ),
                                   ),
-                                ),
-                              ),
-                              const Divider(
-                                color: Colors.white,
-                              ),
-                              GestureDetector(
-                                onTap: () {
-                                  BlocProvider.of<AuthBloc>(context)
-                                      .add(UserLoggedOut());
-                                },
-                                child: ListTile(
-                                  leading: SvgPicture.asset(
-                                    "assets/icons/log_out.svg",
-                                    height: 20.h,
+                                  const Divider(
+                                    color: Colors.white,
                                   ),
-                                  title: Text(
-                                    "تسجيل خروج",
-                                    style: TextStyle(
-                                        color: Colors.white,
-                                        fontSize: 16.sp,
-                                        fontWeight: FontWeight.bold),
+                                  GestureDetector(
+                                    onTap: () {
+                                      BlocProvider.of<AuthBloc>(context)
+                                          .add(UserLoggedOut());
+                                    },
+                                    child: ListTile(
+                                      leading: SvgPicture.asset(
+                                        "assets/icons/log_out.svg",
+                                        height: 20.h,
+                                      ),
+                                      title: Text(
+                                        AppLocalizations.of(context)!
+                                            .translate('log_out'),
+                                        style: TextStyle(
+                                            color: Colors.white,
+                                            fontSize: 16.sp,
+                                            fontWeight: FontWeight.bold),
+                                      ),
+                                    ),
                                   ),
-                                ),
+                                ]),
                               ),
-                            ]),
+                            ),
+                            bottomNavigationBar: BlocBuilder<BottomNavBarCubit,
+                                BottomNavBarState>(
+                              builder: (context, state) {
+                                if (state is BottomNavBarShown) {
+                                  return Container(
+                                      height: 88.h,
+                                      decoration: BoxDecoration(
+                                        gradient: LinearGradient(
+                                          colors: bottomNavbarColor(),
+                                          begin: Alignment.centerRight,
+                                          end: Alignment.centerLeft,
+                                        ),
+                                      ),
+                                      child: TabBar(
+                                          labelPadding: EdgeInsets.zero,
+                                          controller: _tabController,
+                                          indicatorColor: AppColor.goldenYellow,
+                                          labelColor: AppColor.goldenYellow,
+                                          unselectedLabelColor: Colors.white,
+                                          labelStyle:
+                                              TextStyle(fontSize: 15.sp),
+                                          unselectedLabelStyle:
+                                              TextStyle(fontSize: 14.sp),
+                                          padding: EdgeInsets.zero,
+                                          onTap: (value) {
+                                            changeSelectedValue(
+                                                selectedValue: value,
+                                                contxt: context);
+                                          },
+                                          tabs: [
+                                            Tab(
+                                              // text: "طلب مخلص",
+                                              height: 66.h,
+                                              icon: navigationValue == 0
+                                                  ? Column(
+                                                      mainAxisAlignment:
+                                                          MainAxisAlignment.end,
+                                                      children: [
+                                                        SvgPicture.asset(
+                                                          "assets/icons/log_active.svg",
+                                                          width: 36.w,
+                                                          height: 36.h,
+                                                        ),
+                                                        localeState.value
+                                                                    .languageCode ==
+                                                                'en'
+                                                            ? const SizedBox(
+                                                                height: 4,
+                                                              )
+                                                            : const SizedBox
+                                                                .shrink(),
+                                                        Text(
+                                                          AppLocalizations.of(
+                                                                  context)!
+                                                              .translate(
+                                                                  'trader_log_nav'),
+                                                          style: TextStyle(
+                                                              color: AppColor
+                                                                  .goldenYellow,
+                                                              fontSize: 15.sp),
+                                                        )
+                                                      ],
+                                                    )
+                                                  : Column(
+                                                      mainAxisAlignment:
+                                                          MainAxisAlignment.end,
+                                                      children: [
+                                                        SvgPicture.asset(
+                                                          "assets/icons/log.svg",
+                                                          width: 30.w,
+                                                          height: 30.h,
+                                                        ),
+                                                        localeState.value
+                                                                    .languageCode ==
+                                                                'en'
+                                                            ? const SizedBox(
+                                                                height: 4,
+                                                              )
+                                                            : const SizedBox
+                                                                .shrink(),
+                                                        Text(
+                                                          AppLocalizations.of(
+                                                                  context)!
+                                                              .translate(
+                                                                  'trader_log_nav'),
+                                                          style: TextStyle(
+                                                              color:
+                                                                  Colors.white,
+                                                              fontSize: 15.sp),
+                                                        )
+                                                      ],
+                                                    ),
+                                            ),
+                                            Tab(
+                                              // text: "الحاسبة",
+                                              height: 66.h,
+                                              icon: navigationValue == 1
+                                                  ? Column(
+                                                      mainAxisAlignment:
+                                                          MainAxisAlignment.end,
+                                                      children: [
+                                                        SvgPicture.asset(
+                                                          "assets/icons/calculator_active.svg",
+                                                          width: 36.w,
+                                                          height: 36.h,
+                                                        ),
+                                                        localeState.value
+                                                                    .languageCode ==
+                                                                'en'
+                                                            ? const SizedBox(
+                                                                height: 4,
+                                                              )
+                                                            : const SizedBox
+                                                                .shrink(),
+                                                        Text(
+                                                          AppLocalizations.of(
+                                                                  context)!
+                                                              .translate(
+                                                                  'calculator_nav'),
+                                                          style: TextStyle(
+                                                              color: AppColor
+                                                                  .goldenYellow,
+                                                              fontSize: 15.sp),
+                                                        )
+                                                      ],
+                                                    )
+                                                  : Column(
+                                                      mainAxisAlignment:
+                                                          MainAxisAlignment.end,
+                                                      children: [
+                                                        SvgPicture.asset(
+                                                          "assets/icons/calculator.svg",
+                                                          width: 30.w,
+                                                          height: 30.h,
+                                                        ),
+                                                        localeState.value
+                                                                    .languageCode ==
+                                                                'en'
+                                                            ? const SizedBox(
+                                                                height: 4,
+                                                              )
+                                                            : const SizedBox
+                                                                .shrink(),
+                                                        Text(
+                                                          AppLocalizations.of(
+                                                                  context)!
+                                                              .translate(
+                                                                  'calculator_nav'),
+                                                          style: TextStyle(
+                                                              color:
+                                                                  Colors.white,
+                                                              fontSize: 15.sp),
+                                                        )
+                                                      ],
+                                                    ),
+                                            ),
+                                            Tab(
+                                              // text: "الرئيسية",
+                                              height: 66.h,
+                                              icon: navigationValue == 2
+                                                  ? Column(
+                                                      mainAxisAlignment:
+                                                          MainAxisAlignment.end,
+                                                      children: [
+                                                        SvgPicture.asset(
+                                                          "assets/icons/home_active.svg",
+                                                          width: 36.w,
+                                                          height: 36.h,
+                                                        ),
+                                                        localeState.value
+                                                                    .languageCode ==
+                                                                'en'
+                                                            ? const SizedBox(
+                                                                height: 4,
+                                                              )
+                                                            : const SizedBox
+                                                                .shrink(),
+                                                        Text(
+                                                          AppLocalizations.of(
+                                                                  context)!
+                                                              .translate(
+                                                                  'home'),
+                                                          style: TextStyle(
+                                                              color: AppColor
+                                                                  .goldenYellow,
+                                                              fontSize: 15.sp),
+                                                        )
+                                                      ],
+                                                    )
+                                                  : Column(
+                                                      mainAxisAlignment:
+                                                          MainAxisAlignment.end,
+                                                      children: [
+                                                        SvgPicture.asset(
+                                                          "assets/icons/home.svg",
+                                                          width: 30.w,
+                                                          height: 30.h,
+                                                        ),
+                                                        localeState.value
+                                                                    .languageCode ==
+                                                                'en'
+                                                            ? const SizedBox(
+                                                                height: 4,
+                                                              )
+                                                            : const SizedBox
+                                                                .shrink(),
+                                                        Text(
+                                                          AppLocalizations.of(
+                                                                  context)!
+                                                              .translate(
+                                                                  'home'),
+                                                          style: TextStyle(
+                                                              color:
+                                                                  Colors.white,
+                                                              fontSize: 15.sp),
+                                                        )
+                                                      ],
+                                                    ),
+                                            ),
+                                            Tab(
+                                              // text: "التعرفة",
+                                              height: 66.h,
+                                              icon: navigationValue == 3
+                                                  ? Column(
+                                                      mainAxisAlignment:
+                                                          MainAxisAlignment.end,
+                                                      children: [
+                                                        SvgPicture.asset(
+                                                          "assets/icons/tariff_active.svg",
+                                                          width: 36.w,
+                                                          height: 36.h,
+                                                        ),
+                                                        localeState.value
+                                                                    .languageCode ==
+                                                                'en'
+                                                            ? const SizedBox(
+                                                                height: 4,
+                                                              )
+                                                            : const SizedBox
+                                                                .shrink(),
+                                                        Text(
+                                                          AppLocalizations.of(
+                                                                  context)!
+                                                              .translate(
+                                                                  'tariff_nav'),
+                                                          style: TextStyle(
+                                                              color: AppColor
+                                                                  .goldenYellow,
+                                                              fontSize: 15.sp),
+                                                        )
+                                                      ],
+                                                    )
+                                                  : Column(
+                                                      mainAxisAlignment:
+                                                          MainAxisAlignment.end,
+                                                      children: [
+                                                        SvgPicture.asset(
+                                                          "assets/icons/tariff.svg",
+                                                          width: 30.w,
+                                                          height: 30.h,
+                                                        ),
+                                                        localeState.value
+                                                                    .languageCode ==
+                                                                'en'
+                                                            ? const SizedBox(
+                                                                height: 4,
+                                                              )
+                                                            : const SizedBox
+                                                                .shrink(),
+                                                        Text(
+                                                          AppLocalizations.of(
+                                                                  context)!
+                                                              .translate(
+                                                                  'tariff_nav'),
+                                                          style: TextStyle(
+                                                              color:
+                                                                  Colors.white,
+                                                              fontSize: 15.sp),
+                                                        )
+                                                      ],
+                                                    ),
+                                            ),
+                                            Tab(
+                                              // text: "السجل",
+                                              height: 66.h,
+                                              icon: navigationValue == 4
+                                                  ? Column(
+                                                      mainAxisAlignment:
+                                                          MainAxisAlignment.end,
+                                                      children: [
+                                                        SvgPicture.asset(
+                                                          "assets/icons/broker_order_active.svg",
+                                                          width: 36.w,
+                                                          height: 36.h,
+                                                        ),
+                                                        localeState.value
+                                                                    .languageCode ==
+                                                                'en'
+                                                            ? const SizedBox(
+                                                                height: 4,
+                                                              )
+                                                            : const SizedBox
+                                                                .shrink(),
+                                                        Text(
+                                                          AppLocalizations.of(
+                                                                  context)!
+                                                              .translate(
+                                                                  'broker_order_nav'),
+                                                          style: TextStyle(
+                                                              color: AppColor
+                                                                  .goldenYellow,
+                                                              fontSize: 15.sp),
+                                                        )
+                                                      ],
+                                                    )
+                                                  : Column(
+                                                      mainAxisAlignment:
+                                                          MainAxisAlignment.end,
+                                                      children: [
+                                                        Image.asset(
+                                                          "assets/icons/broker_order.png",
+                                                          width: 30.w,
+                                                          height: 30.h,
+                                                        ),
+                                                        localeState.value
+                                                                    .languageCode ==
+                                                                'en'
+                                                            ? const SizedBox(
+                                                                height: 4,
+                                                              )
+                                                            : const SizedBox
+                                                                .shrink(),
+                                                        Text(
+                                                          AppLocalizations.of(
+                                                                  context)!
+                                                              .translate(
+                                                                  'broker_order_nav'),
+                                                          style:
+                                                              const TextStyle(
+                                                                  color: Colors
+                                                                      .white,
+                                                                  fontSize: 14),
+                                                        )
+                                                      ],
+                                                    ),
+                                            ),
+                                          ]));
+                                } else {
+                                  return const SizedBox.shrink();
+                                }
+                              },
+                            ),
+                            body: currentScreen,
                           ),
                         ),
-                        bottomNavigationBar:
-                            BlocBuilder<BottomNavBarCubit, BottomNavBarState>(
-                          builder: (context, state) {
-                            if (state is BottomNavBarShown) {
-                              return Container(
-                                  height: 88.h,
-                                  decoration: BoxDecoration(
-                                    gradient: LinearGradient(
-                                      colors: bottomNavbarColor(),
-                                      begin: Alignment.centerRight,
-                                      end: Alignment.centerLeft,
-                                    ),
-                                  ),
-                                  child: TabBar(
-                                      labelPadding: EdgeInsets.zero,
-                                      controller: _tabController,
-                                      indicatorColor: AppColor.goldenYellow,
-                                      labelColor: AppColor.goldenYellow,
-                                      unselectedLabelColor: Colors.white,
-                                      labelStyle: TextStyle(fontSize: 15.sp),
-                                      unselectedLabelStyle:
-                                          TextStyle(fontSize: 14.sp),
-                                      padding: EdgeInsets.zero,
-                                      onTap: (value) {
-                                        changeSelectedValue(
-                                            selectedValue: value,
-                                            contxt: context);
-                                      },
-                                      tabs: [
-                                        Tab(
-                                          // text: "طلب مخلص",
-                                          height: 66.h,
-                                          icon: navigationValue == 0
-                                              ? Column(
-                                                  mainAxisAlignment:
-                                                      MainAxisAlignment.end,
-                                                  children: [
-                                                    SvgPicture.asset(
-                                                      "assets/icons/log_active.svg",
-                                                      width: 36.w,
-                                                      height: 36.h,
-                                                    ),
-                                                    Text(
-                                                      "السجل",
-                                                      style: TextStyle(
-                                                          color: AppColor
-                                                              .goldenYellow,
-                                                          fontSize: 15.sp),
-                                                    )
-                                                  ],
-                                                )
-                                              : Column(
-                                                  mainAxisAlignment:
-                                                      MainAxisAlignment.end,
-                                                  children: [
-                                                    SvgPicture.asset(
-                                                      "assets/icons/log.svg",
-                                                      width: 30.w,
-                                                      height: 30.h,
-                                                    ),
-                                                    Text(
-                                                      "السجل",
-                                                      style: TextStyle(
-                                                          color: Colors.white,
-                                                          fontSize: 15.sp),
-                                                    )
-                                                  ],
-                                                ),
-                                        ),
-                                        Tab(
-                                          // text: "الحاسبة",
-                                          height: 66.h,
-                                          icon: navigationValue == 1
-                                              ? Column(
-                                                  mainAxisAlignment:
-                                                      MainAxisAlignment.end,
-                                                  children: [
-                                                    SvgPicture.asset(
-                                                      "assets/icons/calculator_active.svg",
-                                                      width: 36.w,
-                                                      height: 36.h,
-                                                    ),
-                                                    Text(
-                                                      "الحاسبة",
-                                                      style: TextStyle(
-                                                          color: AppColor
-                                                              .goldenYellow,
-                                                          fontSize: 15.sp),
-                                                    )
-                                                  ],
-                                                )
-                                              : Column(
-                                                  mainAxisAlignment:
-                                                      MainAxisAlignment.end,
-                                                  children: [
-                                                    SvgPicture.asset(
-                                                      "assets/icons/calculator.svg",
-                                                      width: 30.w,
-                                                      height: 30.h,
-                                                    ),
-                                                    Text(
-                                                      "الحاسبة",
-                                                      style: TextStyle(
-                                                          color: Colors.white,
-                                                          fontSize: 15.sp),
-                                                    )
-                                                  ],
-                                                ),
-                                        ),
-                                        Tab(
-                                          // text: "الرئيسية",
-                                          height: 66.h,
-                                          icon: navigationValue == 2
-                                              ? Column(
-                                                  mainAxisAlignment:
-                                                      MainAxisAlignment.end,
-                                                  children: [
-                                                    SvgPicture.asset(
-                                                      "assets/icons/home_active.svg",
-                                                      width: 36.w,
-                                                      height: 36.h,
-                                                    ),
-                                                    Text(
-                                                      "الرئيسية",
-                                                      style: TextStyle(
-                                                          color: AppColor
-                                                              .goldenYellow,
-                                                          fontSize: 15.sp),
-                                                    )
-                                                  ],
-                                                )
-                                              : Column(
-                                                  mainAxisAlignment:
-                                                      MainAxisAlignment.end,
-                                                  children: [
-                                                    SvgPicture.asset(
-                                                      "assets/icons/home.svg",
-                                                      width: 30.w,
-                                                      height: 30.h,
-                                                    ),
-                                                    Text(
-                                                      "الرئيسية",
-                                                      style: TextStyle(
-                                                          color: Colors.white,
-                                                          fontSize: 15.sp),
-                                                    )
-                                                  ],
-                                                ),
-                                        ),
-                                        Tab(
-                                          // text: "التعرفة",
-                                          height: 66.h,
-                                          icon: navigationValue == 3
-                                              ? Column(
-                                                  mainAxisAlignment:
-                                                      MainAxisAlignment.end,
-                                                  children: [
-                                                    SvgPicture.asset(
-                                                      "assets/icons/tariff_active.svg",
-                                                      width: 36.w,
-                                                      height: 36.h,
-                                                    ),
-                                                    Text(
-                                                      "التعرفة",
-                                                      style: TextStyle(
-                                                          color: AppColor
-                                                              .goldenYellow,
-                                                          fontSize: 15.sp),
-                                                    )
-                                                  ],
-                                                )
-                                              : Column(
-                                                  mainAxisAlignment:
-                                                      MainAxisAlignment.end,
-                                                  children: [
-                                                    SvgPicture.asset(
-                                                      "assets/icons/tariff.svg",
-                                                      width: 30.w,
-                                                      height: 30.h,
-                                                    ),
-                                                    Text(
-                                                      "التعرفة",
-                                                      style: TextStyle(
-                                                          color: Colors.white,
-                                                          fontSize: 15.sp),
-                                                    )
-                                                  ],
-                                                ),
-                                        ),
-                                        Tab(
-                                          // text: "السجل",
-                                          height: 66.h,
-                                          icon: navigationValue == 4
-                                              ? Column(
-                                                  mainAxisAlignment:
-                                                      MainAxisAlignment.end,
-                                                  children: [
-                                                    SvgPicture.asset(
-                                                      "assets/icons/broker_order_active.svg",
-                                                      width: 36.w,
-                                                      height: 36.h,
-                                                    ),
-                                                    Text(
-                                                      "طلب مخلص",
-                                                      style: TextStyle(
-                                                          color: AppColor
-                                                              .goldenYellow,
-                                                          fontSize: 15.sp),
-                                                    )
-                                                  ],
-                                                )
-                                              : Column(
-                                                  mainAxisAlignment:
-                                                      MainAxisAlignment.end,
-                                                  children: [
-                                                    Image.asset(
-                                                      "assets/icons/broker_order.png",
-                                                      width: 30.w,
-                                                      height: 30.h,
-                                                    ),
-                                                    const Text(
-                                                      "طلب مخلص",
-                                                      style: TextStyle(
-                                                          color: Colors.white,
-                                                          fontSize: 14),
-                                                    )
-                                                  ],
-                                                ),
-                                        ),
-                                      ]));
-                            } else {
-                              return const SizedBox.shrink();
-                            }
-                          },
-                        ),
-                        body: currentScreen,
                       ),
-                    ),
-                  ),
-                  AnimatedPositioned(
-                    duration: panelTransation,
-                    curve: Curves.decelerate,
-                    left: 0,
-                    right: 0,
-                    top: _getTopForPanel(_panelState, size),
-                    height: _getSizeForPanel(_panelState, size),
-                    child: Container(
-                      color: Colors.white,
-                      child: AnimatedSwitcher(
+                      AnimatedPositioned(
                         duration: panelTransation,
-                        child: _buildPanelOption(context),
+                        curve: Curves.decelerate,
+                        left: 0,
+                        right: 0,
+                        top: _getTopForPanel(_panelState, size),
+                        height: _getSizeForPanel(_panelState, size),
+                        child: Container(
+                          color: Colors.white,
+                          child: AnimatedSwitcher(
+                            duration: panelTransation,
+                            child: _buildPanelOption(context),
+                          ),
+                        ),
                       ),
-                    ),
-                  ),
-                ],
-              );
-            }),
+                    ],
+                  );
+                }),
+          );
+        },
       ),
     );
   }
@@ -934,6 +1091,7 @@ class _TraderHomeScreenState extends State<TraderHomeScreen>
   bool showunit = true;
   bool isdropdwonVisible = false;
   String _placeholder = "";
+  var f = intel.NumberFormat("#,###", "en_US");
 
   CalculateObject result = CalculateObject();
   final FocusNode _statenode = FocusNode();
@@ -944,7 +1102,7 @@ class _TraderHomeScreenState extends State<TraderHomeScreen>
     var syrianExch = double.parse(_wieghtController.text.replaceAll(",", "")) *
         double.parse(_valueController.text.replaceAll(",", ""));
     var syrianTotal = syrianExch * 30;
-    var totalEnsurance = (syrianTotal) + (syrianTotal * 0.0012);
+    var totalEnsurance = (syrianTotal * 0.0012);
     setState(() {
       syrianExchangeValue = syrianExch.round().toString();
       syrianTotalValue = syrianTotal.round().toString();
@@ -955,14 +1113,14 @@ class _TraderHomeScreenState extends State<TraderHomeScreen>
   void calculateTotalValue() {
     var syrianTotal =
         double.parse(_valueController.text.replaceAll(",", "")) * 30;
-    var totalEnsurance = (syrianTotal) + (syrianTotal * 0.0012);
+    var totalEnsurance = (syrianTotal * 0.0012);
     setState(() {
       syrianTotalValue = syrianTotal.round().toString();
       totalValueWithEnsurance = totalEnsurance.round().toString();
     });
   }
 
-  void selectSuggestion(Package suggestion) {
+  void selectSuggestion(Package suggestion, String lang) {
     setState(() {
       _typeAheadController.text = suggestion.label!;
     });
@@ -1040,77 +1198,77 @@ class _TraderHomeScreenState extends State<TraderHomeScreen>
       switch (suggestion.unit) {
         case "كغ":
           setState(() {
-            wieghtLabel = "  الوزن";
+            wieghtLabel = lang == 'en' ? "weight" : "الوزن";
           });
           break;
         case "طن":
           setState(() {
-            wieghtLabel = "  الوزن";
+            wieghtLabel = lang == 'en' ? "weight" : "الوزن";
           });
           break;
         case "قيراط":
           setState(() {
-            wieghtLabel = "  الوزن";
+            wieghtLabel = lang == 'en' ? "weight" : "الوزن";
           });
           break;
-        case "كيلو واط بالساعة 1000":
+        case "  كيلو واط بالساعة 1000":
           setState(() {
-            wieghtLabel = "  الاستطاعة";
+            wieghtLabel = lang == 'en' ? "power" : "الاستطاعة";
           });
           break;
-        case "الاستطاعة بالطن":
+        case "  الاستطاعة بالطن":
           setState(() {
-            wieghtLabel = "  الاستطاعة";
+            wieghtLabel = lang == 'en' ? "power" : "الاستطاعة";
           });
           break;
         case "واط":
           setState(() {
-            wieghtLabel = "  الاستطاعة";
+            wieghtLabel = lang == 'en' ? "power" : "الاستطاعة";
           });
           break;
         case "عدد الأزواج":
           setState(() {
-            wieghtLabel = "  العدد";
+            wieghtLabel = lang == 'en' ? "number" : "العدد";
           });
           break;
         case "عدد":
           setState(() {
-            wieghtLabel = "  العدد";
+            wieghtLabel = lang == 'en' ? "number" : "العدد";
           });
           break;
         case "طرد":
           setState(() {
-            wieghtLabel = "  العدد";
+            wieghtLabel = lang == 'en' ? "number" : "العدد";
           });
           break;
         case "قدم":
           setState(() {
-            wieghtLabel = "  العدد";
+            wieghtLabel = lang == 'en' ? "number" : "العدد";
           });
           break;
         case "متر":
           setState(() {
-            wieghtLabel = "  الحجم";
+            wieghtLabel = lang == 'en' ? "volume" : "الحجم";
           });
           break;
         case "متر مربع":
           setState(() {
-            wieghtLabel = "  الحجم";
+            wieghtLabel = lang == 'en' ? "volume" : "الحجم";
           });
           break;
         case "متر مكعب":
           setState(() {
-            wieghtLabel = "  الحجم";
+            wieghtLabel = lang == 'en' ? "volume" : "الحجم";
           });
           break;
         case "لتر":
           setState(() {
-            wieghtLabel = "  السعة";
+            wieghtLabel = lang == 'en' ? "capacity" : "السعة";
           });
           break;
         default:
           setState(() {
-            wieghtLabel = "  الوزن";
+            wieghtLabel = lang == 'en' ? "weight" : "الوزن";
           });
       }
       setState(() {
@@ -1272,459 +1430,166 @@ class _TraderHomeScreenState extends State<TraderHomeScreen>
             FocusManager.instance.primaryFocus?.unfocus();
             BlocProvider.of<BottomNavBarCubit>(context).emitShow();
           },
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 8),
-            child: BlocConsumer<FeeItemBloc, FeeItemState>(
-              listener: (context, state) {
-                if (state is FeeItemLoadedSuccess) {
-                  setState(() {
-                    _wieghtController.text = "0.0";
-                    _valueController.text = "0.0";
-                    syrianExchangeValue = "0.0";
-                    syrianTotalValue = "0.0";
-                    totalValueWithEnsurance = "0.0";
-                  });
-                  selectSuggestion(state.fee);
-                }
-              },
-              builder: (context, state) {
-                if (state is FeeItemLoadedSuccess) {
-                  return Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        const SizedBox(
-                          height: 25,
-                        ),
-                        Container(
-                          padding: const EdgeInsets.symmetric(
-                              vertical: 35, horizontal: 15),
-                          decoration: BoxDecoration(
-                              color: Colors.white,
-                              borderRadius: BorderRadius.circular(20)),
-                          child: Form(
-                            key: _calculatorformkey,
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                TextFormField(
-                                  controller: _typeAheadController,
-                                  enabled: false,
-                                  maxLines: null,
-                                  decoration: InputDecoration(
-                                    labelText: "نوع البضاعة",
-                                    contentPadding: const EdgeInsets.symmetric(
-                                        horizontal: 9.0, vertical: 11.0),
-                                    border: OutlineInputBorder(
-                                      borderRadius: BorderRadius.circular(12),
-                                    ),
-                                  ),
-                                ),
-                                const SizedBox(
-                                  height: 12,
-                                ),
-                                Visibility(
-                                  visible: allowexport,
-                                  child: const Text(
-                                    "هذا البند ممنوع من الاستيراد",
-                                    style: TextStyle(
-                                      color: Colors.red,
-                                      fontSize: 13,
-                                    ),
-                                  ),
-                                ),
-                                const SizedBox(
-                                  height: 12,
-                                ),
-                                Visibility(
-                                  visible: isdropdwonVisible,
-                                  child: DropdownButtonHideUnderline(
-                                    child: DropdownButton2<Extras>(
-                                      isExpanded: true,
-                                      barrierLabel: _placeholder,
-                                      hint: Text(
-                                        _placeholder,
-                                        style: TextStyle(
-                                          fontSize: 14,
-                                          color: Theme.of(context).hintColor,
-                                        ),
-                                      ),
-                                      items: items
-                                          .map((Extras item) =>
-                                              DropdownMenuItem<Extras>(
-                                                value: item,
-                                                child: Container(
-                                                  width: double.infinity,
-                                                  decoration: BoxDecoration(
-                                                    border: Border(
-                                                      bottom: BorderSide(
-                                                          color: AppColor
-                                                              .goldenYellow,
-                                                          width: 1),
-                                                    ),
-                                                  ),
-                                                  child: Text(
-                                                    item.label!,
-                                                    style: const TextStyle(
-                                                      fontSize: 14,
-                                                    ),
-                                                  ),
-                                                ),
-                                              ))
-                                          .toList(),
-                                      value: selectedValue,
-                                      onChanged: (Extras? value) {
-                                        if (value!.countryGroup!.isEmpty) {
-                                          if (value.price! > 0) {
-                                            basePrice = value.price!;
-
-                                            _valueController.text =
-                                                value.price!.toString();
-                                            setState(() {
-                                              valueEnabled = false;
-                                            });
-                                          } else {
-                                            setState(() {
-                                              basePrice = 0.0;
-
-                                              _valueController.text = "0.0";
-                                              valueEnabled = true;
-                                              syrianExchangeValue = "30";
-                                            });
-                                          }
-                                          evaluatePrice();
-                                        } else {
-                                          if (value.price! > 0) {
-                                            basePrice = value.price!;
-
-                                            _valueController.text =
-                                                value.price!.toString();
-                                            setState(() {
-                                              valueEnabled = false;
-                                            });
-                                          } else {
-                                            setState(() {
-                                              basePrice = 0.0;
-
-                                              _valueController.text = "0.0";
-                                              valueEnabled = true;
-                                              syrianExchangeValue = "30";
-                                            });
-                                          }
-                                          evaluatePrice();
-                                        }
-                                        setState(() {
-                                          selectedValue = value;
-                                        });
-                                      },
-                                      buttonStyleData: ButtonStyleData(
-                                        height: 50,
-                                        width: double.infinity,
-
-                                        padding: const EdgeInsets.symmetric(
-                                          horizontal: 9.0,
-                                        ),
-                                        decoration: BoxDecoration(
+          child: BlocBuilder<LocaleCubit, LocaleState>(
+            builder: (context, localeState) {
+              return Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 8),
+                child: BlocConsumer<FeeItemBloc, FeeItemState>(
+                  listener: (context, state) {
+                    if (state is FeeItemLoadedSuccess) {
+                      setState(() {
+                        _wieghtController.text = "0.0";
+                        _valueController.text = "0.0";
+                        syrianExchangeValue = "0.0";
+                        syrianTotalValue = "0.0";
+                        totalValueWithEnsurance = "0.0";
+                      });
+                      selectSuggestion(
+                          state.fee, localeState.value.languageCode);
+                    }
+                  },
+                  builder: (context, state) {
+                    if (state is FeeItemLoadedSuccess) {
+                      return Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            const SizedBox(
+                              height: 25,
+                            ),
+                            Container(
+                              padding: const EdgeInsets.symmetric(
+                                  vertical: 35, horizontal: 15),
+                              decoration: BoxDecoration(
+                                  color: Colors.white,
+                                  borderRadius: BorderRadius.circular(20)),
+                              child: Form(
+                                key: _calculatorformkey,
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    TextFormField(
+                                      controller: _typeAheadController,
+                                      enabled: false,
+                                      maxLines: null,
+                                      decoration: InputDecoration(
+                                        labelText: AppLocalizations.of(context)!
+                                            .translate('goods_name'),
+                                        contentPadding:
+                                            const EdgeInsets.symmetric(
+                                                horizontal: 9.0,
+                                                vertical: 11.0),
+                                        border: OutlineInputBorder(
                                           borderRadius:
                                               BorderRadius.circular(12),
-                                          border: Border.all(
-                                            color: Colors.black26,
-                                          ),
-                                          color: Colors.white,
-                                        ),
-                                        // elevation: 2,
-                                      ),
-                                      iconStyleData: const IconStyleData(
-                                        icon: Icon(
-                                          Icons.keyboard_arrow_down_sharp,
-                                        ),
-                                        iconSize: 20,
-                                        iconEnabledColor: AppColor.AccentBlue,
-                                        iconDisabledColor: Colors.grey,
-                                      ),
-                                      dropdownStyleData: DropdownStyleData(
-                                        decoration: BoxDecoration(
-                                          borderRadius:
-                                              BorderRadius.circular(14),
-                                          color: Colors.white,
-                                        ),
-                                        scrollbarTheme: ScrollbarThemeData(
-                                          radius: const Radius.circular(40),
-                                          thickness:
-                                              MaterialStateProperty.all(6),
-                                          thumbVisibility:
-                                              MaterialStateProperty.all(true),
                                         ),
                                       ),
-                                      menuItemStyleData: MenuItemStyleData(
-                                        height: 40.h,
-                                      ),
                                     ),
-                                  ),
-                                ),
-                                const SizedBox(
-                                  height: 12,
-                                ),
-                                Wrap(
-                                  children: [
-                                    Visibility(
-                                      visible: isfeeequal001,
-                                      child: SizedBox(
-                                        width:
-                                            MediaQuery.of(context).size.width *
-                                                .4,
-                                        child: CheckboxListTile(
-                                            value: rawMaterialValue,
-                                            contentPadding: EdgeInsets.zero,
-                                            controlAffinity:
-                                                ListTileControlAffinity.leading,
-                                            title: const Text("المادة أولية؟"),
-                                            onChanged: (value) {
-                                              setState(() {
-                                                rawMaterialValue = value!;
-                                              });
-                                              evaluatePrice();
-                                            }),
-                                      ),
+                                    const SizedBox(
+                                      height: 12,
                                     ),
                                     Visibility(
-                                      visible: isfeeequal001,
-                                      child: SizedBox(
-                                        width:
-                                            MediaQuery.of(context).size.width *
-                                                .4,
-                                        child: CheckboxListTile(
-                                            value: industrialValue,
-                                            contentPadding: EdgeInsets.zero,
-                                            controlAffinity:
-                                                ListTileControlAffinity.leading,
-                                            title: const Text("المادة صناعية؟"),
-                                            onChanged: (value) {
-                                              setState(() {
-                                                industrialValue = value!;
-                                              });
-                                              evaluatePrice();
-                                            }),
+                                      visible: allowexport,
+                                      child: Text(
+                                        AppLocalizations.of(context)!
+                                            .translate('fee_import_banned'),
+                                        style: const TextStyle(
+                                          color: Colors.red,
+                                          fontSize: 13,
+                                        ),
                                       ),
+                                    ),
+                                    const SizedBox(
+                                      height: 12,
                                     ),
                                     Visibility(
-                                      visible: isBrand,
-                                      child: SizedBox(
-                                        width:
-                                            MediaQuery.of(context).size.width *
-                                                .4,
-                                        child: CheckboxListTile(
-                                            value: brandValue,
-                                            contentPadding: EdgeInsets.zero,
-                                            controlAffinity:
-                                                ListTileControlAffinity.leading,
-                                            title: const Text("البضاعة ماركة؟"),
-                                            onChanged: (value) {
-                                              calculateExtrasPrice(1.5, value!);
-                                              setState(() {
-                                                brandValue = value;
-                                              });
-                                              evaluatePrice();
-                                            }),
-                                      ),
-                                    ),
-                                    Visibility(
-                                      visible: isTubes,
-                                      child: SizedBox(
-                                        width:
-                                            MediaQuery.of(context).size.width *
-                                                .4,
-                                        child: CheckboxListTile(
-                                            value: tubesValue,
-                                            contentPadding: EdgeInsets.zero,
-                                            controlAffinity:
-                                                ListTileControlAffinity.leading,
-                                            title: const Text(
-                                                "قياس الأنابيب أقل أو يساوي 3inch؟"),
-                                            onChanged: (value) {
-                                              calculateExtrasPrice(.1, value!);
-                                              setState(() {
-                                                tubesValue = value;
-                                              });
-                                              evaluatePrice();
-                                            }),
-                                      ),
-                                    ),
-                                    Visibility(
-                                      visible: isColored,
-                                      child: SizedBox(
-                                        width:
-                                            MediaQuery.of(context).size.width *
-                                                .4,
-                                        child: CheckboxListTile(
-                                            value: colorValue,
-                                            contentPadding: EdgeInsets.zero,
-                                            controlAffinity:
-                                                ListTileControlAffinity.leading,
-                                            title: const Text("الخيوط ملونة؟"),
-                                            onChanged: (value) {
-                                              calculateExtrasPrice(.1, value!);
-                                              setState(() {
-                                                colorValue = value;
-                                              });
-                                              evaluatePrice();
-                                            }),
-                                      ),
-                                    ),
-                                    Visibility(
-                                      visible: isLycra,
-                                      child: SizedBox(
-                                        width:
-                                            MediaQuery.of(context).size.width *
-                                                .4,
-                                        child: CheckboxListTile(
-                                            value: lycraValue,
-                                            contentPadding: EdgeInsets.zero,
-                                            controlAffinity:
-                                                ListTileControlAffinity.leading,
-                                            title: const Text("الخيوط ليكرا؟"),
-                                            onChanged: (value) {
-                                              calculateExtrasPrice(.05, value!);
-                                              setState(() {
-                                                lycraValue = value;
-                                              });
-                                              evaluatePrice();
-                                            }),
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                                BlocBuilder<FlagsBloc, FlagsState>(
-                                  builder: (context, flagstate) {
-                                    if (flagstate is FlagsLoadedSuccess) {
-                                      return DropdownButtonHideUnderline(
-                                        child: DropdownButton2<Origin>(
+                                      visible: isdropdwonVisible,
+                                      child: DropdownButtonHideUnderline(
+                                        child: DropdownButton2<Extras>(
                                           isExpanded: true,
+                                          barrierLabel: _placeholder,
                                           hint: Text(
-                                            " اختر المنشأ",
+                                            _placeholder,
                                             style: TextStyle(
-                                              fontSize: 15,
+                                              fontSize: 14,
                                               color:
                                                   Theme.of(context).hintColor,
                                             ),
                                           ),
-                                          items: flagstate.origins
-                                              .map((Origin item) =>
-                                                  DropdownMenuItem<Origin>(
+                                          items: items
+                                              .map((Extras item) =>
+                                                  DropdownMenuItem<Extras>(
                                                     value: item,
-                                                    child: SizedBox(
-                                                      // width: 200,
-                                                      child: Row(
-                                                        children: [
-                                                          SvgPicture.network(
-                                                            item.imageURL!,
-                                                            height: 35.h,
-                                                            width: 45.w,
-                                                            // semanticsLabel: 'A shark?!',
-                                                            placeholderBuilder:
-                                                                (BuildContext
-                                                                        context) =>
-                                                                    Container(
-                                                              height: 35.h,
-                                                              width: 45.w,
-                                                              decoration:
-                                                                  BoxDecoration(
-                                                                color: Colors
-                                                                    .grey[200],
-                                                                borderRadius:
-                                                                    BorderRadius
-                                                                        .circular(
-                                                                            5),
-                                                              ),
-                                                            ),
-                                                          ),
-                                                          const SizedBox(
-                                                              width: 7),
-                                                          Container(
-                                                            constraints:
-                                                                BoxConstraints(
-                                                              maxWidth: 280.w,
-                                                            ),
-                                                            child: Text(
-                                                              item.label!,
-                                                              overflow:
-                                                                  TextOverflow
-                                                                      .ellipsis,
-                                                              // maxLines: 2,
-                                                            ),
-                                                          ),
-                                                        ],
-                                                        // subtitle: Text('\$${suggestion['price']}'),
+                                                    child: Container(
+                                                      width: double.infinity,
+                                                      decoration: BoxDecoration(
+                                                        border: Border(
+                                                          bottom: BorderSide(
+                                                              color: AppColor
+                                                                  .goldenYellow,
+                                                              width: 1),
+                                                        ),
+                                                      ),
+                                                      child: Text(
+                                                        item.label!,
+                                                        style: const TextStyle(
+                                                          fontSize: 14,
+                                                        ),
                                                       ),
                                                     ),
                                                   ))
                                               .toList(),
-                                          value: selectedOrigin,
-                                          onChanged: (Origin? value) {
-                                            selectOrigin(value!);
-                                          },
-                                          dropdownSearchData:
-                                              DropdownSearchData(
-                                            searchController: _originController,
-                                            searchInnerWidgetHeight: 60,
-                                            searchInnerWidget: Container(
-                                              height: 60,
-                                              padding: const EdgeInsets.only(
-                                                top: 8,
-                                                bottom: 4,
-                                                right: 8,
-                                                left: 8,
-                                              ),
-                                              child: TextFormField(
-                                                expands: true,
-                                                maxLines: null,
-                                                controller: _originController,
-                                                onTap: () {
-                                                  _originController.selection =
-                                                      TextSelection(
-                                                          baseOffset: 0,
-                                                          extentOffset:
-                                                              _originController
-                                                                  .value
-                                                                  .text
-                                                                  .length);
-                                                },
-                                                decoration: InputDecoration(
-                                                  isDense: true,
-                                                  contentPadding:
-                                                      const EdgeInsets
-                                                          .symmetric(
-                                                    horizontal: 10,
-                                                    vertical: 8,
-                                                  ),
-                                                  hintText: 'اختر المنشأ',
-                                                  hintStyle: const TextStyle(
-                                                      fontSize: 12),
-                                                  border: OutlineInputBorder(
-                                                    borderRadius:
-                                                        BorderRadius.circular(
-                                                            8),
-                                                  ),
-                                                ),
-                                              ),
-                                            ),
-                                            searchMatchFn: (item, searchValue) {
-                                              return item.value!.label!
-                                                  .contains(searchValue);
-                                            },
-                                          ),
-                                          onMenuStateChange: (isOpen) {
-                                            if (isOpen) {
-                                              setState(() {
-                                                _originController.clear();
-                                              });
+                                          value: selectedValue,
+                                          onChanged: (Extras? value) {
+                                            if (value!.countryGroup!.isEmpty) {
+                                              if (value.price! > 0) {
+                                                basePrice = value.price!;
+
+                                                _valueController.text =
+                                                    value.price!.toString();
+                                                setState(() {
+                                                  valueEnabled = false;
+                                                });
+                                              } else {
+                                                setState(() {
+                                                  basePrice = 0.0;
+
+                                                  _valueController.text = "0.0";
+                                                  valueEnabled = true;
+                                                  syrianExchangeValue = "30";
+                                                });
+                                              }
+                                              evaluatePrice();
+                                            } else {
+                                              if (value.price! > 0) {
+                                                basePrice = value.price!;
+
+                                                _valueController.text =
+                                                    value.price!.toString();
+                                                setState(() {
+                                                  valueEnabled = false;
+                                                });
+                                              } else {
+                                                setState(() {
+                                                  basePrice = 0.0;
+
+                                                  _valueController.text = "0.0";
+                                                  valueEnabled = true;
+                                                  syrianExchangeValue = "30";
+                                                });
+                                              }
+                                              evaluatePrice();
                                             }
+                                            setState(() {
+                                              selectedValue = value;
+                                            });
                                           },
-                                          barrierColor: Colors.black45,
                                           buttonStyleData: ButtonStyleData(
                                             height: 50,
                                             width: double.infinity,
-                                            padding: const EdgeInsets.only(
-                                                left: 14, right: 14),
+
+                                            padding: const EdgeInsets.symmetric(
+                                              horizontal: 9.0,
+                                            ),
                                             decoration: BoxDecoration(
                                               borderRadius:
                                                   BorderRadius.circular(12),
@@ -1745,10 +1610,6 @@ class _TraderHomeScreenState extends State<TraderHomeScreen>
                                             iconDisabledColor: Colors.grey,
                                           ),
                                           dropdownStyleData: DropdownStyleData(
-                                            maxHeight: MediaQuery.of(context)
-                                                .size
-                                                .height,
-                                            padding: const EdgeInsets.all(8.0),
                                             decoration: BoxDecoration(
                                               borderRadius:
                                                   BorderRadius.circular(14),
@@ -1763,290 +1624,689 @@ class _TraderHomeScreenState extends State<TraderHomeScreen>
                                                       true),
                                             ),
                                           ),
-                                          menuItemStyleData:
-                                              const MenuItemStyleData(
-                                            height: 40,
+                                          menuItemStyleData: MenuItemStyleData(
+                                            height: 40.h,
                                           ),
                                         ),
-                                      );
-                                    } else if (flagstate
-                                        is FlagsLoadingProgressState) {
-                                      return const Center(
-                                        child: LinearProgressIndicator(),
-                                      );
-                                    } else {
-                                      return Center(
-                                        child: GestureDetector(
-                                          onTap: () {
-                                            BlocProvider.of<FlagsBloc>(context)
-                                                .add(FlagsLoadEvent());
-                                          },
-                                          child: const Row(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.center,
-                                            children: [
-                                              Text(
-                                                "حدث خطأأثناء تحميل القائمة...  ",
+                                      ),
+                                    ),
+                                    const SizedBox(
+                                      height: 12,
+                                    ),
+                                    Wrap(
+                                      children: [
+                                        Visibility(
+                                          visible: isfeeequal001,
+                                          child: SizedBox(
+                                            width: MediaQuery.of(context)
+                                                    .size
+                                                    .width *
+                                                .4,
+                                            child: CheckboxListTile(
+                                                value: rawMaterialValue,
+                                                contentPadding: EdgeInsets.zero,
+                                                controlAffinity:
+                                                    ListTileControlAffinity
+                                                        .leading,
+                                                title: Text(AppLocalizations.of(
+                                                        context)!
+                                                    .translate('raw_material')),
+                                                onChanged: (value) {
+                                                  setState(() {
+                                                    rawMaterialValue = value!;
+                                                  });
+                                                  evaluatePrice();
+                                                }),
+                                          ),
+                                        ),
+                                        Visibility(
+                                          visible: isfeeequal001,
+                                          child: SizedBox(
+                                            width: MediaQuery.of(context)
+                                                    .size
+                                                    .width *
+                                                .4,
+                                            child: CheckboxListTile(
+                                                value: industrialValue,
+                                                contentPadding: EdgeInsets.zero,
+                                                controlAffinity:
+                                                    ListTileControlAffinity
+                                                        .leading,
+                                                title: Text(AppLocalizations.of(
+                                                        context)!
+                                                    .translate('industrial')),
+                                                onChanged: (value) {
+                                                  setState(() {
+                                                    industrialValue = value!;
+                                                  });
+                                                  evaluatePrice();
+                                                }),
+                                          ),
+                                        ),
+                                        Visibility(
+                                          visible: isBrand,
+                                          child: SizedBox(
+                                            width: MediaQuery.of(context)
+                                                    .size
+                                                    .width *
+                                                .4,
+                                            child: CheckboxListTile(
+                                                value: brandValue,
+                                                contentPadding: EdgeInsets.zero,
+                                                controlAffinity:
+                                                    ListTileControlAffinity
+                                                        .leading,
+                                                title: Text(AppLocalizations.of(
+                                                        context)!
+                                                    .translate('isBrand')),
+                                                onChanged: (value) {
+                                                  calculateExtrasPrice(
+                                                      1.5, value!);
+                                                  setState(() {
+                                                    brandValue = value;
+                                                  });
+                                                  evaluatePrice();
+                                                }),
+                                          ),
+                                        ),
+                                        Visibility(
+                                          visible: isTubes,
+                                          child: SizedBox(
+                                            width: MediaQuery.of(context)
+                                                    .size
+                                                    .width *
+                                                .4,
+                                            child: CheckboxListTile(
+                                                value: tubesValue,
+                                                contentPadding: EdgeInsets.zero,
+                                                controlAffinity:
+                                                    ListTileControlAffinity
+                                                        .leading,
+                                                title: Text(AppLocalizations.of(
+                                                        context)!
+                                                    .translate('isTubeValue')),
+                                                onChanged: (value) {
+                                                  calculateExtrasPrice(
+                                                      .1, value!);
+                                                  setState(() {
+                                                    tubesValue = value;
+                                                  });
+                                                  evaluatePrice();
+                                                }),
+                                          ),
+                                        ),
+                                        Visibility(
+                                          visible: isColored,
+                                          child: SizedBox(
+                                            width: MediaQuery.of(context)
+                                                    .size
+                                                    .width *
+                                                .4,
+                                            child: CheckboxListTile(
+                                                value: colorValue,
+                                                contentPadding: EdgeInsets.zero,
+                                                controlAffinity:
+                                                    ListTileControlAffinity
+                                                        .leading,
+                                                title: Text(AppLocalizations.of(
+                                                        context)!
+                                                    .translate('isColored')),
+                                                onChanged: (value) {
+                                                  calculateExtrasPrice(
+                                                      .1, value!);
+                                                  setState(() {
+                                                    colorValue = value;
+                                                  });
+                                                  evaluatePrice();
+                                                }),
+                                          ),
+                                        ),
+                                        Visibility(
+                                          visible: isLycra,
+                                          child: SizedBox(
+                                            width: MediaQuery.of(context)
+                                                    .size
+                                                    .width *
+                                                .4,
+                                            child: CheckboxListTile(
+                                                value: lycraValue,
+                                                contentPadding: EdgeInsets.zero,
+                                                controlAffinity:
+                                                    ListTileControlAffinity
+                                                        .leading,
+                                                title: Text(AppLocalizations.of(
+                                                        context)!
+                                                    .translate('isLycra')),
+                                                onChanged: (value) {
+                                                  calculateExtrasPrice(
+                                                      .05, value!);
+                                                  setState(() {
+                                                    lycraValue = value;
+                                                  });
+                                                  evaluatePrice();
+                                                }),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                    BlocBuilder<FlagsBloc, FlagsState>(
+                                      builder: (context, flagstate) {
+                                        if (flagstate is FlagsLoadedSuccess) {
+                                          return DropdownButtonHideUnderline(
+                                            child: DropdownButton2<Origin>(
+                                              isExpanded: true,
+                                              hint: Text(
+                                                AppLocalizations.of(context)!
+                                                    .translate('select_origin'),
                                                 style: TextStyle(
-                                                    color: Colors.red),
+                                                  fontSize: 15,
+                                                  color: Theme.of(context)
+                                                      .hintColor,
+                                                ),
                                               ),
-                                              Icon(
-                                                Icons.refresh,
-                                                color: Colors.grey,
-                                              )
-                                            ],
+                                              items: flagstate.origins
+                                                  .map((Origin item) =>
+                                                      DropdownMenuItem<Origin>(
+                                                        value: item,
+                                                        child: SizedBox(
+                                                          // width: 200,
+                                                          child: Row(
+                                                            children: [
+                                                              SvgPicture
+                                                                  .network(
+                                                                item.imageURL!,
+                                                                height: 35.h,
+                                                                width: 45.w,
+                                                                // semanticsLabel: 'A shark?!',
+                                                                placeholderBuilder:
+                                                                    (BuildContext
+                                                                            context) =>
+                                                                        Container(
+                                                                  height: 35.h,
+                                                                  width: 45.w,
+                                                                  decoration:
+                                                                      BoxDecoration(
+                                                                    color: Colors
+                                                                            .grey[
+                                                                        200],
+                                                                    borderRadius:
+                                                                        BorderRadius
+                                                                            .circular(5),
+                                                                  ),
+                                                                ),
+                                                              ),
+                                                              const SizedBox(
+                                                                  width: 7),
+                                                              Container(
+                                                                constraints:
+                                                                    BoxConstraints(
+                                                                  maxWidth:
+                                                                      280.w,
+                                                                ),
+                                                                child: Text(
+                                                                  item.label!,
+                                                                  overflow:
+                                                                      TextOverflow
+                                                                          .ellipsis,
+                                                                  // maxLines: 2,
+                                                                ),
+                                                              ),
+                                                            ],
+                                                            // subtitle: Text('\$${suggestion['price']}'),
+                                                          ),
+                                                        ),
+                                                      ))
+                                                  .toList(),
+                                              value: selectedOrigin,
+                                              onChanged: (Origin? value) {
+                                                selectOrigin(value!);
+                                              },
+                                              dropdownSearchData:
+                                                  DropdownSearchData(
+                                                searchController:
+                                                    _originController,
+                                                searchInnerWidgetHeight: 60,
+                                                searchInnerWidget: Container(
+                                                  height: 60,
+                                                  padding:
+                                                      const EdgeInsets.only(
+                                                    top: 8,
+                                                    bottom: 4,
+                                                    right: 8,
+                                                    left: 8,
+                                                  ),
+                                                  child: TextFormField(
+                                                    expands: true,
+                                                    maxLines: null,
+                                                    controller:
+                                                        _originController,
+                                                    onTap: () {
+                                                      _originController
+                                                              .selection =
+                                                          TextSelection(
+                                                              baseOffset: 0,
+                                                              extentOffset:
+                                                                  _originController
+                                                                      .value
+                                                                      .text
+                                                                      .length);
+                                                    },
+                                                    decoration: InputDecoration(
+                                                      isDense: true,
+                                                      contentPadding:
+                                                          const EdgeInsets
+                                                              .symmetric(
+                                                        horizontal: 10,
+                                                        vertical: 8,
+                                                      ),
+                                                      hintText: AppLocalizations
+                                                              .of(context)!
+                                                          .translate(
+                                                              'select_origin'),
+                                                      hintStyle:
+                                                          const TextStyle(
+                                                              fontSize: 12),
+                                                      border:
+                                                          OutlineInputBorder(
+                                                        borderRadius:
+                                                            BorderRadius
+                                                                .circular(8),
+                                                      ),
+                                                    ),
+                                                  ),
+                                                ),
+                                                searchMatchFn:
+                                                    (item, searchValue) {
+                                                  return item.value!.label!
+                                                      .contains(searchValue);
+                                                },
+                                              ),
+                                              onMenuStateChange: (isOpen) {
+                                                if (isOpen) {
+                                                  setState(() {
+                                                    _originController.clear();
+                                                  });
+                                                }
+                                              },
+                                              barrierColor: Colors.black45,
+                                              buttonStyleData: ButtonStyleData(
+                                                height: 50,
+                                                width: double.infinity,
+                                                padding: const EdgeInsets.only(
+                                                    left: 14, right: 14),
+                                                decoration: BoxDecoration(
+                                                  borderRadius:
+                                                      BorderRadius.circular(12),
+                                                  border: Border.all(
+                                                    color: Colors.black26,
+                                                  ),
+                                                  color: Colors.white,
+                                                ),
+                                                // elevation: 2,
+                                              ),
+                                              iconStyleData:
+                                                  const IconStyleData(
+                                                icon: Icon(
+                                                  Icons
+                                                      .keyboard_arrow_down_sharp,
+                                                ),
+                                                iconSize: 20,
+                                                iconEnabledColor:
+                                                    AppColor.AccentBlue,
+                                                iconDisabledColor: Colors.grey,
+                                              ),
+                                              dropdownStyleData:
+                                                  DropdownStyleData(
+                                                maxHeight:
+                                                    MediaQuery.of(context)
+                                                        .size
+                                                        .height,
+                                                padding:
+                                                    const EdgeInsets.all(8.0),
+                                                decoration: BoxDecoration(
+                                                  borderRadius:
+                                                      BorderRadius.circular(14),
+                                                  color: Colors.white,
+                                                ),
+                                                scrollbarTheme:
+                                                    ScrollbarThemeData(
+                                                  radius:
+                                                      const Radius.circular(40),
+                                                  thickness:
+                                                      MaterialStateProperty.all(
+                                                          6),
+                                                  thumbVisibility:
+                                                      MaterialStateProperty.all(
+                                                          true),
+                                                ),
+                                              ),
+                                              menuItemStyleData:
+                                                  const MenuItemStyleData(
+                                                height: 40,
+                                              ),
+                                            ),
+                                          );
+                                        } else if (flagstate
+                                            is FlagsLoadingProgressState) {
+                                          return const Center(
+                                            child: LinearProgressIndicator(),
+                                          );
+                                        } else {
+                                          return Center(
+                                            child: GestureDetector(
+                                              onTap: () {
+                                                BlocProvider.of<FlagsBloc>(
+                                                        context)
+                                                    .add(FlagsLoadEvent());
+                                              },
+                                              child: Row(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment.center,
+                                                children: [
+                                                  Text(
+                                                    AppLocalizations.of(
+                                                            context)!
+                                                        .translate(
+                                                            'list_error'),
+                                                    style: const TextStyle(
+                                                        color: Colors.red),
+                                                  ),
+                                                  const Icon(
+                                                    Icons.refresh,
+                                                    color: Colors.grey,
+                                                  )
+                                                ],
+                                              ),
+                                            ),
+                                          );
+                                        }
+                                      },
+                                    ),
+                                    Visibility(
+                                        visible: originerror,
+                                        child: Text(
+                                          AppLocalizations.of(context)!
+                                              .translate('select_origin_error'),
+                                          style: const TextStyle(
+                                              color: Colors.red),
+                                        )),
+                                    Visibility(
+                                      visible: originerror,
+                                      child: const SizedBox(
+                                        height: 12,
+                                      ),
+                                    ),
+                                    const SizedBox(
+                                      height: 12,
+                                    ),
+                                    Focus(
+                                      focusNode: _statenode,
+                                      onFocusChange: (bool focus) {
+                                        if (!focus) {
+                                          FocusManager.instance.primaryFocus
+                                              ?.unfocus();
+                                          BlocProvider.of<BottomNavBarCubit>(
+                                                  context)
+                                              .emitShow();
+                                        }
+                                      },
+                                      child: TextFormField(
+                                        controller: _wieghtController,
+                                        onTap: () => _wieghtController
+                                                .selection =
+                                            TextSelection(
+                                                baseOffset: 0,
+                                                extentOffset: _wieghtController
+                                                    .value.text.length),
+                                        // enabled: !valueEnabled,textInputAction: TextInputAction.done,
+                                        keyboardType: const TextInputType
+                                            .numberWithOptions(
+                                            decimal: true, signed: true),
+                                        inputFormatters: [
+                                          DecimalFormatter(),
+                                        ],
+                                        decoration: InputDecoration(
+                                          suffixText:
+                                              showunit ? wieghtUnit : "",
+                                          labelText: wieghtLabel,
+                                          contentPadding:
+                                              const EdgeInsets.symmetric(
+                                                  horizontal: 9.0,
+                                                  vertical: 11.0),
+                                          border: OutlineInputBorder(
+                                            borderRadius:
+                                                BorderRadius.circular(12),
                                           ),
                                         ),
-                                      );
-                                    }
-                                  },
-                                ),
-                                Visibility(
-                                    visible: originerror,
-                                    child: const Text(
-                                      "الرجاء اختيار المنشأ",
-                                      style: TextStyle(color: Colors.red),
-                                    )),
-                                Visibility(
-                                  visible: originerror,
-                                  child: const SizedBox(
-                                    height: 12,
-                                  ),
-                                ),
-                                const SizedBox(
-                                  height: 12,
-                                ),
-                                Focus(
-                                  focusNode: _statenode,
-                                  onFocusChange: (bool focus) {
-                                    if (!focus) {
-                                      FocusManager.instance.primaryFocus
-                                          ?.unfocus();
-                                      BlocProvider.of<BottomNavBarCubit>(
-                                              context)
-                                          .emitShow();
-                                    }
-                                  },
-                                  child: TextFormField(
-                                    controller: _wieghtController,
-                                    onTap: () => _wieghtController.selection =
-                                        TextSelection(
-                                            baseOffset: 0,
-                                            extentOffset: _wieghtController
-                                                .value.text.length),
-                                    // enabled: !valueEnabled,textInputAction: TextInputAction.done,
-                                    keyboardType:
-                                        const TextInputType.numberWithOptions(
-                                            decimal: true, signed: true),
-                                    inputFormatters: [
-                                      DecimalFormatter(),
-                                    ],
-                                    decoration: InputDecoration(
-                                      suffixText: showunit ? wieghtUnit : "",
-                                      labelText: wieghtLabel,
-                                      contentPadding:
-                                          const EdgeInsets.symmetric(
-                                              horizontal: 9.0, vertical: 11.0),
-                                      border: OutlineInputBorder(
-                                        borderRadius: BorderRadius.circular(12),
+                                        onChanged: (value) {
+                                          if (_originController
+                                              .text.isNotEmpty) {
+                                            setState(() {
+                                              originerror = false;
+                                            });
+                                            if (value.isNotEmpty) {
+                                              // calculateTotalValueWithPrice(value);
+                                              wieghtValue = double.parse(value);
+                                            } else {
+                                              wieghtValue = 0.0;
+                                            }
+                                            evaluatePrice();
+                                          } else {
+                                            setState(() {
+                                              originerror = true;
+                                            });
+                                          }
+                                        },
                                       ),
                                     ),
-                                    onChanged: (value) {
-                                      if (_originController.text.isNotEmpty) {
-                                        setState(() {
-                                          originerror = false;
-                                        });
-                                        if (value.isNotEmpty) {
-                                          // calculateTotalValueWithPrice(value);
-                                          wieghtValue = double.parse(value);
-                                        } else {
-                                          wieghtValue = 0.0;
+                                    const SizedBox(
+                                      height: 12,
+                                    ),
+                                    Focus(
+                                      focusNode: _statenode,
+                                      onFocusChange: (bool focus) {
+                                        if (!focus) {
+                                          FocusManager.instance.primaryFocus
+                                              ?.unfocus();
+                                          BlocProvider.of<BottomNavBarCubit>(
+                                                  context)
+                                              .emitShow();
                                         }
-                                        evaluatePrice();
-                                      } else {
-                                        setState(() {
-                                          originerror = true;
-                                        });
-                                      }
-                                    },
-                                  ),
-                                ),
-                                const SizedBox(
-                                  height: 12,
-                                ),
-                                Focus(
-                                  focusNode: _statenode,
-                                  onFocusChange: (bool focus) {
-                                    if (!focus) {
-                                      FocusManager.instance.primaryFocus
-                                          ?.unfocus();
-                                      BlocProvider.of<BottomNavBarCubit>(
-                                              context)
-                                          .emitShow();
-                                    }
-                                  },
-                                  child: TextFormField(
-                                    controller: _valueController,
-                                    onTap: () => _valueController.selection =
-                                        TextSelection(
-                                            baseOffset: 0,
-                                            extentOffset: _valueController
-                                                .value.text.length),
-                                    // enabled: valueEnabled,
-                                    textInputAction: TextInputAction.done,
-                                    keyboardType:
-                                        const TextInputType.numberWithOptions(
+                                      },
+                                      child: TextFormField(
+                                        controller: _valueController,
+                                        onTap: () => _valueController
+                                                .selection =
+                                            TextSelection(
+                                                baseOffset: 0,
+                                                extentOffset: _valueController
+                                                    .value.text.length),
+                                        // enabled: valueEnabled,
+                                        textInputAction: TextInputAction.done,
+                                        keyboardType: const TextInputType
+                                            .numberWithOptions(
                                             decimal: true, signed: true),
-                                    inputFormatters: [
-                                      DecimalFormatter(),
-                                    ],
-                                    style: const TextStyle(fontSize: 18),
-                                    decoration: InputDecoration(
-                                      labelText: valueEnabled
-                                          ? "قيمة البضاعة الاجمالية بالدولار"
-                                          : "سعر الواحدة لدى الجمارك",
-                                      suffixText: "\$",
-                                      contentPadding:
-                                          const EdgeInsets.symmetric(
-                                              horizontal: 9.0, vertical: 11.0),
-                                      border: OutlineInputBorder(
-                                        borderRadius: BorderRadius.circular(12),
+                                        inputFormatters: [
+                                          DecimalFormatter(),
+                                        ],
+                                        style: const TextStyle(fontSize: 18),
+                                        decoration: InputDecoration(
+                                          labelText: valueEnabled
+                                              ? AppLocalizations.of(context)!
+                                                  .translate(
+                                                      'total_value_in_dollar')
+                                              : AppLocalizations.of(context)!
+                                                  .translate(
+                                                      'price_for_custome'),
+                                          suffixText: "\$",
+                                          contentPadding:
+                                              const EdgeInsets.symmetric(
+                                                  horizontal: 9.0,
+                                                  vertical: 11.0),
+                                          border: OutlineInputBorder(
+                                            borderRadius:
+                                                BorderRadius.circular(12),
+                                          ),
+                                        ),
+                                        onChanged: (value) {
+                                          if (_originController
+                                              .text.isNotEmpty) {
+                                            setState(() {
+                                              originerror = false;
+                                            });
+                                            if (value.isNotEmpty) {
+                                              basePrice = double.parse(value);
+                                              // calculateTotalValue();
+                                            } else {
+                                              basePrice = 0.0;
+                                              // calculateTotalValue();
+                                            }
+                                            evaluatePrice();
+                                          } else {
+                                            setState(() {
+                                              originerror = true;
+                                            });
+                                          }
+                                        },
+                                        validator: (value) {
+                                          if (value!.isEmpty) {
+                                            return AppLocalizations.of(context)!
+                                                .translate(
+                                                    'insert_value_validate');
+                                          }
+                                          return null;
+                                        },
                                       ),
                                     ),
-                                    onChanged: (value) {
-                                      if (_originController.text.isNotEmpty) {
-                                        setState(() {
-                                          originerror = false;
-                                        });
-                                        if (value.isNotEmpty) {
-                                          basePrice = double.parse(value);
-                                          // calculateTotalValue();
-                                        } else {
-                                          basePrice = 0.0;
-                                          // calculateTotalValue();
-                                        }
-                                        evaluatePrice();
-                                      } else {
-                                        setState(() {
-                                          originerror = true;
-                                        });
-                                      }
-                                    },
-                                  ),
-                                ),
-                                const SizedBox(
-                                  height: 12,
-                                ),
-                                Text(!valueEnabled
-                                    ? "القيمة الاجمالية بالدولار :"
-                                    : "قيمة التحويل بالجنيه المصري :"),
-                                Text(syrianExchangeValue),
-                                const Text("قيمة الاجمالية بالجنيه المصري: "),
-                                Text(syrianTotalValue),
-                                const Text("قيمة البضاعة مع التأمين: "),
-                                Text(totalValueWithEnsurance),
-                                const SizedBox(
-                                  height: 12,
-                                ),
-                                Row(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                    BlocConsumer<CalculateResultBloc,
-                                        CalculateResultState>(
-                                      listener: (context, state) {
-                                        if (state
-                                            is CalculateResultSuccessed) {}
-                                      },
-                                      builder: (context, state) {
-                                        if (state is CalculateResultLoading) {
-                                          return ElevatedButton(
-                                              onPressed: () {},
-                                              child:
-                                                  const CircularProgressIndicator());
-                                        }
-                                        if (state is CalculateResultFailed) {
-                                          return Text(state.error);
-                                        } else {
-                                          return CustomButton(
-                                              onTap: () {
-                                                result.insurance = int.parse(
-                                                    totalValueWithEnsurance);
-                                                result.fee =
-                                                    selectedPackage!.fee!;
-                                                result.rawMaterial =
-                                                    rawMaterialValue ? 1 : 0;
-                                                result.industrial =
-                                                    industrialValue ? 1 : 0;
-                                                result.totalTax =
-                                                    selectedPackage!
-                                                        .totalTaxes!.totalTax!;
-                                                result.partialTax =
-                                                    selectedPackage!.totalTaxes!
-                                                        .partialTax!;
-                                                result.origin =
-                                                    selectedOrigin!.label!;
-                                                result.spendingFee =
-                                                    selectedPackage!
-                                                        .spendingFee!;
-                                                result.supportFee =
-                                                    selectedPackage!
-                                                        .supportFee!;
-                                                result.localFee =
-                                                    selectedPackage!.localFee!;
-                                                result.protectionFee =
-                                                    selectedPackage!
-                                                        .protectionFee!;
-                                                result.naturalFee =
-                                                    selectedPackage!
-                                                        .naturalFee!;
-                                                result.taxFee =
-                                                    selectedPackage!.taxFee!;
-                                                result.weight =
-                                                    wieghtValue.toInt();
-                                                result.price =
-                                                    basePrice.toInt();
-                                                result.cnsulate = 1;
-                                                result.dolar = 8585;
-                                                result.arabic_stamp = 650;
-                                                result.import_fee = 0.01;
-                                                BlocProvider.of<
-                                                            CalculateResultBloc>(
-                                                        context)
-                                                    .add(
-                                                        CalculateTheResultEvent(
-                                                            result));
-                                                // Navigator.push(
-                                                //     context,
-                                                //     MaterialPageRoute(
-                                                //       builder: (context) =>
-                                                //           const TraderCalculatorResultScreen(),
-                                                //     ));
-                                                setState(() {
-                                                  calculateFeeScreen = true;
-                                                });
-                                              },
-                                              title: Padding(
-                                                padding: EdgeInsets.symmetric(
-                                                    vertical: 8.0,
-                                                    horizontal: 12.w),
-                                                child: const Text(
-                                                    "احسب الرسم الجمركي"),
-                                              ));
-                                        }
-                                      },
+                                    const SizedBox(
+                                      height: 12,
                                     ),
+                                    Text(
+                                      "${AppLocalizations.of(context)!.translate('convert_to_dollar_value')}: ${f.format(double.parse(syrianExchangeValue).toInt())}\$",
+                                      style: TextStyle(fontSize: 17.sp),
+                                    ),
+                                    Text(
+                                      "${AppLocalizations.of(context)!.translate('total_value_in_eygptian_pound')}: ${f.format(double.parse(syrianTotalValue).toInt())} E.P",
+                                      style: TextStyle(fontSize: 17.sp),
+                                    ),
+                                    Text(
+                                      "${AppLocalizations.of(context)!.translate('total_value_with_insurance')}: ${f.format(double.parse(totalValueWithEnsurance).toInt())} E.P",
+                                      style: TextStyle(fontSize: 17.sp),
+                                    ),
+                                    const SizedBox(
+                                      height: 12,
+                                    ),
+                                    Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      children: [
+                                        BlocConsumer<CalculateResultBloc,
+                                            CalculateResultState>(
+                                          listener: (context, state) {
+                                            if (state
+                                                is CalculateResultSuccessed) {}
+                                          },
+                                          builder: (context, state) {
+                                            if (state
+                                                is CalculateResultLoading) {
+                                              return ElevatedButton(
+                                                  onPressed: () {},
+                                                  child:
+                                                      const CircularProgressIndicator());
+                                            }
+                                            if (state
+                                                is CalculateResultFailed) {
+                                              return Text(state.error);
+                                            } else {
+                                              return CustomButton(
+                                                  onTap: () {
+                                                    result.insurance = int.parse(
+                                                        totalValueWithEnsurance);
+                                                    result.fee =
+                                                        selectedPackage!.fee!;
+                                                    result.rawMaterial =
+                                                        rawMaterialValue
+                                                            ? 1
+                                                            : 0;
+                                                    result.industrial =
+                                                        industrialValue ? 1 : 0;
+                                                    result.totalTax =
+                                                        selectedPackage!
+                                                            .totalTaxes!
+                                                            .totalTax!;
+                                                    result.partialTax =
+                                                        selectedPackage!
+                                                            .totalTaxes!
+                                                            .partialTax!;
+                                                    result.origin =
+                                                        selectedOrigin!.label!;
+                                                    result.spendingFee =
+                                                        selectedPackage!
+                                                            .spendingFee!;
+                                                    result.supportFee =
+                                                        selectedPackage!
+                                                            .supportFee!;
+                                                    result.localFee =
+                                                        selectedPackage!
+                                                            .localFee!;
+                                                    result.protectionFee =
+                                                        selectedPackage!
+                                                            .protectionFee!;
+                                                    result.naturalFee =
+                                                        selectedPackage!
+                                                            .naturalFee!;
+                                                    result.taxFee =
+                                                        selectedPackage!
+                                                            .taxFee!;
+                                                    result.weight =
+                                                        wieghtValue.toInt();
+                                                    result.price =
+                                                        basePrice.toInt();
+                                                    result.cnsulate = 1;
+                                                    result.dolar = 8585;
+                                                    result.arabic_stamp = 650;
+                                                    result.import_fee = 0.01;
+                                                    BlocProvider.of<
+                                                                CalculateResultBloc>(
+                                                            context)
+                                                        .add(
+                                                            CalculateTheResultEvent(
+                                                                result));
+                                                    // Navigator.push(
+                                                    //     context,
+                                                    //     MaterialPageRoute(
+                                                    //       builder: (context) =>
+                                                    //           const TraderCalculatorResultScreen(),
+                                                    //     ));
+                                                    setState(() {
+                                                      calculateFeeScreen = true;
+                                                    });
+                                                  },
+                                                  title: Padding(
+                                                    padding:
+                                                        EdgeInsets.symmetric(
+                                                            vertical: 8.0,
+                                                            horizontal: 12.w),
+                                                    child: const Text(
+                                                        "احسب الرسم الجمركي"),
+                                                  ));
+                                            }
+                                          },
+                                        ),
+                                      ],
+                                    )
                                   ],
-                                )
-                              ],
+                                ),
+                              ),
                             ),
-                          ),
-                        ),
-                      ]);
-                } else {
-                  return const Center(child: CircularProgressIndicator());
-                }
-              },
-            ),
+                          ]);
+                    } else {
+                      return const Center(child: CircularProgressIndicator());
+                    }
+                  },
+                ),
+              );
+            },
           ),
         ),
       )),
@@ -2060,9 +2320,9 @@ class _TraderHomeScreenState extends State<TraderHomeScreen>
         backgroundColor: Colors.grey[200],
         appBar: AppBar(
           backgroundColor: AppColor.deepBlue,
-          title: const Text(
-            "الضرائب والرسوم",
-            style: TextStyle(
+          title: Text(
+            AppLocalizations.of(context)!.translate('fees_taxes'),
+            style: const TextStyle(
               color: Colors.white,
               fontWeight: FontWeight.bold,
             ),
@@ -2120,101 +2380,10 @@ class _TraderHomeScreenState extends State<TraderHomeScreen>
                   },
                 ),
               ),
-              // const SizedBox(
-              //   height: 20,
-              // ),
-              // Padding(
-              //   padding: EdgeInsets.symmetric(horizontal: 25.w),
-              //   child: BlocBuilder<CalculateResultBloc, CalculateResultState>(
-              //     builder: (context, state) {
-              //       if (state is CalculateResultSuccessed) {
-              //         return PensTaxesWidget(
-              //           addedTaxes: state.result.addedTaxes!,
-              //           customsCertificate: state.result.customsCertificate!,
-              //           billTax: state.result.billTax!,
-              //           stampFee: state.result.stampFee!,
-              //           provincialLocalTax: state.result.provincialLocalTax!,
-              //           advanceIncomeTax: state.result.advanceIncomeTax!,
-              //           reconstructionFee: state.result.reconstructionFee!,
-              //           finalTaxes: state.result.finalTaxes!,
-              //         );
-              //       } else {
-              //         return const CalculatorLoadingScreen();
-              //       }
-              //     },
-              //   ),
-              // ),
-              // const SizedBox(
-              //   height: 20,
-              // ),
-              // Padding(
-              //   padding: EdgeInsets.symmetric(horizontal: 25.w),
-              //   child: BlocBuilder<CalculateResultBloc, CalculateResultState>(
-              //     builder: (context, state) {
-              //       if (state is CalculateResultSuccessed) {
-              //         return Container(
-              //           padding: EdgeInsets.symmetric(horizontal: 15.w),
-              //           decoration: BoxDecoration(
-              //               borderRadius: BorderRadius.circular(25),
-              //               border: const Border(
-              //                 left: BorderSide(
-              //                   color: Colors.blue,
-              //                   width: 1.0,
-              //                 ),
-              //                 right: BorderSide(
-              //                   color: Colors.blue,
-              //                   width: 1.0,
-              //                 ),
-              //                 top: BorderSide(
-              //                   color: Colors.blue,
-              //                   width: 1.0,
-              //                 ),
-              //                 bottom: BorderSide(
-              //                   color: Colors.blue,
-              //                   width: 1.0,
-              //                 ),
-              //               ),
-              //               color: Colors.white),
-              //           child: Column(
-              //             mainAxisAlignment: MainAxisAlignment.start,
-              //             children: [
-              //               const Text(
-              //                 "إجمالي الرسوم:",
-              //                 style: TextStyle(
-              //                     fontWeight: FontWeight.bold, fontSize: 22),
-              //               ),
-              //               Divider(color: AppColor.goldenYellow),
-              //               Row(
-              //                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              //                 children: [
-              //                   const Text(
-              //                     "مجموع الضرائب والرسوم:",
-              //                     maxLines: 3,
-              //                   ),
-              //                   Text(
-              //                     state.result.finalTotal!.toStringAsFixed(2),
-              //                     style: const TextStyle(
-              //                         fontWeight: FontWeight.bold),
-              //                   ),
-              //                 ],
-              //               ),
-              //               const SizedBox(
-              //                 height: 15,
-              //               ),
-              //             ],
-              //           ),
-              //         );
-              //       } else {
-              //         return const CalculatorLoadingScreen();
-              //       }
-              //     },
-              //   ),
-              // ),
               SizedBox(
                 height: 30.h,
               ),
-              const Text(
-                  "هذه الرسوم تقديرية ولا تتضمن مصاريف التخليص الجمركي ورسوم الخدمات"),
+              Text(AppLocalizations.of(context)!.translate('calculater_hint')),
               SizedBox(
                 height: 30.h,
               ),
@@ -2282,9 +2451,9 @@ class _TraderHomeScreenState extends State<TraderHomeScreen>
         backgroundColor: Colors.grey[200],
         appBar: AppBar(
           backgroundColor: AppColor.deepBlue,
-          title: const Text(
-            "اختر البند الجمركي",
-            style: TextStyle(
+          title: Text(
+            AppLocalizations.of(context)!.translate('select_costume_fee'),
+            style: const TextStyle(
               color: Colors.white,
               fontWeight: FontWeight.bold,
             ),
@@ -2351,7 +2520,8 @@ class _TraderHomeScreenState extends State<TraderHomeScreen>
                               bottom: MediaQuery.of(context).viewInsets.bottom +
                                   50),
                           decoration: InputDecoration(
-                            labelText: "بحث",
+                            labelText: AppLocalizations.of(context)!
+                                .translate('search'),
                             suffixIcon: InkWell(
                               onTap: () {
                                 FocusManager.instance.primaryFocus?.unfocus();
@@ -2534,14 +2704,16 @@ class _TraderHomeScreenState extends State<TraderHomeScreen>
                                     // BlocProvider.of<SectionBloc>(context)
                                     //     .add(SectionLoadEvent());
                                   },
-                                  child: const Row(
+                                  child: Row(
                                     mainAxisAlignment: MainAxisAlignment.center,
                                     children: [
                                       Text(
-                                        "حدث خطأأثناء تحميل القائمة...  ",
-                                        style: TextStyle(color: Colors.red),
+                                        AppLocalizations.of(context)!
+                                            .translate('list_error'),
+                                        style:
+                                            const TextStyle(color: Colors.red),
                                       ),
-                                      Icon(
+                                      const Icon(
                                         Icons.refresh,
                                         color: Colors.grey,
                                       )
@@ -2720,15 +2892,17 @@ class _TraderHomeScreenState extends State<TraderHomeScreen>
                                       BlocProvider.of<SectionBloc>(context)
                                           .add(SectionLoadEvent());
                                     },
-                                    child: const Row(
+                                    child: Row(
                                       mainAxisAlignment:
                                           MainAxisAlignment.center,
                                       children: [
                                         Text(
-                                          "حدث خطأأثناء تحميل القائمة...  ",
-                                          style: TextStyle(color: Colors.red),
+                                          AppLocalizations.of(context)!
+                                              .translate('list_error'),
+                                          style: const TextStyle(
+                                              color: Colors.red),
                                         ),
-                                        Icon(
+                                        const Icon(
                                           Icons.refresh,
                                           color: Colors.grey,
                                         )

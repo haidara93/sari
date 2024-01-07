@@ -1,3 +1,4 @@
+import 'package:custome_mobile/Localization/app_localizations.dart';
 import 'package:custome_mobile/constants/user_type.dart';
 import 'package:custome_mobile/helpers/color_constants.dart';
 import 'package:custome_mobile/views/screens/trader/trader_signin_screen.dart';
@@ -45,7 +46,7 @@ class SelectUserType extends StatelessWidget {
                 height: 20.h,
               ),
               Text(
-                "الرجاء اختيار مستخدم",
+                AppLocalizations.of(context)!.translate('select_user_type'),
                 style: TextStyle(
                   fontSize: 24.sp,
                   color: AppColor.deepBlue,
@@ -72,7 +73,7 @@ class SelectUserType extends StatelessWidget {
                         padding: EdgeInsets.symmetric(horizontal: 62.w),
                         child: CustomButton(
                           title: Text(
-                            "تاجر",
+                            AppLocalizations.of(context)!.translate('trader'),
                             style: TextStyle(
                               color: AppColor.deepBlue,
                               fontSize: 19.sp,
@@ -111,7 +112,7 @@ class SelectUserType extends StatelessWidget {
                         padding: EdgeInsets.symmetric(horizontal: 62.w),
                         child: CustomButton(
                           title: Text(
-                            "مخلص جمركي",
+                            AppLocalizations.of(context)!.translate('broker'),
                             style: TextStyle(
                               color: AppColor.deepBlue,
                               fontSize: 19.sp,

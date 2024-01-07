@@ -1,11 +1,12 @@
-import 'package:custome_mobile/business_logic/bloc/calculate_result_bloc.dart';
+import 'package:custome_mobile/Localization/app_localizations.dart';
+import 'package:custome_mobile/business_logic/bloc/calculate_result/calculate_result_bloc.dart';
 import 'package:custome_mobile/data/models/offer_model.dart';
 import 'package:custome_mobile/data/models/package_model.dart';
 import 'package:custome_mobile/helpers/color_constants.dart';
 import 'package:custome_mobile/views/widgets/calculator_loading_screen.dart';
 import 'package:custome_mobile/views/widgets/custom_app_bar.dart';
 import 'package:custome_mobile/views/widgets/item_taxes_widget.dart';
-import 'package:custome_mobile/views/widgets/pens_taxes_widget.dart';
+import 'package:custome_mobile/views/widgets/item_taxes_multi_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -31,6 +32,32 @@ class BrokerCostDetailsScreen extends StatelessWidget {
     }
   }
 
+  String getEnOfferType(String offer) {
+    switch (offer) {
+      case "I":
+        return "Import";
+      case "E":
+        return "Export";
+      default:
+        return "Export";
+    }
+  }
+
+  String getOfferStatus(String offer) {
+    switch (offer) {
+      case "P":
+        return "معلقة";
+      case "R":
+        return "جارية";
+      case "C":
+        return "مكتملة";
+      case "F":
+        return "مرفوضة";
+      default:
+        return "خطأ";
+    }
+  }
+
   String diffText(Duration diff) {
     if (diff.inSeconds < 60) {
       return "منذ ${diff.inSeconds.toString()} ثانية";
@@ -43,13 +70,27 @@ class BrokerCostDetailsScreen extends StatelessWidget {
     }
   }
 
+  String diffEnText(Duration diff) {
+    if (diff.inSeconds < 60) {
+      return "since ${diff.inSeconds.toString()} seconds";
+    } else if (diff.inMinutes < 60) {
+      return "since ${diff.inMinutes.toString()} minutes";
+    } else if (diff.inHours < 24) {
+      return "since ${diff.inHours.toString()} hours";
+    } else {
+      return "since ${diff.inDays.toString()} days";
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     // DateTime now = DateTime.now();
     // Duration diff = now.difference(offer.createdDate!);
     return SafeArea(
       child: Scaffold(
-        appBar: CustomAppBar(title: "الضرائب والتكاليف"),
+        appBar: CustomAppBar(
+          title: AppLocalizations.of(context)!.translate('taxes_costs'),
+        ),
         backgroundColor: Colors.grey[200],
         body: SingleChildScrollView(
           child: Column(
@@ -125,8 +166,9 @@ class BrokerCostDetailsScreen extends StatelessWidget {
                           mainAxisAlignment: MainAxisAlignment.start,
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            const Text(
-                              "تكاليف المعاملة الجمركية",
+                            Text(
+                              AppLocalizations.of(context)!
+                                  .translate('operation_costs'),
                               style: TextStyle(
                                   fontWeight: FontWeight.bold, fontSize: 22),
                             ),
@@ -159,7 +201,8 @@ class BrokerCostDetailsScreen extends StatelessWidget {
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
                                 Text(
-                                  "اجمالي التكاليف:",
+                                  AppLocalizations.of(context)!
+                                      .translate('total_costs'),
                                   style: TextStyle(
                                       fontWeight: FontWeight.bold,
                                       fontSize: 20.sp),
@@ -231,7 +274,8 @@ class BrokerCostDetailsScreen extends StatelessWidget {
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
                                 Text(
-                                  "اجمالي الرسوم والتكاليف:",
+                                  AppLocalizations.of(context)!
+                                      .translate('total_costs_taxes'),
                                   style: TextStyle(
                                       fontWeight: FontWeight.bold,
                                       fontSize: 20.sp),
