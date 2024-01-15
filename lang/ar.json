@@ -67,6 +67,10 @@
     "isColored":"الخيوط ملونة؟",
     "isLycra":"الخيوط ليكرا؟",
     "select_origin_error":"الرجاء اختيار المنشأ",
+    "select_broker":"اختر مخلص جمركي",
+    "no_broker":"لم يتم العثور على مخاصين جمركيين",
+    "directorate":"المديرية",
+    "agencies":"الأمانات",
     
     "calculator_nav":"الحاسبة",
     "calculator_title":"حاسبة الرسوم",

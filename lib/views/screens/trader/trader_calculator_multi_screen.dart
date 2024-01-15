@@ -71,6 +71,7 @@ class _TraderCalculatorMultiScreenState
   List<bool> lycraValus = [];
   List<double> extraPrices = [];
   List<bool> originerrors = [];
+  List<bool> doubleoriginerrors = [];
   List<bool> showunits = [];
   List<String> weightUnits = [];
   List<int> weightValues = [];
@@ -79,6 +80,9 @@ class _TraderCalculatorMultiScreenState
   List<String> syrianExchangeValue = [];
   List<String> syrianTotalValue = [];
   List<String> totalValueWithEnsurance = [];
+  String totalsyrianExchangeValue = "8585";
+  String totalsyrianTotalValue = "0.0";
+  String totalTotalValueWithEnsurance = "0.0";
   List<String> weightLabels = [];
 
   List<CalculateObject> objects = [];
@@ -133,6 +137,7 @@ class _TraderCalculatorMultiScreenState
     lycraValus.add(false);
     extraPrices.add(0.0);
     originerrors.add(false);
+    doubleoriginerrors.add(false);
     showunits.add(false);
     weightUnits.add("kg");
     weightLabels.add("kg");
@@ -190,6 +195,7 @@ class _TraderCalculatorMultiScreenState
     lycraValus.add(false);
     extraPrices.add(0.0);
     originerrors.add(false);
+    doubleoriginerrors.add(false);
     showunits.add(false);
     weightUnits.add("kg");
     weightLabels.add("kg");
@@ -233,6 +239,7 @@ class _TraderCalculatorMultiScreenState
     lycraValus.removeAt(index);
     extraPrices.removeAt(index);
     originerrors.removeAt(index);
+    doubleoriginerrors.removeAt(index);
     showunits.removeAt(index);
     weightUnits.removeAt(index);
     weightLabels.removeAt(index);
@@ -336,7 +343,9 @@ class _TraderCalculatorMultiScreenState
                                           // calculatorProvider.initProvider();
                                         });
                                         selectSuggestion(
-                                            state.package, _countselected);
+                                            state.package,
+                                            localeState.value.languageCode,
+                                            _countselected);
                                         setState(() {
                                           print(
                                               packages[_countselected]!.label!);
@@ -380,12 +389,21 @@ class _TraderCalculatorMultiScreenState
                                                       clipBehavior:
                                                           Clip.antiAlias,
                                                       shape:
-                                                          const RoundedRectangleBorder(
-                                                        borderRadius:
-                                                            BorderRadius.all(
-                                                          Radius.circular(15),
-                                                        ),
-                                                      ),
+                                                          RoundedRectangleBorder(
+                                                              borderRadius:
+                                                                  BorderRadius
+                                                                      .all(
+                                                                Radius.circular(
+                                                                    15),
+                                                              ),
+                                                              side: BorderSide(
+                                                                color: doubleoriginerrors[
+                                                                        index]
+                                                                    ? Colors.red
+                                                                    : Colors
+                                                                        .white,
+                                                                width: 1,
+                                                              )),
                                                       elevation: 1,
                                                       color: Colors.white,
                                                       child: Padding(
@@ -413,19 +431,21 @@ class _TraderCalculatorMultiScreenState
                                                                 Focus(
                                                                   // focusNode: _ordernode,
                                                                   child: Text(
-                                                                      AppLocalizations.of(
-                                                                              context)!
-                                                                          .translate(
-                                                                              'goods_details'),
-                                                                      style:
-                                                                          TextStyle(
-                                                                        fontSize:
-                                                                            19,
-                                                                        fontWeight:
-                                                                            FontWeight.bold,
-                                                                        color: AppColor
-                                                                            .deepBlue,
-                                                                      )),
+                                                                    AppLocalizations.of(
+                                                                            context)!
+                                                                        .translate(
+                                                                            'goods_details'),
+                                                                    style:
+                                                                        TextStyle(
+                                                                      fontSize:
+                                                                          19,
+                                                                      fontWeight:
+                                                                          FontWeight
+                                                                              .bold,
+                                                                      color: AppColor
+                                                                          .deepBlue,
+                                                                    ),
+                                                                  ),
                                                                 ),
                                                               ],
                                                             ),
@@ -1089,58 +1109,87 @@ class _TraderCalculatorMultiScreenState
                                                                         ),
                                                                         items: flagstate
                                                                             .origins
-                                                                            .map((Origin item) =>
-                                                                                DropdownMenuItem<Origin>(
-                                                                                  value: item,
-                                                                                  child: SizedBox(
-                                                                                    // width: 200,
-                                                                                    child: Row(
-                                                                                      children: [
-                                                                                        SizedBox(
+                                                                            .map(
+                                                                              (Origin item) => DropdownMenuItem<Origin>(
+                                                                                value: item,
+                                                                                child: SizedBox(
+                                                                                  // width: 200,
+                                                                                  child: Row(
+                                                                                    children: [
+                                                                                      SizedBox(
+                                                                                        height: 35,
+                                                                                        width: 55,
+                                                                                        child: SvgPicture.network(
+                                                                                          item.imageURL!,
                                                                                           height: 35,
                                                                                           width: 55,
-                                                                                          child: SvgPicture.network(
-                                                                                            item.imageURL!,
-                                                                                            height: 35,
-                                                                                            width: 55,
-                                                                                            // semanticsLabel: 'A shark?!',
-                                                                                            placeholderBuilder: (BuildContext context) => Container(
-                                                                                              height: 35.h,
-                                                                                              width: 45.w,
-                                                                                              decoration: BoxDecoration(
-                                                                                                color: Colors.grey[200],
-                                                                                                borderRadius: BorderRadius.circular(5),
-                                                                                              ),
+                                                                                          // semanticsLabel: 'A shark?!',
+                                                                                          placeholderBuilder: (BuildContext context) => Container(
+                                                                                            height: 35.h,
+                                                                                            width: 45.w,
+                                                                                            decoration: BoxDecoration(
+                                                                                              color: Colors.grey[200],
+                                                                                              borderRadius: BorderRadius.circular(5),
                                                                                             ),
                                                                                           ),
                                                                                         ),
-                                                                                        const SizedBox(width: 7),
-                                                                                        Container(
-                                                                                          constraints: BoxConstraints(
-                                                                                            maxWidth: 280.w,
-                                                                                          ),
-                                                                                          child: Text(
-                                                                                            item.label!,
-                                                                                            overflow: TextOverflow.ellipsis,
-                                                                                            // maxLines: 2,
-                                                                                          ),
+                                                                                      ),
+                                                                                      const SizedBox(width: 7),
+                                                                                      Container(
+                                                                                        constraints: BoxConstraints(
+                                                                                          maxWidth: 280.w,
                                                                                         ),
-                                                                                      ],
-                                                                                      // subtitle: Text('\$${suggestion['price']}'),
-                                                                                    ),
+                                                                                        child: Text(
+                                                                                          item.label!,
+                                                                                          overflow: TextOverflow.ellipsis,
+                                                                                          // maxLines: 2,
+                                                                                        ),
+                                                                                      ),
+                                                                                    ],
+                                                                                    // subtitle: Text('\$${suggestion['price']}'),
                                                                                   ),
-                                                                                ))
+                                                                                ),
+                                                                              ),
+                                                                            )
                                                                             .toList(),
                                                                         value: origins[
                                                                             index],
                                                                         onChanged:
                                                                             (Origin?
                                                                                 value) {
+                                                                          selectOrigin(
+                                                                              value!,
+                                                                              index);
                                                                           setState2(
                                                                             () {
                                                                               origins[index] = value;
                                                                             },
                                                                           );
+                                                                          var originCount =
+                                                                              0;
+                                                                          for (var i = 0;
+                                                                              i < origins.length;
+                                                                              i++) {
+                                                                            if (origins[i] == value &&
+                                                                                packageControllers[i].text == packageControllers[index].text) {
+                                                                              originCount++;
+                                                                            }
+                                                                          }
+
+                                                                          if (originCount >
+                                                                              1) {
+                                                                            setState(
+                                                                              () {
+                                                                                doubleoriginerrors[index] = true;
+                                                                              },
+                                                                            );
+                                                                          } else {
+                                                                            setState(
+                                                                              () {
+                                                                                doubleoriginerrors[index] = false;
+                                                                              },
+                                                                            );
+                                                                          }
                                                                         },
                                                                         barrierColor:
                                                                             Colors.black45,
@@ -1744,17 +1793,17 @@ class _TraderCalculatorMultiScreenState
                                                     CrossAxisAlignment.start,
                                                 children: [
                                                   Text(
-                                                    "${AppLocalizations.of(context)!.translate('convert_to_dollar_value')}: ${f.format(double.parse(syrianExchangeValue[0]).toInt())}\$",
+                                                    "${AppLocalizations.of(context)!.translate('convert_to_dollar_value')}: ${f.format(double.parse(totalsyrianExchangeValue).toInt())}\$",
                                                     style: TextStyle(
                                                         fontSize: 17.sp),
                                                   ),
                                                   Text(
-                                                    "${AppLocalizations.of(context)!.translate('total_value_in_eygptian_pound')}: ${f.format(double.parse(syrianTotalValue[0]).toInt())} E.P",
+                                                    "${AppLocalizations.of(context)!.translate('total_value_in_eygptian_pound')}: ${f.format(double.parse(totalsyrianTotalValue).toInt())} E.P",
                                                     style: TextStyle(
                                                         fontSize: 17.sp),
                                                   ),
                                                   Text(
-                                                    "${AppLocalizations.of(context)!.translate('total_value_with_insurance')}: ${f.format(double.parse(totalValueWithEnsurance[0]).toInt())} E.P",
+                                                    "${AppLocalizations.of(context)!.translate('total_value_with_insurance')}: ${f.format(double.parse(totalTotalValueWithEnsurance).toInt())} E.P",
                                                     style: TextStyle(
                                                         fontSize: 17.sp),
                                                   ),
@@ -1795,14 +1844,12 @@ class _TraderCalculatorMultiScreenState
                                                     } else {
                                                       return CustomButton(
                                                         onTap: () {
-                                                          print("asd");
                                                           _calformkey
                                                               .currentState
                                                               ?.save();
                                                           if (_calformkey
                                                               .currentState!
                                                               .validate()) {
-                                                            print("asd");
                                                             for (var i = 0;
                                                                 i <
                                                                     origins
@@ -1821,17 +1868,6 @@ class _TraderCalculatorMultiScreenState
                                                                     true;
                                                               }
                                                             }
-                                                            print("asd12");
-
-                                                            // for (var i = 0; i < packages.length; i++) {
-                                                            //   if (packages[i] != null) {
-                                                            //     feeerrors[i] = false;
-                                                            //     publicPackageError = false;
-                                                            //   } else {
-                                                            //     publicPackageError = true;
-                                                            //   }
-                                                            // }
-                                                            print("asd123");
                                                             FocusManager
                                                                 .instance
                                                                 .primaryFocus
@@ -2030,7 +2066,7 @@ class _TraderCalculatorMultiScreenState
     );
   }
 
-  selectSuggestion(Package suggestion, int index) {
+  selectSuggestion(Package suggestion, String lang, int index) {
     packages[index] = suggestion;
     feeerrors[index] = false;
     if (suggestion.price! > 0) {
@@ -2078,63 +2114,63 @@ class _TraderCalculatorMultiScreenState
     if (suggestion.unit!.isNotEmpty) {
       switch (suggestion.unit) {
         case "كغ":
-          weightLabels[index] = " الوزن";
+          weightLabels[index] = lang == 'en' ? "weight" : "الوزن";
 
           break;
         case "طن":
-          weightLabels[index] = " الوزن";
+          weightLabels[index] = lang == 'en' ? "weight" : "الوزن";
 
           break;
         case "قيراط":
-          weightLabels[index] = " الوزن";
+          weightLabels[index] = lang == 'en' ? "weight" : "الوزن";
 
           break;
-        case "كيلو واط بالساعة 1000":
-          weightLabels[index] = "الاستطاعة";
+        case "  كيلو واط بالساعة 1000":
+          weightLabels[index] = lang == 'en' ? "power" : "الاستطاعة";
 
           break;
-        case "الاستطاعة بالطن":
-          weightLabels[index] = "الاستطاعة";
+        case "  الاستطاعة بالطن":
+          weightLabels[index] = lang == 'en' ? "power" : "الاستطاعة";
 
           break;
         case "واط":
-          weightLabels[index] = "الاستطاعة";
+          weightLabels[index] = lang == 'en' ? "power" : "الاستطاعة";
 
           break;
         case "عدد الأزواج":
-          weightLabels[index] = "العدد";
+          weightLabels[index] = lang == 'en' ? "number" : "العدد";
 
           break;
         case "عدد":
-          weightLabels[index] = "العدد";
+          weightLabels[index] = lang == 'en' ? "number" : "العدد";
 
           break;
         case "طرد":
-          weightLabels[index] = "العدد";
+          weightLabels[index] = lang == 'en' ? "number" : "العدد";
 
           break;
         case "قدم":
-          weightLabels[index] = "العدد";
+          weightLabels[index] = lang == 'en' ? "number" : "العدد";
 
           break;
         case "متر":
-          weightLabels[index] = "الحجم";
+          weightLabels[index] = lang == 'en' ? "volume" : "الحجم";
 
           break;
         case "متر مربع":
-          weightLabels[index] = "الحجم";
+          weightLabels[index] = lang == 'en' ? "volume" : "الحجم";
 
           break;
         case "متر مكعب":
-          weightLabels[index] = "الحجم";
+          weightLabels[index] = lang == 'en' ? "volume" : "الحجم";
 
           break;
         case "لتر":
-          weightLabels[index] = "السعة";
+          weightLabels[index] = lang == 'en' ? "capacity" : "السعة";
 
           break;
         default:
-          weightLabels[index] = "الوزن";
+          weightLabels[index] = lang == 'en' ? "weight" : "الوزن";
       }
       weightUnits[index] = suggestion.unit!;
       showunits[index] = true;
@@ -2219,27 +2255,53 @@ class _TraderCalculatorMultiScreenState
     var syrianExch = weightValues[index] * basePriceValues[index];
     var syrianTotal = syrianExch * 8585;
     var totalEnsurance = syrianTotal + (syrianTotal * 0.0012);
+
+    var totalsyrian = 0;
+    var totalinsurance = 0;
+
     syrianExchangeValue[index] = syrianExch.round().toString();
     syrianTotalValue[index] = syrianTotal.round().toString();
     totalValueWithEnsurance[index] = totalEnsurance.round().toString();
+
+    for (var i = 0; i < totalValueWithEnsurance.length; i++) {
+      totalsyrian += int.parse(syrianTotalValue[i]);
+      totalinsurance += int.parse(totalValueWithEnsurance[i]);
+    }
+
+    totalsyrianTotalValue = totalsyrian.toString();
+    totalTotalValueWithEnsurance = totalinsurance.toString();
+    setState(() {});
   }
 
   void calculateTotalValue(int index) {
-    var syrianTotal = weightValues[index] * 8585;
-    var totalEnsurance = (syrianTotal * 0.0012);
+    var syrianTotal =
+        double.parse(valueControllers[index].text.replaceAll(",", "")) * 8585;
+    var totalEnsurance = syrianTotal + (syrianTotal * 0.0012);
+    var totalsyrian = 0;
+    var totalinsurance = 0;
+
     syrianTotalValue[index] = syrianTotal.round().toString();
     totalValueWithEnsurance[index] = totalEnsurance.round().toString();
+    for (var i = 0; i < totalValueWithEnsurance.length; i++) {
+      totalsyrian += int.parse(syrianTotalValue[i]);
+      totalinsurance += int.parse(totalValueWithEnsurance[i]);
+    }
+
+    totalsyrianTotalValue = totalsyrian.toString();
+    totalTotalValueWithEnsurance = totalinsurance.toString();
+    setState(() {});
   }
 
   void calculateExtrasPrice(double percentage, bool add, int index) {
     extraPrices[index] = 0.0;
     if (add) {
-      extraPrices[index] =
-          basePriceValues[index] + (basePriceValues[index] * percentage);
+      extraPrices[index] = double.parse(valueControllers[index].text) +
+          (basePriceValues[index] * percentage);
     } else {
-      extraPrices[index] =
-          basePriceValues[index] - (basePriceValues[index] * percentage);
+      extraPrices[index] = double.parse(valueControllers[index].text) -
+          (basePriceValues[index] * percentage);
     }
+    valueControllers[index].text = extraPrices[index].toString();
     setState(() {});
   }
 }

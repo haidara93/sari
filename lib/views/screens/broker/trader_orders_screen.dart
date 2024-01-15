@@ -88,7 +88,7 @@ class _TraderOrdersScreenState extends State<TraderOrdersScreen> {
                                     Text(
                                         'الأمانة الجمركية: ${state.offers[index].costumeagency!.name}'),
                                     Text(
-                                        'نوع البضاعة: ${state.offers[index].product!.label!}'),
+                                        'نوع البضاعة: ${state.offers[index].products![0].label!}'),
                                     SizedBox(
                                       height: 5.h,
                                     ),

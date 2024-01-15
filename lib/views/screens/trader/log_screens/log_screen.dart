@@ -341,7 +341,7 @@ class _LogScreenState extends State<LogScreen>
                                                         TextSpan(
                                                             text: state
                                                                 .offers[index]
-                                                                .origin!
+                                                                .source!
                                                                 .label!,
                                                             style: TextStyle(
                                                               color: AppColor

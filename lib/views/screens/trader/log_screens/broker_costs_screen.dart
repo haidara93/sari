@@ -1,4 +1,5 @@
 import 'package:custome_mobile/Localization/app_localizations.dart';
+import 'package:custome_mobile/business_logic/bloc/calculate_result/calculate_multi_result_dart_bloc.dart';
 import 'package:custome_mobile/business_logic/bloc/calculate_result/calculate_result_bloc.dart';
 import 'package:custome_mobile/data/models/offer_model.dart';
 import 'package:custome_mobile/data/models/package_model.dart';
@@ -98,29 +99,36 @@ class BrokerCostDetailsScreen extends StatelessWidget {
               SizedBox(
                 height: 20.h,
               ),
-              BlocBuilder<CalculateResultBloc, CalculateResultState>(
+              BlocBuilder<CalculateMultiResultBloc, CalculateMultiResultState>(
                 builder: (context, state) {
-                  if (state is CalculateResultSuccessed) {
+                  if (state is CalculateMultiResultSuccessed) {
                     return ItemTaxesWidget(
-                      customsFee: state.result.customsFee!,
-                      spendingFee: state.result.spendingFee!,
-                      conservativeLocality: state.result.conservativeLocality!,
-                      citiesProtectionFee: state.result.citiesProtectionFee!,
-                      feeSupportingLocalProduction:
-                          state.result.feeSupportingLocalProduction!,
-                      imranLocality: state.result.imranLocality!,
-                      incomeTaxFee: state.result.incomeTaxFee!,
-                      naturalDisasterFee: state.result.naturalDisasterFee!,
-                      finalFee: state.result.finalFee!,
-                      addedTaxes: state.result.addedTaxes!,
-                      customsCertificate: state.result.customsCertificate!,
-                      billTax: state.result.billTax!,
-                      stampFee: state.result.stampFee!,
-                      provincialLocalTax: state.result.provincialLocalTax!,
-                      advanceIncomeTax: state.result.advanceIncomeTax!,
-                      reconstructionFee: state.result.reconstructionFee!,
-                      finalTaxes: state.result.finalTaxes!,
-                      finalTotal: state.result.finalTotal!,
+                      customsFee: double.parse(state.result.totalCustomsFee!),
+                      spendingFee: double.parse(state.result.totalSpendingFee!),
+                      conservativeLocality:
+                          double.parse(state.result.totalConservativeLocality!),
+                      citiesProtectionFee:
+                          double.parse(state.result.totalCitiesProtectionFee!),
+                      feeSupportingLocalProduction: double.parse(
+                          state.result.totalFeeSupportingLocalProduction!),
+                      imranLocality: double.parse("0.0"),
+                      incomeTaxFee:
+                          double.parse(state.result.totalIncomeTaxFee!),
+                      naturalDisasterFee:
+                          double.parse(state.result.totalNaturalDisasterFee!),
+                      finalFee: double.parse(state.result.totalFinalFee!),
+                      addedTaxes: double.parse(state.result.totalAddedTaxes!),
+                      customsCertificate: double.parse("0.0"),
+                      billTax: double.parse("0.0"),
+                      stampFee: double.parse(state.result.totalStampFee!),
+                      provincialLocalTax:
+                          double.parse(state.result.totalProvincialLocalTax!),
+                      advanceIncomeTax:
+                          double.parse(state.result.totalAdvanceIncomeTax!),
+                      reconstructionFee:
+                          double.parse(state.result.totalReconstructionFee!),
+                      finalTaxes: double.parse(state.result.totalFinalTaxes!),
+                      finalTotal: double.parse(state.result.totalFinalTotal!),
                     );
                   } else {
                     return const CalculatorLoadingScreen();

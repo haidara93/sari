@@ -6,6 +6,11 @@ part 'bottom_nav_bar_state.dart';
 class BottomNavBarCubit extends Cubit<BottomNavBarState> {
   BottomNavBarCubit() : super(BottomNavBarShown());
 
-  void emitShow() => emit(BottomNavBarShown());
+  void emitShow() {
+    Future.delayed(Duration(seconds: 1)).then(
+      (value) => emit(BottomNavBarShown()),
+    );
+  }
+
   void emitHide() => emit(BottomNavBarHidden());
 }

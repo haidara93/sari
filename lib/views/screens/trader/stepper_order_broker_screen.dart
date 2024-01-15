@@ -2332,31 +2332,31 @@ class _StepperOrderBrokerScreenState extends State<StepperOrderBrokerScreen> {
                                                         null) {
                                                       if (selectedPackage !=
                                                           null) {
-                                                        Navigator.push(
-                                                          context,
-                                                          MaterialPageRoute(
-                                                            builder: (context) =>
-                                                                TraderAttachementScreen(
-                                                              origin:
-                                                                  selectedOrigin!
-                                                                      .id!,
-                                                              weight:
-                                                                  wieghtValue
-                                                                      .toInt(),
-                                                              product:
-                                                                  selectedPackage!
-                                                                      .id,
-                                                              price: int.parse(
-                                                                  syrianTotalValue),
-                                                              taxes: int.parse(
-                                                                  totalValueWithEnsurance),
-                                                              rawMaterial: result
-                                                                  .rawMaterial,
-                                                              industrial: result
-                                                                  .industrial,
-                                                            ),
-                                                          ),
-                                                        );
+                                                        // Navigator.push(
+                                                        //   context,
+                                                        //   MaterialPageRoute(
+                                                        //     builder: (context) =>
+                                                        //         TraderAttachementScreen(
+                                                        //       origin:
+                                                        //           selectedOrigin!
+                                                        //               .id!,
+                                                        //       weight:
+                                                        //           wieghtValue
+                                                        //               .toInt(),
+                                                        //       product:
+                                                        //           selectedPackage!
+                                                        //               .id,
+                                                        //       price: int.parse(
+                                                        //           syrianTotalValue),
+                                                        //       taxes: int.parse(
+                                                        //           totalValueWithEnsurance),
+                                                        //       rawMaterial: result
+                                                        //           .rawMaterial,
+                                                        //       industrial: result
+                                                        //           .industrial,
+                                                        //     ),
+                                                        //   ),
+                                                        // );
                                                       } else {
                                                         setState(() {
                                                           feeerror = true;

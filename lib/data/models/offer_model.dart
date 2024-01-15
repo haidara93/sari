@@ -1,6 +1,8 @@
 // ignore_for_file: non_constant_identifier_names
 
 import 'package:custome_mobile/data/models/attachments_models.dart';
+import 'package:custome_mobile/data/models/state_custome_agency_model.dart';
+import 'dart:convert';
 
 class Offer {
   int? id;
@@ -8,18 +10,26 @@ class Offer {
   String? offerType;
   int? trader;
   int? costumeBroker;
-  Costumeagency? costumeagency;
+  CustomeAgency? costumeagency;
   Costumestate? costumestate;
-  Product? product;
-  Origin? origin;
+  List<Product>? products;
+  List<Origin>? origin;
+  Origin? source;
   int? packageType;
   int? packagesNum;
   int? tabalehNum;
-  int? raw_material;
-  int? industrial;
-  double? weight;
-  double? price;
-  double? taxes;
+  List<bool>? rawMaterial;
+  List<bool>? industrial;
+  List<bool>? brand;
+  List<bool>? tubes;
+  List<bool>? colored;
+  List<bool>? lycra;
+  List<int>? weight;
+  List<int>? price;
+  List<int>? taxes;
+  double? totalweight;
+  double? totalprice;
+  double? totaltaxes;
   DateTime? expectedArrivalDate;
   List<Attachment>? attachments;
   String? notes;
@@ -36,16 +46,24 @@ class Offer {
     this.costumeBroker,
     this.costumeagency,
     this.costumestate,
-    this.product,
+    this.products,
+    this.source,
     this.origin,
     this.packageType,
     this.packagesNum,
     this.tabalehNum,
-    this.raw_material,
+    this.rawMaterial,
     this.industrial,
+    this.brand,
+    this.tubes,
+    this.colored,
+    this.lycra,
     this.weight,
     this.price,
     this.taxes,
+    this.totalweight,
+    this.totalprice,
+    this.totaltaxes,
     this.expectedArrivalDate,
     this.attachments,
     this.notes,
@@ -56,31 +74,54 @@ class Offer {
   });
 
   Offer.fromJson(Map<String, dynamic> json) {
+    print(jsonDecode(json['raw_material'])[0]);
     id = json['id'];
     orderStatus = json['order_status'];
     offerType = json['offer_type'];
     trader = json['trader'];
+    source = json['source'] != null ? Origin.fromJson(json['source']) : null;
     costumeBroker = json['costume_broker'] ?? 0;
     costumeagency = json['costumeagency'] != null
-        ? Costumeagency.fromJson(json['costumeagency'])
+        ? CustomeAgency.fromJson(json['costumeagency'])
         : null;
     costumestate = json['costumestate'] != null
         ? Costumestate.fromJson(json['costumestate'])
         : null;
-    product =
-        json['product'] != null ? Product.fromJson(json['product']) : null;
+    if (json['products'] != null) {
+      products = <Product>[];
+      json['products'].forEach((v) {
+        products!.add(Product.fromJson(v));
+      });
+    } else {
+      json['products'] = [];
+    }
+    if (json['origin'] != null) {
+      origin = <Origin>[];
+      json['origin'].forEach((v) {
+        origin!.add(Origin.fromJson(v));
+      });
+    } else {
+      json['origin'] = [];
+    }
+
     track_offer = json['track_offer'] != null
         ? TrackOffer.fromJson(json['track_offer'])
         : null;
-    origin = json['origin'] != null ? Origin.fromJson(json['origin']) : null;
     packageType = json['package_type'];
     packagesNum = json['packages_num'];
     tabalehNum = json['tabaleh_num'] ?? 0;
-    raw_material = json['raw_material'] ?? 0;
-    industrial = json['industrial'] ?? 0;
-    weight = json['weight'];
-    price = json['price'];
-    taxes = json['taxes'];
+    rawMaterial = jsonDecode(json['raw_material']).cast<bool>();
+    industrial = jsonDecode(json['industrial']).cast<bool>();
+    brand = jsonDecode(json['brand']).cast<bool>();
+    tubes = jsonDecode(json['tubes']).cast<bool>();
+    colored = jsonDecode(json['colored']).cast<bool>();
+    lycra = jsonDecode(json['lycra']).cast<bool>();
+    weight = jsonDecode(json['weight']).cast<int>();
+    price = jsonDecode(json['price']).cast<int>();
+    taxes = jsonDecode(json['taxes']).cast<int>();
+    totalweight = json['totalweight'];
+    totalprice = json['totalprice'];
+    totaltaxes = json['totaltaxes'];
     expectedArrivalDate = DateTime.parse(json['expected_arrival_date']);
     if (json['attachments'] != null) {
       attachments = <Attachment>[];
@@ -125,11 +166,11 @@ class Offer {
     if (costumestate != null) {
       data['costumestate'] = costumestate!.toJson();
     }
-    if (product != null) {
-      data['product'] = product!.toJson();
+    if (products != null) {
+      data['products'] = products!.map((v) => v.toJson()).toList();
     }
-    if (origin != null) {
-      data['origin'] = origin!.toJson();
+    if (this.origin != null) {
+      data['origin'] = this.origin!.map((v) => v.toJson()).toList();
     }
     data['package_type'] = packageType;
     data['packages_num'] = packagesNum;
@@ -197,19 +238,208 @@ class Costumestate {
 
 class Product {
   String? id;
+  TotalTaxes? totalTaxes;
+  Dolar? dolar;
+  List<Extras>? extras;
   String? label;
+  String? export1;
+  double? fee;
+  double? spendingFee;
+  double? supportFee;
+  double? protectionFee;
+  double? naturalFee;
+  double? taxFee;
+  double? localFee;
+  double? gold;
+  double? paper;
+  double? brid;
+  double? price;
+  String? unit;
+  double? importFee;
+  String? placeholder;
+  String? decision;
+  // List<Null>? feesGroup;
 
-  Product({this.id, this.label});
+  Product({
+    this.id,
+    this.label,
+    this.export1,
+    this.fee,
+    this.spendingFee,
+    this.supportFee,
+    this.protectionFee,
+    this.naturalFee,
+    this.taxFee,
+    this.localFee,
+    this.gold,
+    this.paper,
+    this.brid,
+    this.price,
+    this.unit,
+    this.importFee,
+    this.placeholder,
+    this.decision,
+    this.dolar,
+    this.totalTaxes,
+  });
 
   Product.fromJson(Map<String, dynamic> json) {
     id = json['id'];
     label = json['label'];
+    export1 = json['export1'];
+    fee = json['fee'];
+    spendingFee = json['spending_fee'];
+    supportFee = json['support_fee'];
+    protectionFee = json['protection_fee'];
+    naturalFee = json['natural_fee'];
+    taxFee = json['tax_fee'];
+    localFee = json['local_fee'];
+    gold = json['gold'];
+    paper = json['paper'];
+    brid = json['brid'];
+    price = json['price'];
+    unit = json['unit'];
+    importFee = json['Import_fee'];
+    placeholder = json['placeholder'];
+    decision = json['decision'];
+    totalTaxes = json['total_taxes'] != null
+        ? TotalTaxes.fromJson(json['total_taxes'])
+        : null;
+    dolar = json['dolar'] != null ? Dolar.fromJson(json['dolar']) : null;
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = <String, dynamic>{};
-    data['id'] = id;
-    data['label'] = label;
+    final Map<String, dynamic> data = Map<String, dynamic>();
+    data['id'] = this.id;
+    data['label'] = this.label;
+    data['export1'] = this.export1;
+    data['fee'] = this.fee;
+    data['spending_fee'] = this.spendingFee;
+    data['support_fee'] = this.supportFee;
+    data['protection_fee'] = this.protectionFee;
+    data['natural_fee'] = this.naturalFee;
+    data['tax_fee'] = this.taxFee;
+    data['local_fee'] = this.localFee;
+    data['gold'] = this.gold;
+    data['paper'] = this.paper;
+    data['brid'] = this.brid;
+    data['price'] = this.price;
+    data['unit'] = this.unit;
+    data['Import_fee'] = this.importFee;
+    data['placeholder'] = this.placeholder;
+    data['decision'] = this.decision;
+    if (this.totalTaxes != null) {
+      data['total_taxes'] = this.totalTaxes!.toJson();
+    }
+    if (this.dolar != null) {
+      data['dolar'] = this.dolar!.toJson();
+    }
+    return data;
+  }
+}
+
+class Extras {
+  int? id;
+  String? label;
+  double? price;
+  bool? lycra;
+  bool? coloredThread;
+  bool? brand;
+  bool? tubes;
+  String? fees;
+  List<Origin>? origin;
+  // List<Null>? countryGroups;
+
+  Extras({
+    this.id,
+    this.label,
+    this.price,
+    this.lycra,
+    this.coloredThread,
+    this.brand,
+    this.tubes,
+    this.fees,
+    this.origin,
+  });
+
+  Extras.fromJson(Map<String, dynamic> json) {
+    id = json['id'];
+    label = json['label'];
+    price = json['price'];
+    lycra = json['lycra'];
+    coloredThread = json['colored_thread'];
+    brand = json['Brand'];
+    tubes = json['tubes'];
+    fees = json['fees'];
+    if (json['origin'] != null) {
+      origin = <Origin>[];
+      json['origin'].forEach((v) {
+        origin!.add(Origin.fromJson(v));
+      });
+    }
+    // if (json['countryGroups'] != null) {
+    //   countryGroups = <Null>[];
+    //   json['countryGroups'].forEach((v) {
+    //     countryGroups!.add(new Null.fromJson(v));
+    //   });
+    // }
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = Map<String, dynamic>();
+    data['id'] = this.id;
+    data['label'] = this.label;
+    data['price'] = this.price;
+    data['lycra'] = this.lycra;
+    data['colored_thread'] = this.coloredThread;
+    data['Brand'] = this.brand;
+    data['tubes'] = this.tubes;
+    data['fees'] = this.fees;
+    if (this.origin != null) {
+      data['origin'] = this.origin!.map((v) => v.toJson()).toList();
+    }
+    // if (this.countryGroups != null) {
+    //   data['countryGroups'] =
+    //       this.countryGroups!.map((v) => v.toJson()).toList();
+    // }
+    return data;
+  }
+}
+
+class TotalTaxes {
+  double? totalTax;
+  double? partialTax;
+  double? arabicStamp;
+
+  TotalTaxes({this.totalTax, this.partialTax, this.arabicStamp});
+
+  TotalTaxes.fromJson(Map<String, dynamic> json) {
+    totalTax = json['total_tax'];
+    partialTax = json['partial_tax'];
+    arabicStamp = json['arabic_stamp'];
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = Map<String, dynamic>();
+    data['total_tax'] = this.totalTax;
+    data['partial_tax'] = this.partialTax;
+    data['arabic_stamp'] = this.arabicStamp;
+    return data;
+  }
+}
+
+class Dolar {
+  double? price;
+
+  Dolar({this.price});
+
+  Dolar.fromJson(Map<String, dynamic> json) {
+    price = json['price'];
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = Map<String, dynamic>();
+    data['price'] = this.price;
     return data;
   }
 }
@@ -394,11 +624,11 @@ class TrackOffer {
     payFeesTaxes = json['pay_fees_taxes'];
     issuingExitPermit = json['Issuing_exit_permit'];
     loadDistenation = json['load_distenation'];
-    message = json['message'];
+    message = json['message'] ?? "";
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
+    final Map<String, dynamic> data = Map<String, dynamic>();
     data['id'] = this.id;
     data['attachment_recivment'] = this.attachmentRecivment;
     data['unload_distenation'] = this.unloadDistenation;

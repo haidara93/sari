@@ -3,7 +3,7 @@ import 'package:custome_mobile/business_logic/bloc/fee/fee_select_bloc.dart';
 import 'package:custome_mobile/business_logic/cubit/bottom_nav_bar_cubit.dart';
 import 'package:custome_mobile/business_logic/cubit/locale_cubit.dart';
 import 'package:custome_mobile/data/repositories/state_agency_repository.dart';
-import 'package:custome_mobile/views/screens/trader/stepper_order_broker_screen.dart';
+import 'package:custome_mobile/views/screens/trader/stepper_multi_order_broker_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -49,7 +49,7 @@ class _OrderBrokerScreenState extends State<OrderBrokerScreen> {
                   },
                   child: Stack(
                     children: [
-                      const StepperOrderBrokerScreen(),
+                      const StepperMultiOrderBrokerScreen(),
                       BlocBuilder<FeeSelectBloc, FeeSelectState>(
                         builder: (context, state) {
                           if (state is FeeSelectLoadingProgress) {

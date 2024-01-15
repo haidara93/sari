@@ -26,21 +26,27 @@ class Cost {
 class CustomeAgency {
   int? id;
   String? name;
-  int? statecustome;
-
-  CustomeAgency({this.id, this.name, this.statecustome});
+  StateCustome? statecustome;
+  String? shippingType;
+  CustomeAgency({this.id, this.name, this.statecustome, this.shippingType});
 
   CustomeAgency.fromJson(Map<String, dynamic> json) {
     id = json['id'];
     name = json['name'];
-    statecustome = json['statecustome'];
+    shippingType = json['shipping_type'];
+    statecustome = json['statecustome'] != null
+        ? new StateCustome.fromJson(json['statecustome'])
+        : null;
   }
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = <String, dynamic>{};
     data['id'] = id;
     data['name'] = name;
-    data['statecustome'] = statecustome;
+    data['shipping_type'] = shippingType;
+    if (this.statecustome != null) {
+      data['statecustome'] = this.statecustome!.toJson();
+    }
     return data;
   }
 }

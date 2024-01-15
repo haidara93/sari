@@ -158,7 +158,8 @@ class _OrderDetailsScreenState extends State<OrderDetailsScreen> {
                                     ),
                                     children: [
                                       TextSpan(
-                                        text: offerstate.offer.product!.label!,
+                                        text: offerstate
+                                            .offer.products![0].label!,
                                         style: TextStyle(
                                           color: Colors.black,
                                           fontSize: 16.sp,
@@ -186,7 +187,7 @@ class _OrderDetailsScreenState extends State<OrderDetailsScreen> {
                                         children: [
                                           TextSpan(
                                             text:
-                                                offerstate.offer.origin!.label!,
+                                                offerstate.offer.source!.label!,
                                             style: TextStyle(
                                               color: Colors.black,
                                               fontSize: 16.sp,
@@ -295,8 +296,7 @@ class _OrderDetailsScreenState extends State<OrderDetailsScreen> {
                                         ),
                                         children: [
                                           TextSpan(
-                                            text: offerstate.offer.weight!
-                                                .toInt()
+                                            text: offerstate.offer.weight![0]
                                                 .toString(),
                                             style: TextStyle(
                                               color: Colors.black,
@@ -322,8 +322,7 @@ class _OrderDetailsScreenState extends State<OrderDetailsScreen> {
                                       ),
                                       children: [
                                         TextSpan(
-                                          text: offerstate.offer.price!
-                                              .toInt()
+                                          text: offerstate.offer.price![0]
                                               .toString(),
                                           style: TextStyle(
                                             color: Colors.black,

@@ -243,6 +243,7 @@ class StateAgencyRepository {
     var json = jsonDecode(myDataString);
 
     var result = CalculateMultiResult.fromJson(json);
+    print(response.statusCode);
     print(jsonEncode(result.toJson()));
     return result;
   }
@@ -251,19 +252,26 @@ class StateAgencyRepository {
     String? offerType,
     int? packagesNum,
     int? tabalehNum,
-    int? weight,
-    int? price,
-    int? taxes,
+    List<int>? weight,
+    List<String>? price,
+    List<String>? taxes,
+    List<bool>? raw,
+    List<bool>? industrial,
+    List<bool>? brands,
+    List<bool>? tubes,
+    List<bool>? colored,
+    List<bool>? lycra,
+    int? totalweight,
+    String? totalprice,
+    String? totaltaxes,
     String? expectedArrivalDate,
     String? notes,
     int? costumeagency,
     int? costumestate,
-    String? product,
-    int? origin,
+    List<String>? products,
+    List<int>? origin,
     int? packageType,
     List<int>? attachments,
-    int? rawMaterial,
-    int? industrial,
   ) async {
     var prefs = await SharedPreferences.getInstance();
     var token = prefs.getString("token");
@@ -271,29 +279,41 @@ class StateAgencyRepository {
     var payload =
         json.decode(ascii.decode(base64.decode(base64.normalize(jwt[1]))));
     var trader = prefs.getInt("trader");
+
     var response = await HttpHelper.post(OFFERS_ENDPOINT, apiToken: token, {
       "offer_type": offerType,
       "trader": trader,
       "costumeagency": costumeagency,
       "costumestate": costumestate,
-      "product": product,
+      "products": products,
+      "source": origin![0],
       "origin": origin,
       "package_type": packageType,
       "packages_num": packagesNum,
       "tabaleh_num": tabalehNum,
-      "raw_material": rawMaterial,
-      "industrial": industrial,
-      "weight": weight,
-      "price": price,
-      "taxes": taxes,
+      "raw_material": raw.toString(),
+      "industrial": industrial.toString(),
+      "brand": brands.toString(),
+      "tubes": tubes.toString(),
+      "colored": colored.toString(),
+      "lycra": lycra.toString(),
+      "weight": weight.toString(),
+      "price": price.toString(),
+      "taxes": taxes.toString(),
+      "totalweight": totalweight,
+      "totalprice": totalprice,
+      "totaltaxes": totaltaxes,
       "expected_arrival_date": expectedArrivalDate,
       "attachments": attachments,
       "notes": notes
     });
 
+    print(response.statusCode);
     var jsonObject = jsonDecode(response.body);
     if (response.statusCode == 201) {
-      return Offer.fromJson(jsonObject);
+      var offer = Offer.fromJson(jsonObject);
+      print(offer);
+      return offer;
     } else {
       return null;
     }
@@ -349,6 +369,23 @@ class StateAgencyRepository {
       {"order_status": state},
       apiToken: jwt,
     );
+    if (response.statusCode == 200) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+  Future<bool> assignBrokerToOffer(int offerId, int broker) async {
+    var prefs = await SharedPreferences.getInstance();
+    var jwt = prefs.getString("token");
+    var response = await HttpHelper.patch(
+      "$OFFERS_ENDPOINT$offerId/assign_broker/",
+      {"costume_broker": broker},
+      apiToken: jwt,
+    );
+    print(response.statusCode);
+    print(response.body);
     if (response.statusCode == 200) {
       return true;
     } else {

@@ -67,6 +67,11 @@
     "isColored":"are threads colored?",
     "isLycra":"are threads lycra?",
     "select_origin_error":"please select origin",
+    "select_broker":"select Costum Broker",
+    "no_broker":"No Costum Broker was found",
+    "directorate":"directorate",
+    "agencies":"agencies",
+
     "complete_blank_textfield":"please complete blank textfields and other choices",
     "select_arrival_date_error":"please select arrival date.",
     "select_package_type_error":"please select package type.",

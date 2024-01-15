@@ -31,35 +31,49 @@ class AddOfferEvent extends OfferEvent {
   final String offerType;
   final int packageNum;
   final int tabalehNum;
-  final int weight;
-  final int price;
-  final int taxes;
+  final List<int> weight;
+  final List<String> price;
+  final List<String> taxes;
+  final int totalweight;
+  final String totalprice;
+  final String totaltaxes;
+  final List<bool> rawmaterial;
+  final List<bool> industrial;
+  final List<bool> brands;
+  final List<bool> tubes;
+  final List<bool> colored;
+  final List<bool> lycra;
   final int costumeAgency;
   final int costumeState;
-  final int origin;
   final int packageType;
-  final int rawMaterial;
-  final int industrial;
   final String expectedDate;
   final String notes;
-  final String product;
+  final List<int> origin;
+  final List<String> products;
   final List<int> attachments;
 
-  const AddOfferEvent(
+  AddOfferEvent(
       this.offerType,
       this.packageNum,
       this.tabalehNum,
       this.weight,
       this.price,
       this.taxes,
+      this.totalweight,
+      this.totalprice,
+      this.totaltaxes,
+      this.rawmaterial,
+      this.industrial,
+      this.brands,
+      this.tubes,
+      this.colored,
+      this.lycra,
       this.costumeAgency,
       this.costumeState,
-      this.origin,
       this.packageType,
       this.expectedDate,
       this.notes,
-      this.product,
-      this.attachments,
-      this.rawMaterial,
-      this.industrial);
+      this.origin,
+      this.products,
+      this.attachments);
 }

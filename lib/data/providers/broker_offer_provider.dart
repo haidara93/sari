@@ -1,5 +1,6 @@
 import 'package:custome_mobile/data/models/attachments_models.dart';
 import 'package:custome_mobile/data/models/offer_model.dart';
+import 'package:custome_mobile/data/models/state_custome_agency_model.dart';
 import 'package:flutter/material.dart';
 
 class BrokerOfferProvider extends ChangeNotifier {
@@ -18,17 +19,20 @@ class BrokerOfferProvider extends ChangeNotifier {
   int? _costumeBroker;
   int? get costumeBroker => _costumeBroker;
 
-  Costumeagency? _costumeagency;
-  Costumeagency? get costumeagency => _costumeagency;
+  CustomeAgency? _costumeagency;
+  CustomeAgency? get costumeagency => _costumeagency;
 
   Costumestate? _costumestate;
   Costumestate? get costumestate => _costumestate;
 
-  Product? _product;
-  Product? get product => _product;
+  List<Product>? _products;
+  List<Product>? get products => _products;
 
-  Origin? _origin;
-  Origin? get origin => _origin;
+  List<Origin>? _origin;
+  List<Origin>? get origin => _origin;
+
+  Origin? _source;
+  Origin? get source => _source;
 
   int? _packageType;
   int? get packageType => _packageType;
@@ -39,20 +43,41 @@ class BrokerOfferProvider extends ChangeNotifier {
   int? _tabalehNum;
   int? get tabalehNum => _tabalehNum;
 
-  int? _raw_material;
-  int? get raw_material => _raw_material;
+  List<bool>? _raw_material;
+  List<bool>? get raw_material => _raw_material;
 
-  int? _industrial;
-  int? get industrial => _industrial;
+  List<bool>? _industrial;
+  List<bool>? get industrial => _industrial;
 
-  double? _weight;
-  double? get weight => _weight;
+  List<bool>? _brand;
+  List<bool>? get brand => _brand;
 
-  double? _price;
-  double? get price => _price;
+  List<bool>? _tubes;
+  List<bool>? get tubes => _tubes;
 
-  double? _taxes;
-  double? get taxes => _taxes;
+  List<bool>? _colored;
+  List<bool>? get colored => _colored;
+
+  List<bool>? _lycra;
+  List<bool>? get lycra => _lycra;
+
+  List<int>? _weight;
+  List<int>? get weight => _weight;
+
+  List<int>? _price;
+  List<int>? get price => _price;
+
+  List<int>? _taxes;
+  List<int>? get taxes => _taxes;
+
+  double? _totalweight;
+  double? get totalweight => _totalweight;
+
+  double? _totalprice;
+  double? get totalprice => _totalprice;
+
+  double? _totaltaxes;
+  double? get totaltaxes => _totaltaxes;
 
   DateTime? _expectedArrivalDate;
   DateTime? get expectedArrivalDate => _expectedArrivalDate;
@@ -83,16 +108,24 @@ class BrokerOfferProvider extends ChangeNotifier {
     _costumeBroker = value.costumeBroker;
     _costumeagency = value.costumeagency;
     _costumestate = value.costumestate;
-    _product = value.product;
+    _products = value.products;
+    _source = value.source;
     _origin = value.origin;
     _packageType = value.packageType;
     _packagesNum = value.packagesNum;
     _tabalehNum = value.tabalehNum;
-    _raw_material = value.raw_material;
+    _raw_material = value.rawMaterial;
     _industrial = value.industrial;
+    _brand = value.brand;
+    _tubes = value.tubes;
+    _colored = value.colored;
+    _lycra = value.lycra;
     _weight = value.weight;
     _price = value.price;
     _taxes = value.taxes;
+    _totalweight = value.totalweight!.toDouble();
+    _totalprice = value.totalprice!.toDouble();
+    _totaltaxes = value.totaltaxes!.toDouble();
     _expectedArrivalDate = value.expectedArrivalDate;
     _attachments = value.attachments;
     _notes = value.notes;

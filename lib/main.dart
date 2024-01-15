@@ -1,11 +1,13 @@
 import 'dart:io';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:custome_mobile/Localization/app_localizations_setup.dart';
+import 'package:custome_mobile/business_logic/bloc/assign_broker_bloc.dart';
 import 'package:custome_mobile/business_logic/bloc/attachment/additional_attachment_bloc.dart';
 import 'package:custome_mobile/business_logic/bloc/attachment/attachment_bloc.dart';
 import 'package:custome_mobile/business_logic/bloc/attachment/attachment_type_bloc.dart';
 import 'package:custome_mobile/business_logic/bloc/attachment/attachments_list_bloc.dart';
 import 'package:custome_mobile/business_logic/bloc/auth_bloc.dart';
+import 'package:custome_mobile/business_logic/bloc/broker_list_bloc.dart';
 import 'package:custome_mobile/business_logic/bloc/calculate_result/calculate_multi_result_dart_bloc.dart';
 import 'package:custome_mobile/business_logic/bloc/calculate_result/calculate_result_bloc.dart';
 import 'package:custome_mobile/business_logic/bloc/calculate_result/calculator_panel_bloc.dart';
@@ -122,6 +124,10 @@ class MyApp extends StatelessWidget {
                 providers: [
                   BlocProvider(
                       create: (context) => AuthBloc(
+                          authRepository:
+                              RepositoryProvider.of<AuthRepository>(context))),
+                  BlocProvider(
+                      create: (context) => BrokerListBloc(
                           authRepository:
                               RepositoryProvider.of<AuthRepository>(context))),
                   BlocProvider(
@@ -243,6 +249,12 @@ class MyApp extends StatelessWidget {
                   ),
                   BlocProvider(
                     create: (context) => AttachmentsListBloc(),
+                  ),
+                  BlocProvider(
+                    create: (context) => AssignBrokerBloc(
+                        stateAgencyRepository:
+                            RepositoryProvider.of<StateAgencyRepository>(
+                                context)),
                   ),
                   BlocProvider(
                     create: (context) => CalculateResultBloc(

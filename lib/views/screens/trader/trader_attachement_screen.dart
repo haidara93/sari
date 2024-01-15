@@ -5,15 +5,18 @@ import 'package:custome_mobile/Localization/app_localizations.dart';
 import 'package:custome_mobile/business_logic/bloc/attachment/attachment_bloc.dart';
 import 'package:custome_mobile/business_logic/bloc/attachment/attachment_type_bloc.dart';
 import 'package:custome_mobile/business_logic/bloc/attachment/attachments_list_bloc.dart';
+import 'package:custome_mobile/business_logic/bloc/broker_list_bloc.dart';
 import 'package:custome_mobile/business_logic/bloc/offer_bloc.dart';
 import 'package:custome_mobile/business_logic/bloc/package_type_bloc.dart';
 import 'package:custome_mobile/business_logic/cubit/bottom_nav_bar_cubit.dart';
 import 'package:custome_mobile/data/models/attachments_models.dart';
+import 'package:custome_mobile/data/models/package_model.dart';
 import 'package:custome_mobile/data/providers/add_attachment_provider.dart';
 import 'package:custome_mobile/data/providers/order_broker_provider.dart';
 import 'package:custome_mobile/helpers/color_constants.dart';
 import 'package:custome_mobile/helpers/formatter.dart';
 import 'package:custome_mobile/views/control_view.dart';
+import 'package:custome_mobile/views/screens/trader/select_broker_screen.dart';
 import 'package:custome_mobile/views/widgets/custom_app_bar.dart';
 import 'package:custome_mobile/views/widgets/custom_botton.dart';
 import 'package:flutter/cupertino.dart' as cupertino;
@@ -29,25 +32,39 @@ import 'package:shimmer/shimmer.dart';
 
 // ignore: must_be_immutable
 class TraderAttachementScreen extends StatefulWidget {
-  final int? weight;
-  final int? price;
-  final int? taxes;
-  final String? product;
-  final int? origin;
-  final int? rawMaterial;
-  final int? industrial;
+  final List<int>? weight;
+  final List<String>? price;
+  final List<String>? taxes;
+  final int? totalweight;
+  final String? totalprice;
+  final String? totaltaxes;
+  final List<bool>? rawmaterial;
+  final List<bool>? industrial;
+  final List<bool>? brands;
+  final List<bool>? tubes;
+  final List<bool>? colored;
+  final List<bool>? lycra;
+  final List<Package?>? product;
+  final List<Origin?>? origin;
 
   var homeCarouselIndicator = 0;
-  TraderAttachementScreen(
-      {Key? key,
-      this.weight,
-      this.price,
-      this.taxes,
-      this.product,
-      this.origin,
-      this.rawMaterial,
-      this.industrial})
-      : super(key: key);
+  TraderAttachementScreen({
+    Key? key,
+    this.weight,
+    this.price,
+    this.taxes,
+    this.totalweight,
+    this.totalprice,
+    this.totaltaxes,
+    this.product,
+    this.origin,
+    this.rawmaterial,
+    this.industrial,
+    this.brands,
+    this.tubes,
+    this.colored,
+    this.lycra,
+  }) : super(key: key);
 
   @override
   State<TraderAttachementScreen> createState() =>
@@ -1390,13 +1407,18 @@ class _TraderAttachementScreenState extends State<TraderAttachementScreen> {
                                                       context)
                                                   .add(
                                                       ClearAttachmentToListEvent());
-                                              Navigator.pushAndRemoveUntil(
+                                              BlocProvider.of<BrokerListBloc>(
+                                                      context)
+                                                  .add(BrokerListLoadEvent());
+                                              Navigator.push(
                                                 context,
                                                 MaterialPageRoute(
                                                   builder: (context) =>
-                                                      const ControlView(),
+                                                      SelectBrokerScreen(
+                                                    offerId:
+                                                        offerstate.offer.id!,
+                                                  ),
                                                 ),
-                                                (route) => false,
                                               );
 
                                               var snackBar = SnackBar(
@@ -1433,6 +1455,7 @@ class _TraderAttachementScreenState extends State<TraderAttachementScreen> {
                                             }
                                             if (offerstate
                                                 is OfferLoadedFailed) {
+                                              print(offerstate.errortext);
                                               var snackBar = SnackBar(
                                                 elevation: 0,
                                                 duration:
@@ -1490,6 +1513,21 @@ class _TraderAttachementScreenState extends State<TraderAttachementScreen> {
                                                       if (_attachmentformkey
                                                           .currentState!
                                                           .validate()) {
+                                                        List<String>
+                                                            productsId = [];
+                                                        List<int> originId = [];
+                                                        for (var i = 0;
+                                                            i <
+                                                                widget.product!
+                                                                    .length;
+                                                            i++) {
+                                                          productsId.add(widget
+                                                              .product![i]!
+                                                              .id!);
+                                                          originId.add(widget
+                                                              .origin![i]!.id!);
+                                                        }
+
                                                         BlocProvider.of<OfferBloc>(context).add(AddOfferEvent(
                                                             orderBrokerProvider
                                                                 .selectedRadioTile,
@@ -1500,24 +1538,30 @@ class _TraderAttachementScreenState extends State<TraderAttachementScreen> {
                                                             widget.weight!,
                                                             widget.price!,
                                                             widget.taxes!,
+                                                            widget.totalweight!,
+                                                            widget.totalprice!,
+                                                            widget.totaltaxes!,
+                                                            widget.rawmaterial!,
+                                                            widget.industrial!,
+                                                            widget.brands!,
+                                                            widget.tubes!,
+                                                            widget.colored!,
+                                                            widget.lycra!,
                                                             orderBrokerProvider
                                                                 .selectedCustomeAgency!
                                                                 .id!,
                                                             orderBrokerProvider
                                                                 .selectedStateCustome!
                                                                 .id!,
-                                                            widget.origin!,
                                                             orderBrokerProvider
                                                                 .packageTypeId,
                                                             "${orderBrokerProvider.productExpireDate!.year}-${orderBrokerProvider.productExpireDate!.month}-${orderBrokerProvider.productExpireDate!.day}",
                                                             orderBrokerProvider
                                                                 .note,
-                                                            widget.product!,
+                                                            originId,
+                                                            productsId,
                                                             orderBrokerProvider
-                                                                .attachmentsId,
-                                                            widget.rawMaterial!,
-                                                            widget
-                                                                .industrial!));
+                                                                .attachmentsId));
                                                       } else {
                                                         Scrollable
                                                             .ensureVisible(

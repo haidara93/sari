@@ -292,7 +292,7 @@ class _BrokerLogScreenState extends State<BrokerLogScreen>
                                                 Text.rich(
                                                   TextSpan(
                                                       text: state.offers[index]
-                                                          .origin!.label!,
+                                                          .source!.label!,
                                                       style: TextStyle(
                                                         color:
                                                             AppColor.lightBlue,

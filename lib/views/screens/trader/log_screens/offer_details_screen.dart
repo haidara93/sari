@@ -1,4 +1,5 @@
 import 'package:custome_mobile/Localization/app_localizations.dart';
+import 'package:custome_mobile/business_logic/bloc/calculate_result/calculate_multi_result_dart_bloc.dart';
 import 'package:custome_mobile/business_logic/bloc/calculate_result/calculate_result_bloc.dart';
 import 'package:custome_mobile/business_logic/bloc/offer_details_bloc.dart';
 import 'package:custome_mobile/business_logic/cubit/locale_cubit.dart';
@@ -30,6 +31,8 @@ class OfferDetailsScreen extends StatefulWidget {
 
 class _OfferDetailsScreenState extends State<OfferDetailsScreen> {
   CalculateObject result = CalculateObject();
+  List<CalculateObject> objects = [];
+
   TraderOfferProvider? trader_offerProvider;
   BrokerOfferProvider? broker_offerProvider;
 
@@ -139,7 +142,7 @@ class _OfferDetailsScreenState extends State<OfferDetailsScreen> {
                 },
                 builder: (context, offerstate) {
                   if (offerstate is OfferDetailsLoadedSuccess) {
-                    getProductInfo(offerstate.offer.product!.id!);
+                    getProductInfo(offerstate.offer.products![0].id!);
 
                     return SingleChildScrollView(
                       child: Column(
@@ -314,7 +317,7 @@ class _OfferDetailsScreenState extends State<OfferDetailsScreen> {
                                           children: [
                                             TextSpan(
                                               text: broker_offerProvider!
-                                                  .product!.label!,
+                                                  .products![0].label!,
                                               style: TextStyle(
                                                 color: Colors.black,
                                                 fontSize: 16.sp,
@@ -325,7 +328,8 @@ class _OfferDetailsScreenState extends State<OfferDetailsScreen> {
                                     ),
                                   ),
                                   Divider(
-                                    color: Colors.grey[300]!,
+                                    color: const Color.fromARGB(
+                                        255, 164, 144, 144)!,
                                   ),
                                   Row(
                                     mainAxisAlignment: MainAxisAlignment.start,
@@ -345,7 +349,7 @@ class _OfferDetailsScreenState extends State<OfferDetailsScreen> {
                                               children: [
                                                 TextSpan(
                                                   text: offerstate
-                                                      .offer.origin!.label!,
+                                                      .offer.source!.label!,
                                                   style: TextStyle(
                                                     color: Colors.black,
                                                     fontSize: 16.sp,
@@ -467,8 +471,7 @@ class _OfferDetailsScreenState extends State<OfferDetailsScreen> {
                                               children: [
                                                 TextSpan(
                                                   text: broker_offerProvider!
-                                                      .weight!
-                                                      .toInt()
+                                                      .weight![0]
                                                       .toString(),
                                                   style: TextStyle(
                                                     color: Colors.black,
@@ -497,8 +500,7 @@ class _OfferDetailsScreenState extends State<OfferDetailsScreen> {
                                             children: [
                                               TextSpan(
                                                 text: broker_offerProvider!
-                                                    .price!
-                                                    .toInt()
+                                                    .price![0]
                                                     .toString(),
                                                 style: TextStyle(
                                                   color: Colors.black,
@@ -587,63 +589,74 @@ class _OfferDetailsScreenState extends State<OfferDetailsScreen> {
                                                   broker_offerProvider!.costs,
                                             ),
                                           ));
-
-                                      result.insurance =
-                                          broker_offerProvider!.taxes!.toInt();
-                                      result.fee = product!.fee!;
-                                      result.rawMaterial =
-                                          broker_offerProvider!.raw_material!;
-                                      result.industrial =
-                                          broker_offerProvider!.industrial;
-                                      result.totalTax =
-                                          product!.totalTaxes!.totalTax!;
-                                      result.partialTax =
-                                          product!.totalTaxes!.partialTax!;
-                                      result.origin =
-                                          broker_offerProvider!.origin!.label!;
-                                      result.spendingFee =
-                                          product!.spendingFee!;
-                                      result.supportFee = product!.supportFee!;
-                                      result.localFee = product!.localFee!;
-                                      result.protectionFee =
-                                          product!.protectionFee!;
-                                      result.naturalFee = product!.naturalFee!;
-                                      result.taxFee = product!.taxFee!;
-                                      result.insurance =
-                                          broker_offerProvider!.taxes!.toInt();
-                                      result.fee = product!.fee!;
-                                      result.rawMaterial =
-                                          broker_offerProvider!.raw_material!;
-                                      result.industrial =
-                                          broker_offerProvider!.industrial;
-                                      result.totalTax =
-                                          product!.totalTaxes!.totalTax!;
-                                      result.partialTax =
-                                          product!.totalTaxes!.partialTax!;
-                                      result.origin =
-                                          broker_offerProvider!.origin!.label!;
-                                      result.spendingFee =
-                                          product!.spendingFee!;
-                                      result.supportFee = product!.supportFee!;
-                                      result.localFee = product!.localFee!;
-                                      result.protectionFee =
-                                          product!.protectionFee!;
-                                      result.naturalFee = product!.naturalFee!;
-                                      result.taxFee = product!.taxFee!;
-                                      result.weight =
-                                          broker_offerProvider!.weight!.toInt();
-                                      result.price =
-                                          broker_offerProvider!.price!.toInt();
-                                      result.cnsulate = 1;
-                                      result.dolar = 8585;
-                                      result.arabic_stamp = product!
-                                          .totalTaxes!.arabicStamp!
-                                          .toInt();
-                                      result.import_fee = product!.importFee;
-                                      // ignore: use_build_context_synchronously
-                                      BlocProvider.of<CalculateResultBloc>(
+                                      for (var i = 0;
+                                          i <
+                                              broker_offerProvider!
+                                                  .products!.length;
+                                          i++) {
+                                        objects.add(CalculateObject());
+                                        objects[i].insurance =
+                                            broker_offerProvider!.taxes![i];
+                                        objects[i].fee = broker_offerProvider!
+                                            .products![i].fee;
+                                        objects[i].rawMaterial =
+                                            broker_offerProvider!
+                                                    .raw_material![i]
+                                                ? 1
+                                                : 0;
+                                        objects[i].industrial =
+                                            broker_offerProvider!.industrial![i]
+                                                ? 1
+                                                : 0;
+                                        objects[i].totalTax =
+                                            broker_offerProvider!.products![i]!
+                                                .totalTaxes!.totalTax!
+                                                .toDouble();
+                                        objects[i].partialTax =
+                                            broker_offerProvider!.products![i]!
+                                                .totalTaxes!.partialTax!
+                                                .toDouble();
+                                        objects[i].origin =
+                                            broker_offerProvider!
+                                                .origin![i].label;
+                                        objects[i].spendingFee =
+                                            broker_offerProvider!
+                                                .products![i]!.spendingFee;
+                                        objects[i].supportFee =
+                                            broker_offerProvider!
+                                                .products![i]!.supportFee;
+                                        objects[i].localFee =
+                                            broker_offerProvider!
+                                                .products![i]!.localFee!
+                                                .toDouble();
+                                        objects[i].protectionFee =
+                                            broker_offerProvider!
+                                                .products![i]!.protectionFee;
+                                        objects[i].naturalFee =
+                                            broker_offerProvider!
+                                                .products![i]!.naturalFee;
+                                        objects[i].taxFee =
+                                            broker_offerProvider!
+                                                .products![i]!.taxFee;
+                                        objects[i].weight =
+                                            broker_offerProvider!.weight![i];
+                                        objects[i].price =
+                                            broker_offerProvider!.price![i];
+                                        objects[i].cnsulate = 1;
+                                        objects[i].dolar = 8585;
+                                        objects[i].arabic_stamp =
+                                            broker_offerProvider!.products![i]!
+                                                .totalTaxes!.arabicStamp!
+                                                .toInt();
+                                        objects[i].import_fee =
+                                            broker_offerProvider!
+                                                .products![i]!.importFee!;
+                                      }
+                                      BlocProvider.of<CalculateMultiResultBloc>(
                                               context)
-                                          .add(CalculateTheResultEvent(result));
+                                          .add(CalculateMultiTheResultEvent(
+                                              objects));
+
                                       // ignore: use_build_context_synchronously
                                     },
                                     child: Padding(

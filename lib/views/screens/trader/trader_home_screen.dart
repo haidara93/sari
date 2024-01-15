@@ -80,6 +80,7 @@ class _TraderHomeScreenState extends State<TraderHomeScreen>
     BlocProvider.of<FlagsBloc>(context).add(FlagsLoadEvent());
     BlocProvider.of<GroupBloc>(context).add(GroupLoadEvent());
     BlocProvider.of<SectionBloc>(context).add(SectionLoadEvent());
+    BlocProvider.of<StateCustomeBloc>(context).add(StateCustomeLoadEvent());
 
     notificationServices.requestNotificationPermission();
     notificationServices.forgroundMessage();
@@ -184,8 +185,6 @@ class _TraderHomeScreenState extends State<TraderHomeScreen>
             title =
                 AppLocalizations.of(context)!.translate('broker_order_title');
 
-            BlocProvider.of<StateCustomeBloc>(context)
-                .add(StateCustomeLoadEvent());
             BlocProvider.of<PackageTypeBloc>(context)
                 .add(PackageTypeLoadEvent());
             currentScreen = const OrderBrokerScreen();
@@ -948,10 +947,13 @@ class _TraderHomeScreenState extends State<TraderHomeScreen>
                                                                   context)!
                                                               .translate(
                                                                   'broker_order_nav'),
+                                                          overflow: TextOverflow
+                                                              .ellipsis,
                                                           style: TextStyle(
-                                                              color: AppColor
-                                                                  .goldenYellow,
-                                                              fontSize: 15.sp),
+                                                            color: AppColor
+                                                                .goldenYellow,
+                                                            fontSize: 15.sp,
+                                                          ),
                                                         )
                                                       ],
                                                     )
