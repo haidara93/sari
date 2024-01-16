@@ -687,6 +687,7 @@ class _StepperMultiOrderBrokerScreenState
                                     title: Text(
                                       AppLocalizations.of(context)!
                                           .translate('import'),
+                                      overflow: TextOverflow.fade,
                                       style: const TextStyle(
                                         fontSize: 16,
                                       ),
@@ -714,6 +715,7 @@ class _StepperMultiOrderBrokerScreenState
                                     title: Text(
                                       AppLocalizations.of(context)!
                                           .translate('export'),
+                                      overflow: TextOverflow.fade,
                                       style: const TextStyle(
                                         fontSize: 16,
                                       ),

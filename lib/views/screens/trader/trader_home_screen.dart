@@ -979,6 +979,8 @@ class _TraderHomeScreenState extends State<TraderHomeScreen>
                                                                   context)!
                                                               .translate(
                                                                   'broker_order_nav'),
+                                                          overflow: TextOverflow
+                                                              .ellipsis,
                                                           style:
                                                               const TextStyle(
                                                                   color: Colors
