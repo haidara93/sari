@@ -48,6 +48,7 @@ class AddOfferEvent extends OfferEvent {
   final int packageType;
   final String expectedDate;
   final String notes;
+  final package.Origin source;
   final List<int> origin;
   final List<String> products;
   final List<int> attachments;
@@ -73,6 +74,7 @@ class AddOfferEvent extends OfferEvent {
       this.packageType,
       this.expectedDate,
       this.notes,
+      this.source,
       this.origin,
       this.products,
       this.attachments);

@@ -1,4 +1,5 @@
 import 'package:custome_mobile/data/models/attachments_models.dart';
+import 'package:custome_mobile/data/models/package_model.dart';
 import 'package:custome_mobile/data/models/state_custome_agency_model.dart';
 import 'package:flutter/material.dart';
 
@@ -12,6 +13,8 @@ class OrderBrokerProvider extends ChangeNotifier {
   StateCustome? get selectedStateCustome => _selectedStateCustome;
   CustomeAgency? _selectedCustomeAgency;
   CustomeAgency? get selectedCustomeAgency => _selectedCustomeAgency;
+  Origin? _source;
+  Origin? get source => _source;
   bool _selectedStateError = false;
   bool get selectedStateError => _selectedStateError;
 
@@ -62,6 +65,7 @@ class OrderBrokerProvider extends ChangeNotifier {
     _selectedRadioTileError = false;
     _selectedStateCustome = null;
     _selectedCustomeAgency = null;
+    _source = null;
     _selectedStateError = false;
     _productExpireDate = null;
     _dateError = false;
@@ -90,6 +94,11 @@ class OrderBrokerProvider extends ChangeNotifier {
 
   setSelectedStateCustome(StateCustome? value) {
     _selectedStateCustome = value;
+    notifyListeners();
+  }
+
+  setSource(Origin? value) {
+    _source = value;
     notifyListeners();
   }
 

@@ -8,6 +8,7 @@ import 'package:custome_mobile/business_logic/bloc/attachment/attachment_type_bl
 import 'package:custome_mobile/business_logic/bloc/attachment/attachments_list_bloc.dart';
 import 'package:custome_mobile/business_logic/bloc/auth_bloc.dart';
 import 'package:custome_mobile/business_logic/bloc/broker_list_bloc.dart';
+import 'package:custome_mobile/business_logic/bloc/broker_review_bloc.dart';
 import 'package:custome_mobile/business_logic/bloc/calculate_result/calculate_multi_result_dart_bloc.dart';
 import 'package:custome_mobile/business_logic/bloc/calculate_result/calculate_result_bloc.dart';
 import 'package:custome_mobile/business_logic/bloc/calculate_result/calculator_panel_bloc.dart';
@@ -18,6 +19,7 @@ import 'package:custome_mobile/business_logic/bloc/fee/fee_bloc.dart';
 import 'package:custome_mobile/business_logic/bloc/fee/fee_item_bloc.dart';
 import 'package:custome_mobile/business_logic/bloc/fee/fee_select_bloc.dart';
 import 'package:custome_mobile/business_logic/bloc/fee/fee_trade_description_bloc.dart';
+import 'package:custome_mobile/business_logic/bloc/flag_select_bloc.dart';
 import 'package:custome_mobile/business_logic/bloc/flags_bloc.dart';
 import 'package:custome_mobile/business_logic/bloc/group_bloc.dart';
 import 'package:custome_mobile/business_logic/bloc/note_bloc.dart';
@@ -269,6 +271,11 @@ class MyApp extends StatelessWidget {
                                 context)),
                   ),
                   BlocProvider(
+                    create: (context) => BrokerReviewBloc(
+                        authRepository:
+                            RepositoryProvider.of<AuthRepository>(context)),
+                  ),
+                  BlocProvider(
                     create: (context) => FlagsBloc(),
                   ),
                   BlocProvider(
@@ -280,6 +287,7 @@ class MyApp extends StatelessWidget {
                   BlocProvider(create: (context) => CalculatorPanelBloc()),
                   BlocProvider(create: (context) => FeeItemBloc()),
                   BlocProvider(create: (context) => FeeSelectBloc()),
+                  BlocProvider(create: (context) => FlagSelectBloc()),
                   BlocProvider(create: (context) => FeeAddLoadingBloc()),
                   BlocProvider(
                       create: (context) => NotificationBloc(

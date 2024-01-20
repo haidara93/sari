@@ -15,6 +15,10 @@ class CalculatorPanelBloc
       emit(TariffPanelOpened());
     });
 
+    on<FlagsPanelOpenEvent>((event, emit) {
+      emit(FlagsPanelOpened());
+    });
+
     on<CalculatorPanelHideEvent>((event, emit) {
       emit(CalculatorPanelHidden());
     });

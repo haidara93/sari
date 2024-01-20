@@ -1,0 +1,501 @@
+import 'package:custome_mobile/Localization/app_localizations.dart';
+import 'package:custome_mobile/business_logic/bloc/assign_broker_bloc.dart';
+import 'package:custome_mobile/business_logic/bloc/broker_review_bloc.dart';
+import 'package:custome_mobile/data/models/state_custome_agency_model.dart';
+import 'package:custome_mobile/data/models/user_model.dart';
+import 'package:custome_mobile/helpers/color_constants.dart';
+import 'package:custome_mobile/views/widgets/custom_botton.dart';
+import 'package:flutter/material.dart';
+import 'package:custome_mobile/business_logic/cubit/locale_cubit.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+
+class SelectBrokerProfileScreen extends StatefulWidget {
+  final CostumBroker broker;
+  final int offerId;
+  SelectBrokerProfileScreen(
+      {Key? key, required this.broker, required this.offerId})
+      : super(key: key);
+
+  @override
+  State<SelectBrokerProfileScreen> createState() =>
+      _SelectBrokerProfileScreenState();
+}
+
+class _SelectBrokerProfileScreenState extends State<SelectBrokerProfileScreen> {
+  _buildAgenciesWidget(List<CustomeAgency> agencies) {
+    List<Widget> list = [];
+    for (var element in agencies) {
+      list.add(Text(element.name! + " ,"));
+    }
+
+    return list;
+  }
+
+  Future<void> _showAlertDialog(int index) async {
+    return showDialog<void>(
+      context: context,
+      barrierDismissible: false, // user must tap button!
+      builder: (BuildContext context) {
+        return AlertDialog(
+          // <-- SEE HERE
+          title: const Text('Assign Broker'),
+          content: const SingleChildScrollView(
+            child: ListBody(
+              children: <Widget>[
+                Text('Are you sure want to assign this broker?'),
+              ],
+            ),
+          ),
+          actions: <Widget>[
+            TextButton(
+              child: const Text('No'),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+            TextButton(
+              child: const Text('Yes'),
+              onPressed: () {
+                BlocProvider.of<AssignBrokerBloc>(context)
+                    .add(AssignBrokerToOfferEvent(widget.offerId, index));
+                // remove(index);
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return BlocBuilder<LocaleCubit, LocaleState>(
+      builder: (context, localeState) {
+        return Directionality(
+          textDirection: localeState.value.languageCode == 'en'
+              ? TextDirection.ltr
+              : TextDirection.rtl,
+          child: SafeArea(
+            child: Scaffold(
+              body: Stack(
+                children: [
+                  SingleChildScrollView(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        Stack(
+                          children: [
+                            SizedBox(
+                              height: MediaQuery.of(context).size.height,
+                              child: Column(
+                                children: [
+                                  Container(
+                                    height: 240.h,
+                                    color: AppColor.deepBlue,
+                                  ),
+                                  SizedBox(
+                                    height: 60.h,
+                                  ),
+                                  Padding(
+                                    padding: const EdgeInsets.all(8.0),
+                                    child: Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      children: [
+                                        Container(
+                                          height: 45,
+                                          width: 45,
+                                          decoration: BoxDecoration(
+                                            borderRadius:
+                                                BorderRadius.circular(45),
+                                            color: AppColor.deepBlue,
+                                          ),
+                                          child: const Icon(
+                                            Icons.call,
+                                            color: Colors.white,
+                                          ),
+                                        ),
+                                        Column(
+                                          children: [
+                                            Text(
+                                                '${widget.broker.user!.firstName!} ${widget.broker.user!.lastName!}'),
+                                            Padding(
+                                              padding: EdgeInsets.symmetric(
+                                                  horizontal: 35.w),
+                                              child: Row(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment
+                                                        .spaceAround,
+                                                children: [
+                                                  widget.broker.rating! >= 1
+                                                      ? Icon(
+                                                          Icons.star,
+                                                          color: AppColor
+                                                              .deepYellow,
+                                                        )
+                                                      : Icon(
+                                                          Icons.star_border,
+                                                          color: AppColor
+                                                              .deepYellow,
+                                                        ),
+                                                  widget.broker.rating! >= 2
+                                                      ? Icon(
+                                                          Icons.star,
+                                                          color: AppColor
+                                                              .deepYellow,
+                                                        )
+                                                      : Icon(
+                                                          Icons.star_border,
+                                                          color: AppColor
+                                                              .deepYellow,
+                                                        ),
+                                                  widget.broker.rating! >= 3
+                                                      ? Icon(
+                                                          Icons.star,
+                                                          color: AppColor
+                                                              .deepYellow,
+                                                        )
+                                                      : Icon(
+                                                          Icons.star_border,
+                                                          color: AppColor
+                                                              .deepYellow,
+                                                        ),
+                                                  widget.broker.rating! >= 4
+                                                      ? Icon(
+                                                          Icons.star,
+                                                          color: AppColor
+                                                              .deepYellow,
+                                                        )
+                                                      : Icon(
+                                                          Icons.star_border,
+                                                          color: AppColor
+                                                              .deepYellow,
+                                                        ),
+                                                  widget.broker.rating! == 5
+                                                      ? Icon(
+                                                          Icons.star,
+                                                          color: AppColor
+                                                              .deepYellow,
+                                                        )
+                                                      : Icon(
+                                                          Icons.star_border,
+                                                          color: AppColor
+                                                              .deepYellow,
+                                                        ),
+                                                ],
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                        Container(
+                                          height: 45,
+                                          width: 45,
+                                          decoration: BoxDecoration(
+                                            borderRadius:
+                                                BorderRadius.circular(45),
+                                            color: AppColor.deepBlue,
+                                          ),
+                                          child: const Icon(
+                                            Icons.message,
+                                            color: Colors.white,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                  const SizedBox(
+                                    height: 20,
+                                  ),
+                                  Padding(
+                                    padding: const EdgeInsets.all(8.0),
+                                    child: Text(widget.broker.user!.bio!),
+                                  ),
+                                  const SizedBox(
+                                    height: 15,
+                                  ),
+                                  Padding(
+                                    padding: const EdgeInsets.all(8.0),
+                                    child: Column(
+                                      children: [
+                                        Padding(
+                                          padding: const EdgeInsets.all(8.0),
+                                          child: Row(
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
+                                            children: [
+                                              Icon(
+                                                Icons.person,
+                                                color: AppColor.deepYellow,
+                                              ),
+                                              SizedBox(
+                                                width: 7.w,
+                                              ),
+                                              Column(
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment.start,
+                                                children: [
+                                                  Text(
+                                                      "${AppLocalizations.of(context)!.translate('directorate')}: ${widget.broker.agencies![0].statecustome!.name!}"),
+                                                  Wrap(
+                                                    children:
+                                                        _buildAgenciesWidget(
+                                                            widget.broker
+                                                                .agencies!),
+                                                  ),
+                                                ],
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                        Padding(
+                                          padding: const EdgeInsets.all(8.0),
+                                          child: Row(
+                                            children: [
+                                              Icon(
+                                                Icons.email,
+                                                color: AppColor.deepYellow,
+                                              ),
+                                              SizedBox(
+                                                width: 7.w,
+                                              ),
+                                              Text(
+                                                widget.broker.user!.username!,
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                        Padding(
+                                          padding: const EdgeInsets.all(8.0),
+                                          child: Row(
+                                            children: [
+                                              Icon(
+                                                Icons.call,
+                                                color: AppColor.deepYellow,
+                                              ),
+                                              SizedBox(
+                                                width: 7.w,
+                                              ),
+                                              Text(
+                                                widget.broker.user!.phone!,
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                        Theme(
+                                          data: Theme.of(context).copyWith(
+                                              dividerColor: Colors.transparent),
+                                          child: ExpansionTile(
+                                            initiallyExpanded: false,
+                                            tilePadding: EdgeInsets.zero,
+
+                                            // controlAffinity: ListTileControlAffinity.leading,
+                                            childrenPadding: EdgeInsets.zero,
+                                            title: Row(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.start,
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.center,
+                                              children: [
+                                                SizedBox(
+                                                  width: MediaQuery.of(context)
+                                                          .size
+                                                          .width *
+                                                      .84,
+                                                  child: const Text(
+                                                    'reviews',
+                                                    overflow:
+                                                        TextOverflow.ellipsis,
+                                                  ),
+                                                )
+                                              ],
+                                            ),
+                                            onExpansionChanged: (value) {},
+                                            children: [
+                                              BlocBuilder<BrokerReviewBloc,
+                                                  BrokerReviewState>(
+                                                builder: (context, state) {
+                                                  if (state
+                                                      is BrokerReviewSucess) {
+                                                    return ListView.builder(
+                                                      itemCount:
+                                                          state.reviews.length,
+                                                      shrinkWrap: true,
+                                                      itemBuilder:
+                                                          (context, index) {
+                                                        return Column(
+                                                          crossAxisAlignment:
+                                                              CrossAxisAlignment
+                                                                  .start,
+                                                          children: [
+                                                            Row(
+                                                              mainAxisAlignment:
+                                                                  MainAxisAlignment
+                                                                      .spaceBetween,
+                                                              children: [
+                                                                Text(
+                                                                    '${state.reviews[index].trader!.user!.firstName!} ${state.reviews[index].trader!.user!.lastName!}'),
+                                                                Padding(
+                                                                  padding: EdgeInsets
+                                                                      .symmetric(
+                                                                          horizontal:
+                                                                              25.w),
+                                                                  child: Row(
+                                                                    mainAxisAlignment:
+                                                                        MainAxisAlignment
+                                                                            .spaceAround,
+                                                                    children: [
+                                                                      widget.broker.rating! >=
+                                                                              1
+                                                                          ? Icon(
+                                                                              Icons.star,
+                                                                              color: AppColor.deepYellow,
+                                                                            )
+                                                                          : Icon(
+                                                                              Icons.star_border,
+                                                                              color: AppColor.deepYellow,
+                                                                            ),
+                                                                      widget.broker.rating! >=
+                                                                              2
+                                                                          ? Icon(
+                                                                              Icons.star,
+                                                                              color: AppColor.deepYellow,
+                                                                            )
+                                                                          : Icon(
+                                                                              Icons.star_border,
+                                                                              color: AppColor.deepYellow,
+                                                                            ),
+                                                                      widget.broker.rating! >=
+                                                                              3
+                                                                          ? Icon(
+                                                                              Icons.star,
+                                                                              color: AppColor.deepYellow,
+                                                                            )
+                                                                          : Icon(
+                                                                              Icons.star_border,
+                                                                              color: AppColor.deepYellow,
+                                                                            ),
+                                                                      widget.broker.rating! >=
+                                                                              4
+                                                                          ? Icon(
+                                                                              Icons.star,
+                                                                              color: AppColor.deepYellow,
+                                                                            )
+                                                                          : Icon(
+                                                                              Icons.star_border,
+                                                                              color: AppColor.deepYellow,
+                                                                            ),
+                                                                      widget.broker.rating! ==
+                                                                              5
+                                                                          ? Icon(
+                                                                              Icons.star,
+                                                                              color: AppColor.deepYellow,
+                                                                            )
+                                                                          : Icon(
+                                                                              Icons.star_border,
+                                                                              color: AppColor.deepYellow,
+                                                                            ),
+                                                                    ],
+                                                                  ),
+                                                                ),
+                                                              ],
+                                                            ),
+                                                            Text(state
+                                                                .reviews[index]
+                                                                .review!),
+                                                            Divider(
+                                                              color: AppColor
+                                                                  .deepYellow,
+                                                            ),
+                                                          ],
+                                                        );
+                                                      },
+                                                    );
+                                                  } else {
+                                                    return const Center(
+                                                      child:
+                                                          CircularProgressIndicator(),
+                                                    );
+                                                  }
+                                                },
+                                              )
+                                            ],
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  )
+                                ],
+                              ),
+                            ),
+                            Positioned(
+                              top: 30,
+                              child: SizedBox(
+                                width: MediaQuery.of(context).size.width,
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    CircleAvatar(
+                                      radius: 115.h,
+                                      backgroundColor: AppColor.deepAppBarBlue,
+                                      child: (widget.broker.user!.image!
+                                                  .isNotEmpty ||
+                                              widget.broker.user!.image! ==
+                                                  null)
+                                          ? ClipRRect(
+                                              borderRadius:
+                                                  BorderRadius.circular(180),
+                                              child: Image.network(
+                                                widget.broker.user!.image!,
+                                                fit: BoxFit.fill,
+                                              ),
+                                            )
+                                          : Center(
+                                              child: Text(
+                                                "AY",
+                                                style: TextStyle(
+                                                  fontSize: 28.sp,
+                                                ),
+                                              ),
+                                            ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
+                  ),
+                  Positioned(
+                    bottom: 30,
+                    child: SizedBox(
+                      width: MediaQuery.of(context).size.width,
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          CustomButton(
+                              title: SizedBox(
+                                width: 150.w,
+                                child: const Center(
+                                  child: Text("CB request"),
+                                ),
+                              ),
+                              onTap: () {
+                                _showAlertDialog(widget.broker.id!);
+                              }),
+                        ],
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        );
+      },
+    );
+  }
+}

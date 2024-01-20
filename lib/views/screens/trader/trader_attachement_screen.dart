@@ -1558,6 +1558,8 @@ class _TraderAttachementScreenState extends State<TraderAttachementScreen> {
                                                             "${orderBrokerProvider.productExpireDate!.year}-${orderBrokerProvider.productExpireDate!.month}-${orderBrokerProvider.productExpireDate!.day}",
                                                             orderBrokerProvider
                                                                 .note,
+                                                            orderBrokerProvider
+                                                                .source!,
                                                             originId,
                                                             productsId,
                                                             orderBrokerProvider

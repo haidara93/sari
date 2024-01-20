@@ -7,6 +7,8 @@ class CalculatorPanelEvent extends Equatable {
   List<Object> get props => [];
 }
 
+class FlagsPanelOpenEvent extends CalculatorPanelEvent {}
+
 class TariffPanelOpenEvent extends CalculatorPanelEvent {}
 
 class CalculatorPanelOpenEvent extends CalculatorPanelEvent {}

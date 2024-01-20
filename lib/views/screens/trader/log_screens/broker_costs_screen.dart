@@ -138,9 +138,9 @@ class BrokerCostDetailsScreen extends StatelessWidget {
               SizedBox(
                 height: 10.h,
               ),
-              BlocBuilder<CalculateResultBloc, CalculateResultState>(
+              BlocBuilder<CalculateMultiResultBloc, CalculateMultiResultState>(
                 builder: (context, state) {
-                  if (state is CalculateResultSuccessed) {
+                  if (state is CalculateMultiResultSuccessed) {
                     return Container(
                       width: double.infinity,
                       decoration: BoxDecoration(
@@ -240,9 +240,9 @@ class BrokerCostDetailsScreen extends StatelessWidget {
               SizedBox(
                 height: 10.h,
               ),
-              BlocBuilder<CalculateResultBloc, CalculateResultState>(
+              BlocBuilder<CalculateMultiResultBloc, CalculateMultiResultState>(
                 builder: (context, state) {
-                  if (state is CalculateResultSuccessed) {
+                  if (state is CalculateMultiResultSuccessed) {
                     return Container(
                       width: double.infinity,
                       decoration: BoxDecoration(
@@ -291,7 +291,9 @@ class BrokerCostDetailsScreen extends StatelessWidget {
                                 ),
                                 Text(
                                   finaltotalCost(
-                                      costs, state.result.finalTotal!),
+                                      costs,
+                                      double.parse(
+                                          state.result.totalFinalTotal!)),
                                   style: TextStyle(
                                       fontWeight: FontWeight.bold,
                                       fontSize: 20.sp,

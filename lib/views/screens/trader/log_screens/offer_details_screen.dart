@@ -4,6 +4,7 @@ import 'package:custome_mobile/business_logic/bloc/calculate_result/calculate_re
 import 'package:custome_mobile/business_logic/bloc/offer_details_bloc.dart';
 import 'package:custome_mobile/business_logic/cubit/locale_cubit.dart';
 import 'package:custome_mobile/data/models/offer_model.dart';
+import 'package:custome_mobile/data/models/offer_model.dart' as offer;
 import 'package:custome_mobile/data/models/package_model.dart';
 import 'package:custome_mobile/data/providers/broker_offer_provider.dart';
 import 'package:custome_mobile/data/providers/trader_offer_provider.dart';
@@ -13,6 +14,7 @@ import 'package:custome_mobile/views/screens/trader/log_screens/broker_attachmen
 import 'package:custome_mobile/views/screens/trader/log_screens/broker_costs_screen.dart';
 import 'package:custome_mobile/views/screens/trader/log_screens/order_tracking_screen.dart';
 import 'package:custome_mobile/views/widgets/custom_app_bar.dart';
+import 'package:custome_mobile/views/widgets/custome_timeline.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -114,6 +116,178 @@ class _OfferDetailsScreenState extends State<OfferDetailsScreen> {
     });
   }
 
+  List<Widget> buildProductTiles(String agency, offer.Origin origin,
+      int packageType, int packageNum, int weight, int price) {
+    List<Widget> list = [];
+    list.add(Column(
+      children: [
+        Row(
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: [
+            SizedBox(
+              width: MediaQuery.of(context).size.width * .4,
+              child: Text.rich(
+                TextSpan(
+                    text:
+                        "${AppLocalizations.of(context)!.translate('goods_origin')}: ",
+                    style: TextStyle(
+                      fontSize: 17.sp,
+                      fontWeight: FontWeight.bold,
+                    ),
+                    children: [
+                      TextSpan(
+                        text: origin!.label!,
+                        style: TextStyle(
+                          color: Colors.black,
+                          fontSize: 16.sp,
+                          fontWeight: FontWeight.normal,
+                        ),
+                      ),
+                    ]),
+              ),
+            ),
+            SizedBox(
+              height: 45.h,
+              child: VerticalDivider(
+                color: Colors.grey[300],
+              ),
+            ),
+            Text.rich(
+              TextSpan(
+                  text:
+                      "${AppLocalizations.of(context)!.translate('destination')}: ",
+                  style: TextStyle(
+                    fontSize: 17.sp,
+                    fontWeight: FontWeight.bold,
+                  ),
+                  children: [
+                    TextSpan(
+                      text: agency,
+                      style: TextStyle(
+                        color: Colors.black,
+                        fontSize: 16.sp,
+                        fontWeight: FontWeight.normal,
+                      ),
+                    ),
+                  ]),
+            ),
+          ],
+        ),
+        Divider(
+          color: Colors.grey[300]!,
+        ),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: [
+            SizedBox(
+              width: MediaQuery.of(context).size.width * .4,
+              child: Text.rich(
+                TextSpan(
+                    text:
+                        "${AppLocalizations.of(context)!.translate('package_type')}: ",
+                    style: TextStyle(
+                      fontSize: 17.sp,
+                      fontWeight: FontWeight.bold,
+                    ),
+                    children: [
+                      TextSpan(
+                        text: packageType!.toString(),
+                        style: TextStyle(
+                          color: Colors.black,
+                          fontSize: 16.sp,
+                          fontWeight: FontWeight.normal,
+                        ),
+                      ),
+                    ]),
+              ),
+            ),
+            SizedBox(
+              height: 45.h,
+              child: VerticalDivider(
+                color: Colors.grey[300],
+              ),
+            ),
+            Text.rich(
+              TextSpan(
+                  text:
+                      "${AppLocalizations.of(context)!.translate('packages_number')}: ",
+                  style: TextStyle(
+                    fontSize: 17.sp,
+                    fontWeight: FontWeight.bold,
+                  ),
+                  children: [
+                    TextSpan(
+                      text: packageNum!.toString(),
+                      style: TextStyle(
+                        color: Colors.black,
+                        fontSize: 16.sp,
+                        fontWeight: FontWeight.normal,
+                      ),
+                    ),
+                  ]),
+            ),
+          ],
+        ),
+        Divider(
+          color: Colors.grey[300]!,
+        ),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: [
+            SizedBox(
+              width: MediaQuery.of(context).size.width * .4,
+              child: Text.rich(
+                TextSpan(
+                    text:
+                        "${AppLocalizations.of(context)!.translate('weight')}: ",
+                    style: TextStyle(
+                      fontSize: 17.sp,
+                      fontWeight: FontWeight.bold,
+                    ),
+                    children: [
+                      TextSpan(
+                        text: weight.toString(),
+                        style: TextStyle(
+                          color: Colors.black,
+                          fontSize: 16.sp,
+                          fontWeight: FontWeight.normal,
+                        ),
+                      ),
+                    ]),
+              ),
+            ),
+            SizedBox(
+              height: 45.h,
+              child: VerticalDivider(
+                color: Colors.grey[300],
+              ),
+            ),
+            Text.rich(
+              TextSpan(
+                  text: "${AppLocalizations.of(context)!.translate('value')}: ",
+                  style: TextStyle(
+                    fontSize: 17.sp,
+                    fontWeight: FontWeight.bold,
+                  ),
+                  children: [
+                    TextSpan(
+                      text: price.toString(),
+                      style: TextStyle(
+                        color: Colors.black,
+                        fontSize: 16.sp,
+                        fontWeight: FontWeight.normal,
+                      ),
+                    ),
+                  ]),
+            ),
+          ],
+        ),
+      ],
+    ));
+
+    return list;
+  }
+
   @override
   Widget build(BuildContext context) {
     // DateTime now = DateTime.now();
@@ -148,228 +322,119 @@ class _OfferDetailsScreenState extends State<OfferDetailsScreen> {
                       child: Column(
                         mainAxisSize: MainAxisSize.min,
                         children: [
-                          SizedBox(
-                            height: 15.h,
-                          ),
-                          Card(
-                            clipBehavior: Clip.antiAlias,
-                            shape: const RoundedRectangleBorder(
-                                borderRadius: BorderRadius.all(
-                              Radius.circular(15),
-                            )),
-                            margin: EdgeInsets.symmetric(horizontal: 10.w),
-                            elevation: 1,
-                            color: Colors.white,
-                            child: Padding(
-                              padding: EdgeInsets.symmetric(
-                                  horizontal: 15.w, vertical: 7.5.h),
-                              child: Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                children: [
-                                  Text(
-                                    "${AppLocalizations.of(context)!.translate('status')}:",
-                                    style: TextStyle(
-                                      fontSize: 17.sp,
-                                      fontWeight: FontWeight.bold,
-                                    ),
-                                  ),
-                                  Text(
-                                    offerstate.offer.track_offer!.message!,
-                                    style: TextStyle(
-                                      fontSize: 17.sp,
-                                    ),
-                                  ),
-                                  GestureDetector(
-                                    onTap: () {
-                                      Navigator.push(
-                                          context,
-                                          MaterialPageRoute(
-                                            builder: (context) =>
-                                                OrderTrackingScreen(
-                                                    type: widget.type,
-                                                    offer: offerstate.offer),
-                                          ));
-                                    },
-                                    child: Padding(
-                                      padding: const EdgeInsets.all(8.0),
-                                      child: Text(
-                                        AppLocalizations.of(context)!
-                                            .translate('operation_tracking'),
-                                        style: TextStyle(
-                                          color: AppColor.lightBlue,
-                                          fontWeight: FontWeight.bold,
-                                          fontSize: 17.sp,
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ),
                           const SizedBox(
                             height: 15,
                           ),
                           Card(
                             clipBehavior: Clip.antiAlias,
                             shape: const RoundedRectangleBorder(
-                                borderRadius: BorderRadius.all(
-                              Radius.circular(15),
-                            )),
+                              borderRadius: BorderRadius.all(
+                                Radius.circular(15),
+                              ),
+                            ),
                             margin: EdgeInsets.symmetric(horizontal: 10.w),
                             elevation: 1,
                             color: Colors.white,
                             child: Padding(
                               padding: EdgeInsets.symmetric(
                                   horizontal: 15.w, vertical: 7.5.h),
-                              child: Column(
-                                mainAxisAlignment: MainAxisAlignment.start,
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                mainAxisSize: MainAxisSize.min,
-                                children: [
-                                  SizedBox(
-                                    height: 7.h,
-                                  ),
-                                  Text(
-                                    '${AppLocalizations.of(context)!.translate('operation_number')}: SA-${broker_offerProvider!.id!}',
-                                    style: TextStyle(
-                                      color: AppColor.lightBlue,
-                                      fontSize: 18.sp,
-                                      fontWeight: FontWeight.bold,
+                              child: SizedBox(
+                                width: double.infinity,
+                                child: Column(
+                                  mainAxisAlignment: MainAxisAlignment.start,
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    SizedBox(
+                                      height: 7.h,
                                     ),
-                                  ),
-                                  Divider(
-                                    color: Colors.grey[300]!,
-                                  ),
-                                  Padding(
-                                    padding: const EdgeInsets.symmetric(
-                                        vertical: 5.0),
-                                    child: Text.rich(
-                                      TextSpan(
-                                          text:
-                                              "${AppLocalizations.of(context)!.translate('operation_type')}: ",
-                                          style: TextStyle(
-                                            fontSize: 17.sp,
-                                            fontWeight: FontWeight.bold,
-                                          ),
-                                          children: [
-                                            TextSpan(
-                                              text: localeState
-                                                          .value.languageCode ==
-                                                      'en'
-                                                  ? getEnOfferType(
-                                                      broker_offerProvider!
-                                                          .offerType!)
-                                                  : getOfferType(
-                                                      broker_offerProvider!
-                                                          .offerType!),
-                                              style: TextStyle(
-                                                color: Colors.black,
-                                                fontSize: 16.sp,
-                                                fontWeight: FontWeight.normal,
-                                              ),
-                                            ),
-                                          ]),
+                                    Text(
+                                      '${AppLocalizations.of(context)!.translate('operation_number')}: SA-${broker_offerProvider!.id!}',
+                                      style: TextStyle(
+                                        color: AppColor.lightBlue,
+                                        fontSize: 18.sp,
+                                        fontWeight: FontWeight.bold,
+                                      ),
                                     ),
-                                  ),
-                                  Divider(
-                                    color: Colors.grey[300]!,
-                                  ),
-                                  Padding(
-                                    padding: const EdgeInsets.symmetric(
-                                        vertical: 5.0),
-                                    child: Text.rich(
-                                      TextSpan(
-                                          text:
-                                              "${AppLocalizations.of(context)!.translate('costume_agency')}: ",
-                                          style: TextStyle(
-                                            fontSize: 17.sp,
-                                            fontWeight: FontWeight.bold,
-                                          ),
-                                          children: [
-                                            TextSpan(
-                                              text: offerstate
-                                                  .offer.costumeagency!.name,
-                                              style: TextStyle(
-                                                color: Colors.black,
-                                                fontSize: 16.sp,
-                                                fontWeight: FontWeight.normal,
-                                              ),
-                                            ),
-                                          ]),
-                                    ),
-                                  ),
-                                  Divider(
-                                    color: Colors.grey[300]!,
-                                  ),
-                                  Padding(
-                                    padding: const EdgeInsets.symmetric(
-                                        vertical: 5.0),
-                                    child: Text.rich(
-                                      TextSpan(
-                                          text:
-                                              "${AppLocalizations.of(context)!.translate('goods_name')}: ",
-                                          style: TextStyle(
-                                            fontSize: 17.sp,
-                                            fontWeight: FontWeight.bold,
-                                          ),
-                                          children: [
-                                            TextSpan(
-                                              text: broker_offerProvider!
-                                                  .products![0].label!,
-                                              style: TextStyle(
-                                                color: Colors.black,
-                                                fontSize: 16.sp,
-                                                fontWeight: FontWeight.normal,
-                                              ),
-                                            ),
-                                          ]),
-                                    ),
-                                  ),
-                                  Divider(
-                                    color: const Color.fromARGB(
-                                        255, 164, 144, 144)!,
-                                  ),
-                                  Row(
-                                    mainAxisAlignment: MainAxisAlignment.start,
-                                    children: [
-                                      SizedBox(
+                                    Padding(
+                                      padding: const EdgeInsets.symmetric(
+                                          vertical: 5.0),
+                                      child: SizedBox(
                                         width:
                                             MediaQuery.of(context).size.width *
-                                                .4,
-                                        child: Text.rich(
-                                          TextSpan(
-                                              text:
-                                                  "${AppLocalizations.of(context)!.translate('goods_origin')}: ",
-                                              style: TextStyle(
-                                                fontSize: 17.sp,
-                                                fontWeight: FontWeight.bold,
-                                              ),
-                                              children: [
-                                                TextSpan(
-                                                  text: offerstate
-                                                      .offer.source!.label!,
-                                                  style: TextStyle(
-                                                    color: Colors.black,
-                                                    fontSize: 16.sp,
-                                                    fontWeight:
-                                                        FontWeight.normal,
-                                                  ),
+                                                .45,
+                                        child: FittedBox(
+                                          fit: BoxFit.scaleDown,
+                                          child: Text.rich(
+                                            TextSpan(
+                                                text: broker_offerProvider!
+                                                    .source!.label!,
+                                                style: TextStyle(
+                                                  color: AppColor.lightBlue,
+                                                  fontSize: 17.sp,
                                                 ),
-                                              ]),
+                                                children: [
+                                                  TextSpan(
+                                                    text: "  --->  ",
+                                                    style: TextStyle(
+                                                      color: Colors.black,
+                                                      fontSize: 17.sp,
+                                                    ),
+                                                  ),
+                                                  TextSpan(
+                                                    text:
+                                                        "${broker_offerProvider!.costumestate!.name}",
+                                                    style: TextStyle(
+                                                      color: AppColor.lightBlue,
+                                                      fontSize: 17.sp,
+                                                    ),
+                                                  ),
+                                                ]),
+                                          ),
                                         ),
                                       ),
-                                      SizedBox(
-                                        height: 45.h,
-                                        child: VerticalDivider(
-                                          color: Colors.grey[300],
-                                        ),
-                                      ),
-                                      Text.rich(
+                                    ),
+                                    Padding(
+                                      padding: const EdgeInsets.symmetric(
+                                          vertical: 5.0),
+                                      child: Text.rich(
                                         TextSpan(
                                             text:
-                                                "${AppLocalizations.of(context)!.translate('destination')}: ",
+                                                "${AppLocalizations.of(context)!.translate('operation_type')}: ",
+                                            style: TextStyle(
+                                              fontSize: 17.sp,
+                                              fontWeight: FontWeight.bold,
+                                            ),
+                                            children: [
+                                              TextSpan(
+                                                text: localeState.value
+                                                            .languageCode ==
+                                                        'en'
+                                                    ? getEnOfferType(
+                                                        broker_offerProvider!
+                                                            .offerType!)
+                                                    : getOfferType(
+                                                        broker_offerProvider!
+                                                            .offerType!),
+                                                style: TextStyle(
+                                                  color: Colors.black,
+                                                  fontSize: 16.sp,
+                                                  fontWeight: FontWeight.normal,
+                                                ),
+                                              ),
+                                            ]),
+                                      ),
+                                    ),
+                                    SizedBox(
+                                      height: 7.h,
+                                    ),
+                                    Padding(
+                                      padding: const EdgeInsets.symmetric(
+                                          vertical: 5.0),
+                                      child: Text.rich(
+                                        TextSpan(
+                                            text:
+                                                "${AppLocalizations.of(context)!.translate('costume_agency')}: ",
                                             style: TextStyle(
                                               fontSize: 17.sp,
                                               fontWeight: FontWeight.bold,
@@ -377,7 +442,7 @@ class _OfferDetailsScreenState extends State<OfferDetailsScreen> {
                                             children: [
                                               TextSpan(
                                                 text: offerstate
-                                                    .offer.costumestate!.name!,
+                                                    .offer.costumeagency!.name,
                                                 style: TextStyle(
                                                   color: Colors.black,
                                                   fontSize: 16.sp,
@@ -386,164 +451,142 @@ class _OfferDetailsScreenState extends State<OfferDetailsScreen> {
                                               ),
                                             ]),
                                       ),
-                                    ],
-                                  ),
-                                  Divider(
-                                    color: Colors.grey[300]!,
-                                  ),
-                                  Row(
-                                    mainAxisAlignment: MainAxisAlignment.start,
-                                    children: [
-                                      SizedBox(
-                                        width:
-                                            MediaQuery.of(context).size.width *
-                                                .4,
-                                        child: Text.rich(
-                                          TextSpan(
-                                              text:
-                                                  "${AppLocalizations.of(context)!.translate('package_type')}: ",
-                                              style: TextStyle(
-                                                fontSize: 17.sp,
-                                                fontWeight: FontWeight.bold,
-                                              ),
-                                              children: [
-                                                TextSpan(
-                                                  text: offerstate
-                                                      .offer.packageType!
-                                                      .toString(),
-                                                  style: TextStyle(
-                                                    color: Colors.black,
-                                                    fontSize: 16.sp,
-                                                    fontWeight:
-                                                        FontWeight.normal,
-                                                  ),
-                                                ),
-                                              ]),
-                                        ),
-                                      ),
-                                      SizedBox(
-                                        height: 45.h,
-                                        child: VerticalDivider(
-                                          color: Colors.grey[300],
-                                        ),
-                                      ),
-                                      Text.rich(
-                                        TextSpan(
-                                            text:
-                                                "${AppLocalizations.of(context)!.translate('packages_number')}: ",
-                                            style: TextStyle(
-                                              fontSize: 17.sp,
-                                              fontWeight: FontWeight.bold,
-                                            ),
-                                            children: [
-                                              TextSpan(
-                                                text: broker_offerProvider!
-                                                    .packagesNum!
-                                                    .toString(),
-                                                style: TextStyle(
-                                                  color: Colors.black,
-                                                  fontSize: 16.sp,
-                                                  fontWeight: FontWeight.normal,
-                                                ),
-                                              ),
-                                            ]),
-                                      ),
-                                    ],
-                                  ),
-                                  Divider(
-                                    color: Colors.grey[300]!,
-                                  ),
-                                  Row(
-                                    mainAxisAlignment: MainAxisAlignment.start,
-                                    children: [
-                                      SizedBox(
-                                        width:
-                                            MediaQuery.of(context).size.width *
-                                                .4,
-                                        child: Text.rich(
-                                          TextSpan(
-                                              text:
-                                                  "${AppLocalizations.of(context)!.translate('weight')}: ",
-                                              style: TextStyle(
-                                                fontSize: 17.sp,
-                                                fontWeight: FontWeight.bold,
-                                              ),
-                                              children: [
-                                                TextSpan(
-                                                  text: broker_offerProvider!
-                                                      .weight![0]
-                                                      .toString(),
-                                                  style: TextStyle(
-                                                    color: Colors.black,
-                                                    fontSize: 16.sp,
-                                                    fontWeight:
-                                                        FontWeight.normal,
-                                                  ),
-                                                ),
-                                              ]),
-                                        ),
-                                      ),
-                                      SizedBox(
-                                        height: 45.h,
-                                        child: VerticalDivider(
-                                          color: Colors.grey[300],
-                                        ),
-                                      ),
-                                      Text.rich(
-                                        TextSpan(
-                                            text:
-                                                "${AppLocalizations.of(context)!.translate('value')}: ",
-                                            style: TextStyle(
-                                              fontSize: 17.sp,
-                                              fontWeight: FontWeight.bold,
-                                            ),
-                                            children: [
-                                              TextSpan(
-                                                text: broker_offerProvider!
-                                                    .price![0]
-                                                    .toString(),
-                                                style: TextStyle(
-                                                  color: Colors.black,
-                                                  fontSize: 16.sp,
-                                                  fontWeight: FontWeight.normal,
-                                                ),
-                                              ),
-                                            ]),
-                                      ),
-                                    ],
-                                  ),
-                                  Divider(
-                                    color: Colors.grey[300]!,
-                                  ),
-                                  SizedBox(
-                                    height: 7.h,
-                                  ),
-                                  Text.rich(
-                                    TextSpan(
-                                        text:
-                                            "${AppLocalizations.of(context)!.translate('expected_arrival_date')}: ",
-                                        style: TextStyle(
-                                          fontSize: 17.sp,
-                                          fontWeight: FontWeight.bold,
-                                        ),
-                                        children: [
-                                          TextSpan(
-                                            text:
-                                                '${broker_offerProvider!.expectedArrivalDate!.day}-${broker_offerProvider!.expectedArrivalDate!.month}-${broker_offerProvider!.expectedArrivalDate!.year}',
-                                            style: TextStyle(
-                                              color: Colors.black,
-                                              fontSize: 16.sp,
-                                              fontWeight: FontWeight.normal,
-                                            ),
+                                    ),
+                                    SizedBox(
+                                      height: 7.h,
+                                    ),
+                                    Text.rich(
+                                      TextSpan(
+                                          text:
+                                              "${AppLocalizations.of(context)!.translate('expected_arrival_date')}: ",
+                                          style: TextStyle(
+                                            fontSize: 17.sp,
+                                            fontWeight: FontWeight.bold,
                                           ),
-                                        ]),
-                                  ),
-                                  SizedBox(
-                                    height: 10.h,
-                                  )
-                                ],
+                                          children: [
+                                            TextSpan(
+                                              text:
+                                                  '${broker_offerProvider!.expectedArrivalDate!.day}-${broker_offerProvider!.expectedArrivalDate!.month}-${broker_offerProvider!.expectedArrivalDate!.year}',
+                                              style: TextStyle(
+                                                color: Colors.black,
+                                                fontSize: 16.sp,
+                                                fontWeight: FontWeight.normal,
+                                              ),
+                                            ),
+                                          ]),
+                                    ),
+                                    SizedBox(
+                                      height: 10.h,
+                                    )
+                                  ],
+                                ),
                               ),
                             ),
+                          ),
+                          SizedBox(
+                            height: 15.h,
+                          ),
+                          ListView.builder(
+                            itemCount: broker_offerProvider!.products!.length,
+                            shrinkWrap: true,
+                            itemBuilder: (context, index) {
+                              return Stack(
+                                children: [
+                                  Card(
+                                    clipBehavior: Clip.antiAlias,
+                                    shape: const RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.all(
+                                        Radius.circular(15),
+                                      ),
+                                    ),
+                                    child: Padding(
+                                      padding: const EdgeInsets.all(8.0),
+                                      child: Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          const SizedBox(
+                                            height: 30,
+                                          ),
+                                          Theme(
+                                            data: Theme.of(context).copyWith(
+                                                dividerColor:
+                                                    Colors.transparent),
+                                            child: ExpansionTile(
+                                              initiallyExpanded: false,
+                                              tilePadding: EdgeInsets.zero,
+
+                                              // controlAffinity: ListTileControlAffinity.leading,
+                                              childrenPadding: EdgeInsets.zero,
+                                              title: Row(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment.start,
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment.center,
+                                                children: [
+                                                  SizedBox(
+                                                    width:
+                                                        MediaQuery.of(context)
+                                                                .size
+                                                                .width *
+                                                            .84,
+                                                    child: Text(
+                                                      'commodity name: ${broker_offerProvider!.products![index].label!}',
+                                                      overflow:
+                                                          TextOverflow.ellipsis,
+                                                    ),
+                                                  )
+                                                ],
+                                              ),
+                                              onExpansionChanged: (value) {},
+                                              children: buildProductTiles(
+                                                  broker_offerProvider!
+                                                      .costumeagency!.name!,
+                                                  broker_offerProvider!
+                                                      .origin![index],
+                                                  broker_offerProvider!
+                                                      .packageType!,
+                                                  broker_offerProvider!
+                                                      .packagesNum!,
+                                                  broker_offerProvider!
+                                                      .weight![index],
+                                                  broker_offerProvider!
+                                                      .price![index]),
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ),
+                                  Positioned(
+                                    left: 4,
+                                    top: 4,
+                                    child: Container(
+                                      height: 30,
+                                      width: 35,
+                                      decoration: BoxDecoration(
+                                        color: AppColor.deepYellow,
+                                        borderRadius: const BorderRadius.only(
+                                          topLeft: Radius.circular(15),
+                                          topRight: Radius.circular(5),
+                                          bottomLeft: Radius.circular(5),
+                                          bottomRight: Radius.circular(5),
+                                        ),
+                                      ),
+                                      child: Center(
+                                        child: Text(
+                                          (index + 1).toString(),
+                                          style: const TextStyle(
+                                            color: Colors.white,
+                                            fontWeight: FontWeight.bold,
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              );
+                            },
                           ),
                           SizedBox(
                             height: 15.h,
@@ -733,6 +776,185 @@ class _OfferDetailsScreenState extends State<OfferDetailsScreen> {
                             ),
                           ),
                           SizedBox(
+                            height: 15.h,
+                          ),
+                          Card(
+                            clipBehavior: Clip.antiAlias,
+                            shape: const RoundedRectangleBorder(
+                                borderRadius: BorderRadius.all(
+                              Radius.circular(15),
+                            )),
+                            margin: EdgeInsets.symmetric(horizontal: 10.w),
+                            elevation: 1,
+                            color: Colors.white,
+                            child: Padding(
+                              padding: EdgeInsets.symmetric(
+                                  horizontal: 15.w, vertical: 7.5.h),
+                              child: Theme(
+                                data: Theme.of(context)
+                                    .copyWith(dividerColor: Colors.transparent),
+                                child: ExpansionTile(
+                                  initiallyExpanded: false,
+                                  tilePadding: EdgeInsets.zero,
+
+                                  // controlAffinity: ListTileControlAffinity.leading,
+                                  childrenPadding: EdgeInsets.zero,
+                                  title: const Row(
+                                    mainAxisAlignment: MainAxisAlignment.start,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.center,
+                                    children: [Text('operation tracking:')],
+                                  ),
+                                  onExpansionChanged: (value) {},
+                                  children: [
+                                    Padding(
+                                      padding: EdgeInsets.all(12.h),
+                                      child: Column(
+                                        mainAxisSize: MainAxisSize.min,
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          const SizedBox(
+                                            height: 15,
+                                          ),
+                                          CustomeTimeLine(
+                                            isFirst: true,
+                                            isLast: true,
+                                            isPast: offerstate
+                                                .offer
+                                                .track_offer!
+                                                .attachmentRecivment!,
+                                            imageUrl: !offerstate
+                                                    .offer
+                                                    .track_offer!
+                                                    .attachmentRecivment!
+                                                ? "assets/images/step 1 Dark.svg"
+                                                : "assets/images/step 1 blue.svg",
+                                            type: "svg",
+                                            title: AppLocalizations.of(context)!
+                                                .translate(
+                                                    'attachments_recivment'),
+                                          ),
+                                          CustomeTimeLine(
+                                            isFirst: true,
+                                            isLast: false,
+                                            isPast: offerstate
+                                                .offer
+                                                .track_offer!
+                                                .unloadDistenation!,
+                                            imageUrl: !offerstate
+                                                    .offer
+                                                    .track_offer!
+                                                    .unloadDistenation!
+                                                ? "assets/images/step 2 Dark.svg"
+                                                : "assets/images/step 2 blue.svg",
+                                            type: "svg",
+                                            title: AppLocalizations.of(context)!
+                                                .translate(
+                                                    'unload_distenation'),
+                                          ),
+                                          CustomeTimeLine(
+                                            isFirst: false,
+                                            isLast: false,
+                                            isPast: offerstate.offer
+                                                .track_offer!.deliveryPermit!,
+                                            imageUrl: !offerstate
+                                                    .offer
+                                                    .track_offer!
+                                                    .deliveryPermit!
+                                                ? "assets/images/step 3 Dark.svg"
+                                                : "assets/images/step 3 blue.svg",
+                                            type: "svg",
+                                            title: AppLocalizations.of(context)!
+                                                .translate('delivery_permit'),
+                                          ),
+                                          CustomeTimeLine(
+                                            isFirst: false,
+                                            isLast: false,
+                                            isPast: offerstate
+                                                .offer
+                                                .track_offer!
+                                                .customeDeclration!,
+                                            isCurrent: true,
+                                            imageUrl: !offerstate
+                                                    .offer
+                                                    .track_offer!
+                                                    .customeDeclration!
+                                                ? "assets/images/step 4 Dark.svg"
+                                                : "assets/images/step 4 blue.svg",
+                                            type: "svg",
+                                            title: AppLocalizations.of(context)!
+                                                .translate(
+                                                    'custome_declration'),
+                                          ),
+                                          CustomeTimeLine(
+                                            isFirst: false,
+                                            isLast: false,
+                                            isPast: offerstate.offer
+                                                .track_offer!.previewGoods!,
+                                            imageUrl: !offerstate.offer
+                                                    .track_offer!.previewGoods!
+                                                ? "assets/images/step 5 Dark.svg"
+                                                : "assets/images/step 5 blue.svg",
+                                            type: "svg",
+                                            title: AppLocalizations.of(context)!
+                                                .translate('preview_goods'),
+                                          ),
+                                          CustomeTimeLine(
+                                            isFirst: false,
+                                            isLast: false,
+                                            isPast: offerstate.offer
+                                                .track_offer!.payFeesTaxes!,
+                                            imageUrl: !offerstate.offer
+                                                    .track_offer!.payFeesTaxes!
+                                                ? "assets/images/step 6 Dark.svg"
+                                                : "assets/images/step 6 blue.svg",
+                                            type: "svg",
+                                            title: AppLocalizations.of(context)!
+                                                .translate('pay_fees_taxes'),
+                                          ),
+                                          CustomeTimeLine(
+                                            isFirst: false,
+                                            isLast: false,
+                                            isPast: offerstate
+                                                .offer
+                                                .track_offer!
+                                                .issuingExitPermit!,
+                                            imageUrl: !offerstate
+                                                    .offer
+                                                    .track_offer!
+                                                    .issuingExitPermit!
+                                                ? "assets/images/step 7 Dark.svg"
+                                                : "assets/images/step 7 blue.svg",
+                                            type: "svg",
+                                            title: AppLocalizations.of(context)!
+                                                .translate(
+                                                    'issuing_exit_permit'),
+                                          ),
+                                          CustomeTimeLine(
+                                            isFirst: false,
+                                            isLast: true,
+                                            isPast: offerstate.offer
+                                                .track_offer!.loadDistenation!,
+                                            imageUrl: !offerstate
+                                                    .offer
+                                                    .track_offer!
+                                                    .loadDistenation!
+                                                ? "assets/images/step 8 Dark.svg"
+                                                : "assets/images/step 8 blue.svg",
+                                            type: "svg",
+                                            title: AppLocalizations.of(context)!
+                                                .translate('load_distenation'),
+                                          ),
+                                        ],
+                                      ),
+                                    )
+                                  ],
+                                ),
+                              ),
+                            ),
+                          ),
+                          SizedBox(
                             height: 30.h,
                           ),
                         ],
@@ -744,7 +966,7 @@ class _OfferDetailsScreenState extends State<OfferDetailsScreen> {
                       child: const Center(child: CircularProgressIndicator()),
                     );
                   } else {
-                    return Text("");
+                    return const Text("");
                   }
                 },
               ),

@@ -459,7 +459,7 @@ class _TraderCalculatorMultiScreenState
                                                                     BlocProvider.of<CalculatorPanelBloc>(
                                                                             context)
                                                                         .add(
-                                                                            TariffPanelOpenEvent());
+                                                                            FlagsPanelOpenEvent());
 
                                                                     FocusManager
                                                                         .instance

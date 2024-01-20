@@ -6,6 +6,7 @@ import 'package:custome_mobile/business_logic/bloc/attachment/attachment_type_bl
 import 'package:custome_mobile/business_logic/bloc/trader_additional_attachment_bloc.dart';
 import 'package:custome_mobile/business_logic/cubit/locale_cubit.dart';
 import 'package:custome_mobile/data/models/attachments_models.dart';
+import 'package:custome_mobile/data/models/offer_model.dart';
 import 'package:custome_mobile/data/providers/trader_offer_provider.dart';
 import 'package:custome_mobile/helpers/color_constants.dart';
 import 'package:custome_mobile/views/widgets/custom_app_bar.dart';
@@ -73,6 +74,7 @@ class _BrokerAttachmentsScreenState extends State<BrokerAttachmentsScreen> {
   List<Widget> _buildAttachmentImages(List<AttachmentImage>? images) {
     List<Widget> list = [];
     var restofImagesNum = 0;
+    var tempimages = images!.removeAt(0);
     if (images != null) {
       for (var i = 0; i < images!.length; i++) {
         if (i < 3) {
@@ -130,35 +132,175 @@ class _BrokerAttachmentsScreenState extends State<BrokerAttachmentsScreen> {
     return list;
   }
 
+  Widget _buildAttachmentItem(Attachment attachment) {
+    return Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: Column(
+        children: [
+          Row(
+            children: [
+              attachment.image!.length == 1
+                  ? Container(
+                      margin: EdgeInsets.all(5.h),
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(15),
+                        border: Border.all(
+                          color: AppColor.deepAppBarBlue,
+                          width: 1.0,
+                        ),
+                      ),
+                      height: 140.h,
+                      width: 245.w,
+                      clipBehavior: Clip.antiAlias,
+                      child: ClipRRect(
+                        borderRadius: BorderRadius.circular(15),
+                        child: SizedBox(
+                          height: 137.h,
+                          width: 120.w,
+                          child: Image.network(
+                              fit: BoxFit.fill, attachment.image![0].image!),
+                        ),
+                      ),
+                    )
+                  : const SizedBox.shrink(),
+              attachment.image!.isEmpty
+                  ? Container(
+                      margin: EdgeInsets.all(5.h),
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(15),
+                        border: Border.all(
+                          color: AppColor.deepAppBarBlue,
+                          width: 1.0,
+                        ),
+                      ),
+                      height: 140.h,
+                      width: 245.w,
+                      clipBehavior: Clip.antiAlias,
+                      child: ClipRRect(
+                        borderRadius: BorderRadius.circular(15),
+                        child: SizedBox(
+                          height: 137.h,
+                          width: 120.w,
+                          child:
+                              const Center(child: Text("there are no Images")),
+                        ),
+                      ),
+                    )
+                  : const SizedBox.shrink(),
+              attachment.image!.length > 1
+                  ? Row(
+                      children: [
+                        Container(
+                          margin: EdgeInsets.all(5.h),
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(15),
+                            border: Border.all(
+                              color: AppColor.deepAppBarBlue,
+                              width: 1.0,
+                            ),
+                          ),
+                          height: 140.h,
+                          width: 120.w,
+                          clipBehavior: Clip.antiAlias,
+                          child: ClipRRect(
+                            borderRadius: BorderRadius.circular(15),
+                            child: SizedBox(
+                              height: 137.h,
+                              width: 120.w,
+                              child: Image.network(
+                                  fit: BoxFit.fill,
+                                  attachment.image![0].image!),
+                            ),
+                          ),
+                        ),
+                        const SizedBox(
+                          width: 5,
+                        ),
+                        Container(
+                          margin: EdgeInsets.all(5.h),
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(15),
+                            border: Border.all(
+                              color: AppColor.deepAppBarBlue,
+                              width: 1.0,
+                            ),
+                          ),
+                          height: 140.h,
+                          width: 120.w,
+                          clipBehavior: Clip.antiAlias,
+                          child: ClipRRect(
+                            borderRadius: BorderRadius.circular(15),
+                            child: SizedBox(
+                              height: 137.h,
+                              width: 120.w,
+                              child: Wrap(
+                                children:
+                                    _buildAttachmentImages(attachment.image!),
+                              ),
+                            ),
+                          ),
+                        )
+                      ],
+                    )
+                  : const SizedBox.shrink(),
+              SizedBox(
+                width: 5.w,
+              ),
+              SizedBox(
+                width: 100.w,
+                child: FittedBox(
+                  fit: BoxFit.scaleDown,
+                  child: Text(
+                    attachment.attachmentType!.name!,
+                  ),
+                ),
+              ),
+            ],
+          ),
+          Divider(
+            color: Colors.grey[400],
+          ),
+        ],
+      ),
+    );
+  }
+
   List<Widget> _buildAttachmentslist(List<Attachment> attachments) {
     List<Widget> list = [];
     for (var element in attachments) {
       var elem = Column(
         children: [
           Container(
-              margin: EdgeInsets.all(5.h),
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(15),
-                border: Border.all(
-                  color: AppColor.deepAppBarBlue,
-                  width: 1.0,
+            margin: EdgeInsets.all(5.h),
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(15),
+              border: Border.all(
+                color: AppColor.deepAppBarBlue,
+                width: 1.0,
+              ),
+            ),
+            height: 140.h,
+            width: 120.w,
+            clipBehavior: Clip.antiAlias,
+            child: ClipRRect(
+              borderRadius: BorderRadius.circular(15),
+              child: SizedBox(
+                height: 137.h,
+                width: 120.w,
+                child: Wrap(children: _buildAttachmentImages(element.image)),
+              ),
+            ),
+          ),
+          SizedBox(
+            width: 120.w,
+            child: FittedBox(
+              fit: BoxFit.scaleDown,
+              child: Text(
+                element.attachmentType!.name!,
+                style: const TextStyle(
+                  fontWeight: FontWeight.bold,
                 ),
               ),
-              height: 140.h,
-              width: 120.w,
-              clipBehavior: Clip.antiAlias,
-              child: ClipRRect(
-                borderRadius: BorderRadius.circular(15),
-                child: SizedBox(
-                  height: 137.h,
-                  width: 120.w,
-                  child: Wrap(children: _buildAttachmentImages(element.image)),
-                ),
-              )),
-          Text(
-            attachmentName(element.attachmentType!),
-            style: const TextStyle(
-              fontWeight: FontWeight.bold,
             ),
           ),
         ],
@@ -168,6 +310,10 @@ class _BrokerAttachmentsScreenState extends State<BrokerAttachmentsScreen> {
     return list;
   }
 
+  // Widget _buildAttachmentItem(Attachment attachment){
+
+  // }
+
   List<Widget> _buildAttachmentsTypelist(
       List<AttachmentType> att, BuildContext context) {
     List<Widget> list = [];
@@ -175,10 +321,25 @@ class _BrokerAttachmentsScreenState extends State<BrokerAttachmentsScreen> {
       if (element.name! == "كافة المستندات") {
         continue;
       }
-      var elem = SizedBox(
-        width: 100.w,
+      var elem = Container(
+        margin: EdgeInsets.all(5.h),
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(15),
+          border: Border.all(
+            color: AppColor.deepAppBarBlue,
+            width: 1.0,
+          ),
+        ),
+        width: MediaQuery.of(context).size.width * .28,
+        height: 150.h,
         child: Column(
+          mainAxisAlignment: MainAxisAlignment.end,
           children: [
+            SizedBox(
+              width: MediaQuery.of(context).size.width * .27,
+              child:
+                  FittedBox(fit: BoxFit.scaleDown, child: Text(element.name!)),
+            ),
             GestureDetector(
               onTap: () {
                 showDialog(
@@ -440,12 +601,27 @@ class _BrokerAttachmentsScreenState extends State<BrokerAttachmentsScreen> {
               },
               child: Container(
                 margin: const EdgeInsets.all(7),
-                height: 100.h,
-                width: 100.w,
+                height: 75.h,
+                width: 75.w,
                 child: CachedNetworkImage(imageUrl: element.image!),
               ),
             ),
-            Text(element.name!)
+            Row(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: [
+                SizedBox(
+                  width: 5,
+                ),
+                SizedBox(
+                  height: 25.h,
+                  width: 25.w,
+                  child: SvgPicture.asset("assets/icons/cloud.svg"),
+                ),
+                SizedBox(
+                  width: 5,
+                ),
+              ],
+            )
           ],
         ),
       );
@@ -492,36 +668,81 @@ class _BrokerAttachmentsScreenState extends State<BrokerAttachmentsScreen> {
                           )),
                           margin: EdgeInsets.symmetric(horizontal: 10.w),
                           elevation: 1,
+                          color: Colors.blue[100],
+                          child: Container(
+                            margin: const EdgeInsets.all(8),
+                            width: double.infinity,
+                            decoration: BoxDecoration(
+                              color: Colors.blue[100],
+                              borderRadius: BorderRadius.circular(7),
+                              border: Border.all(
+                                style: BorderStyle.solid,
+                                width: 1,
+                                color: AppColor.deepBlue,
+                              ),
+                            ),
+                            padding: const EdgeInsets.all(8.0),
+                            child: Center(
+                              child: SizedBox(
+                                height: 137.h,
+                                width: 120.w,
+                                child:
+                                    SvgPicture.asset("assets/icons/cloud.svg"),
+                              ),
+                            ),
+                          ),
+                        ),
+                        SizedBox(
+                          height: 10.h,
+                        ),
+                        Card(
+                          clipBehavior: Clip.antiAlias,
+                          shape: const RoundedRectangleBorder(
+                              borderRadius: BorderRadius.all(
+                            Radius.circular(15),
+                          )),
+                          margin: EdgeInsets.symmetric(horizontal: 10.w),
+                          elevation: 1,
                           color: Colors.white,
                           child: Container(
                             margin: const EdgeInsets.symmetric(vertical: 7),
                             width: double.infinity,
                             padding: const EdgeInsets.all(8.0),
                             child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    AppLocalizations.of(context)!
-                                        .translate('uploaded_attachments'),
-                                    style: TextStyle(
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: 18,
-                                    ),
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  AppLocalizations.of(context)!
+                                      .translate('uploaded_attachments'),
+                                  style: const TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 18,
                                   ),
-                                  const SizedBox(
-                                    height: 5,
-                                  ),
-                                  traderofferProvider.attachments.isEmpty
-                                      ? Center(
-                                          child: Text(AppLocalizations.of(
-                                                  context)!
+                                ),
+                                const SizedBox(
+                                  height: 5,
+                                ),
+                                traderofferProvider.attachments.isEmpty
+                                    ? Center(
+                                        child: Text(
+                                          AppLocalizations.of(context)!
                                               .translate(
-                                                  'no_uploaded_attachments')),
-                                        )
-                                      : Wrap(
-                                          children: _buildAttachmentslist(
-                                              traderofferProvider.attachments)),
-                                ]),
+                                                  'no_uploaded_attachments'),
+                                        ),
+                                      )
+                                    : ListView.builder(
+                                        physics: NeverScrollableScrollPhysics(),
+                                        itemCount: traderofferProvider
+                                            .attachments.length,
+                                        shrinkWrap: true,
+                                        itemBuilder: (context, index) {
+                                          return _buildAttachmentItem(
+                                              traderofferProvider
+                                                  .attachments[index]);
+                                        },
+                                      ),
+                              ],
+                            ),
                           ),
                         ),
                         SizedBox(
@@ -546,7 +767,7 @@ class _BrokerAttachmentsScreenState extends State<BrokerAttachmentsScreen> {
                                   Text(
                                     AppLocalizations.of(context)!.translate(
                                         'additional_required_attachments'),
-                                    style: TextStyle(
+                                    style: const TextStyle(
                                       fontWeight: FontWeight.bold,
                                       fontSize: 18,
                                     ),

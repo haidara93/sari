@@ -7,6 +7,7 @@ import 'package:custome_mobile/business_logic/bloc/chapter_bloc.dart';
 import 'package:custome_mobile/business_logic/bloc/fee/fee_bloc.dart';
 import 'package:custome_mobile/business_logic/bloc/fee/fee_item_bloc.dart';
 import 'package:custome_mobile/business_logic/bloc/fee/fee_select_bloc.dart';
+import 'package:custome_mobile/business_logic/bloc/flag_select_bloc.dart';
 import 'package:custome_mobile/business_logic/bloc/flags_bloc.dart';
 import 'package:custome_mobile/business_logic/bloc/group_bloc.dart';
 import 'package:custome_mobile/business_logic/bloc/package_type_bloc.dart';
@@ -77,10 +78,7 @@ class _TraderHomeScreenState extends State<TraderHomeScreen>
   void initState() {
     super.initState();
     BlocProvider.of<PostBloc>(context).add(PostLoadEvent());
-    BlocProvider.of<FlagsBloc>(context).add(FlagsLoadEvent());
     BlocProvider.of<GroupBloc>(context).add(GroupLoadEvent());
-    BlocProvider.of<SectionBloc>(context).add(SectionLoadEvent());
-    BlocProvider.of<StateCustomeBloc>(context).add(StateCustomeLoadEvent());
 
     notificationServices.requestNotificationPermission();
     notificationServices.forgroundMessage();
@@ -313,7 +311,7 @@ class _TraderHomeScreenState extends State<TraderHomeScreen>
                             drawer: Drawer(
                               backgroundColor: AppColor.deepAppBarBlue,
                               elevation: 1,
-                              width: 300.w,
+                              width: MediaQuery.of(context).size.width * .85,
                               child: Padding(
                                 padding: EdgeInsets.symmetric(horizontal: 12.w),
                                 child: ListView(children: [
@@ -549,15 +547,71 @@ class _TraderHomeScreenState extends State<TraderHomeScreen>
                                         BlocProvider.of<LocaleCubit>(context)
                                             .toEnglish();
                                       }
-                                      _scaffoldKey.currentState!.closeDrawer();
+                                      switch (navigationValue) {
+                                        case 0:
+                                          {
+                                            setState(() {
+                                              title =
+                                                  AppLocalizations.of(context)!
+                                                      .translate(
+                                                          'trader_log_title');
+                                            });
+                                            break;
+                                          }
+                                        case 1:
+                                          {
+                                            setState(() {
+                                              title =
+                                                  AppLocalizations.of(context)!
+                                                      .translate(
+                                                          'calculator_title');
+                                            });
+                                            break;
+                                          }
+                                        case 2:
+                                          {
+                                            // print(MediaQuery.of(context).size.width);
+                                            setState(() {
+                                              title =
+                                                  AppLocalizations.of(context)!
+                                                      .translate('home');
+                                            });
+                                            break;
+                                          }
+                                        case 3:
+                                          {
+                                            setState(() {
+                                              title = AppLocalizations.of(
+                                                      context)!
+                                                  .translate('tariff_title');
+                                            });
+                                            break;
+                                          }
+                                        case 4:
+                                          {
+                                            setState(() {
+                                              title =
+                                                  AppLocalizations.of(context)!
+                                                      .translate(
+                                                          'broker_order_title');
+                                            });
+                                            break;
+                                          }
+                                      }
+
+                                      Future.delayed(
+                                              Duration(milliseconds: 500))
+                                          .then((value) => _scaffoldKey
+                                              .currentState!
+                                              .closeDrawer());
                                     },
                                     child: ListTile(
                                       leading: const Icon(Icons.language,
                                           color: Colors.white),
                                       title: Text(
-                                        localeState.value.languageCode == 'en'
-                                            ? "language: English"
-                                            : "اللغة: العربية",
+                                        localeState.value.languageCode != 'en'
+                                            ? "اللغة: English"
+                                            : "language: العربية",
                                         style: TextStyle(
                                             color: Colors.white,
                                             fontSize: 16.sp,
@@ -644,353 +698,376 @@ class _TraderHomeScreenState extends State<TraderHomeScreen>
                               builder: (context, state) {
                                 if (state is BottomNavBarShown) {
                                   return Container(
-                                      height: 88.h,
-                                      decoration: BoxDecoration(
-                                        gradient: LinearGradient(
-                                          colors: bottomNavbarColor(),
-                                          begin: Alignment.centerRight,
-                                          end: Alignment.centerLeft,
-                                        ),
+                                    height: 88.h,
+                                    decoration: BoxDecoration(
+                                      gradient: LinearGradient(
+                                        colors: bottomNavbarColor(),
+                                        begin: Alignment.centerRight,
+                                        end: Alignment.centerLeft,
                                       ),
-                                      child: TabBar(
-                                          labelPadding: EdgeInsets.zero,
-                                          controller: _tabController,
-                                          indicatorColor: AppColor.goldenYellow,
-                                          labelColor: AppColor.goldenYellow,
-                                          unselectedLabelColor: Colors.white,
-                                          labelStyle:
-                                              TextStyle(fontSize: 15.sp),
-                                          unselectedLabelStyle:
-                                              TextStyle(fontSize: 14.sp),
-                                          padding: EdgeInsets.zero,
-                                          onTap: (value) {
-                                            changeSelectedValue(
-                                                selectedValue: value,
-                                                contxt: context);
-                                          },
-                                          tabs: [
-                                            Tab(
-                                              // text: "طلب مخلص",
-                                              height: 66.h,
-                                              icon: navigationValue == 0
-                                                  ? Column(
-                                                      mainAxisAlignment:
-                                                          MainAxisAlignment.end,
-                                                      children: [
-                                                        SvgPicture.asset(
-                                                          "assets/icons/log_active.svg",
-                                                          width: 36.w,
-                                                          height: 36.h,
-                                                        ),
-                                                        localeState.value
-                                                                    .languageCode ==
-                                                                'en'
-                                                            ? const SizedBox(
-                                                                height: 4,
-                                                              )
-                                                            : const SizedBox
-                                                                .shrink(),
-                                                        Text(
-                                                          AppLocalizations.of(
-                                                                  context)!
-                                                              .translate(
-                                                                  'trader_log_nav'),
-                                                          style: TextStyle(
-                                                              color: AppColor
-                                                                  .goldenYellow,
-                                                              fontSize: 15.sp),
-                                                        )
-                                                      ],
-                                                    )
-                                                  : Column(
-                                                      mainAxisAlignment:
-                                                          MainAxisAlignment.end,
-                                                      children: [
-                                                        SvgPicture.asset(
-                                                          "assets/icons/log.svg",
-                                                          width: 30.w,
-                                                          height: 30.h,
-                                                        ),
-                                                        localeState.value
-                                                                    .languageCode ==
-                                                                'en'
-                                                            ? const SizedBox(
-                                                                height: 4,
-                                                              )
-                                                            : const SizedBox
-                                                                .shrink(),
-                                                        Text(
-                                                          AppLocalizations.of(
-                                                                  context)!
-                                                              .translate(
-                                                                  'trader_log_nav'),
-                                                          style: TextStyle(
-                                                              color:
-                                                                  Colors.white,
-                                                              fontSize: 15.sp),
-                                                        )
-                                                      ],
+                                    ),
+                                    child: TabBar(
+                                      labelPadding: EdgeInsets.zero,
+                                      controller: _tabController,
+                                      indicatorColor: AppColor.goldenYellow,
+                                      labelColor: AppColor.goldenYellow,
+                                      unselectedLabelColor: Colors.white,
+                                      labelStyle: TextStyle(fontSize: 15.sp),
+                                      unselectedLabelStyle:
+                                          TextStyle(fontSize: 14.sp),
+                                      padding: EdgeInsets.zero,
+                                      onTap: (value) {
+                                        changeSelectedValue(
+                                            selectedValue: value,
+                                            contxt: context);
+                                      },
+                                      tabs: [
+                                        Tab(
+                                          // text: "طلب مخلص",
+                                          height: 66.h,
+                                          icon: navigationValue == 0
+                                              ? Column(
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment.end,
+                                                  children: [
+                                                    SvgPicture.asset(
+                                                      "assets/icons/log_active.svg",
+                                                      width: 36.w,
+                                                      height: 36.h,
                                                     ),
-                                            ),
-                                            Tab(
-                                              // text: "الحاسبة",
-                                              height: 66.h,
-                                              icon: navigationValue == 1
-                                                  ? Column(
-                                                      mainAxisAlignment:
-                                                          MainAxisAlignment.end,
-                                                      children: [
-                                                        SvgPicture.asset(
-                                                          "assets/icons/calculator_active.svg",
-                                                          width: 36.w,
-                                                          height: 36.h,
-                                                        ),
-                                                        localeState.value
-                                                                    .languageCode ==
-                                                                'en'
-                                                            ? const SizedBox(
-                                                                height: 4,
-                                                              )
-                                                            : const SizedBox
-                                                                .shrink(),
-                                                        Text(
-                                                          AppLocalizations.of(
-                                                                  context)!
-                                                              .translate(
-                                                                  'calculator_nav'),
-                                                          style: TextStyle(
-                                                              color: AppColor
-                                                                  .goldenYellow,
-                                                              fontSize: 15.sp),
-                                                        )
-                                                      ],
-                                                    )
-                                                  : Column(
-                                                      mainAxisAlignment:
-                                                          MainAxisAlignment.end,
-                                                      children: [
-                                                        SvgPicture.asset(
-                                                          "assets/icons/calculator.svg",
-                                                          width: 30.w,
-                                                          height: 30.h,
-                                                        ),
-                                                        localeState.value
-                                                                    .languageCode ==
-                                                                'en'
-                                                            ? const SizedBox(
-                                                                height: 4,
-                                                              )
-                                                            : const SizedBox
-                                                                .shrink(),
-                                                        Text(
-                                                          AppLocalizations.of(
-                                                                  context)!
-                                                              .translate(
-                                                                  'calculator_nav'),
-                                                          style: TextStyle(
-                                                              color:
-                                                                  Colors.white,
-                                                              fontSize: 15.sp),
-                                                        )
-                                                      ],
-                                                    ),
-                                            ),
-                                            Tab(
-                                              // text: "الرئيسية",
-                                              height: 66.h,
-                                              icon: navigationValue == 2
-                                                  ? Column(
-                                                      mainAxisAlignment:
-                                                          MainAxisAlignment.end,
-                                                      children: [
-                                                        SvgPicture.asset(
-                                                          "assets/icons/home_active.svg",
-                                                          width: 36.w,
-                                                          height: 36.h,
-                                                        ),
-                                                        localeState.value
-                                                                    .languageCode ==
-                                                                'en'
-                                                            ? const SizedBox(
-                                                                height: 4,
-                                                              )
-                                                            : const SizedBox
-                                                                .shrink(),
-                                                        Text(
-                                                          AppLocalizations.of(
-                                                                  context)!
-                                                              .translate(
-                                                                  'home'),
-                                                          style: TextStyle(
-                                                              color: AppColor
-                                                                  .goldenYellow,
-                                                              fontSize: 15.sp),
-                                                        )
-                                                      ],
-                                                    )
-                                                  : Column(
-                                                      mainAxisAlignment:
-                                                          MainAxisAlignment.end,
-                                                      children: [
-                                                        SvgPicture.asset(
-                                                          "assets/icons/home.svg",
-                                                          width: 30.w,
-                                                          height: 30.h,
-                                                        ),
-                                                        localeState.value
-                                                                    .languageCode ==
-                                                                'en'
-                                                            ? const SizedBox(
-                                                                height: 4,
-                                                              )
-                                                            : const SizedBox
-                                                                .shrink(),
-                                                        Text(
-                                                          AppLocalizations.of(
-                                                                  context)!
-                                                              .translate(
-                                                                  'home'),
-                                                          style: TextStyle(
-                                                              color:
-                                                                  Colors.white,
-                                                              fontSize: 15.sp),
-                                                        )
-                                                      ],
-                                                    ),
-                                            ),
-                                            Tab(
-                                              // text: "التعرفة",
-                                              height: 66.h,
-                                              icon: navigationValue == 3
-                                                  ? Column(
-                                                      mainAxisAlignment:
-                                                          MainAxisAlignment.end,
-                                                      children: [
-                                                        SvgPicture.asset(
-                                                          "assets/icons/tariff_active.svg",
-                                                          width: 36.w,
-                                                          height: 36.h,
-                                                        ),
-                                                        localeState.value
-                                                                    .languageCode ==
-                                                                'en'
-                                                            ? const SizedBox(
-                                                                height: 4,
-                                                              )
-                                                            : const SizedBox
-                                                                .shrink(),
-                                                        Text(
-                                                          AppLocalizations.of(
-                                                                  context)!
-                                                              .translate(
-                                                                  'tariff_nav'),
-                                                          style: TextStyle(
-                                                              color: AppColor
-                                                                  .goldenYellow,
-                                                              fontSize: 15.sp),
-                                                        )
-                                                      ],
-                                                    )
-                                                  : Column(
-                                                      mainAxisAlignment:
-                                                          MainAxisAlignment.end,
-                                                      children: [
-                                                        SvgPicture.asset(
-                                                          "assets/icons/tariff.svg",
-                                                          width: 30.w,
-                                                          height: 30.h,
-                                                        ),
-                                                        localeState.value
-                                                                    .languageCode ==
-                                                                'en'
-                                                            ? const SizedBox(
-                                                                height: 4,
-                                                              )
-                                                            : const SizedBox
-                                                                .shrink(),
-                                                        Text(
-                                                          AppLocalizations.of(
-                                                                  context)!
-                                                              .translate(
-                                                                  'tariff_nav'),
-                                                          style: TextStyle(
-                                                              color:
-                                                                  Colors.white,
-                                                              fontSize: 15.sp),
-                                                        )
-                                                      ],
-                                                    ),
-                                            ),
-                                            Tab(
-                                              // text: "السجل",
-                                              height: 66.h,
-                                              icon: navigationValue == 4
-                                                  ? Column(
-                                                      mainAxisAlignment:
-                                                          MainAxisAlignment.end,
-                                                      children: [
-                                                        SvgPicture.asset(
-                                                          "assets/icons/broker_order_active.svg",
-                                                          width: 36.w,
-                                                          height: 36.h,
-                                                        ),
-                                                        localeState.value
-                                                                    .languageCode ==
-                                                                'en'
-                                                            ? const SizedBox(
-                                                                height: 4,
-                                                              )
-                                                            : const SizedBox
-                                                                .shrink(),
-                                                        Text(
-                                                          AppLocalizations.of(
-                                                                  context)!
-                                                              .translate(
-                                                                  'broker_order_nav'),
-                                                          overflow: TextOverflow
-                                                              .ellipsis,
-                                                          style: TextStyle(
+                                                    localeState.value
+                                                                .languageCode ==
+                                                            'en'
+                                                        ? const SizedBox(
+                                                            height: 4,
+                                                          )
+                                                        : const SizedBox
+                                                            .shrink(),
+                                                    FittedBox(
+                                                      fit: BoxFit.scaleDown,
+                                                      child: Text(
+                                                        AppLocalizations.of(
+                                                                context)!
+                                                            .translate(
+                                                                'trader_log_nav'),
+                                                        style: TextStyle(
                                                             color: AppColor
                                                                 .goldenYellow,
-                                                            fontSize: 15.sp,
-                                                          ),
-                                                        )
-                                                      ],
+                                                            fontSize: 15.sp),
+                                                      ),
                                                     )
-                                                  : Column(
-                                                      mainAxisAlignment:
-                                                          MainAxisAlignment.end,
-                                                      children: [
-                                                        Image.asset(
-                                                          "assets/icons/broker_order.png",
-                                                          width: 30.w,
-                                                          height: 30.h,
-                                                        ),
-                                                        localeState.value
-                                                                    .languageCode ==
-                                                                'en'
-                                                            ? const SizedBox(
-                                                                height: 4,
-                                                              )
-                                                            : const SizedBox
-                                                                .shrink(),
-                                                        Text(
-                                                          AppLocalizations.of(
-                                                                  context)!
-                                                              .translate(
-                                                                  'broker_order_nav'),
-                                                          overflow: TextOverflow
-                                                              .ellipsis,
-                                                          style:
-                                                              const TextStyle(
-                                                                  color: Colors
-                                                                      .white,
-                                                                  fontSize: 14),
-                                                        )
-                                                      ],
+                                                  ],
+                                                )
+                                              : Column(
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment.end,
+                                                  children: [
+                                                    SvgPicture.asset(
+                                                      "assets/icons/log.svg",
+                                                      width: 30.w,
+                                                      height: 30.h,
                                                     ),
-                                            ),
-                                          ]));
+                                                    localeState.value
+                                                                .languageCode ==
+                                                            'en'
+                                                        ? const SizedBox(
+                                                            height: 4,
+                                                          )
+                                                        : const SizedBox
+                                                            .shrink(),
+                                                    FittedBox(
+                                                      fit: BoxFit.scaleDown,
+                                                      child: Text(
+                                                        AppLocalizations.of(
+                                                                context)!
+                                                            .translate(
+                                                                'trader_log_nav'),
+                                                        style: TextStyle(
+                                                            color: Colors.white,
+                                                            fontSize: 15.sp),
+                                                      ),
+                                                    )
+                                                  ],
+                                                ),
+                                        ),
+                                        Tab(
+                                          // text: "الحاسبة",
+                                          height: 66.h,
+                                          icon: navigationValue == 1
+                                              ? Column(
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment.end,
+                                                  children: [
+                                                    SvgPicture.asset(
+                                                      "assets/icons/calculator_active.svg",
+                                                      width: 36.w,
+                                                      height: 36.h,
+                                                    ),
+                                                    localeState.value
+                                                                .languageCode ==
+                                                            'en'
+                                                        ? const SizedBox(
+                                                            height: 4,
+                                                          )
+                                                        : const SizedBox
+                                                            .shrink(),
+                                                    FittedBox(
+                                                      fit: BoxFit.scaleDown,
+                                                      child: Text(
+                                                        AppLocalizations.of(
+                                                                context)!
+                                                            .translate(
+                                                                'calculator_nav'),
+                                                        style: TextStyle(
+                                                            color: AppColor
+                                                                .goldenYellow,
+                                                            fontSize: 15.sp),
+                                                      ),
+                                                    )
+                                                  ],
+                                                )
+                                              : Column(
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment.end,
+                                                  children: [
+                                                    SvgPicture.asset(
+                                                      "assets/icons/calculator.svg",
+                                                      width: 30.w,
+                                                      height: 30.h,
+                                                    ),
+                                                    localeState.value
+                                                                .languageCode ==
+                                                            'en'
+                                                        ? const SizedBox(
+                                                            height: 4,
+                                                          )
+                                                        : const SizedBox
+                                                            .shrink(),
+                                                    FittedBox(
+                                                      fit: BoxFit.scaleDown,
+                                                      child: Text(
+                                                        AppLocalizations.of(
+                                                                context)!
+                                                            .translate(
+                                                                'calculator_nav'),
+                                                        style: TextStyle(
+                                                            color: Colors.white,
+                                                            fontSize: 15.sp),
+                                                      ),
+                                                    )
+                                                  ],
+                                                ),
+                                        ),
+                                        Tab(
+                                          // text: "الرئيسية",
+                                          height: 66.h,
+                                          icon: navigationValue == 2
+                                              ? Column(
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment.end,
+                                                  children: [
+                                                    SvgPicture.asset(
+                                                      "assets/icons/home_active.svg",
+                                                      width: 36.w,
+                                                      height: 36.h,
+                                                    ),
+                                                    localeState.value
+                                                                .languageCode ==
+                                                            'en'
+                                                        ? const SizedBox(
+                                                            height: 4,
+                                                          )
+                                                        : const SizedBox
+                                                            .shrink(),
+                                                    FittedBox(
+                                                      fit: BoxFit.scaleDown,
+                                                      child: Text(
+                                                        AppLocalizations.of(
+                                                                context)!
+                                                            .translate('home'),
+                                                        style: TextStyle(
+                                                            color: AppColor
+                                                                .goldenYellow,
+                                                            fontSize: 15.sp),
+                                                      ),
+                                                    )
+                                                  ],
+                                                )
+                                              : Column(
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment.end,
+                                                  children: [
+                                                    SvgPicture.asset(
+                                                      "assets/icons/home.svg",
+                                                      width: 30.w,
+                                                      height: 30.h,
+                                                    ),
+                                                    localeState.value
+                                                                .languageCode ==
+                                                            'en'
+                                                        ? const SizedBox(
+                                                            height: 4,
+                                                          )
+                                                        : const SizedBox
+                                                            .shrink(),
+                                                    FittedBox(
+                                                      fit: BoxFit.scaleDown,
+                                                      child: Text(
+                                                        AppLocalizations.of(
+                                                                context)!
+                                                            .translate('home'),
+                                                        style: TextStyle(
+                                                            color: Colors.white,
+                                                            fontSize: 15.sp),
+                                                      ),
+                                                    )
+                                                  ],
+                                                ),
+                                        ),
+                                        Tab(
+                                          // text: "التعرفة",
+                                          height: 66.h,
+                                          icon: navigationValue == 3
+                                              ? Column(
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment.end,
+                                                  children: [
+                                                    SvgPicture.asset(
+                                                      "assets/icons/tariff_active.svg",
+                                                      width: 36.w,
+                                                      height: 36.h,
+                                                    ),
+                                                    localeState.value
+                                                                .languageCode ==
+                                                            'en'
+                                                        ? const SizedBox(
+                                                            height: 4,
+                                                          )
+                                                        : const SizedBox
+                                                            .shrink(),
+                                                    FittedBox(
+                                                      fit: BoxFit.scaleDown,
+                                                      child: Text(
+                                                        AppLocalizations.of(
+                                                                context)!
+                                                            .translate(
+                                                                'tariff_nav'),
+                                                        style: TextStyle(
+                                                            color: AppColor
+                                                                .goldenYellow,
+                                                            fontSize: 15.sp),
+                                                      ),
+                                                    )
+                                                  ],
+                                                )
+                                              : Column(
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment.end,
+                                                  children: [
+                                                    SvgPicture.asset(
+                                                      "assets/icons/tariff.svg",
+                                                      width: 30.w,
+                                                      height: 30.h,
+                                                    ),
+                                                    localeState.value
+                                                                .languageCode ==
+                                                            'en'
+                                                        ? const SizedBox(
+                                                            height: 4,
+                                                          )
+                                                        : const SizedBox
+                                                            .shrink(),
+                                                    FittedBox(
+                                                      fit: BoxFit.scaleDown,
+                                                      child: Text(
+                                                        AppLocalizations.of(
+                                                                context)!
+                                                            .translate(
+                                                                'tariff_nav'),
+                                                        style: TextStyle(
+                                                            color: Colors.white,
+                                                            fontSize: 15.sp),
+                                                      ),
+                                                    )
+                                                  ],
+                                                ),
+                                        ),
+                                        Tab(
+                                          // text: "السجل",
+                                          height: 66.h,
+                                          icon: navigationValue == 4
+                                              ? Column(
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment.end,
+                                                  children: [
+                                                    SvgPicture.asset(
+                                                      "assets/icons/broker_order_active.svg",
+                                                      width: 36.w,
+                                                      height: 36.h,
+                                                    ),
+                                                    localeState.value
+                                                                .languageCode ==
+                                                            'en'
+                                                        ? const SizedBox(
+                                                            height: 4,
+                                                          )
+                                                        : const SizedBox
+                                                            .shrink(),
+                                                    FittedBox(
+                                                      fit: BoxFit.scaleDown,
+                                                      child: Text(
+                                                        AppLocalizations.of(
+                                                                context)!
+                                                            .translate(
+                                                                'broker_order_nav'),
+                                                        overflow: TextOverflow
+                                                            .ellipsis,
+                                                        style: TextStyle(
+                                                          color: AppColor
+                                                              .goldenYellow,
+                                                          fontSize: 15.sp,
+                                                        ),
+                                                      ),
+                                                    )
+                                                  ],
+                                                )
+                                              : Column(
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment.end,
+                                                  children: [
+                                                    Image.asset(
+                                                      "assets/icons/broker_order.png",
+                                                      width: 30.w,
+                                                      height: 30.h,
+                                                    ),
+                                                    localeState.value
+                                                                .languageCode ==
+                                                            'en'
+                                                        ? const SizedBox(
+                                                            height: 4,
+                                                          )
+                                                        : const SizedBox
+                                                            .shrink(),
+                                                    FittedBox(
+                                                      fit: BoxFit.scaleDown,
+                                                      child: Text(
+                                                        AppLocalizations.of(
+                                                                context)!
+                                                            .translate(
+                                                                'broker_order_nav'),
+                                                        overflow: TextOverflow
+                                                            .ellipsis,
+                                                        style: const TextStyle(
+                                                            color: Colors.white,
+                                                            fontSize: 14),
+                                                      ),
+                                                    ),
+                                                  ],
+                                                ),
+                                        ),
+                                      ],
+                                    ),
+                                  );
                                 } else {
                                   return const SizedBox.shrink();
                                 }
@@ -1027,7 +1104,9 @@ class _TraderHomeScreenState extends State<TraderHomeScreen>
   Widget _buildPanelOption(BuildContext context) {
     return BlocConsumer<CalculatorPanelBloc, CalculatorPanelState>(
       listener: (context, state) {
-        if (state is CalculatorPanelOpened || state is TariffPanelOpened) {
+        if (state is CalculatorPanelOpened ||
+            state is TariffPanelOpened ||
+            state is FlagsPanelOpened) {
           setState(() {
             _panelState = PanelState.open;
           });
@@ -1046,6 +1125,8 @@ class _TraderHomeScreenState extends State<TraderHomeScreen>
           }
         } else if (state is TariffPanelOpened) {
           return _buildTariffPanel(context);
+        } else if (state is FlagsPanelOpened) {
+          return _buildFlagsPanel(context);
         } else {
           return const SizedBox.shrink();
         }
@@ -2441,12 +2522,321 @@ class _TraderHomeScreenState extends State<TraderHomeScreen>
   int? chapterselected;
   int? subchapterselected;
   int? feeselected = -1;
+  int? flagselected = -1;
   String? feeselectedId;
+  Origin? originselected;
   bool shownote = false;
   NoteType noteType = NoteType.None;
   final ScrollController scroll = ScrollController();
   bool isSearch = false;
+  String querySearch = "";
   final TextEditingController _searchController = TextEditingController();
+  final TextEditingController _flagsearchController = TextEditingController();
+
+  Widget _buildFlagsPanel(BuildContext context) {
+    return BlocBuilder<LocaleCubit, LocaleState>(
+      builder: (context, localeState) {
+        return Directionality(
+          textDirection: localeState.value.languageCode == 'en'
+              ? TextDirection.ltr
+              : TextDirection.rtl,
+          child: Scaffold(
+            backgroundColor: Colors.grey[200],
+            appBar: AppBar(
+              backgroundColor: AppColor.deepBlue,
+              title: Text(
+                AppLocalizations.of(context)!.translate('select_origin'),
+                style: const TextStyle(
+                  color: Colors.white,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              centerTitle: true,
+              leading: GestureDetector(
+                onTap: () {
+                  setState(() {
+                    flagselected = -1;
+                    originselected = null;
+                  });
+                  BlocProvider.of<CalculatorPanelBloc>(context)
+                      .add(CalculatorPanelHideEvent());
+                },
+                child: const Padding(
+                  padding: EdgeInsets.all(8.0),
+                  child: Icon(Icons.arrow_back, color: Colors.white),
+                ),
+              ),
+              elevation: 0,
+            ),
+            body: Stack(
+              children: [
+                SingleChildScrollView(
+                  child: Column(
+                    children: [
+                      SizedBox(
+                        height: 10.h,
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Focus(
+                          focusNode: _statenode,
+                          onFocusChange: (bool focus) {
+                            if (!focus) {
+                              FocusManager.instance.primaryFocus?.unfocus();
+                              BlocProvider.of<BottomNavBarCubit>(context)
+                                  .emitShow();
+                            }
+                          },
+                          child: BlocListener<FlagsBloc, FlagsState>(
+                            listener: (context, flagstate) {
+                              if (flagstate is FlagsLoadedSuccess) {
+                                // print(jsonEncode(flagstate.sections));
+                              }
+                              if (flagstate is FlagsLoadedFailed) {
+                                print(flagstate.error);
+                              }
+                            },
+                            child: TextFormField(
+                              controller: _flagsearchController,
+                              onTap: () {
+                                BlocProvider.of<BottomNavBarCubit>(context)
+                                    .emitHide();
+                                _flagsearchController.selection = TextSelection(
+                                    baseOffset: 0,
+                                    extentOffset: _flagsearchController
+                                        .value.text.length);
+                              },
+                              scrollPadding: EdgeInsets.only(
+                                  bottom:
+                                      MediaQuery.of(context).viewInsets.bottom +
+                                          50),
+                              decoration: InputDecoration(
+                                labelText: AppLocalizations.of(context)!
+                                    .translate('search'),
+                                suffixIcon: InkWell(
+                                  onTap: () {
+                                    FocusManager.instance.primaryFocus
+                                        ?.unfocus();
+                                    BlocProvider.of<BottomNavBarCubit>(context)
+                                        .emitShow();
+
+                                    if (_searchController.text.isNotEmpty) {
+                                      // BlocProvider.of<SearchSectionBloc>(context)
+                                      //     .add(SearchSectionLoadEvent(
+                                      //         _searchController.text));
+                                      setState(() {
+                                        isSearch = true;
+                                      });
+                                    }
+                                  },
+                                  child: const Icon(
+                                    Icons.search,
+                                    color: Colors.grey,
+                                  ),
+                                ),
+                              ),
+                              onChanged: (value) {
+                                if (value.isEmpty) {
+                                  setState(() {
+                                    isSearch = false;
+                                  });
+                                } else {
+                                  setState(() {
+                                    querySearch = value;
+                                  });
+                                }
+                              },
+                              onFieldSubmitted: (value) {
+                                FocusManager.instance.primaryFocus?.unfocus();
+                                BlocProvider.of<BottomNavBarCubit>(context)
+                                    .emitShow();
+                                _searchController.text = value;
+                                if (value.isNotEmpty) {
+                                  // BlocProvider.of<SearchSectionBloc>(context)
+                                  //     .add(SearchSectionLoadEvent(value));
+                                  setState(() {
+                                    isSearch = true;
+                                    querySearch = value;
+                                  });
+                                }
+                              },
+                            ),
+                          ),
+                        ),
+                      ),
+                      Padding(
+                        padding: EdgeInsets.all(8.h),
+                        child: BlocConsumer<FlagsBloc, FlagsState>(
+                          listener: (context, state) {
+                            // if(state is)
+                          },
+                          builder: (context, state) {
+                            if (state is FlagsLoadedSuccess) {
+                              return ListView.builder(
+                                key: Key('builder ${selected.toString()}'),
+                                shrinkWrap: true,
+                                controller: scroll,
+                                physics: const NeverScrollableScrollPhysics(),
+                                itemCount: state.origins.length,
+                                itemBuilder: (context, index) {
+                                  return querySearch.isEmpty ||
+                                          state.origins[index].label!
+                                              .contains(querySearch)
+                                      ? SizedBox(
+                                          // width: 200,
+                                          child: Row(
+                                            children: [
+                                              SizedBox(
+                                                height: 35,
+                                                width: 55,
+                                                child: SvgPicture.network(
+                                                  state
+                                                      .origins[index].imageURL!,
+                                                  height: 35,
+                                                  width: 55,
+                                                  // semanticsLabel: 'A shark?!',
+                                                  placeholderBuilder:
+                                                      (BuildContext context) =>
+                                                          Container(
+                                                    height: 35.h,
+                                                    width: 45.w,
+                                                    decoration: BoxDecoration(
+                                                      color: Colors.grey[200],
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                              5),
+                                                    ),
+                                                  ),
+                                                ),
+                                              ),
+                                              const SizedBox(width: 7),
+                                              Container(
+                                                constraints: BoxConstraints(
+                                                  maxWidth: 280.w,
+                                                ),
+                                                child: Text(
+                                                  state.origins[index].label!,
+                                                  overflow:
+                                                      TextOverflow.ellipsis,
+                                                  // maxLines: 2,
+                                                ),
+                                              ),
+                                            ],
+                                            // subtitle: Text('\$${suggestion['price']}'),
+                                          ),
+                                        )
+                                      : const SizedBox.shrink();
+                                },
+                              );
+                            } else if (state is FlagsLoadingProgressState) {
+                              return Shimmer.fromColors(
+                                baseColor: (Colors.grey[300])!,
+                                highlightColor: (Colors.grey[100])!,
+                                enabled: true,
+                                child: ListView.builder(
+                                  shrinkWrap: true,
+                                  itemBuilder: (_, __) => Container(
+                                    margin: const EdgeInsets.symmetric(
+                                        vertical: 4, horizontal: 3),
+                                    clipBehavior: Clip.antiAlias,
+                                    decoration: BoxDecoration(
+                                      color: Colors.white,
+                                      borderRadius: BorderRadius.circular(10),
+                                    ),
+                                    child: SizedBox(
+                                      height: 90.h,
+                                    ),
+                                  ),
+                                  itemCount: 10,
+                                ),
+                              );
+                            } else {
+                              return Center(
+                                child: GestureDetector(
+                                  onTap: () {
+                                    BlocProvider.of<FlagsBloc>(context)
+                                        .add(FlagsLoadEvent());
+                                  },
+                                  child: Row(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      Text(
+                                        AppLocalizations.of(context)!
+                                            .translate('list_error'),
+                                        style:
+                                            const TextStyle(color: Colors.red),
+                                      ),
+                                      const Icon(
+                                        Icons.refresh,
+                                        color: Colors.grey,
+                                      )
+                                    ],
+                                  ),
+                                ),
+                              );
+                            }
+                          },
+                        ),
+                      ),
+                      SizedBox(
+                        height: 70.h,
+                      )
+                    ],
+                  ),
+                ),
+                Visibility(
+                  visible: flagselected != -1,
+                  child: Positioned(
+                    bottom: 0.h,
+                    child: Container(
+                      padding: const EdgeInsets.all(8),
+                      color: AppColor.deepBlue,
+                      width: MediaQuery.of(context).size.width,
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceAround,
+                        children: [
+                          // CustomButton(
+                          //   onTap: () {
+                          //     setState(() {
+                          //       feeselected = -1;
+                          //       feeselectedId = "";
+                          //     });
+                          //   },
+                          //   color: Colors.white,
+                          //   bordercolor: Colors.red,
+                          //   title: const SizedBox(
+                          //       width: 100, child: Center(child: Text("إلغاء"))),
+                          // ),
+                          CustomButton(
+                            onTap: () {
+                              setState(() {
+                                flagselected = -1;
+                                _flagsearchController.text = "";
+                                isSearch = false;
+                              });
+                              BlocProvider.of<FlagSelectBloc>(context).add(
+                                  FlagSelectLoadEvent(origin: originselected!));
+                              BlocProvider.of<CalculatorPanelBloc>(context)
+                                  .add(CalculatorPanelHideEvent());
+                            },
+                            color: Colors.white,
+                            bordercolor: Colors.green,
+                            title: SizedBox(
+                                width: 100.w,
+                                child: const Center(child: Text("موافق"))),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                )
+              ],
+            ),
+          ),
+        );
+      },
+    );
+  }
 
   Widget _buildTariffPanel(BuildContext context) {
     return Directionality(

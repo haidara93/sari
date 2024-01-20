@@ -133,7 +133,7 @@ class _OrderAttachmentScreenState extends State<OrderAttachmentScreen> {
             const SizedBox(
               height: 5,
             ),
-            Text(attachmentName(element.attachmentType!)),
+            Text(element.attachmentType!.name!),
             const SizedBox(
               height: 7,
             ),

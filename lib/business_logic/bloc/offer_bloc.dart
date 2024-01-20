@@ -1,4 +1,5 @@
 import 'package:custome_mobile/data/models/offer_model.dart';
+import 'package:custome_mobile/data/models/package_model.dart' as package;
 import 'package:custome_mobile/data/repositories/state_agency_repository.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -36,6 +37,7 @@ class OfferBloc extends Bloc<OfferEvent, OfferState> {
           event.costumeAgency,
           event.costumeState,
           event.products,
+          event.source,
           event.origin,
           event.packageType,
           event.attachments,

@@ -67,6 +67,7 @@ class _StepperMultiOrderBrokerScreenState
   List<TextEditingController> packageControllers = [];
 
   List<TextEditingController> originControllers = [];
+  TextEditingController sourceControllers = TextEditingController();
 
   List<TextEditingController> weightControllers = [];
 
@@ -131,51 +132,54 @@ class _StepperMultiOrderBrokerScreenState
   void initState() {
     super.initState();
     BlocProvider.of<FeeAddLoadingBloc>(context).add(FeeLoadingProgressEvent());
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+      TextEditingController package_controller = TextEditingController();
+      TextEditingController weight_controller = TextEditingController();
+      TextEditingController value_controller = TextEditingController();
+      TextEditingController origin_controller = TextEditingController();
+      package_controller.text =
+          AppLocalizations.of(context)!.translate('goods_name');
+      packageControllers.add(package_controller);
+      weightControllers.add(weight_controller);
+      valueControllers.add(value_controller);
+      originControllers.add(origin_controller);
+      packages.add(null);
+      origins.add(null);
+      allowexports.add(false);
+      feeerrors.add(false);
+      isdropdownVisibles.add(false);
+      placeholders.add("");
+      extraslist.add([]);
+      extraselectedValues.add(null);
+      isfeeequal001.add(false);
+      rawMaterialValues.add(false);
+      industrialValues.add(false);
+      isBrands.add(false);
+      brandValus.add(false);
+      isTubes.add(false);
+      tubeValus.add(false);
+      isColored.add(false);
+      colorValus.add(false);
+      isLycra.add(false);
+      lycraValus.add(false);
+      extraPrices.add(0.0);
+      originerrors.add(false);
+      doubleoriginerrors.add(false);
+      showunits.add(false);
+      weightUnits.add("kg");
+      weightLabels.add("kg");
+      weightValues.add(0);
+      basePriceValues.add(0);
+      valueEnabled.add(false);
+      syrianExchangeValue.add("8585");
+      syrianTotalValue.add("0.0");
+      totalValueWithEnsurance.add("0.0");
 
-    TextEditingController package_controller = TextEditingController();
-    TextEditingController weight_controller = TextEditingController();
-    TextEditingController value_controller = TextEditingController();
-    TextEditingController origin_controller = TextEditingController();
-
-    packageControllers.add(package_controller);
-    weightControllers.add(weight_controller);
-    valueControllers.add(value_controller);
-    originControllers.add(origin_controller);
-    packages.add(null);
-    origins.add(null);
-    allowexports.add(false);
-    feeerrors.add(false);
-    isdropdownVisibles.add(false);
-    placeholders.add("");
-    extraslist.add([]);
-    extraselectedValues.add(null);
-    isfeeequal001.add(false);
-    rawMaterialValues.add(false);
-    industrialValues.add(false);
-    isBrands.add(false);
-    brandValus.add(false);
-    isTubes.add(false);
-    tubeValus.add(false);
-    isColored.add(false);
-    colorValus.add(false);
-    isLycra.add(false);
-    lycraValus.add(false);
-    extraPrices.add(0.0);
-    originerrors.add(false);
-    doubleoriginerrors.add(false);
-    showunits.add(false);
-    weightUnits.add("kg");
-    weightLabels.add("kg");
-    weightValues.add(0);
-    basePriceValues.add(0);
-    valueEnabled.add(false);
-    syrianExchangeValue.add("8585");
-    syrianTotalValue.add("0.0");
-    totalValueWithEnsurance.add("0.0");
-
-    setState(() {
-      _count++;
+      setState(() {
+        _count++;
+      });
     });
+
     BlocProvider.of<FeeAddLoadingBloc>(context).add(FeeIdleProgressEvent());
 
     // FocusScope.of(context).unfocus();
@@ -186,7 +190,8 @@ class _StepperMultiOrderBrokerScreenState
     TextEditingController weight_controller = TextEditingController();
     TextEditingController value_controller = TextEditingController();
     TextEditingController origin_controller = TextEditingController();
-
+    package_controller.text =
+        AppLocalizations.of(context)!.translate('goods_name');
     packageControllers.add(package_controller);
     weightControllers.add(weight_controller);
     valueControllers.add(value_controller);
@@ -312,6 +317,55 @@ class _StepperMultiOrderBrokerScreenState
     totalsyrianTotalValue = totalsyrian.toString();
     totalTotalValueWithEnsurance = totalinsurance.toString();
     setState(() {});
+  }
+
+  String showUnit(String unit, String lang) {
+    switch (unit) {
+      case "كغ":
+        return lang == 'en' ? "kg" : "كغ";
+
+      case "طن":
+        return lang == 'en' ? "ton" : "طن";
+
+      case "قيراط":
+        return lang == 'en' ? "oz" : "قيراط";
+
+      case "  كيلو واط بالساعة 1000":
+        return lang == 'en' ? "k watts" : "واط";
+
+      case "  الاستطاعة بالطن":
+        return lang == 'en' ? "power" : "الاستطاعة";
+
+      case "واط":
+        return lang == 'en' ? "watts" : "واط";
+
+      case "عدد الأزواج":
+        return lang == 'en' ? "num" : "عدد الأزواج";
+
+      case "عدد":
+        return lang == 'en' ? "num" : "عدد";
+
+      case "طرد":
+        return lang == 'en' ? "package" : "طرد";
+
+      case "قدم":
+        return lang == 'en' ? "feet" : "قدم";
+
+      case "متر":
+        return lang == 'en' ? "metre" : "متر";
+
+      case "متر مربع":
+        return lang == 'en' ? "metre square" : "م2";
+
+      case "متر مكعب":
+        return lang == 'en' ? "metre cube" : "م3";
+
+      case "لتر":
+        return lang == 'en' ? "litre" : "لتر";
+
+      default:
+        return lang == 'en' ? "kg" : "كغ";
+    }
   }
 
   void selectSuggestion(Package suggestion, String lang, int index) {
@@ -548,6 +602,7 @@ class _StepperMultiOrderBrokerScreenState
           objects[i].totalTax = packages[i]!.totalTaxes!.totalTax;
           objects[i].partialTax = packages[i]!.totalTaxes!.partialTax;
           objects[i].origin = origins[i]!.label;
+          objects[i].source = sourceControllers.text;
           objects[i].spendingFee = packages[i]!.spendingFee;
           objects[i].supportFee = packages[i]!.supportFee;
           objects[i].localFee = packages[i]!.localFee;
@@ -684,12 +739,15 @@ class _StepperMultiOrderBrokerScreenState
                                     value: "I",
                                     groupValue:
                                         orderBrokerProvider.selectedRadioTile,
-                                    title: Text(
-                                      AppLocalizations.of(context)!
-                                          .translate('import'),
-                                      overflow: TextOverflow.fade,
-                                      style: const TextStyle(
-                                        fontSize: 16,
+                                    title: FittedBox(
+                                      fit: BoxFit.scaleDown,
+                                      child: Text(
+                                        AppLocalizations.of(context)!
+                                            .translate('import'),
+                                        overflow: TextOverflow.fade,
+                                        style: const TextStyle(
+                                          fontSize: 16,
+                                        ),
                                       ),
                                     ),
                                     // subtitle: Text("Radio 1 Subtitle"),
@@ -712,12 +770,15 @@ class _StepperMultiOrderBrokerScreenState
                                     value: "E",
                                     groupValue:
                                         orderBrokerProvider.selectedRadioTile,
-                                    title: Text(
-                                      AppLocalizations.of(context)!
-                                          .translate('export'),
-                                      overflow: TextOverflow.fade,
-                                      style: const TextStyle(
-                                        fontSize: 16,
+                                    title: FittedBox(
+                                      fit: BoxFit.scaleDown,
+                                      child: Text(
+                                        AppLocalizations.of(context)!
+                                            .translate('export'),
+                                        overflow: TextOverflow.fade,
+                                        style: const TextStyle(
+                                          fontSize: 16,
+                                        ),
                                       ),
                                     ),
                                     // subtitle: Text("Radio 2 Subtitle"),
@@ -1290,66 +1351,69 @@ class _StepperMultiOrderBrokerScreenState
                                                     crossAxisAlignment:
                                                         CrossAxisAlignment.end,
                                                     children: [
-                                                      GestureDetector(
-                                                        onTap: () {
-                                                          BlocProvider.of<
-                                                                      CalculatorPanelBloc>(
-                                                                  context)
-                                                              .add(
-                                                                  TariffPanelOpenEvent());
-
-                                                          FocusManager.instance
-                                                              .primaryFocus
-                                                              ?.unfocus();
-                                                          BlocProvider.of<
-                                                                      BottomNavBarCubit>(
-                                                                  context)
-                                                              .emitShow();
-                                                          _countselected =
-                                                              index;
-                                                        },
-                                                        child: SizedBox(
-                                                          height: 40.h,
-                                                          child: Row(
-                                                            mainAxisAlignment:
-                                                                MainAxisAlignment
-                                                                    .end,
-                                                            children: [
-                                                              SizedBox(
-                                                                width: 25.w,
-                                                                height: 25.h,
-                                                                child:
-                                                                    SvgPicture
-                                                                        .asset(
-                                                                  "assets/icons/tarrif_btn.svg",
-                                                                ),
-                                                              ),
-                                                              const SizedBox(
-                                                                width: 3,
-                                                              ),
-                                                              Text(
-                                                                AppLocalizations.of(
-                                                                        context)!
-                                                                    .translate(
-                                                                        'tariff_browser'),
-                                                                textAlign:
-                                                                    TextAlign
-                                                                        .center,
-                                                                style:
-                                                                    TextStyle(
-                                                                  color: AppColor
-                                                                      .lightBlue,
-                                                                  fontSize:
-                                                                      15.sp,
-                                                                  fontWeight:
-                                                                      FontWeight
-                                                                          .bold,
-                                                                ),
-                                                              ),
-                                                            ],
-                                                          ),
-                                                        ),
+                                                      SizedBox(
+                                                        height: 5,
                                                       ),
+                                                      // GestureDetector(
+                                                      //   onTap: () {
+                                                      //     BlocProvider.of<
+                                                      //                 CalculatorPanelBloc>(
+                                                      //             context)
+                                                      //         .add(
+                                                      //             TariffPanelOpenEvent());
+
+                                                      //     FocusManager.instance
+                                                      //         .primaryFocus
+                                                      //         ?.unfocus();
+                                                      //     BlocProvider.of<
+                                                      //                 BottomNavBarCubit>(
+                                                      //             context)
+                                                      //         .emitShow();
+                                                      //     _countselected =
+                                                      //         index;
+                                                      //   },
+                                                      //   child: SizedBox(
+                                                      //     height: 40.h,
+                                                      //     child: Row(
+                                                      //       mainAxisAlignment:
+                                                      //           MainAxisAlignment
+                                                      //               .end,
+                                                      //       children: [
+                                                      //         SizedBox(
+                                                      //           width: 25.w,
+                                                      //           height: 25.h,
+                                                      //           child:
+                                                      //               SvgPicture
+                                                      //                   .asset(
+                                                      //             "assets/icons/tarrif_btn.svg",
+                                                      //           ),
+                                                      //         ),
+                                                      //         const SizedBox(
+                                                      //           width: 3,
+                                                      //         ),
+                                                      //         Text(
+                                                      //           AppLocalizations.of(
+                                                      //                   context)!
+                                                      //               .translate(
+                                                      //                   'tariff_browser'),
+                                                      //           textAlign:
+                                                      //               TextAlign
+                                                      //                   .center,
+                                                      //           style:
+                                                      //               TextStyle(
+                                                      //             color: AppColor
+                                                      //                 .lightBlue,
+                                                      //             fontSize:
+                                                      //                 15.sp,
+                                                      //             fontWeight:
+                                                      //                 FontWeight
+                                                      //                     .bold,
+                                                      //           ),
+                                                      //         ),
+                                                      //       ],
+                                                      //     ),
+                                                      //   ),
+                                                      // ),
                                                       GestureDetector(
                                                         onTap: () {
                                                           BlocProvider.of<
@@ -1379,16 +1443,18 @@ class _StepperMultiOrderBrokerScreenState
                                                             controller:
                                                                 packageControllers[
                                                                     index],
+
                                                             scrollPadding: EdgeInsets.only(
                                                                 bottom: MediaQuery.of(
                                                                             context)
                                                                         .viewInsets
                                                                         .bottom +
                                                                     150),
-                                                            style:
-                                                                const TextStyle(
-                                                                    fontSize:
-                                                                        18),
+                                                            style: TextStyle(
+                                                                fontSize: 18,
+                                                                color:
+                                                                    Colors.grey[
+                                                                        600]!),
                                                             onTap: () {
                                                               setSelectedPanel(
                                                                   2);
@@ -1400,12 +1466,82 @@ class _StepperMultiOrderBrokerScreenState
                                                                           context)!
                                                                   .translate(
                                                                       'goods_name'),
+                                                              hintText: AppLocalizations
+                                                                      .of(
+                                                                          context)!
+                                                                  .translate(
+                                                                      'goods_name'),
                                                               contentPadding:
                                                                   const EdgeInsets
                                                                       .symmetric(
                                                                 horizontal: 9.0,
                                                                 vertical: 11.0,
                                                               ),
+                                                              // disabledBorder:
+                                                              //     OutlineInputBorder(
+                                                              //   borderRadius:
+                                                              //       BorderRadius
+                                                              //           .circular(
+                                                              //               12),
+                                                              //   borderSide:
+                                                              //       BorderSide(
+                                                              //     color: AppColor
+                                                              //         .deepBlue,
+                                                              //   ),
+                                                              // ),
+
+                                                              suffixIcon: packageControllers[
+                                                                              index]
+                                                                          .text ==
+                                                                      AppLocalizations.of(
+                                                                              context)!
+                                                                          .translate(
+                                                                              'goods_name')
+                                                                  ? SizedBox(
+                                                                      width:
+                                                                          130.w,
+                                                                      child:
+                                                                          Row(
+                                                                        mainAxisAlignment:
+                                                                            MainAxisAlignment.end,
+                                                                        children: [
+                                                                          SizedBox(
+                                                                            width:
+                                                                                21.w,
+                                                                            height:
+                                                                                21.h,
+                                                                            child:
+                                                                                SvgPicture.asset(
+                                                                              "assets/icons/tarrif_btn.svg",
+                                                                            ),
+                                                                          ),
+                                                                          const SizedBox(
+                                                                            width:
+                                                                                3,
+                                                                          ),
+                                                                          FittedBox(
+                                                                            fit:
+                                                                                BoxFit.scaleDown,
+                                                                            child:
+                                                                                Text(
+                                                                              AppLocalizations.of(context)!.translate('tariff_browser'),
+                                                                              textAlign: TextAlign.center,
+                                                                              style: TextStyle(
+                                                                                color: AppColor.lightBlue,
+                                                                                fontSize: 15.sp,
+                                                                                fontWeight: FontWeight.bold,
+                                                                              ),
+                                                                            ),
+                                                                          ),
+                                                                          const SizedBox(
+                                                                            width:
+                                                                                3,
+                                                                          ),
+                                                                        ],
+                                                                      ),
+                                                                    )
+                                                                  : SizedBox
+                                                                      .shrink(),
                                                             ),
                                                             onSubmitted:
                                                                 (value) {
@@ -1732,18 +1868,22 @@ class _StepperMultiOrderBrokerScreenState
                                                                   controlAffinity:
                                                                       ListTileControlAffinity
                                                                           .leading,
-                                                                  title: Text(AppLocalizations.of(
-                                                                          context)!
-                                                                      .translate(
-                                                                          'raw_material')),
+                                                                  title:
+                                                                      FittedBox(
+                                                                    fit: BoxFit
+                                                                        .scaleDown,
+                                                                    child: Text(AppLocalizations.of(
+                                                                            context)!
+                                                                        .translate(
+                                                                            'raw_material')),
+                                                                  ),
                                                                   onChanged:
                                                                       (value) {
-                                                                    setState(
-                                                                        () {
-                                                                      rawMaterialValues[
-                                                                              index] =
-                                                                          value!;
-                                                                    });
+                                                                    rawMaterialValues[
+                                                                            index] =
+                                                                        value!;
+                                                                    evaluatePrice(
+                                                                        index);
                                                                   }),
                                                         ),
                                                       ),
@@ -1767,10 +1907,15 @@ class _StepperMultiOrderBrokerScreenState
                                                                   controlAffinity:
                                                                       ListTileControlAffinity
                                                                           .leading,
-                                                                  title: Text(AppLocalizations.of(
-                                                                          context)!
-                                                                      .translate(
-                                                                          'industrial')),
+                                                                  title:
+                                                                      FittedBox(
+                                                                    fit: BoxFit
+                                                                        .scaleDown,
+                                                                    child: Text(AppLocalizations.of(
+                                                                            context)!
+                                                                        .translate(
+                                                                            'industrial')),
+                                                                  ),
                                                                   onChanged:
                                                                       (value) {
                                                                     industrialValues[
@@ -1801,10 +1946,15 @@ class _StepperMultiOrderBrokerScreenState
                                                                   controlAffinity:
                                                                       ListTileControlAffinity
                                                                           .leading,
-                                                                  title: Text(AppLocalizations.of(
-                                                                          context)!
-                                                                      .translate(
-                                                                          'isBrand')),
+                                                                  title:
+                                                                      FittedBox(
+                                                                    fit: BoxFit
+                                                                        .scaleDown,
+                                                                    child: Text(AppLocalizations.of(
+                                                                            context)!
+                                                                        .translate(
+                                                                            'isBrand')),
+                                                                  ),
                                                                   onChanged:
                                                                       (value) {
                                                                     calculateExtrasPrice(
@@ -1843,10 +1993,15 @@ class _StepperMultiOrderBrokerScreenState
                                                                   controlAffinity:
                                                                       ListTileControlAffinity
                                                                           .leading,
-                                                                  title: Text(AppLocalizations.of(
-                                                                          context)!
-                                                                      .translate(
-                                                                          'isTubeValue')),
+                                                                  title:
+                                                                      FittedBox(
+                                                                    fit: BoxFit
+                                                                        .scaleDown,
+                                                                    child: Text(AppLocalizations.of(
+                                                                            context)!
+                                                                        .translate(
+                                                                            'isTubeValue')),
+                                                                  ),
                                                                   onChanged:
                                                                       (value) {
                                                                     calculateExtrasPrice(
@@ -1884,11 +2039,15 @@ class _StepperMultiOrderBrokerScreenState
                                                             controlAffinity:
                                                                 ListTileControlAffinity
                                                                     .leading,
-                                                            title: Text(
-                                                                AppLocalizations.of(
-                                                                        context)!
-                                                                    .translate(
-                                                                        'isColored')),
+                                                            title: FittedBox(
+                                                              fit: BoxFit
+                                                                  .scaleDown,
+                                                              child: Text(AppLocalizations
+                                                                      .of(
+                                                                          context)!
+                                                                  .translate(
+                                                                      'isColored')),
+                                                            ),
                                                             onChanged: (value) {
                                                               calculateExtrasPrice(
                                                                   .1,
@@ -1926,11 +2085,15 @@ class _StepperMultiOrderBrokerScreenState
                                                             controlAffinity:
                                                                 ListTileControlAffinity
                                                                     .leading,
-                                                            title: Text(
-                                                                AppLocalizations.of(
-                                                                        context)!
-                                                                    .translate(
-                                                                        'isLycra')),
+                                                            title: FittedBox(
+                                                              fit: BoxFit
+                                                                  .scaleDown,
+                                                              child: Text(AppLocalizations
+                                                                      .of(
+                                                                          context)!
+                                                                  .translate(
+                                                                      'isLycra')),
+                                                            ),
                                                             onChanged: (value) {
                                                               calculateExtrasPrice(
                                                                   .05,
@@ -1953,6 +2116,342 @@ class _StepperMultiOrderBrokerScreenState
                                                         ),
                                                       ),
                                                     ],
+                                                  ),
+                                                  Visibility(
+                                                    visible: index == 0,
+                                                    child: BlocBuilder<
+                                                        FlagsBloc, FlagsState>(
+                                                      builder:
+                                                          (context, flagstate) {
+                                                        if (flagstate
+                                                            is FlagsLoadedSuccess) {
+                                                          return StatefulBuilder(
+                                                              builder: (context,
+                                                                  setState2) {
+                                                            return DropdownButtonHideUnderline(
+                                                              child: Focus(
+                                                                focusNode:
+                                                                    _statenode,
+                                                                onFocusChange:
+                                                                    (bool
+                                                                        focus) {
+                                                                  if (focus) {
+                                                                    setSelectedPanel(
+                                                                        2);
+                                                                  }
+                                                                },
+                                                                child:
+                                                                    DropdownButton2<
+                                                                        Origin>(
+                                                                  isExpanded:
+                                                                      true,
+                                                                  hint: Text(
+                                                                    AppLocalizations.of(
+                                                                            context)!
+                                                                        .translate(
+                                                                            'select_source'),
+                                                                    style:
+                                                                        TextStyle(
+                                                                      fontSize:
+                                                                          18,
+                                                                      color: Theme.of(
+                                                                              context)
+                                                                          .hintColor,
+                                                                    ),
+                                                                  ),
+                                                                  items: flagstate
+                                                                      .origins
+                                                                      .map(
+                                                                        (Origin item) =>
+                                                                            DropdownMenuItem<Origin>(
+                                                                          value:
+                                                                              item,
+                                                                          child:
+                                                                              SizedBox(
+                                                                            // width: 200,
+                                                                            child:
+                                                                                Row(
+                                                                              children: [
+                                                                                SizedBox(
+                                                                                  height: 35,
+                                                                                  width: 55,
+                                                                                  child: SvgPicture.network(
+                                                                                    item.imageURL!,
+                                                                                    height: 35,
+                                                                                    width: 55,
+                                                                                    // semanticsLabel: 'A shark?!',
+                                                                                    placeholderBuilder: (BuildContext context) => Container(
+                                                                                      height: 35.h,
+                                                                                      width: 45.w,
+                                                                                      decoration: BoxDecoration(
+                                                                                        color: Colors.grey[200],
+                                                                                        borderRadius: BorderRadius.circular(5),
+                                                                                      ),
+                                                                                    ),
+                                                                                  ),
+                                                                                ),
+                                                                                const SizedBox(width: 7),
+                                                                                Container(
+                                                                                  constraints: BoxConstraints(
+                                                                                    maxWidth: 280.w,
+                                                                                  ),
+                                                                                  child: Text(
+                                                                                    item.label!,
+                                                                                    overflow: TextOverflow.ellipsis,
+                                                                                    // maxLines: 2,
+                                                                                  ),
+                                                                                ),
+                                                                              ],
+                                                                              // subtitle: Text('\$${suggestion['price']}'),
+                                                                            ),
+                                                                          ),
+                                                                        ),
+                                                                      )
+                                                                      .toList(),
+                                                                  value:
+                                                                      orderBrokerProvider
+                                                                          .source,
+                                                                  onChanged:
+                                                                      (Origin?
+                                                                          value) {
+                                                                    orderBrokerProvider
+                                                                        .setSource(
+                                                                            value);
+                                                                  },
+                                                                  barrierColor:
+                                                                      Colors
+                                                                          .black45,
+                                                                  dropdownSearchData:
+                                                                      DropdownSearchData(
+                                                                    searchController:
+                                                                        sourceControllers,
+                                                                    searchInnerWidgetHeight:
+                                                                        60,
+                                                                    searchInnerWidget:
+                                                                        Container(
+                                                                      height:
+                                                                          60,
+                                                                      padding:
+                                                                          const EdgeInsets
+                                                                              .only(
+                                                                        top: 8,
+                                                                        bottom:
+                                                                            4,
+                                                                        right:
+                                                                            8,
+                                                                        left: 8,
+                                                                      ),
+                                                                      child:
+                                                                          TextFormField(
+                                                                        expands:
+                                                                            true,
+                                                                        maxLines:
+                                                                            null,
+                                                                        controller:
+                                                                            sourceControllers,
+                                                                        onTap:
+                                                                            () {
+                                                                          sourceControllers.selection =
+                                                                              TextSelection(
+                                                                            baseOffset:
+                                                                                0,
+                                                                            extentOffset:
+                                                                                sourceControllers.value.text.length,
+                                                                          );
+                                                                        },
+                                                                        decoration:
+                                                                            InputDecoration(
+                                                                          isDense:
+                                                                              true,
+                                                                          contentPadding:
+                                                                              const EdgeInsets.symmetric(
+                                                                            horizontal:
+                                                                                10,
+                                                                            vertical:
+                                                                                8,
+                                                                          ),
+                                                                          labelText:
+                                                                              AppLocalizations.of(context)!.translate('select_source'),
+                                                                          hintStyle:
+                                                                              const TextStyle(fontSize: 12),
+                                                                          border:
+                                                                              OutlineInputBorder(
+                                                                            borderRadius:
+                                                                                BorderRadius.circular(8),
+                                                                          ),
+                                                                        ),
+                                                                        onTapOutside:
+                                                                            (event) {
+                                                                          FocusManager
+                                                                              .instance
+                                                                              .primaryFocus
+                                                                              ?.unfocus();
+                                                                          BlocProvider.of<BottomNavBarCubit>(context)
+                                                                              .emitShow();
+                                                                        },
+                                                                        onFieldSubmitted:
+                                                                            (value) {
+                                                                          FocusManager
+                                                                              .instance
+                                                                              .primaryFocus
+                                                                              ?.unfocus();
+                                                                          BlocProvider.of<BottomNavBarCubit>(context)
+                                                                              .emitShow();
+                                                                        },
+                                                                      ),
+                                                                    ),
+                                                                    searchMatchFn:
+                                                                        (item,
+                                                                            searchValue) {
+                                                                      return item
+                                                                          .value!
+                                                                          .label!
+                                                                          .contains(
+                                                                              searchValue);
+                                                                    },
+                                                                  ),
+                                                                  onMenuStateChange:
+                                                                      (isOpen) {
+                                                                    if (isOpen) {
+                                                                      setState(
+                                                                          () {
+                                                                        sourceControllers
+                                                                            .clear();
+                                                                      });
+                                                                    }
+                                                                  },
+                                                                  buttonStyleData:
+                                                                      ButtonStyleData(
+                                                                    height: 50,
+                                                                    width: double
+                                                                        .infinity,
+                                                                    padding: const EdgeInsets
+                                                                        .only(
+                                                                        left:
+                                                                            14,
+                                                                        right:
+                                                                            14),
+
+                                                                    decoration:
+                                                                        BoxDecoration(
+                                                                      borderRadius:
+                                                                          BorderRadius.circular(
+                                                                              12),
+                                                                      border:
+                                                                          Border
+                                                                              .all(
+                                                                        color: Colors
+                                                                            .black26,
+                                                                      ),
+                                                                      color: Colors
+                                                                          .white,
+                                                                    ),
+                                                                    // elevation: 2,
+                                                                  ),
+                                                                  iconStyleData:
+                                                                      const IconStyleData(
+                                                                    icon: Icon(
+                                                                      Icons
+                                                                          .keyboard_arrow_down_sharp,
+                                                                    ),
+                                                                    iconSize:
+                                                                        20,
+                                                                    iconEnabledColor:
+                                                                        AppColor
+                                                                            .AccentBlue,
+                                                                    iconDisabledColor:
+                                                                        Colors
+                                                                            .grey,
+                                                                  ),
+                                                                  dropdownStyleData:
+                                                                      DropdownStyleData(
+                                                                    maxHeight: MediaQuery.of(
+                                                                            context)
+                                                                        .size
+                                                                        .height,
+                                                                    padding:
+                                                                        const EdgeInsets
+                                                                            .all(
+                                                                            8.0),
+                                                                    decoration:
+                                                                        BoxDecoration(
+                                                                      borderRadius:
+                                                                          BorderRadius.circular(
+                                                                              14),
+                                                                      color: Colors
+                                                                          .white,
+                                                                    ),
+                                                                    scrollbarTheme:
+                                                                        ScrollbarThemeData(
+                                                                      radius: const Radius
+                                                                          .circular(
+                                                                          40),
+                                                                      thickness:
+                                                                          MaterialStateProperty.all(
+                                                                              6),
+                                                                      thumbVisibility:
+                                                                          MaterialStateProperty.all(
+                                                                              true),
+                                                                    ),
+                                                                  ),
+                                                                  menuItemStyleData:
+                                                                      const MenuItemStyleData(
+                                                                    height: 40,
+                                                                  ),
+                                                                ),
+                                                              ),
+                                                            );
+                                                          });
+                                                        } else if (flagstate
+                                                            is FlagsLoadingProgressState) {
+                                                          return const Center(
+                                                            child:
+                                                                LinearProgressIndicator(),
+                                                          );
+                                                        } else {
+                                                          return Center(
+                                                            child:
+                                                                GestureDetector(
+                                                              onTap: () {
+                                                                BlocProvider.of<
+                                                                            FlagsBloc>(
+                                                                        context)
+                                                                    .add(
+                                                                        FlagsLoadEvent());
+                                                              },
+                                                              child: Row(
+                                                                mainAxisAlignment:
+                                                                    MainAxisAlignment
+                                                                        .center,
+                                                                children: [
+                                                                  Text(
+                                                                    AppLocalizations.of(
+                                                                            context)!
+                                                                        .translate(
+                                                                            'list_error'),
+                                                                    style: const TextStyle(
+                                                                        color: Colors
+                                                                            .red),
+                                                                  ),
+                                                                  const Icon(
+                                                                    Icons
+                                                                        .refresh,
+                                                                    color: Colors
+                                                                        .grey,
+                                                                  )
+                                                                ],
+                                                              ),
+                                                            ),
+                                                          );
+                                                        }
+                                                      },
+                                                    ),
+                                                  ),
+                                                  Visibility(
+                                                    visible: index == 0,
+                                                    child: const SizedBox(
+                                                      height: 14,
+                                                    ),
                                                   ),
                                                   BlocBuilder<FlagsBloc,
                                                       FlagsState>(
@@ -2051,7 +2550,7 @@ class _StepperMultiOrderBrokerScreenState
                                                                   selectOrigin(
                                                                       value!,
                                                                       index);
-                                                                  setState2(
+                                                                  setState(
                                                                     () {
                                                                       origins[index] =
                                                                           value;
@@ -2407,11 +2906,15 @@ class _StepperMultiOrderBrokerScreenState
                                                                     context)!
                                                                 .translate(
                                                                     'weight'),
-                                                        suffixText:
-                                                            showunits[index]
-                                                                ? weightLabels[
-                                                                    index]
-                                                                : "",
+                                                        suffixText: showunits[
+                                                                index]
+                                                            ? showUnit(
+                                                                packages[index]!
+                                                                    .unit!,
+                                                                localeState
+                                                                    .value
+                                                                    .languageCode)
+                                                            : "",
                                                         contentPadding:
                                                             const EdgeInsets
                                                                 .symmetric(
@@ -2650,7 +3153,7 @@ class _StepperMultiOrderBrokerScreenState
                                               ),
                                             ),
                                           ),
-                                          (_count > 1)
+                                          (_count > 1) && (index != 0)
                                               ? Positioned(
                                                   right: 0,
                                                   child: GestureDetector(

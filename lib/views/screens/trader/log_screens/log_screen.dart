@@ -260,206 +260,289 @@ class _LogScreenState extends State<LogScreen>
                                     // DateTime now = DateTime.now();
                                     // Duration diff = now
                                     //     .difference(state.offers[index].createdDate!);
-                                    return Card(
-                                      shape: const RoundedRectangleBorder(
-                                        borderRadius: BorderRadius.all(
-                                          Radius.circular(10),
-                                        ),
-                                      ),
-                                      child: Padding(
-                                        padding:
-                                            EdgeInsets.symmetric(vertical: 5.h),
-                                        child: Column(
-                                          children: [
-                                            ListTile(
-                                              contentPadding: EdgeInsets.zero,
-                                              onTap: () {
-                                                BlocProvider.of<
-                                                            OfferDetailsBloc>(
-                                                        context)
-                                                    .add(OfferDetailsLoadEvent(
-                                                        state.offers[index]
-                                                            .id!));
-                                                Navigator.push(
-                                                    context,
-                                                    MaterialPageRoute(
-                                                      builder: (context) =>
-                                                          OfferDetailsScreen(
-                                                        type: "trader",
-                                                      ),
-                                                    ));
-                                              },
-                                              leading: Container(
-                                                height: 75.h,
-                                                width: 75.w,
-                                                decoration: BoxDecoration(
-                                                    // color: AppColor.lightGoldenYellow,
-                                                    borderRadius:
-                                                        BorderRadius.circular(
-                                                            5)),
-                                                child: Center(
-                                                  child: SvgPicture.asset(
-                                                    "assets/icons/naval_shipping.svg",
-                                                    height: 55.h,
-                                                    width: 55.w,
-                                                    fit: BoxFit.fill,
-                                                  ),
-                                                ),
+                                    return GestureDetector(
+                                      onTap: () {
+                                        BlocProvider.of<OfferDetailsBloc>(
+                                                context)
+                                            .add(OfferDetailsLoadEvent(
+                                                state.offers[index].id!));
+                                        Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                              builder: (context) =>
+                                                  OfferDetailsScreen(
+                                                type: "trader",
                                               ),
-                                              title: Row(
-                                                mainAxisAlignment:
-                                                    MainAxisAlignment
-                                                        .spaceBetween,
-                                                children: [
-                                                  Column(
+                                            ));
+                                      },
+                                      child: Card(
+                                        elevation: 3,
+                                        shape: const RoundedRectangleBorder(
+                                          borderRadius: BorderRadius.all(
+                                            Radius.circular(10),
+                                          ),
+                                        ),
+                                        child: Padding(
+                                          padding: EdgeInsets.symmetric(
+                                              vertical: 5.h),
+                                          child: Column(
+                                            children: [
+                                              Padding(
+                                                padding:
+                                                    const EdgeInsets.all(8.0),
+                                                child: Row(
                                                     mainAxisAlignment:
-                                                        MainAxisAlignment.start,
-                                                    crossAxisAlignment:
-                                                        CrossAxisAlignment
-                                                            .start,
+                                                        MainAxisAlignment
+                                                            .spaceBetween,
                                                     children: [
-                                                      Text(
-                                                        '${AppLocalizations.of(context)!.translate('operation_number')}: SA-${state.offers[index].id!}',
-                                                        style: TextStyle(
-                                                            // color: AppColor.lightBlue,
-                                                            fontSize: 18.sp,
-                                                            fontWeight:
-                                                                FontWeight
-                                                                    .bold),
+                                                      Row(
+                                                        children: [
+                                                          SizedBox(
+                                                            height: 35.h,
+                                                            width: 35.w,
+                                                            child: Center(
+                                                              child: SvgPicture
+                                                                  .asset(
+                                                                "assets/icons/naval_shipping.svg",
+                                                                height: 55.h,
+                                                                width: 55.w,
+                                                                fit:
+                                                                    BoxFit.fill,
+                                                              ),
+                                                            ),
+                                                          ),
+                                                          SizedBox(
+                                                            width: 7.h,
+                                                          ),
+                                                          Text(
+                                                            'SA-${state.offers[index].id!}',
+                                                            style: TextStyle(
+                                                                // color: AppColor.lightBlue,
+                                                                fontSize: 18.sp,
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .bold),
+                                                          ),
+                                                        ],
                                                       ),
-                                                      SizedBox(
-                                                        height: 7.h,
-                                                      ),
-                                                      Text(
-                                                        '${AppLocalizations.of(context)!.translate('operation_type')}: ${localeState.value.languageCode == 'en' ? getEnOfferType(state.offers[index].offerType!) : getOfferType(state.offers[index].offerType!)}',
-                                                        style: TextStyle(
-                                                          // color: AppColor.lightBlue,
-                                                          fontSize: 17.sp,
+                                                      Row(children: [
+                                                        Icon(
+                                                          Icons
+                                                              .notifications_none_outlined,
+                                                        ),
+                                                        SizedBox(
+                                                          width: 7.h,
+                                                        ),
+                                                        Icon(
+                                                          localeState.value
+                                                                      .languageCode ==
+                                                                  'en'
+                                                              ? Icons
+                                                                  .arrow_forward_ios
+                                                              : Icons
+                                                                  .arrow_back_ios_new,
+                                                        ),
+                                                      ]),
+                                                    ]),
+                                              ),
+                                              Padding(
+                                                padding:
+                                                    const EdgeInsets.all(8.0),
+                                                child: Row(
+                                                  crossAxisAlignment:
+                                                      CrossAxisAlignment.start,
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment
+                                                          .spaceBetween,
+                                                  children: [
+                                                    SizedBox(
+                                                      width:
+                                                          MediaQuery.of(context)
+                                                                  .size
+                                                                  .width *
+                                                              .45,
+                                                      child: FittedBox(
+                                                        fit: BoxFit.scaleDown,
+                                                        child: Text.rich(
+                                                          TextSpan(
+                                                              text: state
+                                                                  .offers[index]
+                                                                  .source!
+                                                                  .label!,
+                                                              style: TextStyle(
+                                                                color: AppColor
+                                                                    .lightBlue,
+                                                                fontSize: 17.sp,
+                                                              ),
+                                                              children: [
+                                                                TextSpan(
+                                                                  text:
+                                                                      "  --->  ",
+                                                                  style:
+                                                                      TextStyle(
+                                                                    color: Colors
+                                                                        .black,
+                                                                    fontSize:
+                                                                        17.sp,
+                                                                  ),
+                                                                ),
+                                                                TextSpan(
+                                                                  text:
+                                                                      "${state.offers[index].costumestate!.name}",
+                                                                  style:
+                                                                      TextStyle(
+                                                                    color: AppColor
+                                                                        .lightBlue,
+                                                                    fontSize:
+                                                                        17.sp,
+                                                                  ),
+                                                                ),
+                                                              ]),
                                                         ),
                                                       ),
-                                                      Text.rich(
-                                                        TextSpan(
-                                                            text: state
-                                                                .offers[index]
-                                                                .source!
-                                                                .label!,
-                                                            style: TextStyle(
-                                                              color: AppColor
-                                                                  .lightBlue,
-                                                              fontSize: 17.sp,
-                                                            ),
-                                                            children: [
-                                                              TextSpan(
-                                                                text:
-                                                                    "  --->  ",
-                                                                style:
-                                                                    TextStyle(
-                                                                  color: Colors
-                                                                      .black,
-                                                                  fontSize:
-                                                                      17.sp,
-                                                                ),
-                                                              ),
-                                                              TextSpan(
-                                                                text:
-                                                                    "${state.offers[index].costumestate!.name}",
-                                                                style:
-                                                                    TextStyle(
-                                                                  color: AppColor
-                                                                      .lightBlue,
-                                                                  fontSize:
-                                                                      17.sp,
-                                                                ),
-                                                              ),
-                                                            ]),
+                                                    ),
+                                                    SizedBox(
+                                                      width:
+                                                          MediaQuery.of(context)
+                                                                  .size
+                                                                  .width *
+                                                              .45,
+                                                      child: FittedBox(
+                                                        // fit: BoxFit.scaleDown,
+                                                        child: Text(
+                                                          "costums agency: ${state.offers[index].costumeagency!.name!}",
+                                                          maxLines: 2,
+                                                          style: TextStyle(
+                                                            color: AppColor
+                                                                .deepBlue,
+                                                          ),
+                                                        ),
                                                       ),
-                                                      // Text(
-                                                      //     'نوع البضاعة: ${state.offers[index].product!.label!}'),
-                                                    ],
+                                                    )
+                                                  ],
+                                                ),
+                                              ),
+                                              Padding(
+                                                padding:
+                                                    const EdgeInsets.symmetric(
+                                                        horizontal: 8.0),
+                                                child: Row(
+                                                  children: [
+                                                    SizedBox(
+                                                      width:
+                                                          MediaQuery.of(context)
+                                                                  .size
+                                                                  .width *
+                                                              .9,
+                                                      child: Text(
+                                                        state
+                                                            .offers[index]
+                                                            .products![0]
+                                                            .label!,
+                                                        overflow: TextOverflow
+                                                            .ellipsis,
+                                                        style: TextStyle(
+                                                          color:
+                                                              AppColor.deepBlue,
+                                                          fontSize: 18,
+                                                          fontWeight:
+                                                              FontWeight.bold,
+                                                        ),
+                                                      ),
+                                                    ),
+                                                  ],
+                                                ),
+                                              ),
+                                              Column(
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment.end,
+                                                children: [
+                                                  // GestureDetector(
+                                                  //   onTap: () {
+                                                  //     BlocProvider.of<
+                                                  //                 OfferDetailsBloc>(
+                                                  //             context)
+                                                  //         .add(
+                                                  //             OfferDetailsLoadEvent(
+                                                  //                 state
+                                                  //                     .offers[
+                                                  //                         index]
+                                                  //                     .id!));
+                                                  //     Navigator.push(
+                                                  //         context,
+                                                  //         MaterialPageRoute(
+                                                  //           builder: (context) =>
+                                                  //               OrderTrackingScreen(
+                                                  //                   type:
+                                                  //                       "trader",
+                                                  //                   offer: state
+                                                  //                           .offers[
+                                                  //                       index]),
+                                                  //         ));
+                                                  //   },
+                                                  //   child: Padding(
+                                                  //     padding: const EdgeInsets
+                                                  //         .symmetric(
+                                                  //         horizontal: 3.0),
+                                                  //     child: Column(
+                                                  //       mainAxisSize:
+                                                  //           MainAxisSize.min,
+                                                  //       mainAxisAlignment:
+                                                  //           MainAxisAlignment
+                                                  //               .end,
+                                                  //       children: [
+                                                  //         Text(
+                                                  //           AppLocalizations.of(
+                                                  //                   context)!
+                                                  //               .translate(
+                                                  //                   'operation_tracking'),
+                                                  //           style: TextStyle(
+                                                  //             color: AppColor
+                                                  //                 .lightBlue,
+                                                  //             fontWeight:
+                                                  //                 FontWeight
+                                                  //                     .bold,
+                                                  //             fontSize: 17.sp,
+                                                  //           ),
+                                                  //         )
+                                                  //       ],
+                                                  //     ),
+                                                  //   ),
+                                                  // ),
+                                                  Padding(
+                                                    padding:
+                                                        EdgeInsets.all(3.0),
+                                                    child:
+                                                        LinearPercentIndicator(
+                                                      // width: MediaQuery.of(context)
+                                                      //         .size
+                                                      //         .width -
+                                                      //     50,
+                                                      animation: true,
+                                                      lineHeight: 20.0,
+                                                      animationDuration: 2000,
+                                                      percent: showPercentage(
+                                                          state.offers[index]
+                                                              .track_offer!),
+                                                      center: Text(
+                                                        "${(showPercentage(state.offers[index].track_offer!) * 100).toString()}%",
+                                                        style: TextStyle(
+                                                          color: Colors.white,
+                                                        ),
+                                                      ),
+                                                      linearStrokeCap:
+                                                          LinearStrokeCap
+                                                              .roundAll,
+                                                      progressColor:
+                                                          AppColor.deepYellow,
+                                                      barRadius:
+                                                          Radius.circular(15),
+                                                    ),
                                                   ),
                                                 ],
                                               ),
-                                              dense: false,
-                                            ),
-                                            Column(
-                                              crossAxisAlignment:
-                                                  CrossAxisAlignment.end,
-                                              children: [
-                                                GestureDetector(
-                                                  onTap: () {
-                                                    BlocProvider.of<
-                                                                OfferDetailsBloc>(
-                                                            context)
-                                                        .add(
-                                                            OfferDetailsLoadEvent(
-                                                                state
-                                                                    .offers[
-                                                                        index]
-                                                                    .id!));
-                                                    Navigator.push(
-                                                        context,
-                                                        MaterialPageRoute(
-                                                          builder: (context) =>
-                                                              OrderTrackingScreen(
-                                                                  type:
-                                                                      "trader",
-                                                                  offer: state
-                                                                          .offers[
-                                                                      index]),
-                                                        ));
-                                                  },
-                                                  child: Padding(
-                                                    padding: const EdgeInsets
-                                                        .symmetric(
-                                                        horizontal: 3.0),
-                                                    child: Column(
-                                                      mainAxisSize:
-                                                          MainAxisSize.min,
-                                                      mainAxisAlignment:
-                                                          MainAxisAlignment.end,
-                                                      children: [
-                                                        Text(
-                                                          AppLocalizations.of(
-                                                                  context)!
-                                                              .translate(
-                                                                  'operation_tracking'),
-                                                          style: TextStyle(
-                                                            color: AppColor
-                                                                .lightBlue,
-                                                            fontWeight:
-                                                                FontWeight.bold,
-                                                            fontSize: 17.sp,
-                                                          ),
-                                                        )
-                                                      ],
-                                                    ),
-                                                  ),
-                                                ),
-                                                Padding(
-                                                  padding: EdgeInsets.all(3.0),
-                                                  child: LinearPercentIndicator(
-                                                    // width: MediaQuery.of(context)
-                                                    //         .size
-                                                    //         .width -
-                                                    //     50,
-                                                    animation: true,
-                                                    lineHeight: 20.0,
-                                                    animationDuration: 2000,
-                                                    percent: showPercentage(
-                                                        state.offers[index]
-                                                            .track_offer!),
-                                                    center: Text(
-                                                        "${(showPercentage(state.offers[index].track_offer!) * 100).toString()}%"),
-                                                    linearStrokeCap:
-                                                        LinearStrokeCap
-                                                            .roundAll,
-                                                    progressColor:
-                                                        AppColor.deepYellow,
-                                                  ),
-                                                ),
-                                              ],
-                                            ),
-                                          ],
+                                            ],
+                                          ),
                                         ),
                                       ),
                                     );

@@ -27,7 +27,7 @@ class Attachment {
   int? id;
   List<AttachmentFile>? file;
   List<AttachmentImage>? image;
-  int? attachmentType;
+  AttachmentType? attachmentType;
   String? otherAttachmentName;
   int? user;
 
@@ -57,7 +57,9 @@ class Attachment {
     } else {
       image = <AttachmentImage>[];
     }
-    attachmentType = json['attachment_type'];
+    attachmentType = json['attachment_type'] != null
+        ? AttachmentType.fromJson(json['attachment_type'])
+        : null;
     otherAttachmentName = json['other_attachment_name'];
     user = json['user'];
   }

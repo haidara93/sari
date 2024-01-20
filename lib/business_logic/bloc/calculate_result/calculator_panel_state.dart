@@ -12,3 +12,5 @@ class CalculatorPanelHidden extends CalculatorPanelState {}
 class CalculatorPanelOpened extends CalculatorPanelState {}
 
 class TariffPanelOpened extends CalculatorPanelState {}
+
+class FlagsPanelOpened extends CalculatorPanelState {}

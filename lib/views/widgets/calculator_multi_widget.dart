@@ -202,7 +202,7 @@ class _CalculatorMultiWidgetState extends State<CalculatorMultiWidget> {
                       child: GestureDetector(
                         onTap: () {
                           BlocProvider.of<CalculatorPanelBloc>(context)
-                              .add(TariffPanelOpenEvent());
+                              .add(FlagsPanelOpenEvent());
                           // BlocProvider.of<SectionBloc>(context)
                           //     .add(SectionLoadEvent());
                           FocusManager.instance.primaryFocus?.unfocus();

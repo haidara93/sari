@@ -11,6 +11,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 class AuthRepository {
   late SharedPreferences prefs;
   List<CostumBroker> costumBrokers = [];
+  List<Review> reviews = [];
 
   Future<List<CostumBroker>> getCostumBrokers() async {
     prefs = await SharedPreferences.getInstance();
@@ -27,6 +28,24 @@ class AuthRepository {
       }
     }
     return costumBrokers;
+  }
+
+  Future<List<Review>> getreviews(int id) async {
+    prefs = await SharedPreferences.getInstance();
+    var jwt = prefs.getString("token");
+
+    var rs =
+        await HttpHelper.get('$BROKERS_ENDPOINT$id/reviews/', apiToken: jwt);
+    reviews = [];
+    if (rs.statusCode == 200) {
+      var myDataString = utf8.decode(rs.bodyBytes);
+
+      var result = jsonDecode(myDataString);
+      for (var element in result) {
+        reviews.add(Review.fromJson(element));
+      }
+    }
+    return reviews;
   }
 
   Future<dynamic> login(

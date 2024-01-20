@@ -1,11 +1,14 @@
 import 'package:custome_mobile/Localization/app_localizations.dart';
 import 'package:custome_mobile/business_logic/bloc/assign_broker_bloc.dart';
 import 'package:custome_mobile/business_logic/bloc/broker_list_bloc.dart';
+import 'package:custome_mobile/business_logic/bloc/broker_review_bloc.dart';
 import 'package:custome_mobile/business_logic/cubit/locale_cubit.dart';
 import 'package:custome_mobile/data/models/state_custome_agency_model.dart';
 import 'package:custome_mobile/helpers/color_constants.dart';
 import 'package:custome_mobile/views/control_view.dart';
+import 'package:custome_mobile/views/screens/trader/select_broker_profile_screen.dart';
 import 'package:custome_mobile/views/widgets/custom_app_bar.dart';
+import 'package:custome_mobile/views/widgets/custom_botton.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -128,8 +131,23 @@ class _SelectBrokerScreenState extends State<SelectBrokerScreen> {
                                             //     .difference(state.offers[index].createdDate!);
                                             return GestureDetector(
                                               onTap: () {
-                                                _showAlertDialog(
-                                                    state.brokers[index].id!);
+                                                BlocProvider.of<
+                                                            BrokerReviewBloc>(
+                                                        context)
+                                                    .add(BrokerReviewLoadEvent(
+                                                        state.brokers[index]
+                                                            .id!));
+                                                Navigator.push(
+                                                  context,
+                                                  MaterialPageRoute(
+                                                    builder: (context) =>
+                                                        SelectBrokerProfileScreen(
+                                                      broker:
+                                                          state.brokers[index],
+                                                      offerId: widget.offerId,
+                                                    ),
+                                                  ),
+                                                );
                                               },
                                               child: Card(
                                                 shape:
@@ -141,7 +159,7 @@ class _SelectBrokerScreenState extends State<SelectBrokerScreen> {
                                                 ),
                                                 child: Padding(
                                                   padding: EdgeInsets.symmetric(
-                                                      vertical: 5.h),
+                                                      horizontal: 5.h),
                                                   child: Column(
                                                     children: [
                                                       Row(
@@ -170,15 +188,16 @@ class _SelectBrokerScreenState extends State<SelectBrokerScreen> {
                                                                   child: Center(
                                                                     child: (state.brokers[index].user!.image!.length >
                                                                             1)
-                                                                        ? Image
-                                                                            .network(
-                                                                            state.brokers[index].user!.image!,
-                                                                            height:
-                                                                                55.h,
-                                                                            width:
-                                                                                55.w,
-                                                                            fit:
-                                                                                BoxFit.fill,
+                                                                        ? ClipRRect(
+                                                                            borderRadius:
+                                                                                BorderRadius.circular(180),
+                                                                            child:
+                                                                                Image.network(
+                                                                              state.brokers[index].user!.image!,
+                                                                              height: 55.h,
+                                                                              width: 55.w,
+                                                                              fit: BoxFit.fill,
+                                                                            ),
                                                                           )
                                                                         : Text(
                                                                             state.brokers[index].user!.image!,
@@ -193,16 +212,24 @@ class _SelectBrokerScreenState extends State<SelectBrokerScreen> {
                                                                 const SizedBox(
                                                                   height: 5,
                                                                 ),
-                                                                Text(
-                                                                  "${state.brokers[index].user!.firstName!} ${state.brokers[index].user!.lastName!}",
-                                                                  style: TextStyle(
-                                                                      fontSize:
-                                                                          13.sp),
+                                                                SizedBox(
+                                                                  width: 100,
+                                                                  child:
+                                                                      FittedBox(
+                                                                    fit: BoxFit
+                                                                        .scaleDown,
+                                                                    child: Text(
+                                                                      "${state.brokers[index].user!.firstName!} ${state.brokers[index].user!.lastName!}",
+                                                                      style: TextStyle(
+                                                                          fontSize:
+                                                                              13.sp),
+                                                                    ),
+                                                                  ),
                                                                 )
                                                               ],
                                                             ),
                                                           ),
-                                                          SizedBox(
+                                                          const SizedBox(
                                                             width: 5,
                                                           ),
                                                           Column(
@@ -212,96 +239,135 @@ class _SelectBrokerScreenState extends State<SelectBrokerScreen> {
                                                             children: [
                                                               Text(
                                                                   "${AppLocalizations.of(context)!.translate('directorate')}: ${state.brokers[index].agencies![0].statecustome!.name!}"),
-                                                              Wrap(
-                                                                children: _buildAgenciesWidget(state
-                                                                    .brokers[
-                                                                        index]
-                                                                    .agencies!),
+                                                              SizedBox(
+                                                                width: MediaQuery.of(
+                                                                            context)
+                                                                        .size
+                                                                        .width *
+                                                                    5,
+                                                                child: Wrap(
+                                                                  children: _buildAgenciesWidget(state
+                                                                      .brokers[
+                                                                          index]
+                                                                      .agencies!),
+                                                                ),
                                                               ),
                                                             ],
-                                                          )
+                                                          ),
                                                         ],
                                                       ),
                                                       Padding(
-                                                        padding: EdgeInsets
-                                                            .symmetric(
-                                                                horizontal:
-                                                                    35.w),
+                                                        padding:
+                                                            const EdgeInsets
+                                                                .all(8.0),
                                                         child: Row(
                                                           mainAxisAlignment:
                                                               MainAxisAlignment
-                                                                  .spaceAround,
+                                                                  .spaceBetween,
                                                           children: [
-                                                            state.brokers[index]
-                                                                        .rating! >=
-                                                                    1
-                                                                ? Icon(
-                                                                    Icons.star,
-                                                                    color: AppColor
-                                                                        .deepYellow,
-                                                                  )
-                                                                : Icon(
-                                                                    Icons
-                                                                        .star_border,
-                                                                    color: AppColor
-                                                                        .deepYellow,
+                                                            Padding(
+                                                              padding: EdgeInsets
+                                                                  .symmetric(
+                                                                      horizontal:
+                                                                          25.w),
+                                                              child: Row(
+                                                                mainAxisAlignment:
+                                                                    MainAxisAlignment
+                                                                        .spaceAround,
+                                                                children: [
+                                                                  state.brokers[index]
+                                                                              .rating! >=
+                                                                          1
+                                                                      ? Icon(
+                                                                          Icons
+                                                                              .star,
+                                                                          color:
+                                                                              AppColor.deepYellow,
+                                                                        )
+                                                                      : Icon(
+                                                                          Icons
+                                                                              .star_border,
+                                                                          color:
+                                                                              AppColor.deepYellow,
+                                                                        ),
+                                                                  state.brokers[index]
+                                                                              .rating! >=
+                                                                          2
+                                                                      ? Icon(
+                                                                          Icons
+                                                                              .star,
+                                                                          color:
+                                                                              AppColor.deepYellow,
+                                                                        )
+                                                                      : Icon(
+                                                                          Icons
+                                                                              .star_border,
+                                                                          color:
+                                                                              AppColor.deepYellow,
+                                                                        ),
+                                                                  state.brokers[index]
+                                                                              .rating! >=
+                                                                          3
+                                                                      ? Icon(
+                                                                          Icons
+                                                                              .star,
+                                                                          color:
+                                                                              AppColor.deepYellow,
+                                                                        )
+                                                                      : Icon(
+                                                                          Icons
+                                                                              .star_border,
+                                                                          color:
+                                                                              AppColor.deepYellow,
+                                                                        ),
+                                                                  state.brokers[index]
+                                                                              .rating! >=
+                                                                          4
+                                                                      ? Icon(
+                                                                          Icons
+                                                                              .star,
+                                                                          color:
+                                                                              AppColor.deepYellow,
+                                                                        )
+                                                                      : Icon(
+                                                                          Icons
+                                                                              .star_border,
+                                                                          color:
+                                                                              AppColor.deepYellow,
+                                                                        ),
+                                                                  state.brokers[index]
+                                                                              .rating! ==
+                                                                          5
+                                                                      ? Icon(
+                                                                          Icons
+                                                                              .star,
+                                                                          color:
+                                                                              AppColor.deepYellow,
+                                                                        )
+                                                                      : Icon(
+                                                                          Icons
+                                                                              .star_border,
+                                                                          color:
+                                                                              AppColor.deepYellow,
+                                                                        ),
+                                                                ],
+                                                              ),
+                                                            ),
+                                                            CustomButton(
+                                                                title: SizedBox(
+                                                                  width: 100.w,
+                                                                  child:
+                                                                      const Center(
+                                                                    child: Text(
+                                                                        "CB request"),
                                                                   ),
-                                                            state.brokers[index]
-                                                                        .rating! >=
-                                                                    2
-                                                                ? Icon(
-                                                                    Icons.star,
-                                                                    color: AppColor
-                                                                        .deepYellow,
-                                                                  )
-                                                                : Icon(
-                                                                    Icons
-                                                                        .star_border,
-                                                                    color: AppColor
-                                                                        .deepYellow,
-                                                                  ),
-                                                            state.brokers[index]
-                                                                        .rating! >=
-                                                                    3
-                                                                ? Icon(
-                                                                    Icons.star,
-                                                                    color: AppColor
-                                                                        .deepYellow,
-                                                                  )
-                                                                : Icon(
-                                                                    Icons
-                                                                        .star_border,
-                                                                    color: AppColor
-                                                                        .deepYellow,
-                                                                  ),
-                                                            state.brokers[index]
-                                                                        .rating! >=
-                                                                    4
-                                                                ? Icon(
-                                                                    Icons.star,
-                                                                    color: AppColor
-                                                                        .deepYellow,
-                                                                  )
-                                                                : Icon(
-                                                                    Icons
-                                                                        .star_border,
-                                                                    color: AppColor
-                                                                        .deepYellow,
-                                                                  ),
-                                                            state.brokers[index]
-                                                                        .rating! ==
-                                                                    5
-                                                                ? Icon(
-                                                                    Icons.star,
-                                                                    color: AppColor
-                                                                        .deepYellow,
-                                                                  )
-                                                                : Icon(
-                                                                    Icons
-                                                                        .star_border,
-                                                                    color: AppColor
-                                                                        .deepYellow,
-                                                                  ),
+                                                                ),
+                                                                onTap: () {
+                                                                  _showAlertDialog(state
+                                                                      .brokers[
+                                                                          index]
+                                                                      .id!);
+                                                                })
                                                           ],
                                                         ),
                                                       ),

@@ -5,6 +5,7 @@ import 'dart:io';
 import 'package:custome_mobile/data/models/attachments_models.dart';
 import 'package:custome_mobile/data/models/offer_model.dart';
 import 'package:custome_mobile/data/models/package_model.dart';
+import 'package:custome_mobile/data/models/package_model.dart' as package;
 import 'package:custome_mobile/data/models/state_custome_agency_model.dart';
 import 'package:custome_mobile/helpers/http_helper.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -210,7 +211,7 @@ class StateAgencyRepository {
       var obj = {
         "insurance": element.insurance,
         "origin": element.origin,
-        "source": element.origin,
+        "source": element.source,
         "fee": element.fee,
         "spending_fee": element.spendingFee,
         "support_fee": element.supportFee,
@@ -269,6 +270,7 @@ class StateAgencyRepository {
     int? costumeagency,
     int? costumestate,
     List<String>? products,
+    package.Origin? source,
     List<int>? origin,
     int? packageType,
     List<int>? attachments,
@@ -286,7 +288,7 @@ class StateAgencyRepository {
       "costumeagency": costumeagency,
       "costumestate": costumestate,
       "products": products,
-      "source": origin![0],
+      "source": source!.id!,
       "origin": origin,
       "package_type": packageType,
       "packages_num": packagesNum,

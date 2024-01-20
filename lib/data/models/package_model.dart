@@ -221,6 +221,7 @@ class TotalTaxes {
 class Origin {
   int? id;
   String? label;
+  String? labelar;
   String? imageURL;
   String? countriesCode;
   List<int>? countryGroups;
@@ -228,13 +229,15 @@ class Origin {
   Origin(
       {this.id,
       this.label,
+      this.labelar,
       this.imageURL,
       this.countriesCode,
       this.countryGroups});
 
   Origin.fromJson(Map<String, dynamic> json) {
     id = json['id'];
-    label = json['label_ar'];
+    label = json['label'];
+    labelar = json['label_ar'];
     imageURL = json['ImageURL'];
     countriesCode = json['countries_code'];
     countryGroups = json['countryGroups'].cast<int>();

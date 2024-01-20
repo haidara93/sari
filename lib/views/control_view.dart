@@ -1,6 +1,9 @@
 import 'package:custome_mobile/business_logic/bloc/attachment/attachment_type_bloc.dart';
 import 'package:custome_mobile/business_logic/bloc/auth_bloc.dart';
+import 'package:custome_mobile/business_logic/bloc/flags_bloc.dart';
 import 'package:custome_mobile/business_logic/bloc/notification_bloc.dart';
+import 'package:custome_mobile/business_logic/bloc/section_bloc.dart';
+import 'package:custome_mobile/business_logic/bloc/state_custome_bloc.dart';
 import 'package:custome_mobile/business_logic/cubit/bottom_nav_bar_cubit.dart';
 import 'package:custome_mobile/business_logic/cubit/internet_cubit.dart';
 import 'package:custome_mobile/views/screens/broker/broker_home_screen.dart';
@@ -31,6 +34,10 @@ class ControlView extends StatelessWidget {
                 .add(NotificationLoadEvent());
             BlocProvider.of<AttachmentTypeBloc>(context)
                 .add(AttachmentTypeLoadEvent());
+            BlocProvider.of<SectionBloc>(context).add(SectionLoadEvent());
+            BlocProvider.of<FlagsBloc>(context).add(FlagsLoadEvent());
+            BlocProvider.of<StateCustomeBloc>(context)
+                .add(StateCustomeLoadEvent());
 
             return BlocBuilder<AuthBloc, AuthState>(
               builder: (context, state) {
