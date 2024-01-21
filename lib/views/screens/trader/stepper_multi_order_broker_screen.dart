@@ -7,6 +7,7 @@ import 'package:custome_mobile/business_logic/bloc/calculate_result/calculate_re
 import 'package:custome_mobile/business_logic/bloc/calculate_result/calculator_panel_bloc.dart';
 import 'package:custome_mobile/business_logic/bloc/fee/fee_add_loading_bloc.dart';
 import 'package:custome_mobile/business_logic/bloc/fee/fee_select_bloc.dart';
+import 'package:custome_mobile/business_logic/bloc/flag_select_bloc.dart';
 import 'package:custome_mobile/business_logic/bloc/flags_bloc.dart';
 import 'package:custome_mobile/business_logic/bloc/state_custome_bloc.dart';
 import 'package:custome_mobile/business_logic/cubit/bottom_nav_bar_cubit.dart';
@@ -68,7 +69,7 @@ class _StepperMultiOrderBrokerScreenState
 
   List<TextEditingController> originControllers = [];
   TextEditingController sourceControllers = TextEditingController();
-
+  bool sourceError = false;
   List<TextEditingController> weightControllers = [];
 
   List<TextEditingController> valueControllers = [];
@@ -108,9 +109,10 @@ class _StepperMultiOrderBrokerScreenState
 
   List<CalculateObject> objects = [];
 
-  bool commodity_panel_loading = false;
+  bool basePriceError = false;
   int _count = 0;
   int _countselected = 0;
+  bool sourceselect = false;
   var f = intel.NumberFormat("#,###", "en_US");
 
   int agencyId = 0;
@@ -373,10 +375,10 @@ class _StepperMultiOrderBrokerScreenState
     feeerrors[index] = false;
     if (suggestion.price! > 0) {
       basePriceValues[index] = suggestion.price!;
-      valueEnabled[index] = false;
+      valueEnabled[index] = true;
     } else {
       basePriceValues[index] = 0.0;
-      valueEnabled[index] = true;
+      valueEnabled[index] = false;
       syrianExchangeValue[index] = "8585";
     }
 
@@ -510,6 +512,7 @@ class _StepperMultiOrderBrokerScreenState
         break;
       default:
     }
+    evaluatePrice(index);
     setState(() {});
   }
 
@@ -665,8 +668,8 @@ class _StepperMultiOrderBrokerScreenState
                       basePriceValues[_countselected].toString();
                 });
 
-                selectSuggestion(state.package, localeState.value.languageCode,
-                    _countselected);
+                // selectSuggestion(state.package, localeState.value.languageCode,
+                //     _countselected);
               } else {
                 // print("ghjhgjgh");
               }
@@ -678,1106 +681,450 @@ class _StepperMultiOrderBrokerScreenState
               },
               child: Consumer<OrderBrokerProvider>(
                   builder: (context, orderBrokerProvider, child) {
-                return Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Column(children: [
-                    EnsureVisibleWhenFocused(
-                      focusNode: _orderTypenode,
-                      child: Card(
-                        key: key1,
-                        margin: const EdgeInsets.symmetric(vertical: 7),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(10),
-                        ),
-                        child: Container(
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(10),
-                            gradient: selectedPanel == 0
-                                ? orderBrokerProvider.selectedRadioTileError
-                                    ? LinearGradient(
-                                        colors: [
-                                            Colors.red[300]!,
-                                            Colors.white,
-                                            Colors.white,
-                                            Colors.white,
-                                          ],
-                                        begin: Alignment.topCenter,
-                                        end: Alignment.bottomCenter)
-                                    : LinearGradient(
-                                        colors: [
-                                            AppColor.goldenYellow,
-                                            Colors.white,
-                                            Colors.white,
-                                            Colors.white,
-                                          ],
-                                        begin: Alignment.topCenter,
-                                        end: Alignment.bottomCenter)
-                                : null,
-                          ),
-                          padding: const EdgeInsets.all(8.0),
-                          child: Column(children: [
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.start,
-                              children: [
-                                Text(
-                                    AppLocalizations.of(context)!
-                                        .translate('select_operation_type'),
-                                    style: TextStyle(
-                                      fontSize: 17,
-                                      fontWeight: FontWeight.bold,
-                                      color: AppColor.deepBlue,
-                                    )),
-                              ],
-                            ),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                SizedBox(
-                                  width:
-                                      MediaQuery.of(context).size.width * .38,
-                                  child: RadioListTile(
-                                    value: "I",
-                                    groupValue:
-                                        orderBrokerProvider.selectedRadioTile,
-                                    title: FittedBox(
-                                      fit: BoxFit.scaleDown,
-                                      child: Text(
-                                        AppLocalizations.of(context)!
-                                            .translate('import'),
-                                        overflow: TextOverflow.fade,
-                                        style: const TextStyle(
-                                          fontSize: 16,
-                                        ),
-                                      ),
-                                    ),
-                                    // subtitle: Text("Radio 1 Subtitle"),
-                                    onChanged: (val) {
-                                      // print("Radio Tile pressed $val");
-                                      setSelectedPanel(0);
-                                      orderBrokerProvider
-                                          .setSelectedRadioTile(val!);
-                                    },
-                                    activeColor: AppColor.goldenYellow,
-                                    selected:
-                                        orderBrokerProvider.selectedRadioTile ==
-                                            "I",
-                                  ),
-                                ),
-                                SizedBox(
-                                  width:
-                                      MediaQuery.of(context).size.width * .38,
-                                  child: RadioListTile(
-                                    value: "E",
-                                    groupValue:
-                                        orderBrokerProvider.selectedRadioTile,
-                                    title: FittedBox(
-                                      fit: BoxFit.scaleDown,
-                                      child: Text(
-                                        AppLocalizations.of(context)!
-                                            .translate('export'),
-                                        overflow: TextOverflow.fade,
-                                        style: const TextStyle(
-                                          fontSize: 16,
-                                        ),
-                                      ),
-                                    ),
-                                    // subtitle: Text("Radio 2 Subtitle"),
-                                    onChanged: (val) {
-                                      // print("Radio Tile pressed $val");
-                                      setSelectedPanel(0);
-                                      orderBrokerProvider
-                                          .setSelectedRadioTile(val!);
-                                    },
-                                    activeColor: AppColor.goldenYellow,
+                return BlocListener<FlagSelectBloc, FlagSelectState>(
+                  listener: (context, flagselectstate) {
+                    if (flagselectstate is FlagSelectSuccess) {
+                      print("flagselectstate.origin.label!");
+                      print(flagselectstate.origin.label!);
+                      if (sourceselect) {
+                        setState(
+                          () {
+                            orderBrokerProvider
+                                .setSource(flagselectstate.origin);
+                            sourceControllers.text =
+                                flagselectstate.origin.label!;
+                          },
+                        );
+                      } else {
+                        setState(
+                          () {
+                            origins[_countselected] = flagselectstate.origin;
+                            originControllers[_countselected].text =
+                                flagselectstate.origin.label!;
+                          },
+                        );
+                        selectOrigin(flagselectstate.origin, _countselected);
+                        var originCount = 0;
+                        for (var i = 0; i < origins.length; i++) {
+                          if (origins[i] == flagselectstate.origin &&
+                              packageControllers[i].text ==
+                                  packageControllers[_countselected].text) {
+                            originCount++;
+                          }
+                        }
 
-                                    selected:
-                                        orderBrokerProvider.selectedRadioTile ==
-                                            "E",
-                                  ),
-                                )
-                              ],
-                            ),
-                            Visibility(
-                                visible: showtypeError,
-                                child: Text(
-                                    AppLocalizations.of(context)!.translate(
-                                        'select_operation_type_error'),
-                                    style: const TextStyle(color: Colors.red)))
-                          ]),
-                        ),
-                      ),
-                    ),
-                    Visibility(
-                      visible: orderBrokerProvider.selectedRadioTileError,
-                      child: Padding(
-                        padding: const EdgeInsets.only(
-                            top: 2.0, bottom: 8.0, right: 25.0, left: 25.0),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          children: [
-                            Text(
-                              AppLocalizations.of(context)!
-                                  .translate('select_operation_type_error'),
-                              style: const TextStyle(
-                                color: Colors.red,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-                    EnsureVisibleWhenFocused(
-                      focusNode: _stateCustomenode,
-                      child: Card(
-                        key: key2,
-                        margin: const EdgeInsets.symmetric(vertical: 7),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(10),
-                        ),
-                        child: Container(
-                          width: double.infinity,
-                          clipBehavior: Clip.antiAlias,
-                          decoration: BoxDecoration(
+                        if (originCount > 1) {
+                          setState(
+                            () {
+                              doubleoriginerrors[_countselected] = true;
+                            },
+                          );
+                        } else {
+                          setState(
+                            () {
+                              doubleoriginerrors[_countselected] = false;
+                            },
+                          );
+                        }
+                      }
+                    }
+                  },
+                  child: Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Column(children: [
+                      EnsureVisibleWhenFocused(
+                        focusNode: _orderTypenode,
+                        child: Card(
+                          key: key1,
+                          margin: const EdgeInsets.symmetric(vertical: 7),
+                          shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(10),
-                            gradient: selectedPanel == 1
-                                ? orderBrokerProvider.selectedStateError
-                                    ? LinearGradient(
-                                        colors: [
-                                            Colors.red[300]!,
-                                            Colors.white,
-                                            Colors.white,
-                                            Colors.white,
-                                            Colors.white,
-                                          ],
-                                        begin: Alignment.topCenter,
-                                        end: Alignment.bottomCenter)
-                                    : LinearGradient(
-                                        colors: [
-                                            AppColor.goldenYellow,
-                                            Colors.white,
-                                            Colors.white,
-                                            Colors.white,
-                                            Colors.white,
-                                          ],
-                                        begin: Alignment.topCenter,
-                                        end: Alignment.bottomCenter)
-                                : null,
                           ),
-                          padding: const EdgeInsets.all(8.0),
-                          child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                    AppLocalizations.of(context)!
-                                        .translate('costume_agency'),
-                                    style: TextStyle(
-                                      fontSize: 17,
-                                      fontWeight: FontWeight.bold,
-                                      color: AppColor.deepBlue,
-                                    )),
-                                const SizedBox(
-                                  height: 15,
-                                ),
-                                BlocBuilder<StateCustomeBloc,
-                                    StateCustomeState>(
-                                  builder: (context, state) {
-                                    if (state is StateCustomeLoadedSuccess) {
-                                      return Column(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                        children: [
-                                          DropdownButtonHideUnderline(
-                                            child: Focus(
-                                              focusNode: _statenode,
-                                              onFocusChange: (bool focus) {
-                                                if (focus) {
-                                                  setSelectedPanel(1);
-                                                }
-                                              },
-                                              child:
-                                                  DropdownButton2<StateCustome>(
-                                                isExpanded: true,
-                                                barrierLabel: AppLocalizations
-                                                        .of(context)!
-                                                    .translate('select_state'),
-                                                hint: Text(
-                                                  AppLocalizations.of(context)!
-                                                      .translate(
-                                                          'select_state'),
-                                                  style: TextStyle(
-                                                    fontSize: 18,
-                                                    color: Theme.of(context)
-                                                        .hintColor,
-                                                  ),
-                                                ),
-                                                items: state.states
-                                                    .map((StateCustome item) =>
-                                                        DropdownMenuItem<
-                                                            StateCustome>(
-                                                          value: item,
-                                                          child: Text(
-                                                            item.name!,
-                                                            style:
-                                                                const TextStyle(
-                                                              fontSize: 17,
-                                                            ),
-                                                          ),
-                                                        ))
-                                                    .toList(),
-                                                value: orderBrokerProvider
-                                                    .selectedStateCustome,
-                                                onChanged:
-                                                    (StateCustome? value) {
-                                                  BlocProvider.of<AgencyBloc>(
-                                                          context)
-                                                      .add(AgenciesLoadEvent(
-                                                          value!.id!));
-                                                  orderBrokerProvider
-                                                      .setSelectedStateCustome(
-                                                          value);
-                                                  orderBrokerProvider
-                                                      .setSelectedCustomeAgency(
-                                                          null);
-                                                },
-                                                buttonStyleData:
-                                                    ButtonStyleData(
-                                                  height: 50,
-                                                  width: double.infinity,
-
-                                                  padding: const EdgeInsets
-                                                      .symmetric(
-                                                    horizontal: 9.0,
-                                                  ),
-                                                  decoration: BoxDecoration(
-                                                    borderRadius:
-                                                        BorderRadius.circular(
-                                                            12),
-                                                    border: Border.all(
-                                                      color: Colors.black26,
-                                                    ),
-                                                    color: Colors.white,
-                                                  ),
-                                                  // elevation: 2,
-                                                ),
-                                                iconStyleData:
-                                                    const IconStyleData(
-                                                  icon: Icon(
-                                                    Icons
-                                                        .keyboard_arrow_down_sharp,
-                                                  ),
-                                                  iconSize: 20,
-                                                  iconEnabledColor:
-                                                      AppColor.AccentBlue,
-                                                  iconDisabledColor:
-                                                      Colors.grey,
-                                                ),
-                                                dropdownStyleData:
-                                                    DropdownStyleData(
-                                                  decoration: BoxDecoration(
-                                                    borderRadius:
-                                                        BorderRadius.circular(
-                                                            14),
-                                                    color: Colors.white,
-                                                  ),
-                                                  scrollbarTheme:
-                                                      ScrollbarThemeData(
-                                                    radius:
-                                                        const Radius.circular(
-                                                            40),
-                                                    thickness:
-                                                        MaterialStateProperty
-                                                            .all(6),
-                                                    thumbVisibility:
-                                                        MaterialStateProperty
-                                                            .all(true),
-                                                  ),
-                                                ),
-                                                menuItemStyleData:
-                                                    MenuItemStyleData(
-                                                  height: 40.h,
-                                                ),
-                                              ),
-                                            ),
-                                          ),
-                                          const SizedBox(
-                                            height: 24,
-                                          ),
-                                          BlocBuilder<AgencyBloc, AgencyState>(
-                                            builder: (context, state2) {
-                                              if (state2
-                                                  is AgencyLoadedSuccess) {
-                                                return DropdownButtonHideUnderline(
-                                                  child: Focus(
-                                                    focusNode: _statenode,
-                                                    onFocusChange:
-                                                        (bool focus) {
-                                                      if (focus) {
-                                                        setSelectedPanel(1);
-                                                      }
-                                                    },
-                                                    child: DropdownButton2<
-                                                        CustomeAgency>(
-                                                      isExpanded: true,
-                                                      hint: Text(
-                                                        AppLocalizations.of(
-                                                                context)!
-                                                            .translate(
-                                                                'select_agency'),
-                                                        style: TextStyle(
-                                                          fontSize: 18,
-                                                          color:
-                                                              Theme.of(context)
-                                                                  .hintColor,
-                                                        ),
-                                                      ),
-                                                      items: state2.agencies
-                                                          .map((CustomeAgency
-                                                                  item) =>
-                                                              DropdownMenuItem<
-                                                                  CustomeAgency>(
-                                                                value: item,
-                                                                child: SizedBox(
-                                                                  width: 200,
-                                                                  child: Text(
-                                                                    item.name!,
-                                                                    style:
-                                                                        const TextStyle(
-                                                                      fontSize:
-                                                                          17,
-                                                                    ),
-                                                                  ),
-                                                                ),
-                                                              ))
-                                                          .toList(),
-                                                      value: orderBrokerProvider
-                                                          .selectedCustomeAgency,
-                                                      onChanged: (CustomeAgency?
-                                                          value) {
-                                                        orderBrokerProvider
-                                                            .setSelectedCustomeAgency(
-                                                                value);
-                                                        orderBrokerProvider
-                                                            .setselectedStateError(
-                                                                false);
-                                                      },
-                                                      buttonStyleData:
-                                                          ButtonStyleData(
-                                                        height: 50,
-                                                        width: double.infinity,
-                                                        padding:
-                                                            const EdgeInsets
-                                                                .symmetric(
-                                                          horizontal: 9.0,
-                                                        ),
-                                                        decoration:
-                                                            BoxDecoration(
-                                                          borderRadius:
-                                                              BorderRadius
-                                                                  .circular(12),
-                                                          border: Border.all(
-                                                            color:
-                                                                Colors.black26,
-                                                          ),
-                                                          color: Colors.white,
-                                                        ),
-                                                        // elevation: 2,
-                                                      ),
-                                                      iconStyleData:
-                                                          const IconStyleData(
-                                                        icon: Icon(
-                                                          Icons
-                                                              .keyboard_arrow_down_sharp,
-                                                        ),
-                                                        iconSize: 20,
-                                                        iconEnabledColor:
-                                                            AppColor.AccentBlue,
-                                                        iconDisabledColor:
-                                                            Colors.grey,
-                                                      ),
-                                                      dropdownStyleData:
-                                                          DropdownStyleData(
-                                                        decoration:
-                                                            BoxDecoration(
-                                                          borderRadius:
-                                                              BorderRadius
-                                                                  .circular(14),
-                                                          color: Colors.white,
-                                                        ),
-                                                        scrollbarTheme:
-                                                            ScrollbarThemeData(
-                                                          radius: const Radius
-                                                              .circular(40),
-                                                          thickness:
-                                                              MaterialStateProperty
-                                                                  .all(6),
-                                                          thumbVisibility:
-                                                              MaterialStateProperty
-                                                                  .all(true),
-                                                        ),
-                                                      ),
-                                                      menuItemStyleData:
-                                                          const MenuItemStyleData(
-                                                        height: 40,
-                                                      ),
-                                                    ),
-                                                  ),
-                                                );
-                                              } else if (state2
-                                                  is AgencyLoadingProgress) {
-                                                return const Center(
-                                                  child:
-                                                      LinearProgressIndicator(),
-                                                );
-                                              } else if (state
-                                                  is AgencyLoadedFailed) {
-                                                return Center(
-                                                  child: GestureDetector(
-                                                    onTap: () {
-                                                      BlocProvider.of<
-                                                                  AgencyBloc>(
-                                                              context)
-                                                          .add(AgenciesLoadEvent(
-                                                              orderBrokerProvider
-                                                                  .selectedStateCustome!
-                                                                  .id!));
-                                                    },
-                                                    child: Row(
-                                                      mainAxisAlignment:
-                                                          MainAxisAlignment
-                                                              .center,
-                                                      children: [
-                                                        Text(
-                                                          AppLocalizations.of(
-                                                                  context)!
-                                                              .translate(
-                                                                  'list_error'),
-                                                          style:
-                                                              const TextStyle(
-                                                                  color: Colors
-                                                                      .red),
-                                                        ),
-                                                        const Icon(
-                                                          Icons.refresh,
-                                                          color: Colors.grey,
-                                                        )
-                                                      ],
-                                                    ),
-                                                  ),
-                                                );
-                                              } else {
-                                                return Container();
-                                              }
-                                            },
-                                          ),
-                                        ],
-                                      );
-                                    } else if (state
-                                        is StateCustomeLoadedFailed) {
-                                      return Center(
-                                        child: GestureDetector(
-                                          onTap: () {
-                                            BlocProvider.of<StateCustomeBloc>(
-                                                    context)
-                                                .add(StateCustomeLoadEvent());
-                                          },
-                                          child: Row(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.center,
-                                            children: [
-                                              Text(
-                                                AppLocalizations.of(context)!
-                                                    .translate('list_error'),
-                                                style: const TextStyle(
-                                                    color: Colors.red),
-                                              ),
-                                              const Icon(
-                                                Icons.refresh,
-                                                color: Colors.grey,
-                                              )
+                          child: Container(
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(10),
+                              gradient: selectedPanel == 0
+                                  ? orderBrokerProvider.selectedRadioTileError
+                                      ? LinearGradient(
+                                          colors: [
+                                              Colors.red[300]!,
+                                              Colors.white,
+                                              Colors.white,
+                                              Colors.white,
                                             ],
+                                          begin: Alignment.topCenter,
+                                          end: Alignment.bottomCenter)
+                                      : LinearGradient(
+                                          colors: [
+                                              AppColor.goldenYellow,
+                                              Colors.white,
+                                              Colors.white,
+                                              Colors.white,
+                                            ],
+                                          begin: Alignment.topCenter,
+                                          end: Alignment.bottomCenter)
+                                  : null,
+                            ),
+                            padding: const EdgeInsets.all(8.0),
+                            child: Column(children: [
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                children: [
+                                  Text(
+                                      AppLocalizations.of(context)!
+                                          .translate('select_operation_type'),
+                                      style: TextStyle(
+                                        fontSize: 17,
+                                        fontWeight: FontWeight.bold,
+                                        color: AppColor.deepBlue,
+                                      )),
+                                ],
+                              ),
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  SizedBox(
+                                    width:
+                                        MediaQuery.of(context).size.width * .38,
+                                    child: RadioListTile(
+                                      value: "I",
+                                      groupValue:
+                                          orderBrokerProvider.selectedRadioTile,
+                                      title: FittedBox(
+                                        fit: BoxFit.scaleDown,
+                                        child: Text(
+                                          AppLocalizations.of(context)!
+                                              .translate('import'),
+                                          overflow: TextOverflow.fade,
+                                          style: const TextStyle(
+                                            fontSize: 16,
                                           ),
                                         ),
-                                      );
-                                    } else {
-                                      return const Center(
-                                        child: LinearProgressIndicator(),
-                                      );
-                                    }
-                                  },
-                                ),
-                                const SizedBox(
-                                  height: 7,
-                                ),
-                              ]),
-                        ),
-                      ),
-                    ),
-                    Visibility(
-                      visible: orderBrokerProvider.selectedStateError,
-                      child: Padding(
-                        padding: const EdgeInsets.only(
-                            top: 2.0, bottom: 8.0, right: 25.0, left: 25.0),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          children: [
-                            Text(
-                              AppLocalizations.of(context)!
-                                  .translate('select_agency_error'),
-                              style: const TextStyle(
-                                color: Colors.red,
+                                      ),
+                                      // subtitle: Text("Radio 1 Subtitle"),
+                                      onChanged: (val) {
+                                        // print("Radio Tile pressed $val");
+                                        setSelectedPanel(0);
+                                        orderBrokerProvider
+                                            .setSelectedRadioTile(val!);
+                                      },
+                                      activeColor: AppColor.goldenYellow,
+                                      selected: orderBrokerProvider
+                                              .selectedRadioTile ==
+                                          "I",
+                                    ),
+                                  ),
+                                  SizedBox(
+                                    width:
+                                        MediaQuery.of(context).size.width * .38,
+                                    child: RadioListTile(
+                                      value: "E",
+                                      groupValue:
+                                          orderBrokerProvider.selectedRadioTile,
+                                      title: FittedBox(
+                                        fit: BoxFit.scaleDown,
+                                        child: Text(
+                                          AppLocalizations.of(context)!
+                                              .translate('export'),
+                                          overflow: TextOverflow.fade,
+                                          style: const TextStyle(
+                                            fontSize: 16,
+                                          ),
+                                        ),
+                                      ),
+                                      // subtitle: Text("Radio 2 Subtitle"),
+                                      onChanged: (val) {
+                                        // print("Radio Tile pressed $val");
+                                        setSelectedPanel(0);
+                                        orderBrokerProvider
+                                            .setSelectedRadioTile(val!);
+                                      },
+                                      activeColor: AppColor.goldenYellow,
+
+                                      selected: orderBrokerProvider
+                                              .selectedRadioTile ==
+                                          "E",
+                                    ),
+                                  )
+                                ],
                               ),
-                            ),
-                          ],
+                              Visibility(
+                                  visible: showtypeError,
+                                  child: Text(
+                                      AppLocalizations.of(context)!.translate(
+                                          'select_operation_type_error'),
+                                      style:
+                                          const TextStyle(color: Colors.red)))
+                            ]),
+                          ),
                         ),
                       ),
-                    ),
-                    Card(
-                      key: key3,
-                      margin: const EdgeInsets.symmetric(vertical: 7),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(10),
-                      ),
-                      child: Container(
-                        // margin: const EdgeInsets.symmetric(vertical: 7),
-                        clipBehavior: Clip.antiAlias,
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(10),
-                          gradient: selectedPanel == 2
-                              ? calculatorError
-                                  ? LinearGradient(
-                                      colors: [
-                                          Colors.red[300]!,
-                                          Colors.white,
-                                          Colors.white,
-                                          Colors.white,
-                                          Colors.white,
-                                          Colors.white,
-                                          Colors.white,
-                                          Colors.white,
-                                          Colors.white,
-                                          Colors.white,
-                                        ],
-                                      begin: Alignment.topCenter,
-                                      end: Alignment.bottomCenter)
-                                  : LinearGradient(
-                                      colors: [
-                                          AppColor.goldenYellow,
-                                          Colors.white,
-                                          Colors.white,
-                                          Colors.white,
-                                          Colors.white,
-                                          Colors.white,
-                                          Colors.white,
-                                          Colors.white,
-                                          Colors.white,
-                                          Colors.white,
-                                        ],
-                                      begin: Alignment.topCenter,
-                                      end: Alignment.bottomCenter)
-                              : null,
-                        ),
+                      Visibility(
+                        visible: orderBrokerProvider.selectedRadioTileError,
                         child: Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: Form(
-                            key: _ordercalformkey,
+                          padding: const EdgeInsets.only(
+                              top: 2.0, bottom: 8.0, right: 25.0, left: 25.0),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            children: [
+                              Text(
+                                AppLocalizations.of(context)!
+                                    .translate('select_operation_type_error'),
+                                style: const TextStyle(
+                                  color: Colors.red,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                      EnsureVisibleWhenFocused(
+                        focusNode: _stateCustomenode,
+                        child: Card(
+                          key: key2,
+                          margin: const EdgeInsets.symmetric(vertical: 7),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+                          child: Container(
+                            width: double.infinity,
+                            clipBehavior: Clip.antiAlias,
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(10),
+                              gradient: selectedPanel == 1
+                                  ? orderBrokerProvider.selectedStateError
+                                      ? LinearGradient(
+                                          colors: [
+                                              Colors.red[300]!,
+                                              Colors.white,
+                                              Colors.white,
+                                              Colors.white,
+                                              Colors.white,
+                                            ],
+                                          begin: Alignment.topCenter,
+                                          end: Alignment.bottomCenter)
+                                      : LinearGradient(
+                                          colors: [
+                                              AppColor.goldenYellow,
+                                              Colors.white,
+                                              Colors.white,
+                                              Colors.white,
+                                              Colors.white,
+                                            ],
+                                          begin: Alignment.topCenter,
+                                          end: Alignment.bottomCenter)
+                                  : null,
+                            ),
+                            padding: const EdgeInsets.all(8.0),
                             child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
-                                  ListView.builder(
-                                    shrinkWrap: true,
-                                    physics:
-                                        const NeverScrollableScrollPhysics(),
-                                    itemCount: _count,
-                                    itemBuilder: (context, index) {
-                                      return Stack(
-                                        children: [
-                                          Card(
-                                            margin: const EdgeInsets.symmetric(
-                                              vertical: 5,
-                                              horizontal: 5,
-                                            ),
-                                            clipBehavior: Clip.antiAlias,
-                                            shape: RoundedRectangleBorder(
-                                                borderRadius: BorderRadius.all(
-                                                  Radius.circular(15),
-                                                ),
-                                                side: BorderSide(
-                                                  color:
-                                                      doubleoriginerrors[index]
-                                                          ? Colors.red
-                                                          : Colors.white,
-                                                  width: 1,
-                                                )),
-                                            elevation: 1,
-                                            color: Colors.white,
-                                            child: Padding(
-                                              padding:
-                                                  const EdgeInsets.symmetric(
-                                                vertical: 4.0,
-                                                horizontal: 10.0,
-                                              ),
-                                              child: Column(
-                                                mainAxisSize: MainAxisSize.min,
-                                                crossAxisAlignment:
-                                                    CrossAxisAlignment.start,
-                                                children: [
-                                                  const SizedBox(
-                                                    height: 30,
+                                  Text(
+                                      AppLocalizations.of(context)!
+                                          .translate('costume_agency'),
+                                      style: TextStyle(
+                                        fontSize: 17,
+                                        fontWeight: FontWeight.bold,
+                                        color: AppColor.deepBlue,
+                                      )),
+                                  const SizedBox(
+                                    height: 15,
+                                  ),
+                                  BlocBuilder<StateCustomeBloc,
+                                      StateCustomeState>(
+                                    builder: (context, state) {
+                                      if (state is StateCustomeLoadedSuccess) {
+                                        return Column(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: [
+                                            DropdownButtonHideUnderline(
+                                              child: Focus(
+                                                focusNode: _statenode,
+                                                onFocusChange: (bool focus) {
+                                                  if (focus) {
+                                                    setSelectedPanel(1);
+                                                  }
+                                                },
+                                                child: DropdownButton2<
+                                                    StateCustome?>(
+                                                  isExpanded: true,
+                                                  barrierLabel:
+                                                      AppLocalizations.of(
+                                                              context)!
+                                                          .translate(
+                                                              'select_state'),
+                                                  hint: Text(
+                                                    AppLocalizations.of(
+                                                            context)!
+                                                        .translate(
+                                                            'select_state'),
+                                                    style: TextStyle(
+                                                      fontSize: 18,
+                                                      color: Theme.of(context)
+                                                          .hintColor,
+                                                    ),
                                                   ),
-                                                  Row(
-                                                    mainAxisAlignment:
-                                                        MainAxisAlignment
-                                                            .spaceBetween,
-                                                    children: [
-                                                      Focus(
-                                                        // focusNode: _ordernode,
-                                                        child: Text(
+                                                  items: state.states
+                                                      .map(
+                                                          (StateCustome item) =>
+                                                              DropdownMenuItem<
+                                                                  StateCustome>(
+                                                                value: item,
+                                                                child: Text(
+                                                                  item.name!,
+                                                                  style:
+                                                                      const TextStyle(
+                                                                    fontSize:
+                                                                        17,
+                                                                  ),
+                                                                ),
+                                                              ))
+                                                      .toList(),
+                                                  value: orderBrokerProvider
+                                                      .selectedStateCustome,
+                                                  onChanged:
+                                                      (StateCustome? value) {
+                                                    BlocProvider.of<AgencyBloc>(
+                                                            context)
+                                                        .add(AgenciesLoadEvent(
+                                                            value!.id!));
+                                                    orderBrokerProvider
+                                                        .setSelectedStateCustome(
+                                                            value);
+                                                    orderBrokerProvider
+                                                        .setSelectedCustomeAgency(
+                                                            null);
+                                                  },
+                                                  buttonStyleData:
+                                                      ButtonStyleData(
+                                                    height: 50,
+                                                    width: double.infinity,
+
+                                                    padding: const EdgeInsets
+                                                        .symmetric(
+                                                      horizontal: 9.0,
+                                                    ),
+                                                    decoration: BoxDecoration(
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                              12),
+                                                      border: Border.all(
+                                                        color: Colors.black26,
+                                                      ),
+                                                      color: Colors.white,
+                                                    ),
+                                                    // elevation: 2,
+                                                  ),
+                                                  iconStyleData:
+                                                      const IconStyleData(
+                                                    icon: Icon(
+                                                      Icons
+                                                          .keyboard_arrow_down_sharp,
+                                                    ),
+                                                    iconSize: 20,
+                                                    iconEnabledColor:
+                                                        AppColor.AccentBlue,
+                                                    iconDisabledColor:
+                                                        Colors.grey,
+                                                  ),
+                                                  dropdownStyleData:
+                                                      DropdownStyleData(
+                                                    decoration: BoxDecoration(
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                              14),
+                                                      color: Colors.white,
+                                                    ),
+                                                    scrollbarTheme:
+                                                        ScrollbarThemeData(
+                                                      radius:
+                                                          const Radius.circular(
+                                                              40),
+                                                      thickness:
+                                                          MaterialStateProperty
+                                                              .all(6),
+                                                      thumbVisibility:
+                                                          MaterialStateProperty
+                                                              .all(true),
+                                                    ),
+                                                  ),
+                                                  menuItemStyleData:
+                                                      MenuItemStyleData(
+                                                    height: 40.h,
+                                                  ),
+                                                ),
+                                              ),
+                                            ),
+                                            const SizedBox(
+                                              height: 24,
+                                            ),
+                                            BlocBuilder<AgencyBloc,
+                                                AgencyState>(
+                                              builder: (context, state2) {
+                                                if (state2
+                                                    is AgencyLoadedSuccess) {
+                                                  return DropdownButtonHideUnderline(
+                                                    child: Focus(
+                                                      focusNode: _statenode,
+                                                      onFocusChange:
+                                                          (bool focus) {
+                                                        if (focus) {
+                                                          setSelectedPanel(1);
+                                                        }
+                                                      },
+                                                      child: DropdownButton2<
+                                                          CustomeAgency>(
+                                                        isExpanded: true,
+                                                        hint: Text(
                                                           AppLocalizations.of(
                                                                   context)!
                                                               .translate(
-                                                                  'goods_details'),
+                                                                  'select_agency'),
                                                           style: TextStyle(
-                                                            fontSize: 19,
-                                                            fontWeight:
-                                                                FontWeight.bold,
-                                                            color: AppColor
-                                                                .deepBlue,
-                                                          ),
-                                                        ),
-                                                      ),
-                                                    ],
-                                                  ),
-                                                  Column(
-                                                    crossAxisAlignment:
-                                                        CrossAxisAlignment.end,
-                                                    children: [
-                                                      SizedBox(
-                                                        height: 5,
-                                                      ),
-                                                      // GestureDetector(
-                                                      //   onTap: () {
-                                                      //     BlocProvider.of<
-                                                      //                 CalculatorPanelBloc>(
-                                                      //             context)
-                                                      //         .add(
-                                                      //             TariffPanelOpenEvent());
-
-                                                      //     FocusManager.instance
-                                                      //         .primaryFocus
-                                                      //         ?.unfocus();
-                                                      //     BlocProvider.of<
-                                                      //                 BottomNavBarCubit>(
-                                                      //             context)
-                                                      //         .emitShow();
-                                                      //     _countselected =
-                                                      //         index;
-                                                      //   },
-                                                      //   child: SizedBox(
-                                                      //     height: 40.h,
-                                                      //     child: Row(
-                                                      //       mainAxisAlignment:
-                                                      //           MainAxisAlignment
-                                                      //               .end,
-                                                      //       children: [
-                                                      //         SizedBox(
-                                                      //           width: 25.w,
-                                                      //           height: 25.h,
-                                                      //           child:
-                                                      //               SvgPicture
-                                                      //                   .asset(
-                                                      //             "assets/icons/tarrif_btn.svg",
-                                                      //           ),
-                                                      //         ),
-                                                      //         const SizedBox(
-                                                      //           width: 3,
-                                                      //         ),
-                                                      //         Text(
-                                                      //           AppLocalizations.of(
-                                                      //                   context)!
-                                                      //               .translate(
-                                                      //                   'tariff_browser'),
-                                                      //           textAlign:
-                                                      //               TextAlign
-                                                      //                   .center,
-                                                      //           style:
-                                                      //               TextStyle(
-                                                      //             color: AppColor
-                                                      //                 .lightBlue,
-                                                      //             fontSize:
-                                                      //                 15.sp,
-                                                      //             fontWeight:
-                                                      //                 FontWeight
-                                                      //                     .bold,
-                                                      //           ),
-                                                      //         ),
-                                                      //       ],
-                                                      //     ),
-                                                      //   ),
-                                                      // ),
-                                                      GestureDetector(
-                                                        onTap: () {
-                                                          BlocProvider.of<
-                                                                      CalculatorPanelBloc>(
-                                                                  context)
-                                                              .add(
-                                                                  TariffPanelOpenEvent());
-                                                          FocusManager.instance
-                                                              .primaryFocus
-                                                              ?.unfocus();
-                                                          BlocProvider.of<
-                                                                      BottomNavBarCubit>(
-                                                                  context)
-                                                              .emitShow();
-                                                          _countselected =
-                                                              index;
-                                                        },
-                                                        child: TypeAheadField(
-                                                          textFieldConfiguration:
-                                                              TextFieldConfiguration(
-                                                            // autofocus: true,
-                                                            keyboardType:
-                                                                TextInputType
-                                                                    .multiline,
-                                                            maxLines: null,
-                                                            enabled: false,
-                                                            controller:
-                                                                packageControllers[
-                                                                    index],
-
-                                                            scrollPadding: EdgeInsets.only(
-                                                                bottom: MediaQuery.of(
-                                                                            context)
-                                                                        .viewInsets
-                                                                        .bottom +
-                                                                    150),
-                                                            style: TextStyle(
-                                                                fontSize: 18,
-                                                                color:
-                                                                    Colors.grey[
-                                                                        600]!),
-                                                            onTap: () {
-                                                              setSelectedPanel(
-                                                                  2);
-                                                            },
-                                                            decoration:
-                                                                InputDecoration(
-                                                              labelText: AppLocalizations
-                                                                      .of(
-                                                                          context)!
-                                                                  .translate(
-                                                                      'goods_name'),
-                                                              hintText: AppLocalizations
-                                                                      .of(
-                                                                          context)!
-                                                                  .translate(
-                                                                      'goods_name'),
-                                                              contentPadding:
-                                                                  const EdgeInsets
-                                                                      .symmetric(
-                                                                horizontal: 9.0,
-                                                                vertical: 11.0,
-                                                              ),
-                                                              // disabledBorder:
-                                                              //     OutlineInputBorder(
-                                                              //   borderRadius:
-                                                              //       BorderRadius
-                                                              //           .circular(
-                                                              //               12),
-                                                              //   borderSide:
-                                                              //       BorderSide(
-                                                              //     color: AppColor
-                                                              //         .deepBlue,
-                                                              //   ),
-                                                              // ),
-
-                                                              suffixIcon: packageControllers[
-                                                                              index]
-                                                                          .text ==
-                                                                      AppLocalizations.of(
-                                                                              context)!
-                                                                          .translate(
-                                                                              'goods_name')
-                                                                  ? SizedBox(
-                                                                      width:
-                                                                          130.w,
-                                                                      child:
-                                                                          Row(
-                                                                        mainAxisAlignment:
-                                                                            MainAxisAlignment.end,
-                                                                        children: [
-                                                                          SizedBox(
-                                                                            width:
-                                                                                21.w,
-                                                                            height:
-                                                                                21.h,
-                                                                            child:
-                                                                                SvgPicture.asset(
-                                                                              "assets/icons/tarrif_btn.svg",
-                                                                            ),
-                                                                          ),
-                                                                          const SizedBox(
-                                                                            width:
-                                                                                3,
-                                                                          ),
-                                                                          FittedBox(
-                                                                            fit:
-                                                                                BoxFit.scaleDown,
-                                                                            child:
-                                                                                Text(
-                                                                              AppLocalizations.of(context)!.translate('tariff_browser'),
-                                                                              textAlign: TextAlign.center,
-                                                                              style: TextStyle(
-                                                                                color: AppColor.lightBlue,
-                                                                                fontSize: 15.sp,
-                                                                                fontWeight: FontWeight.bold,
-                                                                              ),
-                                                                            ),
-                                                                          ),
-                                                                          const SizedBox(
-                                                                            width:
-                                                                                3,
-                                                                          ),
-                                                                        ],
-                                                                      ),
-                                                                    )
-                                                                  : SizedBox
-                                                                      .shrink(),
-                                                            ),
-                                                            onSubmitted:
-                                                                (value) {
-                                                              BlocProvider.of<
-                                                                          StopScrollCubit>(
-                                                                      context)
-                                                                  .emitEnable();
-                                                              FocusManager
-                                                                  .instance
-                                                                  .primaryFocus
-                                                                  ?.unfocus();
-                                                              BlocProvider.of<
-                                                                          BottomNavBarCubit>(
-                                                                      context)
-                                                                  .emitShow();
-                                                            },
-                                                          ),
-                                                          loadingBuilder:
-                                                              (context) {
-                                                            return Container(
-                                                              color:
-                                                                  Colors.white,
-                                                              child:
-                                                                  const Center(
-                                                                child:
-                                                                    CircularProgressIndicator(),
-                                                              ),
-                                                            );
-                                                          },
-                                                          errorBuilder:
-                                                              (context, error) {
-                                                            return Container(
-                                                              color:
-                                                                  Colors.white,
-                                                            );
-                                                          },
-                                                          noItemsFoundBuilder:
-                                                              (value) {
-                                                            var localizedMessage =
-                                                                AppLocalizations.of(
-                                                                        context)!
-                                                                    .translate(
-                                                                        'no_result_found');
-                                                            return Container(
-                                                              width: double
-                                                                  .infinity,
-                                                              color:
-                                                                  Colors.white,
-                                                              child: Center(
-                                                                child: Text(
-                                                                  localizedMessage,
-                                                                  style: TextStyle(
-                                                                      fontSize:
-                                                                          18.sp),
-                                                                ),
-                                                              ),
-                                                            );
-                                                          },
-                                                          suggestionsCallback:
-                                                              (pattern) async {
-                                                            return [];
-                                                          },
-                                                          itemBuilder: (context,
-                                                              suggestion) {
-                                                            return Container();
-                                                          },
-                                                          onSuggestionSelected:
-                                                              (suggestion) {},
-                                                        ),
-                                                      ),
-                                                    ],
-                                                  ),
-                                                  const SizedBox(
-                                                    height: 14,
-                                                  ),
-                                                  Visibility(
-                                                    visible:
-                                                        allowexports[index],
-                                                    child: Text(
-                                                      AppLocalizations.of(
-                                                              context)!
-                                                          .translate(
-                                                              'fee_import_banned'),
-                                                      style: const TextStyle(
-                                                        color: Colors.red,
-                                                        fontSize: 13,
-                                                      ),
-                                                    ),
-                                                  ),
-                                                  Visibility(
-                                                    visible:
-                                                        allowexports[index],
-                                                    child: const SizedBox(
-                                                      height: 14,
-                                                    ),
-                                                  ),
-                                                  Visibility(
-                                                    visible: feeerrors[index],
-                                                    child: Text(
-                                                      AppLocalizations.of(
-                                                              context)!
-                                                          .translate(
-                                                              'select_fee_error'),
-                                                      style: const TextStyle(
-                                                        color: Colors.red,
-                                                        fontSize: 13,
-                                                      ),
-                                                    ),
-                                                  ),
-                                                  Visibility(
-                                                    visible: feeerrors[index],
-                                                    child: const SizedBox(
-                                                      height: 14,
-                                                    ),
-                                                  ),
-                                                  Visibility(
-                                                    visible: isdropdownVisibles[
-                                                        index],
-                                                    child:
-                                                        DropdownButtonHideUnderline(
-                                                      child: DropdownButton2<
-                                                          Extras>(
-                                                        isExpanded: true,
-                                                        barrierLabel:
-                                                            placeholders[index],
-                                                        hint: Text(
-                                                          placeholders[index],
-                                                          style: TextStyle(
-                                                            fontSize: 14,
+                                                            fontSize: 18,
                                                             color: Theme.of(
                                                                     context)
                                                                 .hintColor,
                                                           ),
                                                         ),
-                                                        items: extraslist[index]
-                                                            .map((Extras
+                                                        items: state2.agencies
+                                                            .map((CustomeAgency
                                                                     item) =>
                                                                 DropdownMenuItem<
-                                                                    Extras>(
+                                                                    CustomeAgency>(
                                                                   value: item,
-                                                                  child: Text(
-                                                                    item.label!,
-                                                                    style:
-                                                                        const TextStyle(
-                                                                      fontSize:
-                                                                          14,
+                                                                  child:
+                                                                      SizedBox(
+                                                                    width: 200,
+                                                                    child: Text(
+                                                                      item.name!,
+                                                                      style:
+                                                                          const TextStyle(
+                                                                        fontSize:
+                                                                            17,
+                                                                      ),
                                                                     ),
                                                                   ),
                                                                 ))
                                                             .toList(),
-                                                        value:
-                                                            extraselectedValues[
-                                                                index],
+                                                        value: orderBrokerProvider
+                                                            .selectedCustomeAgency,
                                                         onChanged:
-                                                            (Extras? value) {
-                                                          if (value!
-                                                              .countryGroup!
-                                                              .isEmpty) {
-                                                            if (value.price! >
-                                                                0) {
-                                                              basePriceValues[
-                                                                      index] =
-                                                                  value.price!;
-                                                              valueEnabled[
-                                                                      index] =
-                                                                  false;
-                                                              setState(() {
-                                                                valueControllers[
-                                                                        index]
-                                                                    .text = basePriceValues[
-                                                                        index]
-                                                                    .toString();
-                                                              });
-                                                            } else {
-                                                              basePriceValues[
-                                                                  index] = 0.0;
-                                                              valueControllers[
-                                                                      index]
-                                                                  .text = "0.0";
-                                                              valueEnabled[0] =
-                                                                  true;
-                                                              setState(
-                                                                () {
-                                                                  valueControllers[
-                                                                          index]
-                                                                      .text = "0.0";
-                                                                },
-                                                              );
-                                                            }
-                                                            evaluatePrice(
-                                                                index);
-                                                          } else {
-                                                            if (value.price! >
-                                                                0) {
-                                                              basePriceValues[
-                                                                      index] =
-                                                                  value.price!;
-                                                              valueEnabled[
-                                                                      index] =
-                                                                  false;
-
-                                                              setState(
-                                                                () {
-                                                                  valueControllers[
-                                                                              index]
-                                                                          .text =
-                                                                      value
-                                                                          .price!
-                                                                          .toString();
-                                                                },
-                                                              );
-                                                            } else {
-                                                              basePriceValues[
-                                                                  index] = 0.0;
-                                                              valueEnabled[
-                                                                  index] = true;
-                                                              setState(
-                                                                () {
-                                                                  valueControllers[
-                                                                          index]
-                                                                      .text = "0.0";
-                                                                },
-                                                              );
-                                                            }
-                                                            evaluatePrice(
-                                                                index);
-                                                          }
-                                                          extraselectedValues[
-                                                              index] = value;
+                                                            (CustomeAgency?
+                                                                value) {
+                                                          orderBrokerProvider
+                                                              .setSelectedCustomeAgency(
+                                                                  value);
+                                                          orderBrokerProvider
+                                                              .setselectedStateError(
+                                                                  false);
                                                         },
                                                         buttonStyleData:
                                                             ButtonStyleData(
                                                           height: 50,
                                                           width:
                                                               double.infinity,
-
                                                           padding:
                                                               const EdgeInsets
                                                                   .symmetric(
@@ -1833,967 +1180,1793 @@ class _StepperMultiOrderBrokerScreenState
                                                           ),
                                                         ),
                                                         menuItemStyleData:
-                                                            MenuItemStyleData(
-                                                          height: 50.h,
+                                                            const MenuItemStyleData(
+                                                          height: 40,
                                                         ),
                                                       ),
                                                     ),
-                                                  ),
-                                                  Visibility(
-                                                    visible: isdropdownVisibles[
-                                                        index],
-                                                    child: const SizedBox(
-                                                      height: 24,
+                                                  );
+                                                } else if (state2
+                                                    is AgencyLoadingProgress) {
+                                                  return const Center(
+                                                    child:
+                                                        LinearProgressIndicator(),
+                                                  );
+                                                } else if (state
+                                                    is AgencyLoadedFailed) {
+                                                  return Center(
+                                                    child: GestureDetector(
+                                                      onTap: () {
+                                                        BlocProvider.of<
+                                                                    AgencyBloc>(
+                                                                context)
+                                                            .add(AgenciesLoadEvent(
+                                                                orderBrokerProvider
+                                                                    .selectedStateCustome!
+                                                                    .id!));
+                                                      },
+                                                      child: Row(
+                                                        mainAxisAlignment:
+                                                            MainAxisAlignment
+                                                                .center,
+                                                        children: [
+                                                          Text(
+                                                            AppLocalizations.of(
+                                                                    context)!
+                                                                .translate(
+                                                                    'list_error'),
+                                                            style:
+                                                                const TextStyle(
+                                                                    color: Colors
+                                                                        .red),
+                                                          ),
+                                                          const Icon(
+                                                            Icons.refresh,
+                                                            color: Colors.grey,
+                                                          )
+                                                        ],
+                                                      ),
                                                     ),
+                                                  );
+                                                } else {
+                                                  return Container();
+                                                }
+                                              },
+                                            ),
+                                          ],
+                                        );
+                                      } else if (state
+                                          is StateCustomeLoadedFailed) {
+                                        return Center(
+                                          child: GestureDetector(
+                                            onTap: () {
+                                              BlocProvider.of<StateCustomeBloc>(
+                                                      context)
+                                                  .add(StateCustomeLoadEvent());
+                                            },
+                                            child: Row(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.center,
+                                              children: [
+                                                Text(
+                                                  AppLocalizations.of(context)!
+                                                      .translate('list_error'),
+                                                  style: const TextStyle(
+                                                      color: Colors.red),
+                                                ),
+                                                const Icon(
+                                                  Icons.refresh,
+                                                  color: Colors.grey,
+                                                )
+                                              ],
+                                            ),
+                                          ),
+                                        );
+                                      } else {
+                                        return const Center(
+                                          child: LinearProgressIndicator(),
+                                        );
+                                      }
+                                    },
+                                  ),
+                                  const SizedBox(
+                                    height: 7,
+                                  ),
+                                ]),
+                          ),
+                        ),
+                      ),
+                      Visibility(
+                        visible: orderBrokerProvider.selectedStateError,
+                        child: Padding(
+                          padding: const EdgeInsets.only(
+                              top: 2.0, bottom: 8.0, right: 25.0, left: 25.0),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            children: [
+                              Text(
+                                AppLocalizations.of(context)!
+                                    .translate('select_agency_error'),
+                                style: const TextStyle(
+                                  color: Colors.red,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                      Card(
+                        key: key3,
+                        margin: const EdgeInsets.symmetric(vertical: 7),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                        child: Container(
+                          // margin: const EdgeInsets.symmetric(vertical: 7),
+                          clipBehavior: Clip.antiAlias,
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(10),
+                            gradient: selectedPanel == 2
+                                ? calculatorError
+                                    ? LinearGradient(
+                                        colors: [
+                                            Colors.red[300]!,
+                                            Colors.white,
+                                            Colors.white,
+                                            Colors.white,
+                                            Colors.white,
+                                            Colors.white,
+                                            Colors.white,
+                                            Colors.white,
+                                            Colors.white,
+                                            Colors.white,
+                                          ],
+                                        begin: Alignment.topCenter,
+                                        end: Alignment.bottomCenter)
+                                    : LinearGradient(
+                                        colors: [
+                                            AppColor.goldenYellow,
+                                            Colors.white,
+                                            Colors.white,
+                                            Colors.white,
+                                            Colors.white,
+                                            Colors.white,
+                                            Colors.white,
+                                            Colors.white,
+                                            Colors.white,
+                                            Colors.white,
+                                          ],
+                                        begin: Alignment.topCenter,
+                                        end: Alignment.bottomCenter)
+                                : null,
+                          ),
+                          child: Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Form(
+                              key: _ordercalformkey,
+                              child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    ListView.builder(
+                                      shrinkWrap: true,
+                                      physics:
+                                          const NeverScrollableScrollPhysics(),
+                                      itemCount: _count,
+                                      itemBuilder: (context, index) {
+                                        return Stack(
+                                          children: [
+                                            Card(
+                                              margin:
+                                                  const EdgeInsets.symmetric(
+                                                vertical: 5,
+                                                horizontal: 5,
+                                              ),
+                                              clipBehavior: Clip.antiAlias,
+                                              shape: RoundedRectangleBorder(
+                                                  borderRadius:
+                                                      BorderRadius.all(
+                                                    Radius.circular(15),
                                                   ),
-                                                  Wrap(
-                                                    children: [
-                                                      Visibility(
-                                                        visible: isfeeequal001[
-                                                            index],
-                                                        child: SizedBox(
-                                                          width: MediaQuery.of(
-                                                                      context)
-                                                                  .size
-                                                                  .width *
-                                                              .4,
-                                                          child:
-                                                              CheckboxListTile(
-                                                                  value:
-                                                                      rawMaterialValues[
-                                                                          index],
-                                                                  contentPadding:
-                                                                      EdgeInsets
-                                                                          .zero,
-                                                                  controlAffinity:
-                                                                      ListTileControlAffinity
-                                                                          .leading,
-                                                                  title:
-                                                                      FittedBox(
-                                                                    fit: BoxFit
-                                                                        .scaleDown,
-                                                                    child: Text(AppLocalizations.of(
-                                                                            context)!
-                                                                        .translate(
-                                                                            'raw_material')),
-                                                                  ),
-                                                                  onChanged:
-                                                                      (value) {
-                                                                    rawMaterialValues[
-                                                                            index] =
-                                                                        value!;
-                                                                    evaluatePrice(
-                                                                        index);
-                                                                  }),
-                                                        ),
-                                                      ),
-                                                      Visibility(
-                                                        visible: isfeeequal001[
-                                                            index],
-                                                        child: SizedBox(
-                                                          width: MediaQuery.of(
-                                                                      context)
-                                                                  .size
-                                                                  .width *
-                                                              .4,
-                                                          child:
-                                                              CheckboxListTile(
-                                                                  value:
-                                                                      industrialValues[
-                                                                          index],
-                                                                  contentPadding:
-                                                                      EdgeInsets
-                                                                          .zero,
-                                                                  controlAffinity:
-                                                                      ListTileControlAffinity
-                                                                          .leading,
-                                                                  title:
-                                                                      FittedBox(
-                                                                    fit: BoxFit
-                                                                        .scaleDown,
-                                                                    child: Text(AppLocalizations.of(
-                                                                            context)!
-                                                                        .translate(
-                                                                            'industrial')),
-                                                                  ),
-                                                                  onChanged:
-                                                                      (value) {
-                                                                    industrialValues[
-                                                                            index] =
-                                                                        value!;
-                                                                    evaluatePrice(
-                                                                        index);
-                                                                  }),
-                                                        ),
-                                                      ),
-                                                      Visibility(
-                                                        visible:
-                                                            isBrands[index],
-                                                        child: SizedBox(
-                                                          width: MediaQuery.of(
-                                                                      context)
-                                                                  .size
-                                                                  .width *
-                                                              .4,
-                                                          child:
-                                                              CheckboxListTile(
-                                                                  value:
-                                                                      brandValus[
-                                                                          index],
-                                                                  contentPadding:
-                                                                      EdgeInsets
-                                                                          .zero,
-                                                                  controlAffinity:
-                                                                      ListTileControlAffinity
-                                                                          .leading,
-                                                                  title:
-                                                                      FittedBox(
-                                                                    fit: BoxFit
-                                                                        .scaleDown,
-                                                                    child: Text(AppLocalizations.of(
-                                                                            context)!
-                                                                        .translate(
-                                                                            'isBrand')),
-                                                                  ),
-                                                                  onChanged:
-                                                                      (value) {
-                                                                    calculateExtrasPrice(
-                                                                        1.5,
-                                                                        value!,
-                                                                        index);
-                                                                    valueControllers[
-                                                                            index]
-                                                                        .text = extraPrices[
-                                                                            index]
-                                                                        .toString();
-                                                                    brandValus[
-                                                                            index] =
-                                                                        value!;
-                                                                    evaluatePrice(
-                                                                        index);
-                                                                  }),
-                                                        ),
-                                                      ),
-                                                      Visibility(
-                                                        visible: isTubes[index],
-                                                        child: SizedBox(
-                                                          width: MediaQuery.of(
-                                                                      context)
-                                                                  .size
-                                                                  .width *
-                                                              .4,
-                                                          child:
-                                                              CheckboxListTile(
-                                                                  value:
-                                                                      tubeValus[
-                                                                          index],
-                                                                  contentPadding:
-                                                                      EdgeInsets
-                                                                          .zero,
-                                                                  controlAffinity:
-                                                                      ListTileControlAffinity
-                                                                          .leading,
-                                                                  title:
-                                                                      FittedBox(
-                                                                    fit: BoxFit
-                                                                        .scaleDown,
-                                                                    child: Text(AppLocalizations.of(
-                                                                            context)!
-                                                                        .translate(
-                                                                            'isTubeValue')),
-                                                                  ),
-                                                                  onChanged:
-                                                                      (value) {
-                                                                    calculateExtrasPrice(
-                                                                        .1,
-                                                                        value!,
-                                                                        index);
-                                                                    valueControllers[
-                                                                            index]
-                                                                        .text = extraPrices[
-                                                                            index]
-                                                                        .toString();
-                                                                    tubeValus[
-                                                                            index] =
-                                                                        value!;
-                                                                    evaluatePrice(
-                                                                        index);
-                                                                  }),
-                                                        ),
-                                                      ),
-                                                      Visibility(
-                                                        visible:
-                                                            isColored[index],
-                                                        child: SizedBox(
-                                                          width: MediaQuery.of(
-                                                                      context)
-                                                                  .size
-                                                                  .width *
-                                                              .4,
-                                                          child:
-                                                              CheckboxListTile(
-                                                            value: colorValus[
-                                                                index],
-                                                            contentPadding:
-                                                                EdgeInsets.zero,
-                                                            controlAffinity:
-                                                                ListTileControlAffinity
-                                                                    .leading,
-                                                            title: FittedBox(
-                                                              fit: BoxFit
-                                                                  .scaleDown,
-                                                              child: Text(AppLocalizations
-                                                                      .of(
-                                                                          context)!
-                                                                  .translate(
-                                                                      'isColored')),
+                                                  side: BorderSide(
+                                                    color: doubleoriginerrors[
+                                                            index]
+                                                        ? Colors.red
+                                                        : Colors.white,
+                                                    width: 1,
+                                                  )),
+                                              elevation: 1,
+                                              color: Colors.white,
+                                              child: Padding(
+                                                padding:
+                                                    const EdgeInsets.symmetric(
+                                                  vertical: 4.0,
+                                                  horizontal: 10.0,
+                                                ),
+                                                child: Column(
+                                                  mainAxisSize:
+                                                      MainAxisSize.min,
+                                                  crossAxisAlignment:
+                                                      CrossAxisAlignment.start,
+                                                  children: [
+                                                    const SizedBox(
+                                                      height: 30,
+                                                    ),
+                                                    Row(
+                                                      mainAxisAlignment:
+                                                          MainAxisAlignment
+                                                              .spaceBetween,
+                                                      children: [
+                                                        Focus(
+                                                          // focusNode: _ordernode,
+                                                          child: Text(
+                                                            AppLocalizations.of(
+                                                                    context)!
+                                                                .translate(
+                                                                    'goods_details'),
+                                                            style: TextStyle(
+                                                              fontSize: 19,
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .bold,
+                                                              color: AppColor
+                                                                  .deepBlue,
                                                             ),
-                                                            onChanged: (value) {
-                                                              calculateExtrasPrice(
-                                                                  .1,
-                                                                  value!,
-                                                                  index);
-                                                              valueControllers[
-                                                                          index]
-                                                                      .text =
-                                                                  extraPrices[
-                                                                          index]
-                                                                      .toString();
-                                                              colorValus[
-                                                                      index] =
-                                                                  value!;
-                                                              evaluatePrice(
-                                                                  index);
-                                                            },
                                                           ),
                                                         ),
-                                                      ),
-                                                      Visibility(
-                                                        visible: isLycra[index],
-                                                        child: SizedBox(
-                                                          width: MediaQuery.of(
-                                                                      context)
-                                                                  .size
-                                                                  .width *
-                                                              .4,
-                                                          child:
-                                                              CheckboxListTile(
-                                                            value: lycraValus[
-                                                                index],
-                                                            contentPadding:
-                                                                EdgeInsets.zero,
-                                                            controlAffinity:
-                                                                ListTileControlAffinity
-                                                                    .leading,
-                                                            title: FittedBox(
-                                                              fit: BoxFit
-                                                                  .scaleDown,
-                                                              child: Text(AppLocalizations
-                                                                      .of(
-                                                                          context)!
-                                                                  .translate(
-                                                                      'isLycra')),
-                                                            ),
-                                                            onChanged: (value) {
-                                                              calculateExtrasPrice(
-                                                                  .05,
-                                                                  value!,
-                                                                  index);
-                                                              valueControllers[
-                                                                          index]
-                                                                      .text =
-                                                                  extraPrices[
-                                                                          index]
-                                                                      .toString();
-                                                              lycraValus[
-                                                                      index] =
-                                                                  value!;
+                                                      ],
+                                                    ),
+                                                    Column(
+                                                      crossAxisAlignment:
+                                                          CrossAxisAlignment
+                                                              .end,
+                                                      children: [
+                                                        SizedBox(
+                                                          height: 5,
+                                                        ),
+                                                        // GestureDetector(
+                                                        //   onTap: () {
+                                                        //     BlocProvider.of<
+                                                        //                 CalculatorPanelBloc>(
+                                                        //             context)
+                                                        //         .add(
+                                                        //             TariffPanelOpenEvent());
 
+                                                        //     FocusManager.instance
+                                                        //         .primaryFocus
+                                                        //         ?.unfocus();
+                                                        //     BlocProvider.of<
+                                                        //                 BottomNavBarCubit>(
+                                                        //             context)
+                                                        //         .emitShow();
+                                                        //     _countselected =
+                                                        //         index;
+                                                        //   },
+                                                        //   child: SizedBox(
+                                                        //     height: 40.h,
+                                                        //     child: Row(
+                                                        //       mainAxisAlignment:
+                                                        //           MainAxisAlignment
+                                                        //               .end,
+                                                        //       children: [
+                                                        //         SizedBox(
+                                                        //           width: 25.w,
+                                                        //           height: 25.h,
+                                                        //           child:
+                                                        //               SvgPicture
+                                                        //                   .asset(
+                                                        //             "assets/icons/tarrif_btn.svg",
+                                                        //           ),
+                                                        //         ),
+                                                        //         const SizedBox(
+                                                        //           width: 3,
+                                                        //         ),
+                                                        //         Text(
+                                                        //           AppLocalizations.of(
+                                                        //                   context)!
+                                                        //               .translate(
+                                                        //                   'tariff_browser'),
+                                                        //           textAlign:
+                                                        //               TextAlign
+                                                        //                   .center,
+                                                        //           style:
+                                                        //               TextStyle(
+                                                        //             color: AppColor
+                                                        //                 .lightBlue,
+                                                        //             fontSize:
+                                                        //                 15.sp,
+                                                        //             fontWeight:
+                                                        //                 FontWeight
+                                                        //                     .bold,
+                                                        //           ),
+                                                        //         ),
+                                                        //       ],
+                                                        //     ),
+                                                        //   ),
+                                                        // ),
+                                                        GestureDetector(
+                                                          onTap: () {
+                                                            BlocProvider.of<
+                                                                        CalculatorPanelBloc>(
+                                                                    context)
+                                                                .add(
+                                                                    TariffPanelOpenEvent());
+                                                            FocusManager
+                                                                .instance
+                                                                .primaryFocus
+                                                                ?.unfocus();
+                                                            BlocProvider.of<
+                                                                        BottomNavBarCubit>(
+                                                                    context)
+                                                                .emitShow();
+                                                            _countselected =
+                                                                index;
+                                                          },
+                                                          child: TypeAheadField(
+                                                            textFieldConfiguration:
+                                                                TextFieldConfiguration(
+                                                              // autofocus: true,
+                                                              keyboardType:
+                                                                  TextInputType
+                                                                      .multiline,
+                                                              maxLines: null,
+                                                              enabled: false,
+                                                              controller:
+                                                                  packageControllers[
+                                                                      index],
+
+                                                              scrollPadding: EdgeInsets.only(
+                                                                  bottom: MediaQuery.of(
+                                                                              context)
+                                                                          .viewInsets
+                                                                          .bottom +
+                                                                      150),
+                                                              style: TextStyle(
+                                                                  fontSize: 18,
+                                                                  color: originControllers[
+                                                                              index]
+                                                                          .text
+                                                                          .isNotEmpty
+                                                                      ? AppColor
+                                                                          .deepBlue
+                                                                      : Colors.grey[
+                                                                          600]!),
+                                                              onTap: () {
+                                                                setSelectedPanel(
+                                                                    2);
+                                                              },
+                                                              decoration:
+                                                                  InputDecoration(
+                                                                labelText: AppLocalizations.of(
+                                                                        context)!
+                                                                    .translate(
+                                                                        'goods_name'),
+                                                                hintText: AppLocalizations.of(
+                                                                        context)!
+                                                                    .translate(
+                                                                        'goods_name'),
+                                                                contentPadding:
+                                                                    const EdgeInsets
+                                                                        .symmetric(
+                                                                  horizontal:
+                                                                      9.0,
+                                                                  vertical:
+                                                                      11.0,
+                                                                ),
+                                                                suffixIcon: packageControllers[index]
+                                                                            .text ==
+                                                                        AppLocalizations.of(context)!.translate(
+                                                                            'goods_name')
+                                                                    ? SizedBox(
+                                                                        width:
+                                                                            130.w,
+                                                                        child:
+                                                                            Row(
+                                                                          mainAxisAlignment:
+                                                                              MainAxisAlignment.end,
+                                                                          children: [
+                                                                            SizedBox(
+                                                                              width: 21.w,
+                                                                              height: 21.h,
+                                                                              child: SvgPicture.asset(
+                                                                                "assets/icons/tarrif_btn.svg",
+                                                                              ),
+                                                                            ),
+                                                                            const SizedBox(
+                                                                              width: 3,
+                                                                            ),
+                                                                            FittedBox(
+                                                                              fit: BoxFit.scaleDown,
+                                                                              child: Text(
+                                                                                AppLocalizations.of(context)!.translate('tariff_browser'),
+                                                                                textAlign: TextAlign.center,
+                                                                                style: TextStyle(
+                                                                                  color: AppColor.lightBlue,
+                                                                                  fontSize: 15.sp,
+                                                                                  fontWeight: FontWeight.bold,
+                                                                                ),
+                                                                              ),
+                                                                            ),
+                                                                            const SizedBox(
+                                                                              width: 3,
+                                                                            ),
+                                                                          ],
+                                                                        ),
+                                                                      )
+                                                                    : SizedBox
+                                                                        .shrink(),
+                                                              ),
+                                                              onSubmitted:
+                                                                  (value) {
+                                                                BlocProvider.of<
+                                                                            StopScrollCubit>(
+                                                                        context)
+                                                                    .emitEnable();
+                                                                FocusManager
+                                                                    .instance
+                                                                    .primaryFocus
+                                                                    ?.unfocus();
+                                                                BlocProvider.of<
+                                                                            BottomNavBarCubit>(
+                                                                        context)
+                                                                    .emitShow();
+                                                              },
+                                                            ),
+                                                            loadingBuilder:
+                                                                (context) {
+                                                              return Container(
+                                                                color: Colors
+                                                                    .white,
+                                                                child:
+                                                                    const Center(
+                                                                  child:
+                                                                      CircularProgressIndicator(),
+                                                                ),
+                                                              );
+                                                            },
+                                                            errorBuilder:
+                                                                (context,
+                                                                    error) {
+                                                              return Container(
+                                                                color: Colors
+                                                                    .white,
+                                                              );
+                                                            },
+                                                            noItemsFoundBuilder:
+                                                                (value) {
+                                                              var localizedMessage =
+                                                                  AppLocalizations.of(
+                                                                          context)!
+                                                                      .translate(
+                                                                          'no_result_found');
+                                                              return Container(
+                                                                width: double
+                                                                    .infinity,
+                                                                color: Colors
+                                                                    .white,
+                                                                child: Center(
+                                                                  child: Text(
+                                                                    localizedMessage,
+                                                                    style: TextStyle(
+                                                                        fontSize:
+                                                                            18.sp),
+                                                                  ),
+                                                                ),
+                                                              );
+                                                            },
+                                                            suggestionsCallback:
+                                                                (pattern) async {
+                                                              return [];
+                                                            },
+                                                            itemBuilder:
+                                                                (context,
+                                                                    suggestion) {
+                                                              return Container();
+                                                            },
+                                                            onSuggestionSelected:
+                                                                (suggestion) {},
+                                                          ),
+                                                        ),
+                                                      ],
+                                                    ),
+                                                    const SizedBox(
+                                                      height: 14,
+                                                    ),
+                                                    Visibility(
+                                                      visible:
+                                                          allowexports[index],
+                                                      child: Text(
+                                                        AppLocalizations.of(
+                                                                context)!
+                                                            .translate(
+                                                                'fee_import_banned'),
+                                                        style: const TextStyle(
+                                                          color: Colors.red,
+                                                          fontSize: 13,
+                                                        ),
+                                                      ),
+                                                    ),
+                                                    Visibility(
+                                                      visible:
+                                                          allowexports[index],
+                                                      child: const SizedBox(
+                                                        height: 14,
+                                                      ),
+                                                    ),
+                                                    Visibility(
+                                                      visible: feeerrors[index],
+                                                      child: Text(
+                                                        AppLocalizations.of(
+                                                                context)!
+                                                            .translate(
+                                                                'select_fee_error'),
+                                                        style: const TextStyle(
+                                                          color: Colors.red,
+                                                          fontSize: 13,
+                                                        ),
+                                                      ),
+                                                    ),
+                                                    Visibility(
+                                                      visible: feeerrors[index],
+                                                      child: const SizedBox(
+                                                        height: 14,
+                                                      ),
+                                                    ),
+                                                    Visibility(
+                                                      visible:
+                                                          isdropdownVisibles[
+                                                              index],
+                                                      child:
+                                                          DropdownButtonHideUnderline(
+                                                        child: DropdownButton2<
+                                                            Extras>(
+                                                          isExpanded: true,
+                                                          barrierLabel:
+                                                              placeholders[
+                                                                  index],
+                                                          hint: Text(
+                                                            placeholders[index],
+                                                            style: TextStyle(
+                                                              fontSize: 14,
+                                                              color: Theme.of(
+                                                                      context)
+                                                                  .hintColor,
+                                                            ),
+                                                          ),
+                                                          items: extraslist[
+                                                                  index]
+                                                              .map((Extras
+                                                                      item) =>
+                                                                  DropdownMenuItem<
+                                                                      Extras>(
+                                                                    value: item,
+                                                                    child: Text(
+                                                                      item.label!,
+                                                                      style:
+                                                                          const TextStyle(
+                                                                        fontSize:
+                                                                            14,
+                                                                      ),
+                                                                    ),
+                                                                  ))
+                                                              .toList(),
+                                                          value:
+                                                              extraselectedValues[
+                                                                  index],
+                                                          onChanged:
+                                                              (Extras? value) {
+                                                            if (value!
+                                                                .countryGroup!
+                                                                .isEmpty) {
+                                                              if (value.price! >
+                                                                  0) {
+                                                                basePriceValues[
+                                                                        index] =
+                                                                    value
+                                                                        .price!;
+                                                                valueEnabled[
+                                                                        index] =
+                                                                    false;
+                                                                setState(() {
+                                                                  valueControllers[
+                                                                          index]
+                                                                      .text = basePriceValues[
+                                                                          index]
+                                                                      .toString();
+                                                                });
+                                                              } else {
+                                                                basePriceValues[
+                                                                        index] =
+                                                                    0.0;
+                                                                valueControllers[
+                                                                        index]
+                                                                    .text = "0.0";
+                                                                valueEnabled[
+                                                                    0] = true;
+                                                                setState(
+                                                                  () {
+                                                                    valueControllers[
+                                                                            index]
+                                                                        .text = "0.0";
+                                                                  },
+                                                                );
+                                                              }
                                                               evaluatePrice(
                                                                   index);
-                                                            },
+                                                            } else {
+                                                              if (value.price! >
+                                                                  0) {
+                                                                basePriceValues[
+                                                                        index] =
+                                                                    value
+                                                                        .price!;
+                                                                valueEnabled[
+                                                                        index] =
+                                                                    false;
+
+                                                                setState(
+                                                                  () {
+                                                                    valueControllers[index]
+                                                                            .text =
+                                                                        value
+                                                                            .price!
+                                                                            .toString();
+                                                                  },
+                                                                );
+                                                              } else {
+                                                                basePriceValues[
+                                                                        index] =
+                                                                    0.0;
+                                                                valueEnabled[
+                                                                        index] =
+                                                                    true;
+                                                                setState(
+                                                                  () {
+                                                                    valueControllers[
+                                                                            index]
+                                                                        .text = "0.0";
+                                                                  },
+                                                                );
+                                                              }
+                                                              evaluatePrice(
+                                                                  index);
+                                                            }
+                                                            extraselectedValues[
+                                                                index] = value;
+                                                          },
+                                                          buttonStyleData:
+                                                              ButtonStyleData(
+                                                            height: 50,
+                                                            width:
+                                                                double.infinity,
+
+                                                            padding:
+                                                                const EdgeInsets
+                                                                    .symmetric(
+                                                              horizontal: 9.0,
+                                                            ),
+                                                            decoration:
+                                                                BoxDecoration(
+                                                              borderRadius:
+                                                                  BorderRadius
+                                                                      .circular(
+                                                                          12),
+                                                              border:
+                                                                  Border.all(
+                                                                color: Colors
+                                                                    .black26,
+                                                              ),
+                                                              color:
+                                                                  Colors.white,
+                                                            ),
+                                                            // elevation: 2,
+                                                          ),
+                                                          iconStyleData:
+                                                              const IconStyleData(
+                                                            icon: Icon(
+                                                              Icons
+                                                                  .keyboard_arrow_down_sharp,
+                                                            ),
+                                                            iconSize: 20,
+                                                            iconEnabledColor:
+                                                                AppColor
+                                                                    .AccentBlue,
+                                                            iconDisabledColor:
+                                                                Colors.grey,
+                                                          ),
+                                                          dropdownStyleData:
+                                                              DropdownStyleData(
+                                                            decoration:
+                                                                BoxDecoration(
+                                                              borderRadius:
+                                                                  BorderRadius
+                                                                      .circular(
+                                                                          14),
+                                                              color:
+                                                                  Colors.white,
+                                                            ),
+                                                            scrollbarTheme:
+                                                                ScrollbarThemeData(
+                                                              radius:
+                                                                  const Radius
+                                                                      .circular(
+                                                                      40),
+                                                              thickness:
+                                                                  MaterialStateProperty
+                                                                      .all(6),
+                                                              thumbVisibility:
+                                                                  MaterialStateProperty
+                                                                      .all(
+                                                                          true),
+                                                            ),
+                                                          ),
+                                                          menuItemStyleData:
+                                                              MenuItemStyleData(
+                                                            height: 50.h,
                                                           ),
                                                         ),
                                                       ),
-                                                    ],
-                                                  ),
-                                                  Visibility(
-                                                    visible: index == 0,
-                                                    child: BlocBuilder<
-                                                        FlagsBloc, FlagsState>(
-                                                      builder:
-                                                          (context, flagstate) {
-                                                        if (flagstate
-                                                            is FlagsLoadedSuccess) {
-                                                          return StatefulBuilder(
-                                                              builder: (context,
-                                                                  setState2) {
-                                                            return DropdownButtonHideUnderline(
-                                                              child: Focus(
-                                                                focusNode:
-                                                                    _statenode,
-                                                                onFocusChange:
-                                                                    (bool
-                                                                        focus) {
-                                                                  if (focus) {
-                                                                    setSelectedPanel(
-                                                                        2);
-                                                                  }
-                                                                },
-                                                                child:
-                                                                    DropdownButton2<
-                                                                        Origin>(
-                                                                  isExpanded:
-                                                                      true,
-                                                                  hint: Text(
-                                                                    AppLocalizations.of(
-                                                                            context)!
-                                                                        .translate(
-                                                                            'select_source'),
-                                                                    style:
-                                                                        TextStyle(
-                                                                      fontSize:
-                                                                          18,
-                                                                      color: Theme.of(
-                                                                              context)
-                                                                          .hintColor,
+                                                    ),
+                                                    Visibility(
+                                                      visible:
+                                                          isdropdownVisibles[
+                                                              index],
+                                                      child: const SizedBox(
+                                                        height: 24,
+                                                      ),
+                                                    ),
+                                                    Wrap(
+                                                      children: [
+                                                        Visibility(
+                                                          visible:
+                                                              isfeeequal001[
+                                                                  index],
+                                                          child: SizedBox(
+                                                            width: MediaQuery.of(
+                                                                        context)
+                                                                    .size
+                                                                    .width *
+                                                                .4,
+                                                            child:
+                                                                CheckboxListTile(
+                                                                    value: rawMaterialValues[
+                                                                        index],
+                                                                    contentPadding:
+                                                                        EdgeInsets
+                                                                            .zero,
+                                                                    controlAffinity:
+                                                                        ListTileControlAffinity
+                                                                            .leading,
+                                                                    title:
+                                                                        FittedBox(
+                                                                      fit: BoxFit
+                                                                          .scaleDown,
+                                                                      child: Text(AppLocalizations.of(
+                                                                              context)!
+                                                                          .translate(
+                                                                              'raw_material')),
                                                                     ),
+                                                                    onChanged:
+                                                                        (value) {
+                                                                      setState(
+                                                                          () {
+                                                                        rawMaterialValues[index] =
+                                                                            value!;
+                                                                      });
+                                                                      evaluatePrice(
+                                                                          index);
+                                                                    }),
+                                                          ),
+                                                        ),
+                                                        Visibility(
+                                                          visible:
+                                                              isfeeequal001[
+                                                                  index],
+                                                          child: SizedBox(
+                                                            width: MediaQuery.of(
+                                                                        context)
+                                                                    .size
+                                                                    .width *
+                                                                .4,
+                                                            child:
+                                                                CheckboxListTile(
+                                                                    value: industrialValues[
+                                                                        index],
+                                                                    contentPadding:
+                                                                        EdgeInsets
+                                                                            .zero,
+                                                                    controlAffinity:
+                                                                        ListTileControlAffinity
+                                                                            .leading,
+                                                                    title:
+                                                                        FittedBox(
+                                                                      fit: BoxFit
+                                                                          .scaleDown,
+                                                                      child: Text(AppLocalizations.of(
+                                                                              context)!
+                                                                          .translate(
+                                                                              'industrial')),
+                                                                    ),
+                                                                    onChanged:
+                                                                        (value) {
+                                                                      setState(
+                                                                          () {
+                                                                        industrialValues[index] =
+                                                                            value!;
+                                                                      });
+                                                                      evaluatePrice(
+                                                                          index);
+                                                                    }),
+                                                          ),
+                                                        ),
+                                                        Visibility(
+                                                          visible:
+                                                              isBrands[index],
+                                                          child: SizedBox(
+                                                            width: MediaQuery.of(
+                                                                        context)
+                                                                    .size
+                                                                    .width *
+                                                                .4,
+                                                            child:
+                                                                CheckboxListTile(
+                                                                    value: brandValus[
+                                                                        index],
+                                                                    contentPadding:
+                                                                        EdgeInsets
+                                                                            .zero,
+                                                                    controlAffinity:
+                                                                        ListTileControlAffinity
+                                                                            .leading,
+                                                                    title:
+                                                                        FittedBox(
+                                                                      fit: BoxFit
+                                                                          .scaleDown,
+                                                                      child: Text(AppLocalizations.of(
+                                                                              context)!
+                                                                          .translate(
+                                                                              'isBrand')),
+                                                                    ),
+                                                                    onChanged:
+                                                                        (value) {
+                                                                      calculateExtrasPrice(
+                                                                          1.5,
+                                                                          value!,
+                                                                          index);
+                                                                      valueControllers[
+                                                                              index]
+                                                                          .text = extraPrices[
+                                                                              index]
+                                                                          .toString();
+                                                                      brandValus[
+                                                                              index] =
+                                                                          value!;
+                                                                      evaluatePrice(
+                                                                          index);
+                                                                    }),
+                                                          ),
+                                                        ),
+                                                        Visibility(
+                                                          visible:
+                                                              isTubes[index],
+                                                          child: SizedBox(
+                                                            width: MediaQuery.of(
+                                                                        context)
+                                                                    .size
+                                                                    .width *
+                                                                .4,
+                                                            child:
+                                                                CheckboxListTile(
+                                                                    value: tubeValus[
+                                                                        index],
+                                                                    contentPadding:
+                                                                        EdgeInsets
+                                                                            .zero,
+                                                                    controlAffinity:
+                                                                        ListTileControlAffinity
+                                                                            .leading,
+                                                                    title:
+                                                                        FittedBox(
+                                                                      fit: BoxFit
+                                                                          .scaleDown,
+                                                                      child: Text(AppLocalizations.of(
+                                                                              context)!
+                                                                          .translate(
+                                                                              'isTubeValue')),
+                                                                    ),
+                                                                    onChanged:
+                                                                        (value) {
+                                                                      calculateExtrasPrice(
+                                                                          .1,
+                                                                          value!,
+                                                                          index);
+                                                                      valueControllers[
+                                                                              index]
+                                                                          .text = extraPrices[
+                                                                              index]
+                                                                          .toString();
+                                                                      tubeValus[
+                                                                              index] =
+                                                                          value!;
+                                                                      evaluatePrice(
+                                                                          index);
+                                                                    }),
+                                                          ),
+                                                        ),
+                                                        Visibility(
+                                                          visible:
+                                                              isColored[index],
+                                                          child: SizedBox(
+                                                            width: MediaQuery.of(
+                                                                        context)
+                                                                    .size
+                                                                    .width *
+                                                                .4,
+                                                            child:
+                                                                CheckboxListTile(
+                                                              value: colorValus[
+                                                                  index],
+                                                              contentPadding:
+                                                                  EdgeInsets
+                                                                      .zero,
+                                                              controlAffinity:
+                                                                  ListTileControlAffinity
+                                                                      .leading,
+                                                              title: FittedBox(
+                                                                fit: BoxFit
+                                                                    .scaleDown,
+                                                                child: Text(AppLocalizations.of(
+                                                                        context)!
+                                                                    .translate(
+                                                                        'isColored')),
+                                                              ),
+                                                              onChanged:
+                                                                  (value) {
+                                                                calculateExtrasPrice(
+                                                                    .1,
+                                                                    value!,
+                                                                    index);
+                                                                valueControllers[
+                                                                        index]
+                                                                    .text = extraPrices[
+                                                                        index]
+                                                                    .toString();
+                                                                colorValus[
+                                                                        index] =
+                                                                    value!;
+                                                                evaluatePrice(
+                                                                    index);
+                                                              },
+                                                            ),
+                                                          ),
+                                                        ),
+                                                        Visibility(
+                                                          visible:
+                                                              isLycra[index],
+                                                          child: SizedBox(
+                                                            width: MediaQuery.of(
+                                                                        context)
+                                                                    .size
+                                                                    .width *
+                                                                .4,
+                                                            child:
+                                                                CheckboxListTile(
+                                                              value: lycraValus[
+                                                                  index],
+                                                              contentPadding:
+                                                                  EdgeInsets
+                                                                      .zero,
+                                                              controlAffinity:
+                                                                  ListTileControlAffinity
+                                                                      .leading,
+                                                              title: FittedBox(
+                                                                fit: BoxFit
+                                                                    .scaleDown,
+                                                                child: Text(AppLocalizations.of(
+                                                                        context)!
+                                                                    .translate(
+                                                                        'isLycra')),
+                                                              ),
+                                                              onChanged:
+                                                                  (value) {
+                                                                calculateExtrasPrice(
+                                                                    .05,
+                                                                    value!,
+                                                                    index);
+                                                                valueControllers[
+                                                                        index]
+                                                                    .text = extraPrices[
+                                                                        index]
+                                                                    .toString();
+                                                                lycraValus[
+                                                                        index] =
+                                                                    value!;
+
+                                                                evaluatePrice(
+                                                                    index);
+                                                              },
+                                                            ),
+                                                          ),
+                                                        ),
+                                                      ],
+                                                    ),
+                                                    Visibility(
+                                                      visible: index == 0,
+                                                      child: GestureDetector(
+                                                        onTap: () {
+                                                          setSelectedPanel(2);
+                                                          BlocProvider.of<
+                                                                      CalculatorPanelBloc>(
+                                                                  context)
+                                                              .add(
+                                                                  FlagsPanelOpenEvent());
+                                                          FocusManager.instance
+                                                              .primaryFocus
+                                                              ?.unfocus();
+                                                          BlocProvider.of<
+                                                                      BottomNavBarCubit>(
+                                                                  context)
+                                                              .emitShow();
+                                                          sourceselect = true;
+                                                        },
+                                                        child: TextFormField(
+                                                          controller:
+                                                              sourceControllers,
+                                                          enabled: false,
+                                                          style: TextStyle(
+                                                              color: sourceControllers
+                                                                      .text
+                                                                      .isNotEmpty
+                                                                  ? AppColor
+                                                                      .deepBlue
+                                                                  : Colors.grey[
+                                                                      600]!),
+                                                          onTap: () {
+                                                            setSelectedPanel(2);
+                                                            BlocProvider.of<
+                                                                        CalculatorPanelBloc>(
+                                                                    context)
+                                                                .add(
+                                                                    FlagsPanelOpenEvent());
+                                                            FocusManager
+                                                                .instance
+                                                                .primaryFocus
+                                                                ?.unfocus();
+                                                            BlocProvider.of<
+                                                                        BottomNavBarCubit>(
+                                                                    context)
+                                                                .emitShow();
+                                                            sourceselect = true;
+                                                          },
+                                                          decoration:
+                                                              InputDecoration(
+                                                                  labelText: AppLocalizations.of(
+                                                                          context)!
+                                                                      .translate(
+                                                                          'select_source'),
+                                                                  hintText: AppLocalizations.of(
+                                                                          context)!
+                                                                      .translate(
+                                                                          'select_source'),
+                                                                  contentPadding:
+                                                                      const EdgeInsets
+                                                                          .symmetric(
+                                                                    horizontal:
+                                                                        9.0,
+                                                                    vertical:
+                                                                        11.0,
                                                                   ),
-                                                                  items: flagstate
-                                                                      .origins
-                                                                      .map(
-                                                                        (Origin item) =>
-                                                                            DropdownMenuItem<Origin>(
-                                                                          value:
-                                                                              item,
+                                                                  prefixIcon: sourceControllers
+                                                                          .text
+                                                                          .isNotEmpty
+                                                                      ? Padding(
+                                                                          padding: const EdgeInsets
+                                                                              .all(
+                                                                              5.0),
                                                                           child:
                                                                               SizedBox(
-                                                                            // width: 200,
+                                                                            height:
+                                                                                35,
+                                                                            width:
+                                                                                55,
                                                                             child:
-                                                                                Row(
-                                                                              children: [
-                                                                                SizedBox(
-                                                                                  height: 35,
-                                                                                  width: 55,
-                                                                                  child: SvgPicture.network(
-                                                                                    item.imageURL!,
-                                                                                    height: 35,
-                                                                                    width: 55,
-                                                                                    // semanticsLabel: 'A shark?!',
-                                                                                    placeholderBuilder: (BuildContext context) => Container(
-                                                                                      height: 35.h,
-                                                                                      width: 45.w,
-                                                                                      decoration: BoxDecoration(
-                                                                                        color: Colors.grey[200],
-                                                                                        borderRadius: BorderRadius.circular(5),
-                                                                                      ),
-                                                                                    ),
-                                                                                  ),
+                                                                                SvgPicture.network(
+                                                                              orderBrokerProvider!.source!.imageURL!,
+                                                                              height: 35,
+                                                                              width: 55,
+                                                                              // semanticsLabel: 'A shark?!',
+                                                                              placeholderBuilder: (BuildContext context) => Container(
+                                                                                height: 35.h,
+                                                                                width: 45.w,
+                                                                                decoration: BoxDecoration(
+                                                                                  color: Colors.grey[200],
+                                                                                  borderRadius: BorderRadius.circular(5),
                                                                                 ),
-                                                                                const SizedBox(width: 7),
+                                                                              ),
+                                                                            ),
+                                                                          ),
+                                                                        )
+                                                                      : null),
+                                                        ),
+                                                      ),
+                                                    ),
+                                                    Visibility(
+                                                      visible: index == 0,
+                                                      child: const SizedBox(
+                                                        height: 14,
+                                                      ),
+                                                    ),
+                                                    GestureDetector(
+                                                      onTap: () {
+                                                        setSelectedPanel(2);
+                                                        BlocProvider.of<
+                                                                    CalculatorPanelBloc>(
+                                                                context)
+                                                            .add(
+                                                                FlagsPanelOpenEvent());
+                                                        FocusManager.instance
+                                                            .primaryFocus
+                                                            ?.unfocus();
+                                                        BlocProvider.of<
+                                                                    BottomNavBarCubit>(
+                                                                context)
+                                                            .emitShow();
+                                                        _countselected = index;
+                                                        sourceselect = false;
+                                                      },
+                                                      child: TextFormField(
+                                                        controller:
+                                                            originControllers[
+                                                                index],
+                                                        enabled: false,
+                                                        style: TextStyle(
+                                                            color: originControllers[
+                                                                        index]
+                                                                    .text
+                                                                    .isNotEmpty
+                                                                ? AppColor
+                                                                    .deepBlue
+                                                                : Colors.grey[
+                                                                    600]!),
+                                                        onTap: () {
+                                                          setSelectedPanel(2);
+                                                          BlocProvider.of<
+                                                                      CalculatorPanelBloc>(
+                                                                  context)
+                                                              .add(
+                                                                  FlagsPanelOpenEvent());
+                                                          FocusManager.instance
+                                                              .primaryFocus
+                                                              ?.unfocus();
+                                                          BlocProvider.of<
+                                                                      BottomNavBarCubit>(
+                                                                  context)
+                                                              .emitShow();
+                                                          _countselected =
+                                                              index;
+                                                          sourceselect = false;
+                                                        },
+                                                        decoration:
+                                                            InputDecoration(
+                                                                labelText: AppLocalizations.of(
+                                                                        context)!
+                                                                    .translate(
+                                                                        'select_origin'),
+                                                                hintText: AppLocalizations.of(
+                                                                        context)!
+                                                                    .translate(
+                                                                        'select_origin'),
+                                                                contentPadding:
+                                                                    const EdgeInsets
+                                                                        .symmetric(
+                                                                  horizontal:
+                                                                      9.0,
+                                                                  vertical:
+                                                                      11.0,
+                                                                ),
+                                                                prefixIcon: originControllers[
+                                                                            index]
+                                                                        .text
+                                                                        .isNotEmpty
+                                                                    ? Padding(
+                                                                        padding: const EdgeInsets
+                                                                            .all(
+                                                                            5.0),
+                                                                        child:
+                                                                            SizedBox(
+                                                                          height:
+                                                                              25,
+                                                                          width:
+                                                                              45,
+                                                                          child:
+                                                                              SvgPicture.network(
+                                                                            origins[index]!.imageURL!,
+                                                                            height:
+                                                                                25,
+                                                                            width:
+                                                                                45,
+                                                                            // semanticsLabel: 'A shark?!',
+                                                                            placeholderBuilder: (BuildContext context) =>
                                                                                 Container(
-                                                                                  constraints: BoxConstraints(
-                                                                                    maxWidth: 280.w,
-                                                                                  ),
-                                                                                  child: Text(
-                                                                                    item.label!,
-                                                                                    overflow: TextOverflow.ellipsis,
-                                                                                    // maxLines: 2,
-                                                                                  ),
-                                                                                ),
-                                                                              ],
-                                                                              // subtitle: Text('\$${suggestion['price']}'),
+                                                                              height: 25.h,
+                                                                              width: 45.w,
+                                                                              decoration: BoxDecoration(
+                                                                                color: Colors.grey[200],
+                                                                                borderRadius: BorderRadius.circular(5),
+                                                                              ),
                                                                             ),
                                                                           ),
                                                                         ),
                                                                       )
-                                                                      .toList(),
-                                                                  value:
-                                                                      orderBrokerProvider
-                                                                          .source,
-                                                                  onChanged:
-                                                                      (Origin?
-                                                                          value) {
-                                                                    orderBrokerProvider
-                                                                        .setSource(
-                                                                            value);
-                                                                  },
-                                                                  barrierColor:
-                                                                      Colors
-                                                                          .black45,
-                                                                  dropdownSearchData:
-                                                                      DropdownSearchData(
-                                                                    searchController:
-                                                                        sourceControllers,
-                                                                    searchInnerWidgetHeight:
-                                                                        60,
-                                                                    searchInnerWidget:
-                                                                        Container(
-                                                                      height:
-                                                                          60,
-                                                                      padding:
-                                                                          const EdgeInsets
-                                                                              .only(
-                                                                        top: 8,
-                                                                        bottom:
-                                                                            4,
-                                                                        right:
-                                                                            8,
-                                                                        left: 8,
-                                                                      ),
-                                                                      child:
-                                                                          TextFormField(
-                                                                        expands:
-                                                                            true,
-                                                                        maxLines:
-                                                                            null,
-                                                                        controller:
-                                                                            sourceControllers,
-                                                                        onTap:
-                                                                            () {
-                                                                          sourceControllers.selection =
-                                                                              TextSelection(
-                                                                            baseOffset:
-                                                                                0,
-                                                                            extentOffset:
-                                                                                sourceControllers.value.text.length,
-                                                                          );
-                                                                        },
-                                                                        decoration:
-                                                                            InputDecoration(
-                                                                          isDense:
-                                                                              true,
-                                                                          contentPadding:
-                                                                              const EdgeInsets.symmetric(
-                                                                            horizontal:
-                                                                                10,
-                                                                            vertical:
-                                                                                8,
-                                                                          ),
-                                                                          labelText:
-                                                                              AppLocalizations.of(context)!.translate('select_source'),
-                                                                          hintStyle:
-                                                                              const TextStyle(fontSize: 12),
-                                                                          border:
-                                                                              OutlineInputBorder(
-                                                                            borderRadius:
-                                                                                BorderRadius.circular(8),
-                                                                          ),
-                                                                        ),
-                                                                        onTapOutside:
-                                                                            (event) {
-                                                                          FocusManager
-                                                                              .instance
-                                                                              .primaryFocus
-                                                                              ?.unfocus();
-                                                                          BlocProvider.of<BottomNavBarCubit>(context)
-                                                                              .emitShow();
-                                                                        },
-                                                                        onFieldSubmitted:
-                                                                            (value) {
-                                                                          FocusManager
-                                                                              .instance
-                                                                              .primaryFocus
-                                                                              ?.unfocus();
-                                                                          BlocProvider.of<BottomNavBarCubit>(context)
-                                                                              .emitShow();
-                                                                        },
-                                                                      ),
-                                                                    ),
-                                                                    searchMatchFn:
-                                                                        (item,
-                                                                            searchValue) {
-                                                                      return item
-                                                                          .value!
-                                                                          .label!
-                                                                          .contains(
-                                                                              searchValue);
-                                                                    },
-                                                                  ),
-                                                                  onMenuStateChange:
-                                                                      (isOpen) {
-                                                                    if (isOpen) {
-                                                                      setState(
-                                                                          () {
-                                                                        sourceControllers
-                                                                            .clear();
-                                                                      });
-                                                                    }
-                                                                  },
-                                                                  buttonStyleData:
-                                                                      ButtonStyleData(
-                                                                    height: 50,
-                                                                    width: double
-                                                                        .infinity,
-                                                                    padding: const EdgeInsets
-                                                                        .only(
-                                                                        left:
-                                                                            14,
-                                                                        right:
-                                                                            14),
-
-                                                                    decoration:
-                                                                        BoxDecoration(
-                                                                      borderRadius:
-                                                                          BorderRadius.circular(
-                                                                              12),
-                                                                      border:
-                                                                          Border
-                                                                              .all(
-                                                                        color: Colors
-                                                                            .black26,
-                                                                      ),
-                                                                      color: Colors
-                                                                          .white,
-                                                                    ),
-                                                                    // elevation: 2,
-                                                                  ),
-                                                                  iconStyleData:
-                                                                      const IconStyleData(
-                                                                    icon: Icon(
-                                                                      Icons
-                                                                          .keyboard_arrow_down_sharp,
-                                                                    ),
-                                                                    iconSize:
-                                                                        20,
-                                                                    iconEnabledColor:
-                                                                        AppColor
-                                                                            .AccentBlue,
-                                                                    iconDisabledColor:
-                                                                        Colors
-                                                                            .grey,
-                                                                  ),
-                                                                  dropdownStyleData:
-                                                                      DropdownStyleData(
-                                                                    maxHeight: MediaQuery.of(
-                                                                            context)
-                                                                        .size
-                                                                        .height,
-                                                                    padding:
-                                                                        const EdgeInsets
-                                                                            .all(
-                                                                            8.0),
-                                                                    decoration:
-                                                                        BoxDecoration(
-                                                                      borderRadius:
-                                                                          BorderRadius.circular(
-                                                                              14),
-                                                                      color: Colors
-                                                                          .white,
-                                                                    ),
-                                                                    scrollbarTheme:
-                                                                        ScrollbarThemeData(
-                                                                      radius: const Radius
-                                                                          .circular(
-                                                                          40),
-                                                                      thickness:
-                                                                          MaterialStateProperty.all(
-                                                                              6),
-                                                                      thumbVisibility:
-                                                                          MaterialStateProperty.all(
-                                                                              true),
-                                                                    ),
-                                                                  ),
-                                                                  menuItemStyleData:
-                                                                      const MenuItemStyleData(
-                                                                    height: 40,
-                                                                  ),
-                                                                ),
-                                                              ),
-                                                            );
-                                                          });
-                                                        } else if (flagstate
-                                                            is FlagsLoadingProgressState) {
-                                                          return const Center(
-                                                            child:
-                                                                LinearProgressIndicator(),
-                                                          );
-                                                        } else {
-                                                          return Center(
-                                                            child:
-                                                                GestureDetector(
-                                                              onTap: () {
-                                                                BlocProvider.of<
-                                                                            FlagsBloc>(
-                                                                        context)
-                                                                    .add(
-                                                                        FlagsLoadEvent());
-                                                              },
-                                                              child: Row(
-                                                                mainAxisAlignment:
-                                                                    MainAxisAlignment
-                                                                        .center,
-                                                                children: [
-                                                                  Text(
-                                                                    AppLocalizations.of(
-                                                                            context)!
-                                                                        .translate(
-                                                                            'list_error'),
-                                                                    style: const TextStyle(
-                                                                        color: Colors
-                                                                            .red),
-                                                                  ),
-                                                                  const Icon(
-                                                                    Icons
-                                                                        .refresh,
-                                                                    color: Colors
-                                                                        .grey,
-                                                                  )
-                                                                ],
-                                                              ),
-                                                            ),
-                                                          );
-                                                        }
-                                                      },
+                                                                    : null),
+                                                      ),
                                                     ),
-                                                  ),
-                                                  Visibility(
-                                                    visible: index == 0,
-                                                    child: const SizedBox(
+                                                    const SizedBox(
                                                       height: 14,
                                                     ),
-                                                  ),
-                                                  BlocBuilder<FlagsBloc,
-                                                      FlagsState>(
-                                                    builder:
-                                                        (context, flagstate) {
-                                                      if (flagstate
-                                                          is FlagsLoadedSuccess) {
-                                                        return StatefulBuilder(
-                                                            builder: (context,
-                                                                setState2) {
-                                                          return DropdownButtonHideUnderline(
-                                                            child: Focus(
-                                                              focusNode:
-                                                                  _statenode,
-                                                              onFocusChange:
-                                                                  (bool focus) {
-                                                                if (focus) {
-                                                                  setSelectedPanel(
-                                                                      2);
-                                                                }
-                                                              },
-                                                              child:
-                                                                  DropdownButton2<
-                                                                      Origin>(
-                                                                isExpanded:
-                                                                    true,
-                                                                hint: Text(
-                                                                  AppLocalizations.of(
-                                                                          context)!
-                                                                      .translate(
-                                                                          'select_origin'),
-                                                                  style:
-                                                                      TextStyle(
-                                                                    fontSize:
-                                                                        18,
-                                                                    color: Theme.of(
-                                                                            context)
-                                                                        .hintColor,
-                                                                  ),
-                                                                ),
-                                                                items: flagstate
-                                                                    .origins
-                                                                    .map(
-                                                                      (Origin item) =>
-                                                                          DropdownMenuItem<
-                                                                              Origin>(
-                                                                        value:
-                                                                            item,
-                                                                        child:
-                                                                            SizedBox(
-                                                                          // width: 200,
-                                                                          child:
-                                                                              Row(
-                                                                            children: [
-                                                                              SizedBox(
-                                                                                height: 35,
-                                                                                width: 55,
-                                                                                child: SvgPicture.network(
-                                                                                  item.imageURL!,
-                                                                                  height: 35,
-                                                                                  width: 55,
-                                                                                  // semanticsLabel: 'A shark?!',
-                                                                                  placeholderBuilder: (BuildContext context) => Container(
-                                                                                    height: 35.h,
-                                                                                    width: 45.w,
-                                                                                    decoration: BoxDecoration(
-                                                                                      color: Colors.grey[200],
-                                                                                      borderRadius: BorderRadius.circular(5),
-                                                                                    ),
-                                                                                  ),
-                                                                                ),
-                                                                              ),
-                                                                              const SizedBox(width: 7),
-                                                                              Container(
-                                                                                constraints: BoxConstraints(
-                                                                                  maxWidth: 280.w,
-                                                                                ),
-                                                                                child: Text(
-                                                                                  item.label!,
-                                                                                  overflow: TextOverflow.ellipsis,
-                                                                                  // maxLines: 2,
-                                                                                ),
-                                                                              ),
-                                                                            ],
-                                                                            // subtitle: Text('\$${suggestion['price']}'),
-                                                                          ),
-                                                                        ),
-                                                                      ),
-                                                                    )
-                                                                    .toList(),
-                                                                value: origins[
-                                                                    index],
-                                                                onChanged:
-                                                                    (Origin?
-                                                                        value) {
-                                                                  selectOrigin(
-                                                                      value!,
-                                                                      index);
-                                                                  setState(
-                                                                    () {
-                                                                      origins[index] =
-                                                                          value;
-                                                                    },
-                                                                  );
-                                                                  var originCount =
-                                                                      0;
-                                                                  for (var i =
-                                                                          0;
-                                                                      i <
-                                                                          origins
-                                                                              .length;
-                                                                      i++) {
-                                                                    if (origins[i] ==
-                                                                            value &&
-                                                                        packageControllers[i].text ==
-                                                                            packageControllers[index].text) {
-                                                                      originCount++;
-                                                                    }
-                                                                  }
+                                                    Visibility(
+                                                      visible:
+                                                          originerrors[index],
+                                                      child: Text(
+                                                        AppLocalizations.of(
+                                                                context)!
+                                                            .translate(
+                                                                'select_origin_error'),
+                                                        style: const TextStyle(
+                                                            color: Colors.red),
+                                                      ),
+                                                    ),
+                                                    Visibility(
+                                                      visible:
+                                                          originerrors[index],
+                                                      child: const SizedBox(
+                                                        height: 24,
+                                                      ),
+                                                    ),
+                                                    Focus(
+                                                      focusNode: _nodeWeight,
+                                                      onFocusChange:
+                                                          (bool focus) {
+                                                        if (!focus) {
+                                                          FocusManager.instance
+                                                              .primaryFocus
+                                                              ?.unfocus();
+                                                          BlocProvider.of<
+                                                                      BottomNavBarCubit>(
+                                                                  context)
+                                                              .emitShow();
+                                                          evaluatePrice(index);
+                                                        }
+                                                      },
+                                                      child: TextFormField(
+                                                        controller:
+                                                            weightControllers[
+                                                                index],
+                                                        // focusNode: _nodeWeight,
+                                                        onTap: () {
+                                                          setSelectedPanel(2);
 
-                                                                  if (originCount >
-                                                                      1) {
-                                                                    setState(
-                                                                      () {
-                                                                        doubleoriginerrors[index] =
-                                                                            true;
-                                                                      },
-                                                                    );
-                                                                  } else {
-                                                                    setState(
-                                                                      () {
-                                                                        doubleoriginerrors[index] =
-                                                                            false;
-                                                                      },
-                                                                    );
-                                                                  }
-                                                                },
-                                                                barrierColor:
-                                                                    Colors
-                                                                        .black45,
-                                                                dropdownSearchData:
-                                                                    DropdownSearchData(
-                                                                  searchController:
-                                                                      originControllers[
-                                                                          index],
-                                                                  searchInnerWidgetHeight:
-                                                                      60,
-                                                                  searchInnerWidget:
-                                                                      Container(
-                                                                    height: 60,
-                                                                    padding:
-                                                                        const EdgeInsets
-                                                                            .only(
-                                                                      top: 8,
-                                                                      bottom: 4,
-                                                                      right: 8,
-                                                                      left: 8,
-                                                                    ),
-                                                                    child:
-                                                                        TextFormField(
-                                                                      expands:
-                                                                          true,
-                                                                      maxLines:
-                                                                          null,
-                                                                      controller:
-                                                                          originControllers[
-                                                                              index],
-                                                                      onTap:
-                                                                          () {
-                                                                        originControllers[index].selection =
-                                                                            TextSelection(
-                                                                          baseOffset:
-                                                                              0,
-                                                                          extentOffset: originControllers[index]
-                                                                              .value
-                                                                              .text
-                                                                              .length,
-                                                                        );
-                                                                      },
-                                                                      decoration:
-                                                                          InputDecoration(
-                                                                        isDense:
-                                                                            true,
-                                                                        contentPadding:
-                                                                            const EdgeInsets.symmetric(
-                                                                          horizontal:
-                                                                              10,
-                                                                          vertical:
-                                                                              8,
-                                                                        ),
-                                                                        labelText:
-                                                                            AppLocalizations.of(context)!.translate('select_origin'),
-                                                                        hintStyle:
-                                                                            const TextStyle(fontSize: 12),
-                                                                        border:
-                                                                            OutlineInputBorder(
-                                                                          borderRadius:
-                                                                              BorderRadius.circular(8),
-                                                                        ),
-                                                                      ),
-                                                                      onTapOutside:
-                                                                          (event) {
-                                                                        FocusManager
-                                                                            .instance
-                                                                            .primaryFocus
-                                                                            ?.unfocus();
-                                                                        BlocProvider.of<BottomNavBarCubit>(context)
-                                                                            .emitShow();
-                                                                      },
-                                                                      onFieldSubmitted:
-                                                                          (value) {
-                                                                        FocusManager
-                                                                            .instance
-                                                                            .primaryFocus
-                                                                            ?.unfocus();
-                                                                        BlocProvider.of<BottomNavBarCubit>(context)
-                                                                            .emitShow();
-                                                                      },
-                                                                    ),
-                                                                  ),
-                                                                  searchMatchFn:
-                                                                      (item,
-                                                                          searchValue) {
-                                                                    return item
-                                                                        .value!
-                                                                        .label!
-                                                                        .contains(
-                                                                            searchValue);
-                                                                  },
-                                                                ),
-                                                                onMenuStateChange:
-                                                                    (isOpen) {
-                                                                  if (isOpen) {
-                                                                    setState(
-                                                                        () {
-                                                                      originControllers[
-                                                                              index]
-                                                                          .clear();
-                                                                    });
-                                                                  }
-                                                                },
-                                                                buttonStyleData:
-                                                                    ButtonStyleData(
-                                                                  height: 50,
-                                                                  width: double
-                                                                      .infinity,
-                                                                  padding:
-                                                                      const EdgeInsets
-                                                                          .only(
-                                                                          left:
-                                                                              14,
-                                                                          right:
-                                                                              14),
-
-                                                                  decoration:
-                                                                      BoxDecoration(
-                                                                    borderRadius:
-                                                                        BorderRadius.circular(
-                                                                            12),
-                                                                    border:
-                                                                        Border
-                                                                            .all(
-                                                                      color: Colors
-                                                                          .black26,
-                                                                    ),
-                                                                    color: Colors
-                                                                        .white,
-                                                                  ),
-                                                                  // elevation: 2,
-                                                                ),
-                                                                iconStyleData:
-                                                                    const IconStyleData(
-                                                                  icon: Icon(
-                                                                    Icons
-                                                                        .keyboard_arrow_down_sharp,
-                                                                  ),
-                                                                  iconSize: 20,
-                                                                  iconEnabledColor:
-                                                                      AppColor
-                                                                          .AccentBlue,
-                                                                  iconDisabledColor:
-                                                                      Colors
-                                                                          .grey,
-                                                                ),
-                                                                dropdownStyleData:
-                                                                    DropdownStyleData(
-                                                                  maxHeight:
-                                                                      MediaQuery.of(
-                                                                              context)
-                                                                          .size
-                                                                          .height,
-                                                                  padding:
-                                                                      const EdgeInsets
-                                                                          .all(
-                                                                          8.0),
-                                                                  decoration:
-                                                                      BoxDecoration(
-                                                                    borderRadius:
-                                                                        BorderRadius.circular(
-                                                                            14),
-                                                                    color: Colors
-                                                                        .white,
-                                                                  ),
-                                                                  scrollbarTheme:
-                                                                      ScrollbarThemeData(
-                                                                    radius: const Radius
-                                                                        .circular(
-                                                                        40),
-                                                                    thickness:
-                                                                        MaterialStateProperty
-                                                                            .all(6),
-                                                                    thumbVisibility:
-                                                                        MaterialStateProperty.all(
-                                                                            true),
-                                                                  ),
-                                                                ),
-                                                                menuItemStyleData:
-                                                                    const MenuItemStyleData(
-                                                                  height: 40,
-                                                                ),
-                                                              ),
-                                                            ),
+                                                          BlocProvider.of<
+                                                                      BottomNavBarCubit>(
+                                                                  context)
+                                                              .emitHide();
+                                                          weightControllers[
+                                                                      index]
+                                                                  .selection =
+                                                              TextSelection(
+                                                            baseOffset: 0,
+                                                            extentOffset:
+                                                                weightControllers[
+                                                                        index]
+                                                                    .value
+                                                                    .text
+                                                                    .length,
                                                           );
-                                                        });
-                                                      } else if (flagstate
-                                                          is FlagsLoadingProgressState) {
-                                                        return const Center(
-                                                          child:
-                                                              LinearProgressIndicator(),
-                                                        );
-                                                      } else {
-                                                        return Center(
-                                                          child:
-                                                              GestureDetector(
-                                                            onTap: () {
-                                                              BlocProvider.of<
-                                                                          FlagsBloc>(
-                                                                      context)
-                                                                  .add(
-                                                                      FlagsLoadEvent());
-                                                            },
-                                                            child: Row(
+                                                        },
+                                                        // enabled: !valueEnabled,
+                                                        scrollPadding: EdgeInsets.only(
+                                                            bottom: MediaQuery.of(
+                                                                        context)
+                                                                    .viewInsets
+                                                                    .bottom +
+                                                                50),
+                                                        textInputAction:
+                                                            TextInputAction
+                                                                .done,
+                                                        keyboardType:
+                                                            const TextInputType
+                                                                .numberWithOptions(
+                                                                decimal: true,
+                                                                signed: true),
+                                                        inputFormatters: [
+                                                          DecimalFormatter(),
+                                                        ],
+                                                        style: const TextStyle(
+                                                            fontSize: 18),
+                                                        decoration:
+                                                            InputDecoration(
+                                                          labelText:
+                                                              AppLocalizations.of(
+                                                                      context)!
+                                                                  .translate(
+                                                                      'weight'),
+                                                          suffixText: showunits[
+                                                                  index]
+                                                              ? showUnit(
+                                                                  packages[
+                                                                          index]!
+                                                                      .unit!,
+                                                                  localeState
+                                                                      .value
+                                                                      .languageCode)
+                                                              : "",
+                                                          contentPadding:
+                                                              const EdgeInsets
+                                                                  .symmetric(
+                                                            horizontal: 9.0,
+                                                            vertical: 11.0,
+                                                          ),
+                                                        ),
+                                                        onChanged: (value) {
+                                                          if (origins[index] !=
+                                                              null) {
+                                                            setState(
+                                                              () {
+                                                                originerrors[
+                                                                        index] =
+                                                                    false;
+                                                              },
+                                                            );
+                                                            if (value
+                                                                .isNotEmpty) {
+                                                              calculateTotalValueWithPrice(
+                                                                  index);
+                                                              weightValues[
+                                                                      index] =
+                                                                  int.parse(
+                                                                      value);
+                                                            } else {
+                                                              weightValues[
+                                                                  index] = 0;
+                                                            }
+                                                            evaluatePrice(
+                                                                index);
+                                                          } else {
+                                                            originerrors[
+                                                                index] = true;
+                                                          }
+                                                        },
+                                                        autovalidateMode:
+                                                            AutovalidateMode
+                                                                .onUserInteraction,
+                                                        validator: (value) {
+                                                          if (value!.isEmpty) {
+                                                            return AppLocalizations
+                                                                    .of(
+                                                                        context)!
+                                                                .translate(
+                                                                    'insert_value_validate');
+                                                          }
+                                                          return null;
+                                                        },
+                                                        onSaved: (newValue) {
+                                                          weightControllers[
+                                                                  index]
+                                                              .text = newValue!;
+                                                        },
+                                                        onFieldSubmitted:
+                                                            (value) {
+                                                          FocusManager.instance
+                                                              .primaryFocus
+                                                              ?.unfocus();
+                                                          BlocProvider.of<
+                                                                      BottomNavBarCubit>(
+                                                                  context)
+                                                              .emitShow();
+                                                        },
+                                                      ),
+                                                    ),
+                                                    const SizedBox(
+                                                      height: 12,
+                                                    ),
+                                                    Focus(
+                                                      focusNode: _nodeValue,
+                                                      onFocusChange:
+                                                          (bool focus) {
+                                                        if (!focus) {
+                                                          FocusManager.instance
+                                                              .primaryFocus
+                                                              ?.unfocus();
+                                                          BlocProvider.of<
+                                                                      BottomNavBarCubit>(
+                                                                  context)
+                                                              .emitShow();
+                                                          evaluatePrice(index);
+                                                        }
+                                                      },
+                                                      child: TextFormField(
+                                                        controller:
+                                                            valueControllers[
+                                                                index],
+                                                        // focusNode: _nodeValue,
+                                                        onTap: () {
+                                                          BlocProvider.of<
+                                                                      BottomNavBarCubit>(
+                                                                  context)
+                                                              .emitHide();
+                                                          setSelectedPanel(2);
+
+                                                          valueControllers[
+                                                                      index]
+                                                                  .selection =
+                                                              TextSelection(
+                                                            baseOffset: 0,
+                                                            extentOffset:
+                                                                valueControllers[
+                                                                        index]
+                                                                    .value
+                                                                    .text
+                                                                    .length,
+                                                          );
+                                                        },
+                                                        // enabled: valueEnabled,
+                                                        textInputAction:
+                                                            TextInputAction
+                                                                .done,
+                                                        keyboardType:
+                                                            const TextInputType
+                                                                .numberWithOptions(
+                                                                decimal: true,
+                                                                signed: true),
+                                                        inputFormatters: [
+                                                          DecimalFormatter(),
+                                                        ],
+                                                        scrollPadding: EdgeInsets.only(
+                                                            bottom: MediaQuery.of(
+                                                                        context)
+                                                                    .viewInsets
+                                                                    .bottom +
+                                                                50),
+                                                        style: TextStyle(
+                                                          fontSize: 18,
+                                                        ),
+                                                        decoration:
+                                                            InputDecoration(
+                                                          suffixText: "\$",
+                                                          labelText: valueEnabled[
+                                                                  index]
+                                                              ? AppLocalizations
+                                                                      .of(
+                                                                          context)!
+                                                                  .translate(
+                                                                      'price_for_custome')
+                                                              : AppLocalizations
+                                                                      .of(
+                                                                          context)!
+                                                                  .translate(
+                                                                      'total_value_in_dollar'),
+                                                          contentPadding:
+                                                              const EdgeInsets
+                                                                  .symmetric(
+                                                            horizontal: 9.0,
+                                                            vertical: 11.0,
+                                                          ),
+                                                        ),
+                                                        validator: (value) {
+                                                          if (value!.isEmpty) {
+                                                            return AppLocalizations
+                                                                    .of(
+                                                                        context)!
+                                                                .translate(
+                                                                    'insert_value_validate');
+                                                          } else if (valueEnabled[
+                                                                  index] &&
+                                                              double.parse(
+                                                                      value) <
+                                                                  basePriceValues[
+                                                                      index]) {
+                                                            return "entered price should be grater than ${basePriceValues[index]}";
+                                                          }
+                                                          return null;
+                                                        },
+                                                        onEditingComplete: () {
+                                                          evaluatePrice(index);
+                                                        },
+                                                        onChanged: (value) {
+                                                          if (origins[index] !=
+                                                              null) {
+                                                            originerrors[
+                                                                index] = false;
+                                                            if (valueEnabled[
+                                                                    index] &&
+                                                                double.parse(
+                                                                        value) >
+                                                                    basePriceValues[
+                                                                        index]) {
+                                                              if (value
+                                                                  .isNotEmpty) {
+                                                                basePriceValues[
+                                                                        index] =
+                                                                    double.parse(
+                                                                        value);
+                                                                calculateTotalValue(
+                                                                    index);
+                                                              } else {
+                                                                basePriceValues[
+                                                                        index] =
+                                                                    0.0;
+                                                                calculateTotalValue(
+                                                                    index);
+                                                              }
+                                                              evaluatePrice(
+                                                                  index);
+                                                            }
+                                                          } else {
+                                                            originerrors[
+                                                                index] = true;
+                                                          }
+                                                        },
+                                                        autovalidateMode:
+                                                            AutovalidateMode
+                                                                .onUserInteraction,
+                                                        onSaved: (newValue) {
+                                                          valueControllers[
+                                                                  index]
+                                                              .text = newValue!;
+                                                        },
+                                                        onFieldSubmitted:
+                                                            (value) {
+                                                          FocusManager.instance
+                                                              .primaryFocus
+                                                              ?.unfocus();
+                                                          BlocProvider.of<
+                                                                      BottomNavBarCubit>(
+                                                                  context)
+                                                              .emitShow();
+                                                        },
+                                                      ),
+                                                    ),
+                                                    Visibility(
+                                                      visible:
+                                                          valueEnabled[index],
+                                                      child: Padding(
+                                                        padding:
+                                                            const EdgeInsets
+                                                                .symmetric(
+                                                                horizontal:
+                                                                    8.0),
+                                                        child: Text(
+                                                          AppLocalizations.of(
+                                                                  context)!
+                                                              .translate(
+                                                                  'price_for_custome'),
+                                                        ),
+                                                      ),
+                                                    ),
+                                                    const SizedBox(
+                                                      height: 25,
+                                                    ),
+                                                  ],
+                                                ),
+                                              ),
+                                            ),
+                                            Positioned(
+                                              left: 5,
+                                              top: 5,
+                                              child: Container(
+                                                height: 30,
+                                                width: 35,
+                                                decoration: BoxDecoration(
+                                                  color: AppColor.deepYellow,
+                                                  borderRadius:
+                                                      const BorderRadius.only(
+                                                    topLeft:
+                                                        Radius.circular(15),
+                                                    topRight:
+                                                        Radius.circular(5),
+                                                    bottomLeft:
+                                                        Radius.circular(5),
+                                                    bottomRight:
+                                                        Radius.circular(5),
+                                                  ),
+                                                ),
+                                                child: Center(
+                                                  child: Text(
+                                                    (index + 1).toString(),
+                                                    style: const TextStyle(
+                                                      color: Colors.white,
+                                                      fontWeight:
+                                                          FontWeight.bold,
+                                                    ),
+                                                  ),
+                                                ),
+                                              ),
+                                            ),
+                                            (_count > 1) && (index != 0)
+                                                ? Positioned(
+                                                    right: 0,
+                                                    child: GestureDetector(
+                                                      onTap: () {
+                                                        _showAlertDialog(index);
+                                                      },
+                                                      child: Container(
+                                                        height: 30,
+                                                        width: 30,
+                                                        decoration:
+                                                            BoxDecoration(
+                                                          color: Colors.red,
+                                                          borderRadius:
+                                                              BorderRadius
+                                                                  .circular(45),
+                                                        ),
+                                                        child: const Center(
+                                                          child: Icon(
+                                                            Icons.close,
+                                                            color: Colors.white,
+                                                          ),
+                                                        ),
+                                                      ),
+                                                    ),
+                                                  )
+                                                : const SizedBox.shrink(),
+                                            index == (_count - 1)
+                                                ? Positioned(
+                                                    bottom: -20.h,
+                                                    left: -20.w,
+                                                    child: GestureDetector(
+                                                      onTap: () async {
+                                                        // feeAddProvider!
+                                                        //     .setLoading(true);
+                                                        _add();
+                                                        // feeAddProvider!
+                                                        //     .setLoading(false);
+                                                      },
+                                                      child: Padding(
+                                                        padding:
+                                                            const EdgeInsets
+                                                                .all(8.0),
+                                                        child: Padding(
+                                                          padding:
+                                                              const EdgeInsets
+                                                                  .all(8.0),
+                                                          child: Icon(
+                                                            Icons.add_circle,
+                                                            size: 35,
+                                                            color: AppColor
+                                                                .deepYellow,
+                                                          ),
+                                                        ),
+                                                      ),
+                                                    ),
+                                                  )
+                                                : const SizedBox.shrink(),
+                                          ],
+                                        );
+                                      },
+                                    ),
+                                    const SizedBox(
+                                      height: 15,
+                                    ),
+                                    Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.end,
+                                      children: [
+                                        Container(
+                                          width: double.infinity,
+                                          decoration: BoxDecoration(
+                                            color: AppColor.lightGreen,
+                                            border: Border.all(
+                                                color: Colors.black26,
+                                                width: 1),
+                                            borderRadius:
+                                                BorderRadius.circular(12),
+                                          ),
+                                          padding: const EdgeInsets.all(15.0),
+                                          child: Column(
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
+                                            children: [
+                                              Text(
+                                                "${AppLocalizations.of(context)!.translate('convert_to_dollar_value')}: ${f.format(double.parse(totalsyrianExchangeValue).toInt())}\$",
+                                                style:
+                                                    TextStyle(fontSize: 17.sp),
+                                              ),
+                                              Text(
+                                                "${AppLocalizations.of(context)!.translate('total_value_in_eygptian_pound')}: ${f.format(double.parse(totalsyrianTotalValue).toInt())} E.P",
+                                                style:
+                                                    TextStyle(fontSize: 17.sp),
+                                              ),
+                                              Text(
+                                                "${AppLocalizations.of(context)!.translate('total_value_with_insurance')}: ${f.format(double.parse(totalTotalValueWithEnsurance).toInt())} E.P",
+                                                style:
+                                                    TextStyle(fontSize: 17.sp),
+                                              ),
+                                              Divider(
+                                                  color: AppColor.deepYellow),
+                                              Row(
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment.center,
+                                                children: [
+                                                  Row(
+                                                    crossAxisAlignment:
+                                                        CrossAxisAlignment
+                                                            .center,
+                                                    children: [
+                                                      Text(
+                                                        "${AppLocalizations.of(context)!.translate('fees')} :  ",
+                                                        style: TextStyle(
+                                                          fontSize: 17,
+                                                          fontWeight:
+                                                              FontWeight.bold,
+                                                          color:
+                                                              AppColor.deepBlue,
+                                                        ),
+                                                      ),
+                                                      SizedBox(
+                                                        width: 200.w,
+                                                        child: BlocBuilder<
+                                                            CalculateMultiResultBloc,
+                                                            CalculateMultiResultState>(
+                                                          builder:
+                                                              (context, state) {
+                                                            if (state
+                                                                    is CalculateMultiResultSuccessed &&
+                                                                totalValueWithEnsurance !=
+                                                                    "0.0") {
+                                                              return Text(
+                                                                f.format(double.parse(state
+                                                                        .result
+                                                                        .totalFinalTotal!)
+                                                                    .toInt()),
+                                                                style:
+                                                                    const TextStyle(
+                                                                  fontSize: 16,
+                                                                  fontWeight:
+                                                                      FontWeight
+                                                                          .bold,
+                                                                ),
+                                                              );
+                                                            } else if (state
+                                                                is CalculateMultiResultLoading) {
+                                                              return const LinearProgressIndicator();
+                                                            } else {
+                                                              return const Text(
+                                                                " _ _ _ _ _  ",
+                                                                style:
+                                                                    TextStyle(
+                                                                  fontSize: 16,
+                                                                  fontWeight:
+                                                                      FontWeight
+                                                                          .bold,
+                                                                ),
+                                                              );
+                                                            }
+                                                          },
+                                                        ),
+                                                      ),
+                                                    ],
+                                                  ),
+                                                  BlocBuilder<
+                                                      CalculateMultiResultBloc,
+                                                      CalculateMultiResultState>(
+                                                    builder: (context, state) {
+                                                      if (state
+                                                              is CalculateMultiResultSuccessed &&
+                                                          totalValueWithEnsurance !=
+                                                              "0.0") {
+                                                        return GestureDetector(
+                                                          onTap: () {
+                                                            Navigator.push(
+                                                              context,
+                                                              MaterialPageRoute(
+                                                                builder:
+                                                                    (context) =>
+                                                                        TraderCalculatorResultScreen(),
+                                                              ),
+                                                            );
+                                                          },
+                                                          child: SizedBox(
+                                                            height: 50,
+                                                            child: Column(
                                                               mainAxisAlignment:
                                                                   MainAxisAlignment
                                                                       .center,
@@ -2802,741 +2975,226 @@ class _StepperMultiOrderBrokerScreenState
                                                                   AppLocalizations.of(
                                                                           context)!
                                                                       .translate(
-                                                                          'list_error'),
-                                                                  style: const TextStyle(
-                                                                      color: Colors
-                                                                          .red),
+                                                                          'fees_details'),
+                                                                  style:
+                                                                      TextStyle(
+                                                                    color: AppColor
+                                                                        .lightBlue,
+                                                                    fontWeight:
+                                                                        FontWeight
+                                                                            .bold,
+                                                                  ),
                                                                 ),
-                                                                const Icon(
-                                                                  Icons.refresh,
-                                                                  color: Colors
-                                                                      .grey,
-                                                                )
                                                               ],
                                                             ),
                                                           ),
                                                         );
+                                                      } else {
+                                                        return const SizedBox
+                                                            .shrink();
                                                       }
                                                     },
-                                                  ),
-                                                  const SizedBox(
-                                                    height: 14,
-                                                  ),
-                                                  Visibility(
-                                                    visible:
-                                                        originerrors[index],
-                                                    child: Text(
-                                                      AppLocalizations.of(
-                                                              context)!
-                                                          .translate(
-                                                              'select_origin_error'),
-                                                      style: const TextStyle(
-                                                          color: Colors.red),
-                                                    ),
-                                                  ),
-                                                  Visibility(
-                                                    visible:
-                                                        originerrors[index],
-                                                    child: const SizedBox(
-                                                      height: 24,
-                                                    ),
-                                                  ),
-                                                  Focus(
-                                                    focusNode: _nodeWeight,
-                                                    onFocusChange:
-                                                        (bool focus) {
-                                                      if (!focus) {
-                                                        FocusManager.instance
-                                                            .primaryFocus
-                                                            ?.unfocus();
-                                                        BlocProvider.of<
-                                                                    BottomNavBarCubit>(
-                                                                context)
-                                                            .emitShow();
-                                                        evaluatePrice(index);
-                                                      }
-                                                    },
-                                                    child: TextFormField(
-                                                      controller:
-                                                          weightControllers[
-                                                              index],
-                                                      // focusNode: _nodeWeight,
-                                                      onTap: () {
-                                                        setSelectedPanel(2);
-
-                                                        BlocProvider.of<
-                                                                    BottomNavBarCubit>(
-                                                                context)
-                                                            .emitHide();
-                                                        weightControllers[index]
-                                                                .selection =
-                                                            TextSelection(
-                                                          baseOffset: 0,
-                                                          extentOffset:
-                                                              weightControllers[
-                                                                      index]
-                                                                  .value
-                                                                  .text
-                                                                  .length,
-                                                        );
-                                                      },
-                                                      // enabled: !valueEnabled,
-                                                      scrollPadding: EdgeInsets.only(
-                                                          bottom: MediaQuery.of(
-                                                                      context)
-                                                                  .viewInsets
-                                                                  .bottom +
-                                                              50),
-                                                      textInputAction:
-                                                          TextInputAction.done,
-                                                      keyboardType:
-                                                          const TextInputType
-                                                              .numberWithOptions(
-                                                              decimal: true,
-                                                              signed: true),
-                                                      inputFormatters: [
-                                                        DecimalFormatter(),
-                                                      ],
-                                                      style: const TextStyle(
-                                                          fontSize: 18),
-                                                      decoration:
-                                                          InputDecoration(
-                                                        labelText:
-                                                            AppLocalizations.of(
-                                                                    context)!
-                                                                .translate(
-                                                                    'weight'),
-                                                        suffixText: showunits[
-                                                                index]
-                                                            ? showUnit(
-                                                                packages[index]!
-                                                                    .unit!,
-                                                                localeState
-                                                                    .value
-                                                                    .languageCode)
-                                                            : "",
-                                                        contentPadding:
-                                                            const EdgeInsets
-                                                                .symmetric(
-                                                          horizontal: 9.0,
-                                                          vertical: 11.0,
-                                                        ),
-                                                      ),
-                                                      onChanged: (value) {
-                                                        if (origins[index] !=
-                                                            null) {
-                                                          setState(
-                                                            () {
-                                                              originerrors[
-                                                                      index] =
-                                                                  false;
-                                                            },
-                                                          );
-                                                          if (value
-                                                              .isNotEmpty) {
-                                                            calculateTotalValueWithPrice(
-                                                                index);
-                                                            weightValues[
-                                                                    index] =
-                                                                int.parse(
-                                                                    value);
-                                                          } else {
-                                                            weightValues[
-                                                                index] = 0;
-                                                          }
-                                                          evaluatePrice(index);
-                                                        } else {
-                                                          originerrors[index] =
-                                                              true;
-                                                        }
-                                                      },
-                                                      autovalidateMode:
-                                                          AutovalidateMode
-                                                              .onUserInteraction,
-                                                      validator: (value) {
-                                                        if (value!.isEmpty) {
-                                                          return AppLocalizations
-                                                                  .of(context)!
-                                                              .translate(
-                                                                  'insert_value_validate');
-                                                        }
-                                                        return null;
-                                                      },
-                                                      onSaved: (newValue) {
-                                                        weightControllers[index]
-                                                            .text = newValue!;
-                                                      },
-                                                      onFieldSubmitted:
-                                                          (value) {
-                                                        FocusManager.instance
-                                                            .primaryFocus
-                                                            ?.unfocus();
-                                                        BlocProvider.of<
-                                                                    BottomNavBarCubit>(
-                                                                context)
-                                                            .emitShow();
-                                                      },
-                                                    ),
-                                                  ),
-                                                  const SizedBox(
-                                                    height: 12,
-                                                  ),
-                                                  Focus(
-                                                    focusNode: _nodeValue,
-                                                    onFocusChange:
-                                                        (bool focus) {
-                                                      if (!focus) {
-                                                        FocusManager.instance
-                                                            .primaryFocus
-                                                            ?.unfocus();
-                                                        BlocProvider.of<
-                                                                    BottomNavBarCubit>(
-                                                                context)
-                                                            .emitShow();
-                                                        evaluatePrice(index);
-                                                      }
-                                                    },
-                                                    child: TextFormField(
-                                                      controller:
-                                                          valueControllers[
-                                                              index],
-                                                      // focusNode: _nodeValue,
-                                                      onTap: () {
-                                                        BlocProvider.of<
-                                                                    BottomNavBarCubit>(
-                                                                context)
-                                                            .emitHide();
-                                                        setSelectedPanel(2);
-
-                                                        valueControllers[index]
-                                                                .selection =
-                                                            TextSelection(
-                                                          baseOffset: 0,
-                                                          extentOffset:
-                                                              valueControllers[
-                                                                      index]
-                                                                  .value
-                                                                  .text
-                                                                  .length,
-                                                        );
-                                                      },
-                                                      // enabled: valueEnabled,
-                                                      textInputAction:
-                                                          TextInputAction.done,
-                                                      keyboardType:
-                                                          const TextInputType
-                                                              .numberWithOptions(
-                                                              decimal: true,
-                                                              signed: true),
-                                                      inputFormatters: [
-                                                        DecimalFormatter(),
-                                                      ],
-                                                      scrollPadding: EdgeInsets.only(
-                                                          bottom: MediaQuery.of(
-                                                                      context)
-                                                                  .viewInsets
-                                                                  .bottom +
-                                                              50),
-                                                      style: const TextStyle(
-                                                          fontSize: 18),
-                                                      decoration:
-                                                          InputDecoration(
-                                                        suffixText: "\$",
-                                                        labelText: valueEnabled[
-                                                                index]
-                                                            ? AppLocalizations
-                                                                    .of(
-                                                                        context)!
-                                                                .translate(
-                                                                    'total_value_in_dollar')
-                                                            : AppLocalizations
-                                                                    .of(
-                                                                        context)!
-                                                                .translate(
-                                                                    'price_for_custome'),
-                                                        contentPadding:
-                                                            const EdgeInsets
-                                                                .symmetric(
-                                                          horizontal: 9.0,
-                                                          vertical: 11.0,
-                                                        ),
-                                                      ),
-                                                      validator: (value) {
-                                                        if (value!.isEmpty) {
-                                                          return AppLocalizations
-                                                                  .of(context)!
-                                                              .translate(
-                                                                  'insert_value_validate');
-                                                        }
-                                                        return null;
-                                                      },
-                                                      onEditingComplete: () {
-                                                        evaluatePrice(index);
-                                                      },
-                                                      onChanged: (value) {
-                                                        if (origins[index] !=
-                                                            null) {
-                                                          originerrors[index] =
-                                                              false;
-                                                          if (value
-                                                              .isNotEmpty) {
-                                                            basePriceValues[
-                                                                    index] =
-                                                                double.parse(
-                                                                    value);
-                                                            calculateTotalValue(
-                                                                index);
-                                                          } else {
-                                                            basePriceValues[
-                                                                index] = 0.0;
-                                                            calculateTotalValue(
-                                                                index);
-                                                          }
-                                                          evaluatePrice(index);
-                                                        } else {
-                                                          originerrors[index] =
-                                                              true;
-                                                        }
-                                                      },
-                                                      autovalidateMode:
-                                                          AutovalidateMode
-                                                              .onUserInteraction,
-                                                      onSaved: (newValue) {
-                                                        valueControllers[index]
-                                                            .text = newValue!;
-                                                      },
-                                                      onFieldSubmitted:
-                                                          (value) {
-                                                        FocusManager.instance
-                                                            .primaryFocus
-                                                            ?.unfocus();
-                                                        BlocProvider.of<
-                                                                    BottomNavBarCubit>(
-                                                                context)
-                                                            .emitShow();
-                                                      },
-                                                    ),
-                                                  ),
-                                                  const SizedBox(
-                                                    height: 25,
                                                   ),
                                                 ],
-                                              ),
-                                            ),
-                                          ),
-                                          Positioned(
-                                            left: 5,
-                                            top: 5,
-                                            child: Container(
-                                              height: 30,
-                                              width: 35,
-                                              decoration: BoxDecoration(
-                                                color: AppColor.deepYellow,
-                                                borderRadius:
-                                                    const BorderRadius.only(
-                                                  topLeft: Radius.circular(15),
-                                                  topRight: Radius.circular(5),
-                                                  bottomLeft:
-                                                      Radius.circular(5),
-                                                  bottomRight:
-                                                      Radius.circular(5),
-                                                ),
-                                              ),
-                                              child: Center(
-                                                child: Text(
-                                                  (index + 1).toString(),
-                                                  style: const TextStyle(
-                                                    color: Colors.white,
-                                                    fontWeight: FontWeight.bold,
-                                                  ),
-                                                ),
-                                              ),
-                                            ),
-                                          ),
-                                          (_count > 1) && (index != 0)
-                                              ? Positioned(
-                                                  right: 0,
-                                                  child: GestureDetector(
-                                                    onTap: () {
-                                                      _showAlertDialog(index);
-                                                    },
-                                                    child: Container(
-                                                      height: 30,
-                                                      width: 30,
-                                                      decoration: BoxDecoration(
-                                                        color: Colors.red,
-                                                        borderRadius:
-                                                            BorderRadius
-                                                                .circular(45),
-                                                      ),
-                                                      child: const Center(
-                                                        child: Icon(
-                                                          Icons.close,
-                                                          color: Colors.white,
-                                                        ),
-                                                      ),
-                                                    ),
-                                                  ),
-                                                )
-                                              : const SizedBox.shrink(),
-                                          index == (_count - 1)
-                                              ? Positioned(
-                                                  bottom: -20.h,
-                                                  left: -20.w,
-                                                  child: GestureDetector(
-                                                    onTap: () async {
-                                                      // feeAddProvider!
-                                                      //     .setLoading(true);
-                                                      _add();
-                                                      // feeAddProvider!
-                                                      //     .setLoading(false);
-                                                    },
-                                                    child: Padding(
-                                                      padding:
-                                                          const EdgeInsets.all(
-                                                              8.0),
-                                                      child: Padding(
-                                                        padding:
-                                                            const EdgeInsets
-                                                                .all(8.0),
-                                                        child: Icon(
-                                                          Icons.add_circle,
-                                                          size: 35,
-                                                          color: AppColor
-                                                              .deepYellow,
-                                                        ),
-                                                      ),
-                                                    ),
-                                                  ),
-                                                )
-                                              : const SizedBox.shrink(),
-                                        ],
-                                      );
-                                    },
-                                  ),
-                                  const SizedBox(
-                                    height: 15,
-                                  ),
-                                  Column(
-                                    crossAxisAlignment: CrossAxisAlignment.end,
-                                    children: [
-                                      Container(
-                                        width: double.infinity,
-                                        decoration: BoxDecoration(
-                                          color: AppColor.lightGreen,
-                                          border: Border.all(
-                                              color: Colors.black26, width: 1),
-                                          borderRadius:
-                                              BorderRadius.circular(12),
-                                        ),
-                                        padding: const EdgeInsets.all(15.0),
-                                        child: Column(
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.start,
-                                          children: [
-                                            Text(
-                                              "${AppLocalizations.of(context)!.translate('convert_to_dollar_value')}: ${f.format(double.parse(totalsyrianExchangeValue).toInt())}\$",
-                                              style: TextStyle(fontSize: 17.sp),
-                                            ),
-                                            Text(
-                                              "${AppLocalizations.of(context)!.translate('total_value_in_eygptian_pound')}: ${f.format(double.parse(totalsyrianTotalValue).toInt())} E.P",
-                                              style: TextStyle(fontSize: 17.sp),
-                                            ),
-                                            Text(
-                                              "${AppLocalizations.of(context)!.translate('total_value_with_insurance')}: ${f.format(double.parse(totalTotalValueWithEnsurance).toInt())} E.P",
-                                              style: TextStyle(fontSize: 17.sp),
-                                            ),
-                                            Divider(color: AppColor.deepYellow),
-                                            Row(
-                                              crossAxisAlignment:
-                                                  CrossAxisAlignment.center,
-                                              children: [
-                                                Row(
-                                                  crossAxisAlignment:
-                                                      CrossAxisAlignment.center,
-                                                  children: [
-                                                    Text(
-                                                      "${AppLocalizations.of(context)!.translate('fees')} :  ",
-                                                      style: TextStyle(
-                                                        fontSize: 17,
-                                                        fontWeight:
-                                                            FontWeight.bold,
-                                                        color:
-                                                            AppColor.deepBlue,
-                                                      ),
-                                                    ),
-                                                    SizedBox(
-                                                      width: 200.w,
-                                                      child: BlocBuilder<
-                                                          CalculateMultiResultBloc,
-                                                          CalculateMultiResultState>(
-                                                        builder:
-                                                            (context, state) {
-                                                          if (state
-                                                                  is CalculateMultiResultSuccessed &&
-                                                              totalValueWithEnsurance !=
-                                                                  "0.0") {
-                                                            return Text(
-                                                              f.format(double
-                                                                      .parse(state
-                                                                          .result
-                                                                          .totalFinalTotal!)
-                                                                  .toInt()),
-                                                              style:
-                                                                  const TextStyle(
-                                                                fontSize: 16,
-                                                                fontWeight:
-                                                                    FontWeight
-                                                                        .bold,
-                                                              ),
-                                                            );
-                                                          } else if (state
-                                                              is CalculateMultiResultLoading) {
-                                                            return const LinearProgressIndicator();
-                                                          } else {
-                                                            return const Text(
-                                                              " _ _ _ _ _  ",
-                                                              style: TextStyle(
-                                                                fontSize: 16,
-                                                                fontWeight:
-                                                                    FontWeight
-                                                                        .bold,
-                                                              ),
-                                                            );
-                                                          }
-                                                        },
-                                                      ),
-                                                    ),
-                                                  ],
-                                                ),
-                                                BlocBuilder<
-                                                    CalculateMultiResultBloc,
-                                                    CalculateMultiResultState>(
-                                                  builder: (context, state) {
-                                                    if (state
-                                                            is CalculateMultiResultSuccessed &&
-                                                        totalValueWithEnsurance !=
-                                                            "0.0") {
-                                                      return GestureDetector(
-                                                        onTap: () {
-                                                          Navigator.push(
-                                                            context,
-                                                            MaterialPageRoute(
-                                                              builder: (context) =>
-                                                                  TraderCalculatorResultScreen(),
-                                                            ),
-                                                          );
-                                                        },
-                                                        child: SizedBox(
-                                                          height: 50,
-                                                          child: Column(
-                                                            mainAxisAlignment:
-                                                                MainAxisAlignment
-                                                                    .center,
-                                                            children: [
-                                                              Text(
-                                                                AppLocalizations.of(
-                                                                        context)!
-                                                                    .translate(
-                                                                        'fees_details'),
-                                                                style:
-                                                                    TextStyle(
-                                                                  color: AppColor
-                                                                      .lightBlue,
-                                                                  fontWeight:
-                                                                      FontWeight
-                                                                          .bold,
-                                                                ),
-                                                              ),
-                                                            ],
-                                                          ),
-                                                        ),
-                                                      );
-                                                    } else {
-                                                      return const SizedBox
-                                                          .shrink();
-                                                    }
-                                                  },
-                                                ),
-                                              ],
-                                            ),
-                                          ],
-                                        ),
-                                      ),
-                                      SizedBox(
-                                        height: 7.h,
-                                      ),
-                                      Visibility(
-                                        visible: orderBrokerProvider
-                                                .selectedStateError ||
-                                            orderBrokerProvider
-                                                .selectedRadioTileError ||
-                                            calculatorError
-                                        // packageError,
-                                        ,
-                                        child: Padding(
-                                          padding: const EdgeInsets.only(
-                                              top: 2.0,
-                                              bottom: 8.0,
-                                              right: 25.0,
-                                              left: 25.0),
-                                          child: Row(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.start,
-                                            children: [
-                                              Text(
-                                                AppLocalizations.of(context)!
-                                                    .translate(
-                                                        'complete_blank_textfield'),
-                                                style: const TextStyle(
-                                                  color: Colors.red,
-                                                ),
                                               ),
                                             ],
                                           ),
                                         ),
-                                      ),
-                                      Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.spaceAround,
-                                        children: [
-                                          // CustomButton(
-                                          //   onTap: () {},
-                                          //   color: AppColor.deepYellow,
-                                          //   title: const SizedBox(
-                                          //       width: 100, child: Center(child: Text("إلغاء"))),
-                                          // ),
-                                          BlocConsumer<CalculateResultBloc,
-                                              CalculateResultState>(
-                                            listener: (context, state) {
-                                              if (state
-                                                  is CalculateResultSuccessed) {}
-                                            },
-                                            builder: (context, state) {
-                                              if (state
-                                                  is CalculateResultLoading) {
-                                                return CustomButton(
+                                        SizedBox(
+                                          height: 7.h,
+                                        ),
+                                        Visibility(
+                                          visible: orderBrokerProvider
+                                                  .selectedStateError ||
+                                              orderBrokerProvider
+                                                  .selectedRadioTileError ||
+                                              calculatorError
+                                          // packageError,
+                                          ,
+                                          child: Padding(
+                                            padding: const EdgeInsets.only(
+                                                top: 2.0,
+                                                bottom: 8.0,
+                                                right: 25.0,
+                                                left: 25.0),
+                                            child: Row(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.start,
+                                              children: [
+                                                Text(
+                                                  AppLocalizations.of(context)!
+                                                      .translate(
+                                                          'complete_blank_textfield'),
+                                                  style: const TextStyle(
+                                                    color: Colors.red,
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
+                                          ),
+                                        ),
+                                        Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceAround,
+                                          children: [
+                                            // CustomButton(
+                                            //   onTap: () {},
+                                            //   color: AppColor.deepYellow,
+                                            //   title: const SizedBox(
+                                            //       width: 100, child: Center(child: Text("إلغاء"))),
+                                            // ),
+                                            BlocConsumer<CalculateResultBloc,
+                                                CalculateResultState>(
+                                              listener: (context, state) {
+                                                if (state
+                                                    is CalculateResultSuccessed) {}
+                                              },
+                                              builder: (context, state) {
+                                                if (state
+                                                    is CalculateResultLoading) {
+                                                  return CustomButton(
+                                                      title: SizedBox(
+                                                          width: 250.w,
+                                                          child: const Center(
+                                                              child:
+                                                                  CircularProgressIndicator())),
+                                                      // color: AppColor.deepYellow,
+                                                      onTap: () {});
+                                                }
+                                                if (state
+                                                    is CalculateResultFailed) {
+                                                  return Text(state.error);
+                                                } else {
+                                                  return CustomButton(
                                                     title: SizedBox(
-                                                        width: 250.w,
-                                                        child: const Center(
-                                                            child:
-                                                                CircularProgressIndicator())),
-                                                    // color: AppColor.deepYellow,
-                                                    onTap: () {});
-                                              }
-                                              if (state
-                                                  is CalculateResultFailed) {
-                                                return Text(state.error);
-                                              } else {
-                                                return CustomButton(
-                                                  title: SizedBox(
-                                                    width: 250.w,
-                                                    child: Center(
-                                                      child: Text(
-                                                        AppLocalizations.of(
-                                                                context)!
-                                                            .translate('next'),
-                                                        style: const TextStyle(
-                                                          fontWeight:
-                                                              FontWeight.bold,
+                                                      width: 250.w,
+                                                      child: Center(
+                                                        child: Text(
+                                                          AppLocalizations.of(
+                                                                  context)!
+                                                              .translate(
+                                                                  'next'),
+                                                          style:
+                                                              const TextStyle(
+                                                            fontWeight:
+                                                                FontWeight.bold,
+                                                          ),
                                                         ),
                                                       ),
                                                     ),
-                                                  ),
-                                                  // color: AppColor.deepYellow,
-                                                  onTap: () {
-                                                    FocusManager
-                                                        .instance.primaryFocus
-                                                        ?.unfocus();
-                                                    if (orderBrokerProvider
-                                                        .selectedRadioTile
-                                                        .isNotEmpty) {
+                                                    // color: AppColor.deepYellow,
+                                                    onTap: () {
+                                                      FocusManager
+                                                          .instance.primaryFocus
+                                                          ?.unfocus();
                                                       if (orderBrokerProvider
-                                                                  .selectedStateCustome !=
-                                                              null &&
-                                                          orderBrokerProvider
-                                                                  .selectedCustomeAgency !=
-                                                              null) {
-                                                        _ordercalformkey
-                                                            .currentState
-                                                            ?.save();
-                                                        if (_ordercalformkey
-                                                            .currentState!
-                                                            .validate()) {
-                                                          setState(() {
-                                                            calculatorError =
-                                                                false;
-                                                          });
-
-                                                          for (var i = 0;
-                                                              i <
-                                                                  origins
-                                                                      .length;
-                                                              i++) {
-                                                            if (origins[i] !=
+                                                          .selectedRadioTile
+                                                          .isNotEmpty) {
+                                                        if (orderBrokerProvider
+                                                                    .selectedStateCustome !=
+                                                                null &&
+                                                            orderBrokerProvider
+                                                                    .selectedCustomeAgency !=
                                                                 null) {
-                                                              publicOriginError =
+                                                          _ordercalformkey
+                                                              .currentState
+                                                              ?.save();
+                                                          if (_ordercalformkey
+                                                              .currentState!
+                                                              .validate()) {
+                                                            setState(() {
+                                                              calculatorError =
                                                                   false;
-                                                              originerrors[i] =
-                                                                  false;
-                                                            } else {
-                                                              originerrors[i] =
-                                                                  true;
-                                                              publicOriginError =
-                                                                  true;
-                                                            }
-                                                          }
+                                                            });
 
-                                                          if (!publicOriginError) {
-                                                            var totalWeight = 0;
-                                                            for (var element
-                                                                in weightValues) {
-                                                              totalWeight +=
-                                                                  element;
+                                                            for (var i = 0;
+                                                                i <
+                                                                    origins
+                                                                        .length;
+                                                                i++) {
+                                                              if (origins[i] !=
+                                                                  null) {
+                                                                publicOriginError =
+                                                                    false;
+                                                                originerrors[
+                                                                    i] = false;
+                                                              } else {
+                                                                originerrors[
+                                                                    i] = true;
+                                                                publicOriginError =
+                                                                    true;
+                                                              }
                                                             }
-                                                            Navigator.push(
-                                                              context,
-                                                              MaterialPageRoute(
-                                                                builder:
-                                                                    (context) =>
-                                                                        TraderAttachementScreen(
-                                                                  totalweight:
-                                                                      totalWeight,
-                                                                  totalprice:
-                                                                      totalsyrianTotalValue,
-                                                                  totaltaxes:
-                                                                      totalTotalValueWithEnsurance,
-                                                                  origin:
-                                                                      origins,
-                                                                  weight:
-                                                                      weightValues,
-                                                                  product:
-                                                                      packages,
-                                                                  price:
-                                                                      syrianTotalValue,
-                                                                  taxes:
-                                                                      totalValueWithEnsurance,
-                                                                  rawmaterial:
-                                                                      rawMaterialValues,
-                                                                  industrial:
-                                                                      industrialValues,
-                                                                  brands:
-                                                                      brandValus,
-                                                                  tubes:
-                                                                      tubeValus,
-                                                                  colored:
-                                                                      colorValus,
-                                                                  lycra:
-                                                                      lycraValus,
+
+                                                            if (!publicOriginError) {
+                                                              var totalWeight =
+                                                                  0;
+                                                              for (var element
+                                                                  in weightValues) {
+                                                                totalWeight +=
+                                                                    element;
+                                                              }
+                                                              Navigator.push(
+                                                                context,
+                                                                MaterialPageRoute(
+                                                                  builder:
+                                                                      (context) =>
+                                                                          TraderAttachementScreen(
+                                                                    totalweight:
+                                                                        totalWeight,
+                                                                    totalprice:
+                                                                        totalsyrianTotalValue,
+                                                                    totaltaxes:
+                                                                        totalTotalValueWithEnsurance,
+                                                                    origin:
+                                                                        origins,
+                                                                    weight:
+                                                                        weightValues,
+                                                                    product:
+                                                                        packages,
+                                                                    price:
+                                                                        syrianTotalValue,
+                                                                    taxes:
+                                                                        totalValueWithEnsurance,
+                                                                    rawmaterial:
+                                                                        rawMaterialValues,
+                                                                    industrial:
+                                                                        industrialValues,
+                                                                    brands:
+                                                                        brandValus,
+                                                                    tubes:
+                                                                        tubeValus,
+                                                                    colored:
+                                                                        colorValus,
+                                                                    lycra:
+                                                                        lycraValus,
+                                                                  ),
                                                                 ),
-                                                              ),
-                                                            );
+                                                              );
+                                                            } else {
+                                                              setState(() {
+                                                                calculatorError =
+                                                                    true;
+                                                              });
+                                                              setSelectedPanel(
+                                                                  2);
+                                                              Scrollable
+                                                                  .ensureVisible(
+                                                                key3.currentContext!,
+                                                                duration:
+                                                                    const Duration(
+                                                                  milliseconds:
+                                                                      500,
+                                                                ),
+                                                              );
+                                                            }
                                                           } else {
+                                                            setSelectedPanel(2);
+
                                                             setState(() {
                                                               calculatorError =
                                                                   true;
                                                             });
-                                                            setSelectedPanel(2);
                                                             Scrollable
                                                                 .ensureVisible(
                                                               key3.currentContext!,
@@ -3548,15 +3206,14 @@ class _StepperMultiOrderBrokerScreenState
                                                             );
                                                           }
                                                         } else {
-                                                          setSelectedPanel(2);
+                                                          setSelectedPanel(1);
 
-                                                          setState(() {
-                                                            calculatorError =
-                                                                true;
-                                                          });
+                                                          orderBrokerProvider
+                                                              .setselectedStateError(
+                                                                  true);
                                                           Scrollable
                                                               .ensureVisible(
-                                                            key3.currentContext!,
+                                                            key2.currentContext!,
                                                             duration:
                                                                 const Duration(
                                                               milliseconds: 500,
@@ -3564,54 +3221,41 @@ class _StepperMultiOrderBrokerScreenState
                                                           );
                                                         }
                                                       } else {
-                                                        setSelectedPanel(1);
-
+                                                        setSelectedPanel(0);
                                                         orderBrokerProvider
-                                                            .setselectedStateError(
+                                                            .setSelectedRadioError(
                                                                 true);
                                                         Scrollable
                                                             .ensureVisible(
-                                                          key2.currentContext!,
+                                                          key1.currentContext!,
                                                           duration:
                                                               const Duration(
                                                             milliseconds: 500,
                                                           ),
                                                         );
                                                       }
-                                                    } else {
-                                                      setSelectedPanel(0);
-                                                      orderBrokerProvider
-                                                          .setSelectedRadioError(
-                                                              true);
-                                                      Scrollable.ensureVisible(
-                                                        key1.currentContext!,
-                                                        duration:
-                                                            const Duration(
-                                                          milliseconds: 500,
-                                                        ),
-                                                      );
-                                                    }
-                                                  },
-                                                );
-                                              }
-                                            },
-                                          ),
-                                        ],
-                                      ),
-                                      SizedBox(
-                                        height: 5.h,
-                                      ),
-                                    ],
-                                  ),
-                                ]),
+                                                    },
+                                                  );
+                                                }
+                                              },
+                                            ),
+                                          ],
+                                        ),
+                                        SizedBox(
+                                          height: 5.h,
+                                        ),
+                                      ],
+                                    ),
+                                  ]),
+                            ),
                           ),
                         ),
                       ),
-                    ),
-                    // SizedBox(
-                    //   height: 5.h,
-                    // ),
-                  ]),
+                      // SizedBox(
+                      //   height: 5.h,
+                      // ),
+                    ]),
+                  ),
                 );
               }),
             ),

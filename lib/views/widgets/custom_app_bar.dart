@@ -53,7 +53,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
                             },
                             child: Padding(
                               padding: EdgeInsets.symmetric(
-                                  vertical: 13.h, horizontal: 10.w),
+                                  vertical: 13.h, horizontal: 5.w),
                               child: SizedBox(
                                 // margin:
                                 //     EdgeInsets.symmetric(vertical: 13.h, horizontal: 3.w),
@@ -73,7 +73,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
                             },
                             child: Padding(
                               padding: EdgeInsets.symmetric(
-                                  vertical: 13.h, horizontal: 10.w),
+                                  vertical: 13.h, horizontal: 5.w),
                               child: SizedBox(
                                 height: 35.h,
                                 width: 35.w,
@@ -157,7 +157,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
                 ),
                 SizedBox(
                   height: 95.h,
-                  width: 175.w,
+                  width: MediaQuery.of(context).size.width * .3,
                   child: Column(
                     mainAxisSize: MainAxisSize.min,
                     mainAxisAlignment: MainAxisAlignment.end,

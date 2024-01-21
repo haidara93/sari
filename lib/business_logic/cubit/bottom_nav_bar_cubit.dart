@@ -7,7 +7,7 @@ class BottomNavBarCubit extends Cubit<BottomNavBarState> {
   BottomNavBarCubit() : super(BottomNavBarShown());
 
   void emitShow() {
-    Future.delayed(Duration(seconds: 1)).then(
+    Future.delayed(const Duration(milliseconds: 300)).then(
       (value) => emit(BottomNavBarShown()),
     );
   }

@@ -251,6 +251,7 @@ class StateAgencyRepository {
 
   Future<Offer?> postOffer(
     String? offerType,
+    int? broker,
     int? packagesNum,
     int? tabalehNum,
     List<int>? weight,
@@ -285,6 +286,7 @@ class StateAgencyRepository {
     var response = await HttpHelper.post(OFFERS_ENDPOINT, apiToken: token, {
       "offer_type": offerType,
       "trader": trader,
+      "costume_broker": broker,
       "costumeagency": costumeagency,
       "costumestate": costumestate,
       "products": products,

@@ -18,6 +18,7 @@ class OfferBloc extends Bloc<OfferEvent, OfferState> {
       try {
         var data = await stateAgencyRepository.postOffer(
           event.offerType,
+          event.broker,
           event.packageNum,
           event.tabalehNum,
           event.weight,

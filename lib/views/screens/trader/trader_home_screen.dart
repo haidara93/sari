@@ -672,8 +672,44 @@ class _TraderHomeScreenState extends State<TraderHomeScreen>
                                   ),
                                   GestureDetector(
                                     onTap: () {
-                                      BlocProvider.of<AuthBloc>(context)
-                                          .add(UserLoggedOut());
+                                      showDialog<void>(
+                                        context: context,
+                                        barrierDismissible:
+                                            false, // user must tap button!
+                                        builder: (BuildContext context) {
+                                          return AlertDialog(
+                                            // <-- SEE HERE
+                                            backgroundColor: Colors.white,
+                                            title: const Text('Log out'),
+                                            content:
+                                                const SingleChildScrollView(
+                                              child: ListBody(
+                                                children: <Widget>[
+                                                  Text(
+                                                      'Are you sure want to log out?'),
+                                                ],
+                                              ),
+                                            ),
+                                            actions: <Widget>[
+                                              TextButton(
+                                                child: const Text('No'),
+                                                onPressed: () {
+                                                  Navigator.of(context).pop();
+                                                },
+                                              ),
+                                              TextButton(
+                                                child: const Text('Yes'),
+                                                onPressed: () {
+                                                  BlocProvider.of<AuthBloc>(
+                                                          context)
+                                                      .add(UserLoggedOut());
+                                                  Navigator.of(context).pop();
+                                                },
+                                              ),
+                                            ],
+                                          );
+                                        },
+                                      );
                                     },
                                     child: ListTile(
                                       leading: SvgPicture.asset(
@@ -2557,6 +2593,7 @@ class _TraderHomeScreenState extends State<TraderHomeScreen>
                   setState(() {
                     flagselected = -1;
                     originselected = null;
+                    querySearch = "";
                   });
                   BlocProvider.of<CalculatorPanelBloc>(context)
                       .add(CalculatorPanelHideEvent());
@@ -2640,17 +2677,16 @@ class _TraderHomeScreenState extends State<TraderHomeScreen>
                                   setState(() {
                                     isSearch = false;
                                   });
-                                } else {
-                                  setState(() {
-                                    querySearch = value;
-                                  });
                                 }
+                                setState(() {
+                                  querySearch = value;
+                                });
                               },
                               onFieldSubmitted: (value) {
                                 FocusManager.instance.primaryFocus?.unfocus();
                                 BlocProvider.of<BottomNavBarCubit>(context)
                                     .emitShow();
-                                _searchController.text = value;
+                                _flagsearchController.text = value;
                                 if (value.isNotEmpty) {
                                   // BlocProvider.of<SearchSectionBloc>(context)
                                   //     .add(SearchSectionLoadEvent(value));
@@ -2681,48 +2717,76 @@ class _TraderHomeScreenState extends State<TraderHomeScreen>
                                 itemBuilder: (context, index) {
                                   return querySearch.isEmpty ||
                                           state.origins[index].label!
-                                              .contains(querySearch)
-                                      ? SizedBox(
-                                          // width: 200,
-                                          child: Row(
-                                            children: [
-                                              SizedBox(
-                                                height: 35,
-                                                width: 55,
-                                                child: SvgPicture.network(
-                                                  state
-                                                      .origins[index].imageURL!,
+                                              .toLowerCase()
+                                              .contains(
+                                                  querySearch.toLowerCase())
+                                      ? InkWell(
+                                          onTap: () {
+                                            setState(() {
+                                              flagselected = index;
+                                              originselected =
+                                                  state.origins[index];
+                                              // querySearch = "";
+                                            });
+                                          },
+                                          child: SizedBox(
+                                            width: MediaQuery.of(context)
+                                                .size
+                                                .width,
+                                            child: Row(
+                                              children: [
+                                                SizedBox(
                                                   height: 35,
                                                   width: 55,
-                                                  // semanticsLabel: 'A shark?!',
-                                                  placeholderBuilder:
-                                                      (BuildContext context) =>
-                                                          Container(
-                                                    height: 35.h,
-                                                    width: 45.w,
-                                                    decoration: BoxDecoration(
-                                                      color: Colors.grey[200],
-                                                      borderRadius:
-                                                          BorderRadius.circular(
-                                                              5),
+                                                  child: SvgPicture.network(
+                                                    state.origins[index]
+                                                        .imageURL!,
+                                                    height: 35,
+                                                    width: 55,
+                                                    // semanticsLabel: 'A shark?!',
+                                                    placeholderBuilder:
+                                                        (BuildContext
+                                                                context) =>
+                                                            Container(
+                                                      height: 35.h,
+                                                      width: 45.w,
+                                                      decoration: BoxDecoration(
+                                                        color: Colors.grey[200],
+                                                        borderRadius:
+                                                            BorderRadius
+                                                                .circular(5),
+                                                      ),
                                                     ),
                                                   ),
                                                 ),
-                                              ),
-                                              const SizedBox(width: 7),
-                                              Container(
-                                                constraints: BoxConstraints(
-                                                  maxWidth: 280.w,
+                                                const SizedBox(width: 7),
+                                                Container(
+                                                  constraints: BoxConstraints(
+                                                    maxWidth: 280.w,
+                                                  ),
+                                                  child: Text(
+                                                    state.origins[index].label!,
+                                                    // overflow:
+                                                    //     TextOverflow.ellipsis,
+                                                    maxLines: 2,
+                                                  ),
                                                 ),
-                                                child: Text(
-                                                  state.origins[index].label!,
-                                                  overflow:
-                                                      TextOverflow.ellipsis,
-                                                  // maxLines: 2,
-                                                ),
-                                              ),
-                                            ],
-                                            // subtitle: Text('\$${suggestion['price']}'),
+                                                Spacer(),
+                                                flagselected == index
+                                                    ? const Icon(
+                                                        Icons
+                                                            .check_box_outlined,
+                                                        color: Colors.green,
+                                                      )
+                                                    : Icon(
+                                                        Icons
+                                                            .check_box_outline_blank,
+                                                        color:
+                                                            AppColor.deepBlue,
+                                                      ),
+                                              ],
+                                              // subtitle: Text('\$${suggestion['price']}'),
+                                            ),
                                           ),
                                         )
                                       : const SizedBox.shrink();
@@ -2812,6 +2876,7 @@ class _TraderHomeScreenState extends State<TraderHomeScreen>
                               setState(() {
                                 flagselected = -1;
                                 _flagsearchController.text = "";
+                                querySearch = "";
                                 isSearch = false;
                               });
                               BlocProvider.of<FlagSelectBloc>(context).add(
@@ -2823,7 +2888,7 @@ class _TraderHomeScreenState extends State<TraderHomeScreen>
                             bordercolor: Colors.green,
                             title: SizedBox(
                                 width: 100.w,
-                                child: const Center(child: Text("موافق"))),
+                                child: const Center(child: Text("accept"))),
                           ),
                         ],
                       ),

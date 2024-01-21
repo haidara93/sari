@@ -29,6 +29,7 @@ class OfferStatusUpdateEvent extends OfferEvent {
 
 class AddOfferEvent extends OfferEvent {
   final String offerType;
+  final int broker;
   final int packageNum;
   final int tabalehNum;
   final List<int> weight;
@@ -55,6 +56,7 @@ class AddOfferEvent extends OfferEvent {
 
   AddOfferEvent(
       this.offerType,
+      this.broker,
       this.packageNum,
       this.tabalehNum,
       this.weight,

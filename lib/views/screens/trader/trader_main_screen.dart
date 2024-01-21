@@ -5,6 +5,7 @@ import 'package:custome_mobile/Localization/app_localizations.dart';
 import 'package:custome_mobile/business_logic/bloc/group_bloc.dart';
 import 'package:custome_mobile/business_logic/bloc/post_bloc.dart';
 import 'package:custome_mobile/business_logic/cubit/locale_cubit.dart';
+import 'package:custome_mobile/helpers/color_constants.dart';
 import 'package:custome_mobile/views/widgets/calculator_loading_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -188,36 +189,21 @@ class _TraderMainScreenState extends State<TraderMainScreen> {
                                                                       state3) {
                                                                 if (state3
                                                                     is PostUnsavedSuccessfully) {
-                                                                  var snackBar =
-                                                                      SnackBar(
-                                                                    elevation:
-                                                                        0,
-                                                                    duration: const Duration(
-                                                                        seconds:
-                                                                            4),
-                                                                    backgroundColor:
-                                                                        Colors
-                                                                            .transparent,
-                                                                    content:
-                                                                        Column(
-                                                                      children: [
-                                                                        AwesomeSnackbarContent(
-                                                                          title:
-                                                                              'تم',
-                                                                          message:
-                                                                              'تم إزالة المنشور من المحفوظات!',
-
-                                                                          /// change contentType to ContentType.success, ContentType.warning or ContentType.help for variants
-                                                                          contentType:
-                                                                              ContentType.success,
-                                                                        ),
-                                                                        SizedBox(
-                                                                          height:
-                                                                              90.h,
-                                                                        ),
-                                                                      ],
+                                                                  ScaffoldMessenger.of(
+                                                                          context)
+                                                                      .showSnackBar(
+                                                                    SnackBar(
+                                                                      backgroundColor:
+                                                                          AppColor
+                                                                              .deepYellow,
+                                                                      content: Text(
+                                                                          'تم إزالة المنشور من المحفوظات!'),
+                                                                      duration: const Duration(
+                                                                          seconds:
+                                                                              3),
                                                                     ),
                                                                   );
+
                                                                   BlocProvider.of<
                                                                               PostBloc>(
                                                                           context)
@@ -228,10 +214,6 @@ class _TraderMainScreenState extends State<TraderMainScreen> {
                                                                           false));
                                                                   Navigator.pop(
                                                                       context);
-                                                                  ScaffoldMessenger.of(
-                                                                          context)
-                                                                      .showSnackBar(
-                                                                          snackBar);
                                                                 }
                                                               },
                                                               child: SizedBox(
@@ -282,33 +264,21 @@ class _TraderMainScreenState extends State<TraderMainScreen> {
                                                                       if ((state2
                                                                               is GroupListLoadedSuccess) &
                                                                           savepost) {
-                                                                        var snackBar =
-                                                                            SnackBar(
-                                                                          elevation:
-                                                                              0,
-                                                                          duration:
-                                                                              const Duration(seconds: 4),
-                                                                          backgroundColor:
-                                                                              Colors.transparent,
-                                                                          content:
-                                                                              Column(
-                                                                            children: [
-                                                                              AwesomeSnackbarContent(
-                                                                                title: 'تم',
-                                                                                message: 'تم حفظ المنشور في المحفوظات!',
-                                                                                contentType: ContentType.success,
-                                                                              ),
-                                                                              SizedBox(
-                                                                                height: 90.h,
-                                                                              ),
-                                                                            ],
+                                                                        ScaffoldMessenger.of(context)
+                                                                            .showSnackBar(
+                                                                          SnackBar(
+                                                                            backgroundColor:
+                                                                                AppColor.deepYellow,
+                                                                            content:
+                                                                                Text('تم حفظ المنشور في المحفوظات!'),
+                                                                            duration:
+                                                                                const Duration(seconds: 3),
                                                                           ),
                                                                         );
+
                                                                         BlocProvider.of<PostBloc>(context).add(PostSaveEvent(
                                                                             state.posts[index].id!,
                                                                             true));
-                                                                        ScaffoldMessenger.of(context)
-                                                                            .showSnackBar(snackBar);
 
                                                                         Navigator.pop(
                                                                             context);

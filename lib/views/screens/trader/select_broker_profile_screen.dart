@@ -1,21 +1,57 @@
 import 'package:custome_mobile/Localization/app_localizations.dart';
 import 'package:custome_mobile/business_logic/bloc/assign_broker_bloc.dart';
+import 'package:custome_mobile/business_logic/bloc/attachment/attachments_list_bloc.dart';
 import 'package:custome_mobile/business_logic/bloc/broker_review_bloc.dart';
+import 'package:custome_mobile/business_logic/bloc/offer_bloc.dart';
+import 'package:custome_mobile/data/models/package_model.dart';
 import 'package:custome_mobile/data/models/state_custome_agency_model.dart';
 import 'package:custome_mobile/data/models/user_model.dart';
+import 'package:custome_mobile/data/providers/order_broker_provider.dart';
 import 'package:custome_mobile/helpers/color_constants.dart';
+import 'package:custome_mobile/views/control_view.dart';
 import 'package:custome_mobile/views/widgets/custom_botton.dart';
 import 'package:flutter/material.dart';
 import 'package:custome_mobile/business_logic/cubit/locale_cubit.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:provider/provider.dart';
 
 class SelectBrokerProfileScreen extends StatefulWidget {
   final CostumBroker broker;
-  final int offerId;
-  SelectBrokerProfileScreen(
-      {Key? key, required this.broker, required this.offerId})
-      : super(key: key);
+  final List<int>? weight;
+  final List<String>? price;
+  final List<String>? taxes;
+  final int? totalweight;
+  final String? totalprice;
+  final String? totaltaxes;
+  final List<bool>? rawmaterial;
+  final List<bool>? industrial;
+  final List<bool>? brands;
+  final List<bool>? tubes;
+  final List<bool>? colored;
+  final List<bool>? lycra;
+  final List<Package?>? product;
+  final List<Origin?>? origin;
+  final DateTime? date;
+  SelectBrokerProfileScreen({
+    Key? key,
+    required this.broker,
+    this.weight,
+    this.price,
+    this.taxes,
+    this.totalweight,
+    this.totalprice,
+    this.totaltaxes,
+    this.product,
+    this.origin,
+    this.rawmaterial,
+    this.industrial,
+    this.brands,
+    this.tubes,
+    this.colored,
+    this.lycra,
+    this.date,
+  }) : super(key: key);
 
   @override
   State<SelectBrokerProfileScreen> createState() =>
@@ -57,8 +93,8 @@ class _SelectBrokerProfileScreenState extends State<SelectBrokerProfileScreen> {
             TextButton(
               child: const Text('Yes'),
               onPressed: () {
-                BlocProvider.of<AssignBrokerBloc>(context)
-                    .add(AssignBrokerToOfferEvent(widget.offerId, index));
+                // BlocProvider.of<AssignBrokerBloc>(context)
+                //     .add(AssignBrokerToOfferEvent(widget.offerId, index));
                 // remove(index);
                 Navigator.of(context).pop();
               },
@@ -473,21 +509,115 @@ class _SelectBrokerProfileScreenState extends State<SelectBrokerProfileScreen> {
                     bottom: 30,
                     child: SizedBox(
                       width: MediaQuery.of(context).size.width,
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          CustomButton(
-                              title: SizedBox(
-                                width: 150.w,
-                                child: const Center(
-                                  child: Text("CB request"),
-                                ),
-                              ),
-                              onTap: () {
-                                _showAlertDialog(widget.broker.id!);
-                              }),
-                        ],
-                      ),
+                      child: Consumer<OrderBrokerProvider>(
+                          builder: (context, orderBrokerProvider, child) {
+                        return Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            BlocConsumer<OfferBloc, OfferState>(
+                              listener: (context, offerstate) {
+                                if (offerstate is OfferLoadedSuccess) {
+                                  BlocProvider.of<AttachmentsListBloc>(context)
+                                      .add(ClearAttachmentToListEvent());
+                                  // BlocProvider.of<BrokerListBloc>(
+                                  //         context)
+                                  //     .add(BrokerListLoadEvent());
+                                  Navigator.pushAndRemoveUntil(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) => ControlView(),
+                                    ),
+                                    (route) => false,
+                                  );
+                                  ScaffoldMessenger.of(context)
+                                      .showSnackBar(SnackBar(
+                                    content: Text(AppLocalizations.of(context)!
+                                        .translate('order_success_message')),
+                                    duration: const Duration(seconds: 3),
+                                  ));
+                                  orderBrokerProvider.initProvider();
+                                }
+                                if (offerstate is OfferLoadedFailed) {
+                                  print(offerstate.errortext);
+                                  ScaffoldMessenger.of(context)
+                                      .showSnackBar(SnackBar(
+                                    content: Text(AppLocalizations.of(context)!
+                                        .translate('order_waring_message')),
+                                    duration: const Duration(seconds: 3),
+                                  ));
+                                }
+                              },
+                              builder: (context, offerstate) {
+                                if (offerstate is OfferLoadingProgress) {
+                                  return CustomButton(
+                                    onTap: () {},
+                                    title: SizedBox(
+                                        width:
+                                            MediaQuery.of(context).size.width *
+                                                .75,
+                                        child: const Center(
+                                            child:
+                                                CircularProgressIndicator())),
+                                  );
+                                } else {
+                                  return CustomButton(
+                                      title: SizedBox(
+                                        width:
+                                            MediaQuery.of(context).size.width *
+                                                .75,
+                                        child: const Center(
+                                          child: Text("CB request"),
+                                        ),
+                                      ),
+                                      onTap: () {
+                                        List<String> productsId = [];
+                                        List<int> originId = [];
+                                        for (var i = 0;
+                                            i < widget.product!.length;
+                                            i++) {
+                                          productsId
+                                              .add(widget.product![i]!.id!);
+                                          originId.add(widget.origin![i]!.id!);
+                                        }
+                                        BlocProvider.of<OfferBloc>(context).add(
+                                          AddOfferEvent(
+                                              orderBrokerProvider
+                                                  .selectedRadioTile,
+                                              widget.broker.id!,
+                                              orderBrokerProvider.packageNum,
+                                              orderBrokerProvider.tabalehNum,
+                                              widget.weight!,
+                                              widget.price!,
+                                              widget.taxes!,
+                                              widget.totalweight!,
+                                              widget.totalprice!,
+                                              widget.totaltaxes!,
+                                              widget.rawmaterial!,
+                                              widget.industrial!,
+                                              widget.brands!,
+                                              widget.tubes!,
+                                              widget.colored!,
+                                              widget.lycra!,
+                                              orderBrokerProvider
+                                                  .selectedCustomeAgency!.id!,
+                                              orderBrokerProvider
+                                                  .selectedStateCustome!.id!,
+                                              orderBrokerProvider.packageTypeId,
+                                              "${orderBrokerProvider.productExpireDate!.year}-${orderBrokerProvider.productExpireDate!.month}-${orderBrokerProvider.productExpireDate!.day}",
+                                              orderBrokerProvider.note,
+                                              orderBrokerProvider.source!,
+                                              originId,
+                                              productsId,
+                                              orderBrokerProvider
+                                                  .attachmentsId),
+                                        );
+                                      });
+                                }
+                              },
+                            ),
+                          ],
+                        );
+                      }),
                     ),
                   ),
                 ],

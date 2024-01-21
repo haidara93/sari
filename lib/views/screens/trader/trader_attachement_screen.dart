@@ -262,27 +262,14 @@ class _TraderAttachementScreenState extends State<TraderAttachementScreen> {
               if (state is AttachmentLoadedFailed) {
                 print(state.errortext);
                 Navigator.pop(context);
-                var snackBar = SnackBar(
-                  elevation: 0,
-                  duration: const Duration(seconds: 4),
-                  backgroundColor: Colors.transparent,
-                  content: Column(
-                    children: [
-                      AwesomeSnackbarContent(
-                        title: AppLocalizations.of(context)!.translate('error'),
-                        message: AppLocalizations.of(context)!
-                            .translate('attachment_error'),
-
-                        /// change contentType to ContentType.success, ContentType.warning or ContentType.help for variants
-                        contentType: ContentType.failure,
-                      ),
-                      SizedBox(
-                        height: 90.h,
-                      ),
-                    ],
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(
+                    backgroundColor: Colors.red[300],
+                    content: Text(AppLocalizations.of(context)!
+                        .translate('attachment_error')),
+                    duration: const Duration(seconds: 3),
                   ),
                 );
-                ScaffoldMessenger.of(context).showSnackBar(snackBar);
               }
             },
             child: GestureDetector(
@@ -1278,17 +1265,10 @@ class _TraderAttachementScreenState extends State<TraderAttachementScreen> {
                                                                       .singleWhere(
                                                                           (it) =>
                                                                               it!.attachmentType ==
-                                                                              attachmentTypeState
-                                                                                  .attachmentTypes[
-                                                                                      index]
-                                                                                  .id,
-                                                                          orElse: () => Attachment(
-                                                                              id:
-                                                                                  0))
+                                                                              attachmentTypeState.attachmentTypes[index].id,
+                                                                          orElse: () => Attachment(id: 0))
                                                                       .id !=
-                                                                  Attachment(
-                                                                          id: 0)
-                                                                      .id
+                                                                  Attachment(id: 0).id
                                                               ? SizedBox(
                                                                   height: 137.h,
                                                                   width: 120.w,
@@ -1303,12 +1283,20 @@ class _TraderAttachementScreenState extends State<TraderAttachementScreen> {
                                                                         .image),
                                                                   ),
                                                                 )
-                                                              : SizedBox(
-                                                                  height: 137.h,
-                                                                  width: 120.w,
-                                                                  child: SvgPicture
-                                                                      .asset(
-                                                                          "assets/icons/cloud.svg")),
+                                                              : cupertino.Padding(
+                                                                  padding:
+                                                                      const EdgeInsets
+                                                                          .all(
+                                                                          8.0),
+                                                                  child: SizedBox(
+                                                                      height:
+                                                                          137.h,
+                                                                      width:
+                                                                          120.w,
+                                                                      child: SvgPicture
+                                                                          .asset(
+                                                                              "assets/icons/cloud.svg")),
+                                                                ),
                                                         ),
                                                       ),
                                                       Text(
@@ -1400,95 +1388,95 @@ class _TraderAttachementScreenState extends State<TraderAttachementScreen> {
                                         // ),
                                         BlocConsumer<OfferBloc, OfferState>(
                                           listener: (context, offerstate) {
-                                            if (offerstate
-                                                is OfferLoadedSuccess) {
-                                              BlocProvider.of<
-                                                          AttachmentsListBloc>(
-                                                      context)
-                                                  .add(
-                                                      ClearAttachmentToListEvent());
-                                              BlocProvider.of<BrokerListBloc>(
-                                                      context)
-                                                  .add(BrokerListLoadEvent());
-                                              Navigator.push(
-                                                context,
-                                                MaterialPageRoute(
-                                                  builder: (context) =>
-                                                      SelectBrokerScreen(
-                                                    offerId:
-                                                        offerstate.offer.id!,
-                                                  ),
-                                                ),
-                                              );
+                                            // if (offerstate
+                                            //     is OfferLoadedSuccess) {
+                                            //   BlocProvider.of<
+                                            //               AttachmentsListBloc>(
+                                            //           context)
+                                            //       .add(
+                                            //           ClearAttachmentToListEvent());
+                                            // BlocProvider.of<BrokerListBloc>(
+                                            //         context)
+                                            //     .add(BrokerListLoadEvent());
+                                            // Navigator.push(
+                                            //   context,
+                                            //   MaterialPageRoute(
+                                            //     builder: (context) =>
+                                            //         SelectBrokerScreen(
+                                            //       offerId:
+                                            //           offerstate.offer.id!,
+                                            //     ),
+                                            //   ),
+                                            // );
 
-                                              var snackBar = SnackBar(
-                                                elevation: 0,
-                                                duration:
-                                                    const Duration(seconds: 4),
-                                                backgroundColor:
-                                                    Colors.transparent,
-                                                content: Column(
-                                                  children: [
-                                                    AwesomeSnackbarContent(
-                                                      title: AppLocalizations
-                                                              .of(context)!
-                                                          .translate('done'),
-                                                      message: AppLocalizations
-                                                              .of(context)!
-                                                          .translate(
-                                                              'order_success_message'),
+                                            //   var snackBar = SnackBar(
+                                            //     elevation: 0,
+                                            //     duration:
+                                            //         const Duration(seconds: 4),
+                                            //     backgroundColor:
+                                            //         Colors.transparent,
+                                            //     content: Column(
+                                            //       children: [
+                                            //         AwesomeSnackbarContent(
+                                            //           title: AppLocalizations
+                                            //                   .of(context)!
+                                            //               .translate('done'),
+                                            //           message: AppLocalizations
+                                            //                   .of(context)!
+                                            //               .translate(
+                                            //                   'order_success_message'),
 
-                                                      /// change contentType to ContentType.success, ContentType.warning or ContentType.help for variants
-                                                      contentType:
-                                                          ContentType.success,
-                                                    ),
-                                                    SizedBox(
-                                                      height: 90.h,
-                                                    ),
-                                                  ],
-                                                ),
-                                              );
-                                              ScaffoldMessenger.of(context)
-                                                  .showSnackBar(snackBar);
-                                              orderBrokerProvider
-                                                  .initProvider();
-                                            }
-                                            if (offerstate
-                                                is OfferLoadedFailed) {
-                                              print(offerstate.errortext);
-                                              var snackBar = SnackBar(
-                                                elevation: 0,
-                                                duration:
-                                                    const Duration(seconds: 4),
-                                                backgroundColor:
-                                                    Colors.transparent,
-                                                content: Column(
-                                                  children: [
-                                                    AwesomeSnackbarContent(
-                                                      title: AppLocalizations
-                                                              .of(context)!
-                                                          .translate('warning'),
-                                                      message: AppLocalizations
-                                                              .of(context)!
-                                                          .translate(
-                                                              'order_waring_message'),
+                                            //           /// change contentType to ContentType.success, ContentType.warning or ContentType.help for variants
+                                            //           contentType:
+                                            //               ContentType.success,
+                                            //         ),
+                                            //         SizedBox(
+                                            //           height: 90.h,
+                                            //         ),
+                                            //       ],
+                                            //     ),
+                                            //   );
+                                            //   ScaffoldMessenger.of(context)
+                                            //       .showSnackBar(snackBar);
+                                            //   orderBrokerProvider
+                                            //       .initProvider();
+                                            // }
+                                            // if (offerstate
+                                            //     is OfferLoadedFailed) {
+                                            //   print(offerstate.errortext);
+                                            //   var snackBar = SnackBar(
+                                            //     elevation: 0,
+                                            //     duration:
+                                            //         const Duration(seconds: 4),
+                                            //     backgroundColor:
+                                            //         Colors.transparent,
+                                            //     content: Column(
+                                            //       children: [
+                                            //         AwesomeSnackbarContent(
+                                            //           title: AppLocalizations
+                                            //                   .of(context)!
+                                            //               .translate('warning'),
+                                            //           message: AppLocalizations
+                                            //                   .of(context)!
+                                            //               .translate(
+                                            //                   'order_waring_message'),
 
-                                                      /// change contentType to ContentType.success, ContentType.warning or ContentType.help for variants
-                                                      contentType:
-                                                          ContentType.warning,
-                                                    ),
-                                                    SizedBox(
-                                                      height: 90.h,
-                                                    ),
-                                                  ],
-                                                ),
-                                              );
-                                              ScaffoldMessenger.of(context)
-                                                  .showSnackBar(snackBar);
-                                              BlocProvider.of<OfferBloc>(
-                                                      context)
-                                                  .add(OfferInit());
-                                            }
+                                            //           /// change contentType to ContentType.success, ContentType.warning or ContentType.help for variants
+                                            //           contentType:
+                                            //               ContentType.warning,
+                                            //         ),
+                                            //         SizedBox(
+                                            //           height: 90.h,
+                                            //         ),
+                                            //       ],
+                                            //     ),
+                                            //   );
+                                            //   ScaffoldMessenger.of(context)
+                                            //       .showSnackBar(snackBar);
+                                            //   BlocProvider.of<OfferBloc>(
+                                            //           context)
+                                            //       .add(OfferInit());
+                                            // }
                                           },
                                           builder: (context, offerstate) {
                                             if (offerstate
@@ -1513,57 +1501,47 @@ class _TraderAttachementScreenState extends State<TraderAttachementScreen> {
                                                       if (_attachmentformkey
                                                           .currentState!
                                                           .validate()) {
-                                                        List<String>
-                                                            productsId = [];
-                                                        List<int> originId = [];
-                                                        for (var i = 0;
-                                                            i <
-                                                                widget.product!
-                                                                    .length;
-                                                            i++) {
-                                                          productsId.add(widget
-                                                              .product![i]!
-                                                              .id!);
-                                                          originId.add(widget
-                                                              .origin![i]!.id!);
-                                                        }
-
-                                                        BlocProvider.of<OfferBloc>(context).add(AddOfferEvent(
-                                                            orderBrokerProvider
-                                                                .selectedRadioTile,
-                                                            orderBrokerProvider
-                                                                .packageNum,
-                                                            orderBrokerProvider
-                                                                .tabalehNum,
-                                                            widget.weight!,
-                                                            widget.price!,
-                                                            widget.taxes!,
-                                                            widget.totalweight!,
-                                                            widget.totalprice!,
-                                                            widget.totaltaxes!,
-                                                            widget.rawmaterial!,
-                                                            widget.industrial!,
-                                                            widget.brands!,
-                                                            widget.tubes!,
-                                                            widget.colored!,
-                                                            widget.lycra!,
-                                                            orderBrokerProvider
-                                                                .selectedCustomeAgency!
-                                                                .id!,
-                                                            orderBrokerProvider
-                                                                .selectedStateCustome!
-                                                                .id!,
-                                                            orderBrokerProvider
-                                                                .packageTypeId,
-                                                            "${orderBrokerProvider.productExpireDate!.year}-${orderBrokerProvider.productExpireDate!.month}-${orderBrokerProvider.productExpireDate!.day}",
-                                                            orderBrokerProvider
-                                                                .note,
-                                                            orderBrokerProvider
-                                                                .source!,
-                                                            originId,
-                                                            productsId,
-                                                            orderBrokerProvider
-                                                                .attachmentsId));
+                                                        BlocProvider.of<
+                                                                    BrokerListBloc>(
+                                                                context)
+                                                            .add(
+                                                                BrokerListLoadEvent());
+                                                        Navigator.push(
+                                                          context,
+                                                          MaterialPageRoute(
+                                                            builder: (context) =>
+                                                                SelectBrokerScreen(
+                                                              weight:
+                                                                  widget.weight,
+                                                              brands:
+                                                                  widget.brands,
+                                                              colored: widget
+                                                                  .colored,
+                                                              industrial: widget
+                                                                  .industrial,
+                                                              lycra:
+                                                                  widget.lycra,
+                                                              origin:
+                                                                  widget.origin,
+                                                              price:
+                                                                  widget.price,
+                                                              product: widget
+                                                                  .product,
+                                                              rawmaterial: widget
+                                                                  .rawmaterial,
+                                                              taxes:
+                                                                  widget.taxes,
+                                                              totalprice: widget
+                                                                  .totalprice,
+                                                              totaltaxes: widget
+                                                                  .totaltaxes,
+                                                              totalweight: widget
+                                                                  .totalweight,
+                                                              tubes:
+                                                                  widget.tubes,
+                                                            ),
+                                                          ),
+                                                        );
                                                       } else {
                                                         Scrollable
                                                             .ensureVisible(
@@ -1598,7 +1576,11 @@ class _TraderAttachementScreenState extends State<TraderAttachementScreen> {
                                                   }
                                                 },
                                                 title: SizedBox(
-                                                    width: 100,
+                                                    width:
+                                                        MediaQuery.of(context)
+                                                                .size
+                                                                .width *
+                                                            .8,
                                                     child: Center(
                                                         child: Text(
                                                             AppLocalizations.of(

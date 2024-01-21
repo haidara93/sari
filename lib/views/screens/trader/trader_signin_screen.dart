@@ -5,6 +5,7 @@ import 'package:custome_mobile/business_logic/cubit/internet_cubit.dart';
 import 'package:custome_mobile/business_logic/cubit/locale_cubit.dart';
 import 'package:custome_mobile/constants/text_constants.dart';
 import 'package:custome_mobile/helpers/color_constants.dart';
+import 'package:custome_mobile/views/control_view.dart';
 import 'package:custome_mobile/views/screens/trader/trader_confirm_screen.dart';
 import 'package:custome_mobile/views/widgets/custom_botton.dart';
 import 'package:flutter/material.dart';
@@ -73,7 +74,7 @@ class _TraderSigninScreenState extends State<TraderSigninScreen> {
                       child: Column(
                         children: [
                           SizedBox(
-                            height: 60.h,
+                            height: 45.h,
                           ),
                           Padding(
                               padding: EdgeInsets.symmetric(horizontal: 15.w),
@@ -155,6 +156,11 @@ class _TraderSigninScreenState extends State<TraderSigninScreen> {
                                             _usernameController.text =
                                                 newValue!;
                                           },
+                                          scrollPadding: EdgeInsets.only(
+                                              bottom: MediaQuery.of(context)
+                                                      .viewInsets
+                                                      .bottom +
+                                                  150),
                                           autovalidateMode: AutovalidateMode
                                               .onUserInteraction,
                                           style: TextStyle(
@@ -215,6 +221,11 @@ class _TraderSigninScreenState extends State<TraderSigninScreen> {
                                           ),
                                           autovalidateMode: AutovalidateMode
                                               .onUserInteraction,
+                                          scrollPadding: EdgeInsets.only(
+                                              bottom: MediaQuery.of(context)
+                                                      .viewInsets
+                                                      .bottom +
+                                                  150),
                                           decoration: InputDecoration(
                                             contentPadding:
                                                 EdgeInsets.symmetric(
@@ -241,61 +252,39 @@ class _TraderSigninScreenState extends State<TraderSigninScreen> {
                                       BlocConsumer<AuthBloc, AuthState>(
                                         listener: (context, state) {
                                           if (state is AuthTraderSuccessState) {
-                                            var snackBar = SnackBar(
-                                              elevation: 0,
-                                              duration:
-                                                  const Duration(seconds: 3),
-                                              backgroundColor:
-                                                  Colors.transparent,
-                                              content: Column(
-                                                children: [
-                                                  AwesomeSnackbarContent(
-                                                    title: 'تم',
-                                                    message:
-                                                        'تم تسجيل الدخول بنجاح! أهلا بك.',
-                                                    contentType:
-                                                        ContentType.success,
-                                                  ),
-                                                  SizedBox(
-                                                    height: 30.h,
-                                                  ),
-                                                ],
+                                            ScaffoldMessenger.of(context)
+                                                .showSnackBar(
+                                              SnackBar(
+                                                backgroundColor:
+                                                    AppColor.deepYellow,
+                                                content: const Text(
+                                                    'تم تسجيل الدخول بنجاح! أهلا بك.!'),
+                                                duration:
+                                                    const Duration(seconds: 3),
                                               ),
                                             );
-                                            ScaffoldMessenger.of(context)
-                                                .showSnackBar(snackBar);
 
-                                            Navigator.push(
-                                                context,
-                                                MaterialPageRoute(
-                                                  builder: (context) =>
-                                                      const TraderConfirmScreen(),
-                                                ));
+                                            Navigator.pushAndRemoveUntil(
+                                              context,
+                                              MaterialPageRoute(
+                                                builder: (context) =>
+                                                    const ControlView(),
+                                              ),
+                                              (route) => false,
+                                            );
                                           }
                                           if (state is AuthBrokerSuccessState) {
-                                            var snackBar = SnackBar(
-                                              elevation: 0,
-                                              duration:
-                                                  const Duration(seconds: 3),
-                                              backgroundColor:
-                                                  Colors.transparent,
-                                              content: Column(
-                                                children: [
-                                                  AwesomeSnackbarContent(
-                                                    title: 'تم',
-                                                    message:
-                                                        'تم تسجيل الدخول بنجاح! أهلا بك.',
-                                                    contentType:
-                                                        ContentType.success,
-                                                  ),
-                                                  SizedBox(
-                                                    height: 30.h,
-                                                  ),
-                                                ],
+                                            ScaffoldMessenger.of(context)
+                                                .showSnackBar(
+                                              SnackBar(
+                                                backgroundColor:
+                                                    AppColor.deepYellow,
+                                                content: const Text(
+                                                    'تم تسجيل الدخول بنجاح! أهلا بك.!'),
+                                                duration:
+                                                    const Duration(seconds: 3),
                                               ),
                                             );
-                                            ScaffoldMessenger.of(context)
-                                                .showSnackBar(snackBar);
 
                                             Navigator.push(
                                                 context,
@@ -305,29 +294,17 @@ class _TraderSigninScreenState extends State<TraderSigninScreen> {
                                                 ));
                                           }
                                           if (state is AuthLoginErrorState) {
-                                            var snackBar = SnackBar(
-                                              elevation: 0,
-                                              duration:
-                                                  const Duration(seconds: 3),
-                                              backgroundColor:
-                                                  Colors.transparent,
-                                              content: Column(
-                                                children: [
-                                                  AwesomeSnackbarContent(
-                                                    title: 'خطأ',
-                                                    message:
-                                                        "لا يوجد حساب فعال وفقا للبيانات المدخلة.",
-                                                    contentType:
-                                                        ContentType.failure,
-                                                  ),
-                                                  SizedBox(
-                                                    height: 30.h,
-                                                  ),
-                                                ],
+                                            ScaffoldMessenger.of(context)
+                                                .showSnackBar(
+                                              SnackBar(
+                                                backgroundColor:
+                                                    Colors.red[300],
+                                                content: const Text(
+                                                    'لا يوجد حساب فعال وفقا للبيانات المدخلة!'),
+                                                duration:
+                                                    const Duration(seconds: 3),
                                               ),
                                             );
-                                            ScaffoldMessenger.of(context)
-                                                .showSnackBar(snackBar);
                                           }
                                           // if (state is AuthFailureState) {
                                           //   var snackBar = SnackBar(
@@ -380,7 +357,7 @@ class _TraderSigninScreenState extends State<TraderSigninScreen> {
                                                   onTap: () {
                                                     _formKey.currentState
                                                         ?.save();
-                                                    
+
                                                     if (_formKey.currentState!
                                                         .validate()) {
                                                       _login();

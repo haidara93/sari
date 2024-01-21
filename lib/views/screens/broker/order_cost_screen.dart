@@ -255,52 +255,23 @@ class _OrderCostScreenState extends State<OrderCostScreen> {
                     listener: (context, state) {
                       if (state is CostListLoadedSuccess) {
                         Navigator.pop(context);
-
-                        var snackBar = SnackBar(
-                          elevation: 0,
-                          duration: const Duration(seconds: 4),
-                          backgroundColor: Colors.transparent,
-                          content: Column(
-                            children: [
-                              AwesomeSnackbarContent(
-                                title: 'تم',
-                                message: 'تم إدخال التكاليف بنجاح.',
-
-                                /// change contentType to ContentType.success, ContentType.warning or ContentType.help for variants
-                                contentType: ContentType.success,
-                              ),
-                              SizedBox(
-                                height: 90.h,
-                              ),
-                            ],
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                            backgroundColor: AppColor.deepYellow,
+                            content: Text("تم إدخال التكاليف بنجاح."),
+                            duration: const Duration(seconds: 3),
                           ),
                         );
-
-                        ScaffoldMessenger.of(context).showSnackBar(snackBar);
                       }
                       if (state is CostLoadedFailed) {
-                        var snackBar = SnackBar(
-                          elevation: 0,
-                          duration: const Duration(seconds: 4),
-                          backgroundColor: Colors.transparent,
-                          content: Column(
-                            children: [
-                              AwesomeSnackbarContent(
-                                title: 'خطأ',
-                                message:
-                                    'حدث خطأ أثناء إرسال التكاليف الرجاء المحاولة مرة أخرى.\n اذا تكرر هذا الخطأ الرجاء التواصل معنا لحل هذا الخطأ.',
-
-                                /// change contentType to ContentType.success, ContentType.warning or ContentType.help for variants
-                                contentType: ContentType.failure,
-                              ),
-                              SizedBox(
-                                height: 90.h,
-                              ),
-                            ],
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                            backgroundColor: Colors.red[300],
+                            content: Text(
+                                "حدث خطأ أثناء إرسال التكاليف الرجاء المحاولة مرة أخرى.\n اذا تكرر هذا الخطأ الرجاء التواصل معنا لحل هذا الخطأ."),
+                            duration: const Duration(seconds: 3),
                           ),
                         );
-
-                        ScaffoldMessenger.of(context).showSnackBar(snackBar);
                       }
                     },
                     builder: (context, state) {
