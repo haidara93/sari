@@ -95,6 +95,8 @@ class _TraderAttachementScreenState extends State<TraderAttachementScreen> {
   final FocusNode _nodeTabaleh = FocusNode();
   OrderBrokerProvider? order_brokerProvider;
   AddAttachmentProvider? attachment_Provider;
+  DateTime loadDate = DateTime.now();
+
   @override
   void initState() {
     super.initState();
@@ -131,6 +133,8 @@ class _TraderAttachementScreenState extends State<TraderAttachementScreen> {
           children: [
             TextButton(
               onPressed: () {
+                order_brokerProvider!.setProductDate(loadDate);
+                order_brokerProvider!.setDateError(false);
                 Navigator.pop(context);
               },
               child: Text(
@@ -152,13 +156,14 @@ class _TraderAttachementScreenState extends State<TraderAttachementScreen> {
                 ],
                 child: cupertino.CupertinoDatePicker(
                   backgroundColor: Colors.white10,
-                  initialDateTime: DateTime.now(),
+                  initialDateTime: loadDate,
                   mode: cupertino.CupertinoDatePickerMode.date,
-                  minimumYear: 2023,
+                  minimumYear: loadDate.year,
                   minimumDate: DateTime.now().subtract(const Duration(days: 1)),
-                  maximumYear: 2030,
+                  maximumYear: loadDate.year + 1,
                   onDateTimeChanged: (value) {
-                    order_brokerProvider!.setProductDate(value);
+                    loadDate = value!;
+                    order_brokerProvider!.setProductDate(loadDate);
                     order_brokerProvider!.setDateError(false);
                   },
                 ),

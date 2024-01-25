@@ -215,17 +215,35 @@ class _SelectBrokerScreenState extends State<SelectBrokerScreen> {
                                                                   .brokers[
                                                                       index]
                                                                   .id!));
-                                                  // Navigator.push(
-                                                  //   context,
-                                                  //   MaterialPageRoute(
-                                                  //     builder: (context) =>
-                                                  //         SelectBrokerProfileScreen(
-                                                  //       broker:
-                                                  //           state.brokers[index],
-                                                  //       offerId: widget.offerId,
-                                                  //     ),
-                                                  //   ),
-                                                  // );
+                                                  Navigator.push(
+                                                    context,
+                                                    MaterialPageRoute(
+                                                      builder: (context) =>
+                                                          SelectBrokerProfileScreen(
+                                                        broker: state
+                                                            .brokers[index],
+                                                        weight: widget.weight,
+                                                        brands: widget.brands,
+                                                        colored: widget.colored,
+                                                        industrial:
+                                                            widget.industrial,
+                                                        lycra: widget.lycra,
+                                                        origin: widget.origin,
+                                                        price: widget.price,
+                                                        product: widget.product,
+                                                        rawmaterial:
+                                                            widget.rawmaterial,
+                                                        taxes: widget.taxes,
+                                                        totalprice:
+                                                            widget.totalprice,
+                                                        totaltaxes:
+                                                            widget.totaltaxes,
+                                                        totalweight:
+                                                            widget.totalweight,
+                                                        tubes: widget.tubes,
+                                                      ),
+                                                    ),
+                                                  );
                                                 },
                                                 child: Card(
                                                   shape:

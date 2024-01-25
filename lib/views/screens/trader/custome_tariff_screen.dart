@@ -10,6 +10,7 @@ import 'package:custome_mobile/business_logic/bloc/note_bloc.dart';
 import 'package:custome_mobile/business_logic/bloc/section_bloc.dart';
 import 'package:custome_mobile/business_logic/bloc/sub_chapter_bloc.dart';
 import 'package:custome_mobile/business_logic/cubit/bottom_nav_bar_cubit.dart';
+import 'package:custome_mobile/business_logic/cubit/locale_cubit.dart';
 import 'package:custome_mobile/constants/enums.dart';
 import 'package:custome_mobile/data/models/accurdion_model.dart';
 import 'package:custome_mobile/data/repositories/accurdion_repository.dart';
@@ -1461,134 +1462,404 @@ class _CustomeTariffScreenState extends State<CustomeTariffScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Directionality(
-      textDirection: TextDirection.rtl,
-      child: BlocProvider(
-        create: (context) => NoteBloc(
-          accordionRepository:
-              RepositoryProvider.of<AccordionRepository>(context),
-        ),
-        child: GestureDetector(
-          onTap: () {
-            BlocProvider.of<BottomNavBarCubit>(context).emitShow();
-            FocusManager.instance.primaryFocus?.unfocus();
-          },
-          child: Scaffold(
-            backgroundColor: Colors.grey[200],
-            body: SingleChildScrollView(
-              child: Column(
-                children: [
-                  SizedBox(
-                    height: 10.h,
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Focus(
-                      focusNode: _statenode,
-                      onFocusChange: (bool focus) {
-                        if (!focus) {
-                          BlocProvider.of<BottomNavBarCubit>(context)
-                              .emitShow();
-                          FocusManager.instance.primaryFocus?.unfocus();
-                        }
-                      },
-                      child:
-                          BlocListener<SearchSectionBloc, SearchSectionState>(
-                        listener: (context, state) {
-                          if (state is SearchSectionLoadedSuccess) {
-                            // print(jsonEncode(state.sections));
-                          }
-                          if (state is SearchSectionLoadedFailed) {}
-                        },
-                        child: TextFormField(
-                          controller: _searchController,
-                          onTap: () {
-                            BlocProvider.of<BottomNavBarCubit>(context)
-                                .emitHide();
-                            _searchController.selection = TextSelection(
-                                baseOffset: 0,
-                                extentOffset:
-                                    _searchController.value.text.length);
+    return BlocBuilder<LocaleCubit, LocaleState>(
+      builder: (context, localeState) {
+        return Directionality(
+          textDirection: localeState.value.languageCode == 'en'
+              ? TextDirection.ltr
+              : TextDirection.rtl,
+          child: BlocProvider(
+            create: (context) => NoteBloc(
+              accordionRepository:
+                  RepositoryProvider.of<AccordionRepository>(context),
+            ),
+            child: GestureDetector(
+              onTap: () {
+                BlocProvider.of<BottomNavBarCubit>(context).emitShow();
+                FocusManager.instance.primaryFocus?.unfocus();
+              },
+              child: Scaffold(
+                backgroundColor: Colors.grey[200],
+                body: SingleChildScrollView(
+                  child: Column(
+                    children: [
+                      SizedBox(
+                        height: 10.h,
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Focus(
+                          focusNode: _statenode,
+                          onFocusChange: (bool focus) {
+                            if (!focus) {
+                              BlocProvider.of<BottomNavBarCubit>(context)
+                                  .emitShow();
+                              FocusManager.instance.primaryFocus?.unfocus();
+                            }
                           },
-                          style: TextStyle(fontSize: 18.sp),
-                          scrollPadding: EdgeInsets.only(
-                              bottom: MediaQuery.of(context).viewInsets.bottom +
-                                  50),
-                          decoration: InputDecoration(
-                            labelText: AppLocalizations.of(context)!
-                                .translate('search'),
-                            hintText: AppLocalizations.of(context)!
-                                .translate('search'),
-                            hintStyle: TextStyle(fontSize: 18.sp),
-                            suffixIcon: InkWell(
+                          child: BlocListener<SearchSectionBloc,
+                              SearchSectionState>(
+                            listener: (context, state) {
+                              if (state is SearchSectionLoadedSuccess) {
+                                // print(jsonEncode(state.sections));
+                              }
+                              if (state is SearchSectionLoadedFailed) {}
+                            },
+                            child: TextFormField(
+                              controller: _searchController,
                               onTap: () {
                                 BlocProvider.of<BottomNavBarCubit>(context)
-                                    .emitShow();
-                                FocusManager.instance.primaryFocus?.unfocus();
+                                    .emitHide();
+                                _searchController.selection = TextSelection(
+                                    baseOffset: 0,
+                                    extentOffset:
+                                        _searchController.value.text.length);
+                              },
+                              style: TextStyle(fontSize: 18.sp),
+                              scrollPadding: EdgeInsets.only(
+                                  bottom:
+                                      MediaQuery.of(context).viewInsets.bottom +
+                                          50),
+                              decoration: InputDecoration(
+                                labelText: AppLocalizations.of(context)!
+                                    .translate('search'),
+                                hintText: AppLocalizations.of(context)!
+                                    .translate('search'),
+                                hintStyle: TextStyle(fontSize: 18.sp),
+                                suffixIcon: InkWell(
+                                  onTap: () {
+                                    BlocProvider.of<BottomNavBarCubit>(context)
+                                        .emitShow();
+                                    FocusManager.instance.primaryFocus
+                                        ?.unfocus();
 
-                                if (_searchController.text.isNotEmpty) {
+                                    if (_searchController.text.isNotEmpty) {
+                                      BlocProvider.of<SearchSectionBloc>(
+                                              context)
+                                          .add(SearchSectionLoadEvent(
+                                              _searchController.text));
+                                      setState(() {
+                                        isSearch = true;
+                                      });
+                                    }
+                                  },
+                                  child: const Icon(
+                                    Icons.search,
+                                    color: Colors.grey,
+                                  ),
+                                ),
+                              ),
+                              onChanged: (value) {
+                                if (value.isEmpty) {
+                                  setState(() {
+                                    isSearch = false;
+                                  });
+                                }
+                              },
+                              onFieldSubmitted: (value) {
+                                BlocProvider.of<BottomNavBarCubit>(context)
+                                    .emitShow();
+                                _searchController.text = value;
+                                if (value.isNotEmpty) {
                                   BlocProvider.of<SearchSectionBloc>(context)
-                                      .add(SearchSectionLoadEvent(
-                                          _searchController.text));
+                                      .add(SearchSectionLoadEvent(value));
                                   setState(() {
                                     isSearch = true;
                                   });
                                 }
                               },
-                              child: const Icon(
-                                Icons.search,
-                                color: Colors.grey,
-                              ),
                             ),
                           ),
-                          onChanged: (value) {
-                            if (value.isEmpty) {
-                              setState(() {
-                                isSearch = false;
-                              });
-                            }
-                          },
-                          onFieldSubmitted: (value) {
-                            BlocProvider.of<BottomNavBarCubit>(context)
-                                .emitShow();
-                            _searchController.text = value;
-                            if (value.isNotEmpty) {
-                              BlocProvider.of<SearchSectionBloc>(context)
-                                  .add(SearchSectionLoadEvent(value));
-                              setState(() {
-                                isSearch = true;
-                              });
-                            }
-                          },
                         ),
                       ),
-                    ),
-                  ),
-                  isSearch
-                      ? BlocBuilder<SearchSectionBloc, SearchSectionState>(
-                          builder: (context, state) {
-                            if (state is SearchSectionLoadedSuccess) {
-                              return state.sections.isEmpty
-                                  ? Center(
+                      isSearch
+                          ? BlocBuilder<SearchSectionBloc, SearchSectionState>(
+                              builder: (context, state) {
+                                if (state is SearchSectionLoadedSuccess) {
+                                  return state.sections.isEmpty
+                                      ? Center(
+                                          child: Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.center,
+                                            children: [
+                                              Text(
+                                                AppLocalizations.of(context)!
+                                                    .translate(
+                                                        'no_result_found'),
+                                                maxLines: 2,
+                                                style: const TextStyle(
+                                                    color: Colors.grey),
+                                              ),
+                                              const Icon(
+                                                Icons.warning_rounded,
+                                                color: Colors.grey,
+                                              )
+                                            ],
+                                          ),
+                                        )
+                                      : ListView.builder(
+                                          key: Key(
+                                              'builder ${selected.toString()}'),
+                                          shrinkWrap: true,
+                                          physics:
+                                              const NeverScrollableScrollPhysics(),
+                                          itemCount: state.sections.length,
+                                          itemBuilder: (context, index) {
+                                            return Card(
+                                              margin: EdgeInsets.symmetric(
+                                                  vertical: 4.h,
+                                                  horizontal: 3.w),
+                                              clipBehavior: Clip.none,
+                                              shape: RoundedRectangleBorder(
+                                                borderRadius:
+                                                    const BorderRadius.all(
+                                                  Radius.circular(10),
+                                                ),
+                                                side: BorderSide(
+                                                    color:
+                                                        AppColor.goldenYellow,
+                                                    width: 2),
+                                              ),
+                                              color: Colors.white,
+                                              // decoration: BoxDecoration(
+                                              //   borderRadius: BorderRadius.circular(10),
+                                              //   border: selected == index
+                                              //       ? Border.all(
+                                              //           color: Colors.yellow[600]!, width: 2)
+                                              //       : null,
+                                              // ),
+                                              child: Theme(
+                                                data: Theme.of(context)
+                                                    .copyWith(
+                                                        dividerColor:
+                                                            Colors.transparent),
+                                                child: ExpansionTile(
+                                                  key: Key(index
+                                                      .toString()), //attention
+                                                  initiallyExpanded: true,
+                                                  tilePadding:
+                                                      const EdgeInsets.all(5),
+                                                  // controlAffinity:
+                                                  //     ListTileControlAffinity.leading,
+                                                  trailing: Builder(
+                                                      builder: (iconcontext) {
+                                                    return GestureDetector(
+                                                      onTap: () {
+                                                        showPopover(
+                                                          context: iconcontext,
+                                                          bodyBuilder: (iconcontext) =>
+                                                              StatefulBuilder(
+                                                                  builder: (context,
+                                                                      setState) {
+                                                            BlocProvider.of<
+                                                                        NoteBloc>(
+                                                                    context)
+                                                                .add(NoteLoadEvent(
+                                                                    state
+                                                                        .sections[
+                                                                            index]!
+                                                                        .id!
+                                                                        .toString(),
+                                                                    NoteType
+                                                                        .Section));
+                                                            return BlocBuilder<
+                                                                NoteBloc,
+                                                                NoteState>(
+                                                              builder: (context,
+                                                                  state) {
+                                                                if (state
+                                                                    is NoteLoadedSuccess) {
+                                                                  return ListItems(
+                                                                    noteType:
+                                                                        NoteType
+                                                                            .Section,
+                                                                    sectionnotes:
+                                                                        state
+                                                                            .notes,
+                                                                    loading:
+                                                                        false,
+                                                                    contxt:
+                                                                        context,
+                                                                  );
+                                                                } else {
+                                                                  return ListItems(
+                                                                    noteType:
+                                                                        NoteType
+                                                                            .Section,
+                                                                    sectionnotes: [],
+                                                                    loading:
+                                                                        true,
+                                                                    contxt:
+                                                                        context,
+                                                                  );
+                                                                }
+                                                              },
+                                                            );
+                                                          }),
+                                                          onPop: () => print(
+                                                              'Popover was popped!'),
+                                                          direction:
+                                                              PopoverDirection
+                                                                  .bottom,
+                                                          width: MediaQuery.of(
+                                                                      context)
+                                                                  .size
+                                                                  .width -
+                                                              28.w,
+                                                          height: 280.h,
+                                                          arrowHeight: 15,
+                                                          arrowWidth: 0,
+                                                          barrierLabel:
+                                                              AppLocalizations.of(
+                                                                      context)!
+                                                                  .translate(
+                                                                      'notes'),
+                                                          radius: 15,
+                                                        );
+                                                      },
+                                                      child:
+                                                          const TariffInfoIcon(),
+                                                    );
+                                                  }),
+
+                                                  title: Row(
+                                                    crossAxisAlignment:
+                                                        CrossAxisAlignment
+                                                            .center,
+                                                    children: [
+                                                      SizedBox(
+                                                        width: 65.w,
+                                                        child: Column(
+                                                          children: [
+                                                            SizedBox(
+                                                              width: 36.w,
+                                                              height: 36.h,
+                                                              child: SvgPicture
+                                                                  .network(
+                                                                "https://across-mena.com${state.sections[index]!.image!}",
+                                                                placeholderBuilder:
+                                                                    (context) =>
+                                                                        Container(
+                                                                  color: Colors
+                                                                          .grey[
+                                                                      200],
+                                                                  width: 36.w,
+                                                                  height: 36.h,
+                                                                ),
+                                                              ),
+                                                            ),
+                                                            Text(
+                                                              "(${state.sections[index]!.end!}__${state.sections[index]!.start!})",
+                                                              style:
+                                                                  const TextStyle(
+                                                                      fontSize:
+                                                                          14),
+                                                            ),
+                                                          ],
+                                                        ),
+                                                      ),
+                                                      SizedBox(
+                                                        height: 5.w,
+                                                      ),
+                                                      Flexible(
+                                                        child: HighlightText(
+                                                          highlightStyle:
+                                                              TextStyle(
+                                                            height: 1.3,
+                                                            fontSize: 17,
+                                                            fontWeight:
+                                                                FontWeight.bold,
+                                                            color: AppColor
+                                                                .goldenYellow,
+                                                          ),
+                                                          style:
+                                                              const TextStyle(
+                                                            height: 1.3,
+                                                            fontSize: 17,
+                                                            fontWeight:
+                                                                FontWeight.bold,
+                                                          ),
+                                                          text: state
+                                                              .sections[index]!
+                                                              .label!,
+                                                          highlight:
+                                                              _searchController
+                                                                  .text,
+                                                          ignoreCase: false,
+                                                        ),
+                                                      ),
+                                                    ],
+                                                  ),
+
+                                                  children:
+                                                      buildSearchChapterTiles(
+                                                          state.sections[index]!
+                                                              .chapterSet!),
+                                                ),
+                                              ),
+                                            );
+                                          },
+                                        );
+                                } else if (state is SearchSectionLoading) {
+                                  return Shimmer.fromColors(
+                                    baseColor: (Colors.grey[300])!,
+                                    highlightColor: (Colors.grey[100])!,
+                                    enabled: true,
+                                    child: ListView.builder(
+                                      shrinkWrap: true,
+                                      itemBuilder: (_, __) => Container(
+                                        margin: const EdgeInsets.symmetric(
+                                            vertical: 4, horizontal: 3),
+                                        clipBehavior: Clip.antiAlias,
+                                        decoration: BoxDecoration(
+                                          color: Colors.white,
+                                          borderRadius:
+                                              BorderRadius.circular(10),
+                                        ),
+                                        child: SizedBox(
+                                          height: 90.h,
+                                        ),
+                                      ),
+                                      itemCount: 10,
+                                    ),
+                                  );
+                                } else {
+                                  return Center(
+                                    child: GestureDetector(
+                                      onTap: () {
+                                        // BlocProvider.of<SectionBloc>(context)
+                                        //     .add(SectionLoadEvent());
+                                      },
                                       child: Row(
                                         mainAxisAlignment:
                                             MainAxisAlignment.center,
                                         children: [
                                           Text(
                                             AppLocalizations.of(context)!
-                                                .translate('no_result_found'),
-                                            maxLines: 2,
+                                                .translate('list_error'),
                                             style: const TextStyle(
-                                                color: Colors.grey),
+                                                color: Colors.red),
                                           ),
                                           const Icon(
-                                            Icons.warning_rounded,
+                                            Icons.refresh,
                                             color: Colors.grey,
                                           )
                                         ],
                                       ),
-                                    )
-                                  : ListView.builder(
+                                    ),
+                                  );
+                                }
+                              },
+                            )
+                          : Padding(
+                              padding: EdgeInsets.all(8.h),
+                              child: BlocConsumer<SectionBloc, SectionState>(
+                                listener: (context, state) {
+                                  // if(state is)
+                                },
+                                builder: (context, state) {
+                                  if (state is SectionLoadedSuccess) {
+                                    return ListView.builder(
                                       key:
                                           Key('builder ${selected.toString()}'),
                                       shrinkWrap: true,
@@ -1606,7 +1877,9 @@ class _CustomeTariffScreenState extends State<CustomeTariffScreen> {
                                               Radius.circular(10),
                                             ),
                                             side: BorderSide(
-                                                color: AppColor.goldenYellow,
+                                                color: selected == index
+                                                    ? AppColor.goldenYellow
+                                                    : Colors.white,
                                                 width: 2),
                                           ),
                                           color: Colors.white,
@@ -1624,7 +1897,8 @@ class _CustomeTariffScreenState extends State<CustomeTariffScreen> {
                                             child: ExpansionTile(
                                               key: Key(
                                                   index.toString()), //attention
-                                              initiallyExpanded: true,
+                                              initiallyExpanded:
+                                                  index == selected,
                                               tilePadding:
                                                   const EdgeInsets.all(5),
                                               // controlAffinity:
@@ -1699,6 +1973,36 @@ class _CustomeTariffScreenState extends State<CustomeTariffScreen> {
                                                                   'notes'),
                                                       radius: 15,
                                                     );
+                                                    // BlocProvider.of<NoteBloc>(context)
+                                                    //     .add(NoteLoadEvent(
+                                                    //         state.sections[index]!.id!
+                                                    //             .toString(),
+                                                    //         NoteType.Section));
+                                                    // if (!shownote) {
+                                                    //   setState(() {
+                                                    //     selected = index;
+                                                    //     chapterselected = -1;
+                                                    //     subchapterselected = -1;
+                                                    //     shownote = true;
+                                                    //     noteType = NoteType.Section;
+                                                    //   });
+
+                                                    //   scroll.animateTo(
+                                                    //       index +
+                                                    //           MediaQuery.of(context)
+                                                    //                   .size
+                                                    //                   .width /
+                                                    //               2,
+                                                    //       duration: const Duration(
+                                                    //           seconds: 1),
+                                                    //       curve: Curves.easeIn);
+                                                    // } else {
+                                                    //   setState(() {
+                                                    //     selected = -1;
+                                                    //     shownote = false;
+                                                    //     noteType = NoteType.None;
+                                                    //   });
+                                                    // }
                                                   },
                                                   child: const TariffInfoIcon(),
                                                 );
@@ -1715,16 +2019,27 @@ class _CustomeTariffScreenState extends State<CustomeTariffScreen> {
                                                         SizedBox(
                                                           width: 36.w,
                                                           height: 36.h,
-                                                          child: SvgPicture
-                                                              .network(
-                                                            "https://across-mena.com${state.sections[index]!.image!}",
-                                                            placeholderBuilder:
-                                                                (context) =>
-                                                                    Container(
+                                                          child: Img(
+                                                            state
+                                                                .sections[
+                                                                    index]!
+                                                                .image!,
+                                                            placeholder:
+                                                                Container(
                                                               color: Colors
                                                                   .grey[200],
                                                               width: 36.w,
                                                               height: 36.h,
+                                                            ),
+                                                            errorWidget:
+                                                                Container(
+                                                              color: Colors
+                                                                  .grey[200],
+                                                              width: 36.w,
+                                                              height: 36.h,
+                                                              child: const Center(
+                                                                  child: Text(
+                                                                      "error")),
                                                             ),
                                                           ),
                                                         ),
@@ -1741,373 +2056,110 @@ class _CustomeTariffScreenState extends State<CustomeTariffScreen> {
                                                     height: 5.w,
                                                   ),
                                                   Flexible(
-                                                    child: HighlightText(
-                                                      highlightStyle: TextStyle(
-                                                        height: 1.3,
-                                                        fontSize: 17,
-                                                        fontWeight:
-                                                            FontWeight.bold,
-                                                        color: AppColor
-                                                            .goldenYellow,
-                                                      ),
+                                                    child: Text(
+                                                      state.sections[index]!
+                                                          .label!,
                                                       style: const TextStyle(
                                                         height: 1.3,
                                                         fontSize: 17,
                                                         fontWeight:
                                                             FontWeight.bold,
                                                       ),
-                                                      text: state
-                                                          .sections[index]!
-                                                          .label!,
-                                                      highlight:
-                                                          _searchController
-                                                              .text,
-                                                      ignoreCase: false,
+                                                      maxLines: 10,
+                                                      overflow:
+                                                          TextOverflow.ellipsis,
                                                     ),
                                                   ),
                                                 ],
                                               ),
 
-                                              children: buildSearchChapterTiles(
-                                                  state.sections[index]!
-                                                      .chapterSet!),
+                                              onExpansionChanged: (value) {
+                                                if (value) {
+                                                  BlocProvider.of<ChapterBloc>(
+                                                          context)
+                                                      .add(
+                                                    ChapterLoadEvent(state
+                                                        .sections[index]!.id!),
+                                                  );
+                                                  setState(() {
+                                                    selected = index;
+                                                    chapterselected = -1;
+                                                    subchapterselected = -1;
+                                                    feeselected = -1;
+                                                  });
+                                                } else {
+                                                  setState(() {
+                                                    selected = -1;
+                                                    shownote = false;
+                                                    noteType = NoteType.None;
+                                                  });
+                                                }
+                                              },
+                                              children: buildChapterTiles(),
                                             ),
                                           ),
                                         );
                                       },
                                     );
-                            } else if (state is SearchSectionLoading) {
-                              return Shimmer.fromColors(
-                                baseColor: (Colors.grey[300])!,
-                                highlightColor: (Colors.grey[100])!,
-                                enabled: true,
-                                child: ListView.builder(
-                                  shrinkWrap: true,
-                                  itemBuilder: (_, __) => Container(
-                                    margin: const EdgeInsets.symmetric(
-                                        vertical: 4, horizontal: 3),
-                                    clipBehavior: Clip.antiAlias,
-                                    decoration: BoxDecoration(
-                                      color: Colors.white,
-                                      borderRadius: BorderRadius.circular(10),
-                                    ),
-                                    child: SizedBox(
-                                      height: 90.h,
-                                    ),
-                                  ),
-                                  itemCount: 10,
-                                ),
-                              );
-                            } else {
-                              return Center(
-                                child: GestureDetector(
-                                  onTap: () {
-                                    // BlocProvider.of<SectionBloc>(context)
-                                    //     .add(SectionLoadEvent());
-                                  },
-                                  child: Row(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: [
-                                      Text(
-                                        AppLocalizations.of(context)!
-                                            .translate('list_error'),
-                                        style:
-                                            const TextStyle(color: Colors.red),
-                                      ),
-                                      const Icon(
-                                        Icons.refresh,
-                                        color: Colors.grey,
-                                      )
-                                    ],
-                                  ),
-                                ),
-                              );
-                            }
-                          },
-                        )
-                      : Padding(
-                          padding: EdgeInsets.all(8.h),
-                          child: BlocConsumer<SectionBloc, SectionState>(
-                            listener: (context, state) {
-                              // if(state is)
-                            },
-                            builder: (context, state) {
-                              if (state is SectionLoadedSuccess) {
-                                return ListView.builder(
-                                  key: Key('builder ${selected.toString()}'),
-                                  shrinkWrap: true,
-                                  physics: const NeverScrollableScrollPhysics(),
-                                  itemCount: state.sections.length,
-                                  itemBuilder: (context, index) {
-                                    return Card(
-                                      margin: EdgeInsets.symmetric(
-                                          vertical: 4.h, horizontal: 3.w),
-                                      clipBehavior: Clip.none,
-                                      shape: RoundedRectangleBorder(
-                                        borderRadius: const BorderRadius.all(
-                                          Radius.circular(10),
-                                        ),
-                                        side: BorderSide(
-                                            color: selected == index
-                                                ? AppColor.goldenYellow
-                                                : Colors.white,
-                                            width: 2),
-                                      ),
-                                      color: Colors.white,
-                                      // decoration: BoxDecoration(
-                                      //   borderRadius: BorderRadius.circular(10),
-                                      //   border: selected == index
-                                      //       ? Border.all(
-                                      //           color: Colors.yellow[600]!, width: 2)
-                                      //       : null,
-                                      // ),
-                                      child: Theme(
-                                        data: Theme.of(context).copyWith(
-                                            dividerColor: Colors.transparent),
-                                        child: ExpansionTile(
-                                          key:
-                                              Key(index.toString()), //attention
-                                          initiallyExpanded: index == selected,
-                                          tilePadding: const EdgeInsets.all(5),
-                                          // controlAffinity:
-                                          //     ListTileControlAffinity.leading,
-                                          trailing:
-                                              Builder(builder: (iconcontext) {
-                                            return GestureDetector(
-                                              onTap: () {
-                                                showPopover(
-                                                  context: iconcontext,
-                                                  bodyBuilder: (iconcontext) =>
-                                                      StatefulBuilder(builder:
-                                                          (context, setState) {
-                                                    BlocProvider.of<NoteBloc>(
-                                                            context)
-                                                        .add(NoteLoadEvent(
-                                                            state
-                                                                .sections[
-                                                                    index]!
-                                                                .id!
-                                                                .toString(),
-                                                            NoteType.Section));
-                                                    return BlocBuilder<NoteBloc,
-                                                        NoteState>(
-                                                      builder:
-                                                          (context, state) {
-                                                        if (state
-                                                            is NoteLoadedSuccess) {
-                                                          return ListItems(
-                                                            noteType: NoteType
-                                                                .Section,
-                                                            sectionnotes:
-                                                                state.notes,
-                                                            loading: false,
-                                                            contxt: context,
-                                                          );
-                                                        } else {
-                                                          return ListItems(
-                                                            noteType: NoteType
-                                                                .Section,
-                                                            sectionnotes: [],
-                                                            loading: true,
-                                                            contxt: context,
-                                                          );
-                                                        }
-                                                      },
-                                                    );
-                                                  }),
-                                                  onPop: () => print(
-                                                      'Popover was popped!'),
-                                                  direction:
-                                                      PopoverDirection.bottom,
-                                                  width: MediaQuery.of(context)
-                                                          .size
-                                                          .width -
-                                                      28.w,
-                                                  height: 280.h,
-                                                  arrowHeight: 15,
-                                                  arrowWidth: 0,
-                                                  barrierLabel:
-                                                      AppLocalizations.of(
-                                                              context)!
-                                                          .translate('notes'),
-                                                  radius: 15,
-                                                );
-                                                // BlocProvider.of<NoteBloc>(context)
-                                                //     .add(NoteLoadEvent(
-                                                //         state.sections[index]!.id!
-                                                //             .toString(),
-                                                //         NoteType.Section));
-                                                // if (!shownote) {
-                                                //   setState(() {
-                                                //     selected = index;
-                                                //     chapterselected = -1;
-                                                //     subchapterselected = -1;
-                                                //     shownote = true;
-                                                //     noteType = NoteType.Section;
-                                                //   });
-
-                                                //   scroll.animateTo(
-                                                //       index +
-                                                //           MediaQuery.of(context)
-                                                //                   .size
-                                                //                   .width /
-                                                //               2,
-                                                //       duration: const Duration(
-                                                //           seconds: 1),
-                                                //       curve: Curves.easeIn);
-                                                // } else {
-                                                //   setState(() {
-                                                //     selected = -1;
-                                                //     shownote = false;
-                                                //     noteType = NoteType.None;
-                                                //   });
-                                                // }
-                                              },
-                                              child: const TariffInfoIcon(),
-                                            );
-                                          }),
-
-                                          title: Row(
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.center,
-                                            children: [
-                                              SizedBox(
-                                                width: 65.w,
-                                                child: Column(
-                                                  children: [
-                                                    SizedBox(
-                                                      width: 36.w,
-                                                      height: 36.h,
-                                                      child: Img(
-                                                        state.sections[index]!
-                                                            .image!,
-                                                        placeholder: Container(
-                                                          color:
-                                                              Colors.grey[200],
-                                                          width: 36.w,
-                                                          height: 36.h,
-                                                        ),
-                                                        errorWidget: Container(
-                                                          color:
-                                                              Colors.grey[200],
-                                                          width: 36.w,
-                                                          height: 36.h,
-                                                          child: const Center(
-                                                              child: Text(
-                                                                  "error")),
-                                                        ),
-                                                      ),
-                                                    ),
-                                                    Text(
-                                                      "(${state.sections[index]!.end!}__${state.sections[index]!.start!})",
-                                                      style: const TextStyle(
-                                                          fontSize: 14),
-                                                    ),
-                                                  ],
-                                                ),
-                                              ),
-                                              SizedBox(
-                                                height: 5.w,
-                                              ),
-                                              Flexible(
-                                                child: Text(
-                                                  state.sections[index]!.label!,
-                                                  style: const TextStyle(
-                                                    height: 1.3,
-                                                    fontSize: 17,
-                                                    fontWeight: FontWeight.bold,
-                                                  ),
-                                                  maxLines: 10,
-                                                  overflow:
-                                                      TextOverflow.ellipsis,
-                                                ),
-                                              ),
-                                            ],
+                                  } else if (state is SectionLoadingProgress) {
+                                    return Shimmer.fromColors(
+                                      baseColor: (Colors.grey[300])!,
+                                      highlightColor: (Colors.grey[100])!,
+                                      enabled: true,
+                                      child: ListView.builder(
+                                        shrinkWrap: true,
+                                        itemBuilder: (_, __) => Container(
+                                          margin: const EdgeInsets.symmetric(
+                                              vertical: 4, horizontal: 3),
+                                          clipBehavior: Clip.antiAlias,
+                                          decoration: BoxDecoration(
+                                            color: Colors.white,
+                                            borderRadius:
+                                                BorderRadius.circular(10),
                                           ),
-
-                                          onExpansionChanged: (value) {
-                                            if (value) {
-                                              BlocProvider.of<ChapterBloc>(
-                                                      context)
-                                                  .add(
-                                                ChapterLoadEvent(
-                                                    state.sections[index]!.id!),
-                                              );
-                                              setState(() {
-                                                selected = index;
-                                                chapterselected = -1;
-                                                subchapterselected = -1;
-                                                feeselected = -1;
-                                              });
-                                            } else {
-                                              setState(() {
-                                                selected = -1;
-                                                shownote = false;
-                                                noteType = NoteType.None;
-                                              });
-                                            }
-                                          },
-                                          children: buildChapterTiles(),
+                                          child: SizedBox(
+                                            height: 90.h,
+                                          ),
+                                        ),
+                                        itemCount: 10,
+                                      ),
+                                    );
+                                  } else {
+                                    return Center(
+                                      child: GestureDetector(
+                                        onTap: () {
+                                          BlocProvider.of<SectionBloc>(context)
+                                              .add(SectionLoadEvent());
+                                        },
+                                        child: const Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.center,
+                                          children: [
+                                            Text(
+                                              "حدث خطأأثناء تحميل القائمة...  ",
+                                              style:
+                                                  TextStyle(color: Colors.red),
+                                            ),
+                                            Icon(
+                                              Icons.refresh,
+                                              color: Colors.grey,
+                                            )
+                                          ],
                                         ),
                                       ),
                                     );
-                                  },
-                                );
-                              } else if (state is SectionLoadingProgress) {
-                                return Shimmer.fromColors(
-                                  baseColor: (Colors.grey[300])!,
-                                  highlightColor: (Colors.grey[100])!,
-                                  enabled: true,
-                                  child: ListView.builder(
-                                    shrinkWrap: true,
-                                    itemBuilder: (_, __) => Container(
-                                      margin: const EdgeInsets.symmetric(
-                                          vertical: 4, horizontal: 3),
-                                      clipBehavior: Clip.antiAlias,
-                                      decoration: BoxDecoration(
-                                        color: Colors.white,
-                                        borderRadius: BorderRadius.circular(10),
-                                      ),
-                                      child: SizedBox(
-                                        height: 90.h,
-                                      ),
-                                    ),
-                                    itemCount: 10,
-                                  ),
-                                );
-                              } else {
-                                return Center(
-                                  child: GestureDetector(
-                                    onTap: () {
-                                      BlocProvider.of<SectionBloc>(context)
-                                          .add(SectionLoadEvent());
-                                    },
-                                    child: const Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.center,
-                                      children: [
-                                        Text(
-                                          "حدث خطأأثناء تحميل القائمة...  ",
-                                          style: TextStyle(color: Colors.red),
-                                        ),
-                                        Icon(
-                                          Icons.refresh,
-                                          color: Colors.grey,
-                                        )
-                                      ],
-                                    ),
-                                  ),
-                                );
-                              }
-                            },
-                          ),
-                        ),
-                ],
+                                  }
+                                },
+                              ),
+                            ),
+                    ],
+                  ),
+                ),
               ),
             ),
           ),
-        ),
-      ),
+        );
+      },
     );
   }
 }

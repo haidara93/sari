@@ -568,7 +568,7 @@ class _StepperMultiOrderBrokerScreenState
             valueControllers[index].text != "0.0") &&
         (weightControllers[index].text.isNotEmpty &&
             weightControllers[index].text != "0.0")) {
-      if (valueEnabled[index]) {
+      if (!valueEnabled[index]) {
         calculateTotalValue(index);
       } else {
         calculateTotalValueWithPrice(index);
@@ -982,7 +982,11 @@ class _StepperMultiOrderBrokerScreenState
                                                               ))
                                                       .toList(),
                                                   value: orderBrokerProvider
-                                                      .selectedStateCustome,
+                                                              .selectedStateCustome !=
+                                                          null
+                                                      ? orderBrokerProvider
+                                                          .selectedStateCustome
+                                                      : null,
                                                   onChanged:
                                                       (StateCustome? value) {
                                                     BlocProvider.of<AgencyBloc>(
@@ -2265,14 +2269,14 @@ class _StepperMultiOrderBrokerScreenState
                                                                           child:
                                                                               SizedBox(
                                                                             height:
-                                                                                35,
+                                                                                25,
                                                                             width:
-                                                                                55,
+                                                                                45,
                                                                             child:
                                                                                 SvgPicture.network(
                                                                               orderBrokerProvider!.source!.imageURL!,
-                                                                              height: 35,
-                                                                              width: 55,
+                                                                              height: 25,
+                                                                              width: 45,
                                                                               // semanticsLabel: 'A shark?!',
                                                                               placeholderBuilder: (BuildContext context) => Container(
                                                                                 height: 35.h,
