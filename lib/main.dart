@@ -69,6 +69,7 @@ import 'views/screens/introduction_screen.dart';
 Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
   // you need to initialize firebase first
   await Firebase.initializeApp(
+    name: "Sari",
     options: DefaultFirebaseOptions.currentPlatform,
   );
 
@@ -78,6 +79,7 @@ Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(
+    name: "Sari",
     options: DefaultFirebaseOptions.currentPlatform,
   );
 
