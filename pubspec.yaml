@@ -46,6 +46,7 @@ dependencies:
   keyboard_actions: ^4.2.0
   dropdown_search: ^5.0.6
   percent_indicator: ^4.0.1
+  flutter_gif: ^0.0.4
 
 dev_dependencies:
   flutter_test:

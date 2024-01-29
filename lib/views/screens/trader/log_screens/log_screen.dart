@@ -286,6 +286,8 @@ class _LogScreenState extends State<LogScreen>
                                           padding: EdgeInsets.symmetric(
                                               vertical: 5.h),
                                           child: Column(
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
                                             children: [
                                               Padding(
                                                 padding:
@@ -348,78 +350,56 @@ class _LogScreenState extends State<LogScreen>
                                               Padding(
                                                 padding:
                                                     const EdgeInsets.all(8.0),
-                                                child: Row(
-                                                  crossAxisAlignment:
-                                                      CrossAxisAlignment.start,
-                                                  mainAxisAlignment:
-                                                      MainAxisAlignment
-                                                          .spaceBetween,
-                                                  children: [
-                                                    SizedBox(
-                                                      width:
-                                                          MediaQuery.of(context)
-                                                                  .size
-                                                                  .width *
-                                                              .45,
-                                                      child: FittedBox(
-                                                        fit: BoxFit.scaleDown,
-                                                        child: Text.rich(
+                                                child: FittedBox(
+                                                  fit: BoxFit.scaleDown,
+                                                  child: Text.rich(
+                                                    TextSpan(
+                                                        text: state
+                                                            .offers[index]
+                                                            .source!
+                                                            .label!,
+                                                        style: TextStyle(
+                                                          color: AppColor
+                                                              .lightBlue,
+                                                          fontSize: 17.sp,
+                                                        ),
+                                                        children: [
                                                           TextSpan(
-                                                              text: state
-                                                                  .offers[index]
-                                                                  .source!
-                                                                  .label!,
-                                                              style: TextStyle(
-                                                                color: AppColor
-                                                                    .lightBlue,
-                                                                fontSize: 17.sp,
-                                                              ),
-                                                              children: [
-                                                                TextSpan(
-                                                                  text:
-                                                                      "  --->  ",
-                                                                  style:
-                                                                      TextStyle(
-                                                                    color: Colors
-                                                                        .black,
-                                                                    fontSize:
-                                                                        17.sp,
-                                                                  ),
-                                                                ),
-                                                                TextSpan(
-                                                                  text:
-                                                                      "${state.offers[index].costumestate!.name}",
-                                                                  style:
-                                                                      TextStyle(
-                                                                    color: AppColor
-                                                                        .lightBlue,
-                                                                    fontSize:
-                                                                        17.sp,
-                                                                  ),
-                                                                ),
-                                                              ]),
-                                                        ),
-                                                      ),
-                                                    ),
-                                                    SizedBox(
-                                                      width:
-                                                          MediaQuery.of(context)
-                                                                  .size
-                                                                  .width *
-                                                              .45,
-                                                      child: FittedBox(
-                                                        // fit: BoxFit.scaleDown,
-                                                        child: Text(
-                                                          "costums agency: ${state.offers[index].costumeagency!.name!}",
-                                                          maxLines: 2,
-                                                          style: TextStyle(
-                                                            color: AppColor
-                                                                .deepBlue,
+                                                            text: "  --->  ",
+                                                            style: TextStyle(
+                                                              color:
+                                                                  Colors.black,
+                                                              fontSize: 17.sp,
+                                                            ),
                                                           ),
-                                                        ),
-                                                      ),
-                                                    )
-                                                  ],
+                                                          TextSpan(
+                                                            text:
+                                                                "${state.offers[index].costumestate!.name}",
+                                                            style: TextStyle(
+                                                              color: AppColor
+                                                                  .lightBlue,
+                                                              fontSize: 17.sp,
+                                                            ),
+                                                          ),
+                                                        ]),
+                                                  ),
+                                                ),
+                                              ),
+                                              Padding(
+                                                padding:
+                                                    const EdgeInsets.all(8.0),
+                                                child: FittedBox(
+                                                  // fit: BoxFit.scaleDown,
+                                                  child: Text(
+                                                    "costums agency: ${state.offers[index].costumeagency!.name!}",
+                                                    maxLines: 2,
+                                                    style: TextStyle(
+                                                      color: AppColor.deepBlue,
+                                                      fontSize: 17.sp,
+                                                      fontWeight:
+                                                          FontWeight.bold,
+                                                    ),
+                                                  ),
                                                 ),
                                               ),
                                               Padding(
@@ -435,10 +415,17 @@ class _LogScreenState extends State<LogScreen>
                                                                   .width *
                                                               .9,
                                                       child: Text(
-                                                        state
-                                                            .offers[index]
-                                                            .products![0]
-                                                            .label!,
+                                                        localeState.value
+                                                                    .languageCode ==
+                                                                'en'
+                                                            ? state
+                                                                .offers[index]
+                                                                .products![0]
+                                                                .labelen!
+                                                            : state
+                                                                .offers[index]
+                                                                .products![0]
+                                                                .label!,
                                                         overflow: TextOverflow
                                                             .ellipsis,
                                                         style: TextStyle(

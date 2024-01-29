@@ -242,6 +242,7 @@ class Product {
   Dolar? dolar;
   List<Extras>? extras;
   String? label;
+  String? labelen;
   String? export1;
   double? fee;
   double? spendingFee;
@@ -263,6 +264,7 @@ class Product {
   Product({
     this.id,
     this.label,
+    this.labelen,
     this.export1,
     this.fee,
     this.spendingFee,
@@ -286,6 +288,7 @@ class Product {
   Product.fromJson(Map<String, dynamic> json) {
     id = json['id'];
     label = json['label'];
+    labelen = json['label_en'];
     export1 = json['export1'];
     fee = json['fee'];
     spendingFee = json['spending_fee'];
@@ -312,6 +315,7 @@ class Product {
     final Map<String, dynamic> data = Map<String, dynamic>();
     data['id'] = this.id;
     data['label'] = this.label;
+    data['label_en'] = this.labelen;
     data['export1'] = this.export1;
     data['fee'] = this.fee;
     data['spending_fee'] = this.spendingFee;

@@ -16,8 +16,9 @@ class AccordionRepository {
   Future<List<Section?>> getSections() async {
     prefs = await SharedPreferences.getInstance();
     var jwt = prefs.getString("token");
-
-    var rs = await HttpHelper.get(ACCURDION_SECTION_ENDPOINT, apiToken: jwt);
+    var lang = prefs.getString("language") ?? "en";
+    var rs = await HttpHelper.getlang(ACCURDION_SECTION_ENDPOINT, lang,
+        apiToken: jwt);
     sections = [];
     if (rs.statusCode == 200) {
       var myDataString = utf8.decode(rs.bodyBytes);
@@ -33,8 +34,10 @@ class AccordionRepository {
   Future<List<Chapter>> getChapters(String sectionId) async {
     prefs = await SharedPreferences.getInstance();
     var jwt = prefs.getString("token");
+    var lang = prefs.getString("language") ?? "en";
 
-    var rs = await HttpHelper.get("$ACCURDION_CHAPTERS_ENDPOINT$sectionId/",
+    var rs = await HttpHelper.getlang(
+        "$ACCURDION_CHAPTERS_ENDPOINT$sectionId/", lang,
         apiToken: jwt);
     chapters = [];
     if (rs.statusCode == 200) {
@@ -52,7 +55,10 @@ class AccordionRepository {
     prefs = await SharedPreferences.getInstance();
     var jwt = prefs.getString("token");
 
-    var rs = await HttpHelper.get("$ACCURDION_SUBCHAPTERS_ENDPOINT$chapterId/",
+    var lang = prefs.getString("language") ?? "en";
+
+    var rs = await HttpHelper.getlang(
+        "$ACCURDION_SUBCHAPTERS_ENDPOINT$chapterId/", lang,
         apiToken: jwt);
     subchapters = [];
     if (rs.statusCode == 200) {
@@ -69,7 +75,9 @@ class AccordionRepository {
   Future<List<FeeSet>> getFees(String subchapterId) async {
     prefs = await SharedPreferences.getInstance();
     var jwt = prefs.getString("token");
-    var rs = await HttpHelper.get("$ACCURDION_FEES_ENDPOINT$subchapterId/",
+    var lang = prefs.getString("language") ?? "en";
+    var rs = await HttpHelper.getlang(
+        "$ACCURDION_FEES_ENDPOINT$subchapterId/", lang,
         apiToken: jwt);
     fees = [];
     if (rs.statusCode == 200) {
@@ -85,9 +93,10 @@ class AccordionRepository {
   Future<TradeDescription?> getFeeTradeDescription(String feeId) async {
     prefs = await SharedPreferences.getInstance();
     var jwt = prefs.getString("token");
+    var lang = prefs.getString("language") ?? "en";
 
-    var rs = await HttpHelper.get(
-        "$ACCURDION_FEES_TRADE_DESCRIPTION_ENDPOINT$feeId/",
+    var rs = await HttpHelper.getlang(
+        "$ACCURDION_FEES_TRADE_DESCRIPTION_ENDPOINT$feeId/", lang,
         apiToken: jwt);
     // ignore: prefer_typing_uninitialized_variables
     late var feedescription;
@@ -105,29 +114,31 @@ class AccordionRepository {
     var jwt = prefs.getString("token");
     // ignore: prefer_typing_uninitialized_variables
     var rs;
+    var lang = prefs.getString("language") ?? "en";
 
     switch (type) {
       case NoteType.Section:
         {
-          rs = await HttpHelper.get("$SECTION_NOTES_ENDPOINT$id/",
+          rs = await HttpHelper.getlang("$SECTION_NOTES_ENDPOINT$id/", lang,
               apiToken: jwt);
           break;
         }
       case NoteType.Chapter:
         {
-          rs = await HttpHelper.get("$CHAPTER_NOTES_ENDPOINT$id/",
+          rs = await HttpHelper.getlang("$CHAPTER_NOTES_ENDPOINT$id/", lang,
               apiToken: jwt);
           break;
         }
       case NoteType.SubChapter:
         {
-          rs = await HttpHelper.get("$SUBCHAPTER_NOTES_ENDPOINT$id/",
+          rs = await HttpHelper.getlang("$SUBCHAPTER_NOTES_ENDPOINT$id/", lang,
               apiToken: jwt);
           break;
         }
       case NoteType.Fee:
         {
-          rs = await HttpHelper.get("$FEE_NOTES_ENDPOINT$id/", apiToken: jwt);
+          rs = await HttpHelper.getlang("$FEE_NOTES_ENDPOINT$id/", lang,
+              apiToken: jwt);
           break;
         }
       default:
@@ -147,10 +158,13 @@ class AccordionRepository {
   Future<List<Section?>> searchForItem(String query) async {
     prefs = await SharedPreferences.getInstance();
     var jwt = prefs.getString("token");
+    var lang = prefs.getString("language") ?? "en";
+
     List<ChapterSearch> chapterSearch = [];
     List<SubChapterSearch> subchapterSearch = [];
     List<FeeSearch> feeSearch = [];
-    var rs = await HttpHelper.get(SEARCH_QUERY_ENDPOINT + query, apiToken: jwt);
+    var rs = await HttpHelper.getlang(SEARCH_QUERY_ENDPOINT + query, lang,
+        apiToken: jwt);
     sections = [];
     if (rs.statusCode == 200) {
       var myDataString = utf8.decode(rs.bodyBytes);

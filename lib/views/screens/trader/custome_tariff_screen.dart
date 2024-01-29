@@ -243,293 +243,324 @@ class _CustomeTariffScreenState extends State<CustomeTariffScreen> {
     List<Widget> list = [];
     list.add(Container(
       color: Colors.white,
-      child: ListView(
-        shrinkWrap: true,
-        physics: const NeverScrollableScrollPhysics(),
-        children: [
-          Divider(
-            height: 1,
-            color: AppColor.goldenYellow,
-          ),
-          ExpansionTile(
-            title: Directionality(
-              textDirection: TextDirection.rtl,
-              child: Row(
-                children: [
-                  Container(
-                    height: 25.h,
-                    width: 25.h,
-                    margin: const EdgeInsets.symmetric(horizontal: 10),
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.circular(10),
-                    ),
-                    child: Center(
-                      child: SvgPicture.asset("assets/icons/description.svg"),
-                    ),
-                  ),
-                  Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 5),
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.circular(10),
-                    ),
-                    child: Text(
-                      AppLocalizations.of(context)!
-                          .translate('trade_description'),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            onExpansionChanged: (value) {
-              if (value) {
-                BlocProvider.of<FeeTradeDescriptionBloc>(context)
-                    .add(FeeTradeDescriptionLoadEvent(fe.id!));
-              } else {}
-            },
-            children: buildFeesTradeDescription(),
-          ),
-          Divider(
-            height: 1,
-            color: AppColor.goldenYellow,
-          ),
-          ExpansionTile(
-            title: Directionality(
-              textDirection: TextDirection.rtl,
-              child: Row(
-                children: [
-                  Container(
-                    height: 25.h,
-                    width: 25.h,
-                    margin: const EdgeInsets.symmetric(horizontal: 10),
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.circular(10),
-                    ),
-                    child: Center(
-                      child: SvgPicture.asset("assets/icons/import.svg"),
-                    ),
-                  ),
-                  Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 5),
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.circular(10),
-                    ),
-                    child: Text(
-                      AppLocalizations.of(context)!
-                          .translate('import_conditions'),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            children: fe.importFees!.isEmpty
-                ? [
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 20),
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        children: [
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            children: [
-                              SizedBox(
-                                  height: 25.h,
-                                  width: 25.h,
-                                  child: SvgPicture.asset(
-                                      "assets/icons/conditions.svg")),
-                              SizedBox(
-                                width: 5.w,
-                              ),
-                              Text(AppLocalizations.of(context)!
-                                  .translate('import_conditions')),
-                              const Icon(
-                                Icons.close,
-                                color: Colors.red,
-                              ),
-                              Text(AppLocalizations.of(context)!
-                                  .translate('import_not_allowed')),
-                            ],
-                          ),
-                        ],
-                      ),
-                    ),
-                  ]
-                : buildimportfees(fe),
-          ),
-          Divider(
-            height: 1,
-            color: AppColor.goldenYellow,
-          ),
-          ExpansionTile(
-            title: Directionality(
-              textDirection: TextDirection.rtl,
-              child: Row(
-                children: [
-                  Container(
-                    height: 25.h,
-                    width: 25.h,
-                    margin: const EdgeInsets.symmetric(horizontal: 10),
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.circular(10),
-                    ),
-                    child: Center(
-                      child: SvgPicture.asset("assets/icons/Export.svg"),
-                    ),
-                  ),
-                  Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 5),
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.circular(10),
-                    ),
-                    child: const Text(
-                      "شروط التصدير",
-                    ),
-                  ),
-                ],
-              ),
-            ),
+      child: BlocBuilder<LocaleCubit, LocaleState>(
+        builder: (context, localeState) {
+          return ListView(
+            shrinkWrap: true,
+            physics: const NeverScrollableScrollPhysics(),
             children: [
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 20),
+              Visibility(
+                visible: localeState.value.languageCode == 'ar',
                 child: Column(
-                  mainAxisAlignment: MainAxisAlignment.start,
                   children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      children: [
-                        SizedBox(
-                            height: 25.h,
-                            width: 25.h,
-                            child: SvgPicture.asset(
-                                "assets/icons/conditions.svg")),
-                        SizedBox(
-                          width: 5.w,
-                        ),
-                        Text(AppLocalizations.of(context)!
-                            .translate('export_conditions')),
-                        fe.export! ==
-                                AppLocalizations.of(context)!
-                                    .translate('export_allowed')
-                            ? const Icon(
-                                Icons.check,
-                                color: Colors.green,
-                              )
-                            : const Icon(
-                                Icons.close,
-                                color: Colors.red,
-                              ),
-                        Text(fe.export!),
-                      ],
+                    Divider(
+                      height: 1,
+                      color: AppColor.goldenYellow,
                     ),
-                    Text(
-                      fe.restrictionExport!,
-                      textAlign: TextAlign.start,
+                    ExpansionTile(
+                      title: Directionality(
+                        textDirection: localeState.value.languageCode == 'en'
+                            ? TextDirection.ltr
+                            : TextDirection.rtl,
+                        child: Row(
+                          children: [
+                            Container(
+                              height: 25.h,
+                              width: 25.h,
+                              margin:
+                                  const EdgeInsets.symmetric(horizontal: 10),
+                              decoration: BoxDecoration(
+                                color: Colors.white,
+                                borderRadius: BorderRadius.circular(10),
+                              ),
+                              child: Center(
+                                child: SvgPicture.asset(
+                                    "assets/icons/description.svg"),
+                              ),
+                            ),
+                            Container(
+                              padding:
+                                  const EdgeInsets.symmetric(horizontal: 5),
+                              decoration: BoxDecoration(
+                                color: Colors.white,
+                                borderRadius: BorderRadius.circular(10),
+                              ),
+                              child: Text(
+                                AppLocalizations.of(context)!
+                                    .translate('trade_description'),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                      onExpansionChanged: (value) {
+                        if (value) {
+                          BlocProvider.of<FeeTradeDescriptionBloc>(context)
+                              .add(FeeTradeDescriptionLoadEvent(fe.id!));
+                        } else {}
+                      },
+                      children: buildFeesTradeDescription(),
                     ),
                   ],
                 ),
               ),
-            ],
-          ),
-          Divider(
-            height: 1,
-            color: AppColor.goldenYellow,
-          ),
-          ExpansionTile(
-            title: Directionality(
-              textDirection: TextDirection.rtl,
-              child: Row(
-                children: [
-                  Container(
-                    height: 25.h,
-                    width: 25.h,
-                    margin: const EdgeInsets.symmetric(horizontal: 10),
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.circular(10),
-                    ),
-                    child: Center(
-                      child:
-                          SvgPicture.asset("assets/icons/Fee_calculation.svg"),
-                    ),
+              Divider(
+                height: 1,
+                color: AppColor.goldenYellow,
+              ),
+              ExpansionTile(
+                title: Directionality(
+                  textDirection: localeState.value.languageCode == 'en'
+                      ? TextDirection.ltr
+                      : TextDirection.rtl,
+                  child: Row(
+                    children: [
+                      Container(
+                        height: 25.h,
+                        width: 25.h,
+                        margin: const EdgeInsets.symmetric(horizontal: 10),
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                        child: Center(
+                          child: SvgPicture.asset("assets/icons/import.svg"),
+                        ),
+                      ),
+                      Container(
+                        padding: const EdgeInsets.symmetric(horizontal: 5),
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                        child: Text(
+                          AppLocalizations.of(context)!
+                              .translate('import_conditions'),
+                        ),
+                      ),
+                    ],
                   ),
-                  Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 5),
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.circular(10),
-                    ),
-                    child: Text(
-                      AppLocalizations.of(context)!.translate('fee_calculate'),
+                ),
+                children: fe.importFees!.isEmpty
+                    ? [
+                        Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 20),
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            children: [
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                children: [
+                                  SizedBox(
+                                      height: 25.h,
+                                      width: 25.h,
+                                      child: SvgPicture.asset(
+                                          "assets/icons/conditions.svg")),
+                                  SizedBox(
+                                    width: 5.w,
+                                  ),
+                                  Text(AppLocalizations.of(context)!
+                                      .translate('import_conditions')),
+                                  const Icon(
+                                    Icons.close,
+                                    color: Colors.red,
+                                  ),
+                                  Text(
+                                    AppLocalizations.of(context)!
+                                        .translate('import_not_allowed'),
+                                    maxLines: 2,
+                                  ),
+                                ],
+                              ),
+                            ],
+                          ),
+                        ),
+                      ]
+                    : buildimportfees(fe),
+              ),
+              Divider(
+                height: 1,
+                color: AppColor.goldenYellow,
+              ),
+              ExpansionTile(
+                title: Directionality(
+                  textDirection: localeState.value.languageCode == 'en'
+                      ? TextDirection.ltr
+                      : TextDirection.rtl,
+                  child: Row(
+                    children: [
+                      Container(
+                        height: 25.h,
+                        width: 25.h,
+                        margin: const EdgeInsets.symmetric(horizontal: 10),
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                        child: Center(
+                          child: SvgPicture.asset("assets/icons/Export.svg"),
+                        ),
+                      ),
+                      Container(
+                        padding: const EdgeInsets.symmetric(horizontal: 5),
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                        child: Text(
+                          AppLocalizations.of(context)!
+                              .translate('export_conditions'),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 20),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: [
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          children: [
+                            SizedBox(
+                                height: 25.h,
+                                width: 25.h,
+                                child: SvgPicture.asset(
+                                    "assets/icons/conditions.svg")),
+                            SizedBox(
+                              width: 5.w,
+                            ),
+                            Text(AppLocalizations.of(context)!
+                                .translate('export_conditions')),
+                            fe.export![0].export! ==
+                                    AppLocalizations.of(context)!
+                                        .translate('export_allowed')
+                                ? const Icon(
+                                    Icons.check,
+                                    color: Colors.green,
+                                  )
+                                : const Icon(
+                                    Icons.close,
+                                    color: Colors.red,
+                                  ),
+                            Text(fe.export![0] != null
+                                ? fe.export![0].export!
+                                : ""),
+                          ],
+                        ),
+                        Text(
+                          fe.restrictionExport!,
+                          textAlign: TextAlign.start,
+                        ),
+                      ],
                     ),
                   ),
                 ],
               ),
-            ),
-            onExpansionChanged: (value) {
-              BlocProvider.of<CalculatorPanelBloc>(context)
-                  .add(CalculatorPanelOpenEvent());
-              BlocProvider.of<FeeItemBloc>(context)
-                  .add(FeeItemLoadEvent(fe.id!));
-            },
-            trailing: const SizedBox.shrink(),
-          ),
-          Divider(
-            height: 1,
-            color: AppColor.goldenYellow,
-          ),
-          ExpansionTile(
-            title: Directionality(
-              textDirection: TextDirection.rtl,
-              child: Row(
-                children: [
-                  Container(
-                    height: 25.h,
-                    width: 25.h,
-                    margin: const EdgeInsets.symmetric(horizontal: 10),
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.circular(10),
-                    ),
-                    child: Center(
-                      child: SvgPicture.asset("assets/icons/share.svg"),
-                    ),
-                  ),
-                  Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 5),
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.circular(10),
-                    ),
-                    child: Text(
-                      AppLocalizations.of(context)!.translate('share'),
-                    ),
-                  ),
-                ],
+              Divider(
+                height: 1,
+                color: AppColor.goldenYellow,
               ),
-            ),
-            trailing: const SizedBox.shrink(),
+              ExpansionTile(
+                title: Directionality(
+                  textDirection: localeState.value.languageCode == 'en'
+                      ? TextDirection.ltr
+                      : TextDirection.rtl,
+                  child: Row(
+                    children: [
+                      Container(
+                        height: 25.h,
+                        width: 25.h,
+                        margin: const EdgeInsets.symmetric(horizontal: 10),
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                        child: Center(
+                          child: SvgPicture.asset(
+                              "assets/icons/Fee_calculation.svg"),
+                        ),
+                      ),
+                      Container(
+                        padding: const EdgeInsets.symmetric(horizontal: 5),
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                        child: Text(
+                          AppLocalizations.of(context)!
+                              .translate('fee_calculate'),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                onExpansionChanged: (value) {
+                  BlocProvider.of<CalculatorPanelBloc>(context)
+                      .add(CalculatorPanelOpenEvent());
+                  BlocProvider.of<FeeItemBloc>(context)
+                      .add(FeeItemLoadEvent(fe.id!));
+                },
+                trailing: const SizedBox.shrink(),
+              ),
+              Divider(
+                height: 1,
+                color: AppColor.goldenYellow,
+              ),
+              ExpansionTile(
+                title: Directionality(
+                  textDirection: localeState.value.languageCode == 'en'
+                      ? TextDirection.ltr
+                      : TextDirection.rtl,
+                  child: Row(
+                    children: [
+                      Container(
+                        height: 25.h,
+                        width: 25.h,
+                        margin: const EdgeInsets.symmetric(horizontal: 10),
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                        child: Center(
+                          child: SvgPicture.asset("assets/icons/share.svg"),
+                        ),
+                      ),
+                      Container(
+                        padding: const EdgeInsets.symmetric(horizontal: 5),
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                        child: Text(
+                          AppLocalizations.of(context)!.translate('share'),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                trailing: const SizedBox.shrink(),
 
-            // onExpansionChanged: (value) {
-            //   if (value) {
-            //     // BlocProvider.of<FeeBloc>(context)
-            //     //     .add(FeeLoadEvent(state.subchapters[index].id!));
-            //     setState(() {
-            //       feeselected = index4;
-            //     });
-            //   } else {
-            //     setState(() {
-            //       feeselected = -1;
-            //     });
-            //   }
-            // },
-            // children: buildFeesTiles(),
-          ),
-        ],
+                // onExpansionChanged: (value) {
+                //   if (value) {
+                //     // BlocProvider.of<FeeBloc>(context)
+                //     //     .add(FeeLoadEvent(state.subchapters[index].id!));
+                //     setState(() {
+                //       feeselected = index4;
+                //     });
+                //   } else {
+                //     setState(() {
+                //       feeselected = -1;
+                //     });
+                //   }
+                // },
+                // children: buildFeesTiles(),
+              ),
+            ],
+          );
+        },
       ),
     ));
     return list;

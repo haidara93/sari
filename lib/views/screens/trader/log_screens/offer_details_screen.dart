@@ -20,6 +20,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:provider/provider.dart';
+import 'package:flutter_gif/flutter_gif.dart';
 
 // ignore: must_be_immutable
 class OfferDetailsScreen extends StatefulWidget {
@@ -31,7 +32,9 @@ class OfferDetailsScreen extends StatefulWidget {
   State<OfferDetailsScreen> createState() => _OfferDetailsScreenState();
 }
 
-class _OfferDetailsScreenState extends State<OfferDetailsScreen> {
+class _OfferDetailsScreenState extends State<OfferDetailsScreen>
+    with TickerProviderStateMixin {
+  late FlutterGifController controller1;
   CalculateObject result = CalculateObject();
   List<CalculateObject> objects = [];
 
@@ -107,6 +110,14 @@ class _OfferDetailsScreenState extends State<OfferDetailsScreen> {
 
   @override
   void initState() {
+    controller1 = FlutterGifController(vsync: this);
+    WidgetsBinding.instance?.addPostFrameCallback((_) {
+      controller1.repeat(
+        min: 0,
+        max: 53,
+        period: const Duration(milliseconds: 200),
+      );
+    });
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
       trader_offerProvider =
@@ -360,9 +371,6 @@ class _OfferDetailsScreenState extends State<OfferDetailsScreen> {
                                       padding: const EdgeInsets.symmetric(
                                           vertical: 5.0),
                                       child: SizedBox(
-                                        width:
-                                            MediaQuery.of(context).size.width *
-                                                .45,
                                         child: FittedBox(
                                           fit: BoxFit.scaleDown,
                                           child: Text.rich(
@@ -531,9 +539,15 @@ class _OfferDetailsScreenState extends State<OfferDetailsScreen> {
                                                                 .width *
                                                             .84,
                                                     child: Text(
-                                                      'commodity name: ${broker_offerProvider!.products![index].label!}',
+                                                      'commodity name: ${localeState.value.languageCode == 'en' ? broker_offerProvider!.products![index].labelen! : broker_offerProvider!.products![index].label!}',
                                                       overflow:
                                                           TextOverflow.ellipsis,
+                                                      maxLines: 10,
+                                                      style: TextStyle(
+                                                        fontSize: 17.sp,
+                                                        fontWeight:
+                                                            FontWeight.bold,
+                                                      ),
                                                     ),
                                                   )
                                                 ],
@@ -796,7 +810,14 @@ class _OfferDetailsScreenState extends State<OfferDetailsScreen> {
                                 child: ExpansionTile(
                                   initiallyExpanded: false,
                                   tilePadding: EdgeInsets.zero,
-
+                                  trailing: SizedBox(
+                                    height: 45,
+                                    width: 45,
+                                    child: Image.asset(
+                                        "assets/icons/radar.gif.mp4",
+                                        gaplessPlayback: true,
+                                        fit: BoxFit.fill),
+                                  ),
                                   // controlAffinity: ListTileControlAffinity.leading,
                                   childrenPadding: EdgeInsets.zero,
                                   title: const Row(

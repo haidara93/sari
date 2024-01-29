@@ -11,10 +11,12 @@ class CalculatorService {
   static Future<List<Package>> getpackages(String search) async {
     var prefs = await SharedPreferences.getInstance();
     var jwt = prefs.getString("token");
+    var lang = prefs.getString("language") ?? "en";
     var url = 'https://across-mena.com/Fee_calculator/fees/?search=$search';
     var response = await http.get(Uri.parse(url), headers: {
       HttpHeaders.contentTypeHeader: 'application/json; charset=UTF-8',
       HttpHeaders.acceptHeader: 'application/json',
+      "language": lang,
       HttpHeaders.authorizationHeader: 'JWT $jwt'
     });
     var myDataString = utf8.decode(response.bodyBytes);
@@ -75,10 +77,12 @@ class CalculatorService {
   static Future<Package> getProductInfo(String id) async {
     var prefs = await SharedPreferences.getInstance();
     var jwt = prefs.getString("token");
+    var lang = prefs.getString("language") ?? "en";
     var url = 'https://across-mena.com/Fee_calculator/fees/$id/';
     var response = await http.get(Uri.parse(url), headers: {
       HttpHeaders.contentTypeHeader: 'application/json; charset=UTF-8',
       HttpHeaders.acceptHeader: 'application/json',
+      "language": lang,
       HttpHeaders.authorizationHeader: 'JWT $jwt'
     });
     var myDataString = utf8.decode(response.bodyBytes);

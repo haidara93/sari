@@ -68,6 +68,14 @@ class HttpHelper {
         headers: {HttpHeaders.authorizationHeader: 'JWT $apiToken'});
   }
 
+  static Future<http.Response> getlang(String url, String? lang,
+      {String? apiToken}) async {
+    return await http.get(Uri.parse(url), headers: {
+      HttpHeaders.authorizationHeader: 'JWT $apiToken',
+      "language": lang ?? "ar"
+    });
+  }
+
   static Future<http.Response> delete(String url, {String? apiToken}) async {
     return await http.delete(Uri.parse(url),
         headers: {HttpHeaders.authorizationHeader: 'JWT $apiToken'});

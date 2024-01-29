@@ -1,7 +1,9 @@
+import 'package:custome_mobile/business_logic/cubit/locale_cubit.dart';
 import 'package:custome_mobile/constants/enums.dart';
 import 'package:custome_mobile/data/models/accurdion_model.dart';
 import 'package:custome_mobile/helpers/color_constants.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:shimmer/shimmer.dart';
 
@@ -37,44 +39,41 @@ class ListItems extends StatelessWidget {
                   ],
                 ),
               )
-            : Directionality(
-                textDirection: TextDirection.rtl,
-                child: Container(
-                  height: 280.h,
-                  padding: const EdgeInsets.all(3.0),
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(10),
-                  ),
-                  child: ListView.builder(
-                    controller: _scrollController,
-                    itemCount: sectionnotes.length,
-                    shrinkWrap: true,
-                    physics: const ScrollPhysics(),
-                    itemBuilder: (context, index2) {
-                      return Container(
-                        padding: const EdgeInsets.all(8.0),
-                        margin: const EdgeInsets.symmetric(horizontal: 4),
-                        decoration: BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: BorderRadius.circular(10),
-                        ),
-                        child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                sectionnotes[index2].noteNum!,
-                                style: TextStyle(
-                                    color: AppColor.deepBlue,
-                                    fontSize: 16,
-                                    fontWeight: FontWeight.bold),
-                              ),
-                              Text(
-                                  "  ${sectionnotes[index2].noteA!.replaceAll("#", "\n")}"),
-                            ]),
-                      );
-                    },
-                  ),
+            : Container(
+                height: 280.h,
+                padding: const EdgeInsets.all(3.0),
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(10),
+                ),
+                child: ListView.builder(
+                  controller: _scrollController,
+                  itemCount: sectionnotes.length,
+                  shrinkWrap: true,
+                  physics: const ScrollPhysics(),
+                  itemBuilder: (context, index2) {
+                    return Container(
+                      padding: const EdgeInsets.all(8.0),
+                      margin: const EdgeInsets.symmetric(horizontal: 4),
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                      child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              sectionnotes[index2].noteNum!,
+                              style: TextStyle(
+                                  color: AppColor.deepBlue,
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.bold),
+                            ),
+                            Text(
+                                "  ${sectionnotes[index2].noteA!.replaceAll("#", "\n")}"),
+                          ]),
+                    );
+                  },
                 ),
               ));
       } else {
@@ -114,22 +113,31 @@ class ListItems extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      decoration: BoxDecoration(
-          border: Border.all(
-            color: AppColor.goldenYellow,
-            width: 4,
+    return BlocBuilder<LocaleCubit, LocaleState>(
+      builder: (context, localeState) {
+        return Directionality(
+          textDirection: localeState.value.languageCode == 'en'
+              ? TextDirection.ltr
+              : TextDirection.rtl,
+          child: Container(
+            decoration: BoxDecoration(
+                border: Border.all(
+                  color: AppColor.goldenYellow,
+                  width: 4,
+                ),
+                borderRadius: BorderRadius.circular(14)),
+            child: Scrollbar(
+              controller: _scrollController,
+              thumbVisibility: true,
+              thickness: 2.0,
+              radius: const Radius.circular(2),
+              child: ListView(
+                children: buildNoteWidget(),
+              ),
+            ),
           ),
-          borderRadius: BorderRadius.circular(14)),
-      child: Scrollbar(
-        controller: _scrollController,
-        thumbVisibility: true,
-        thickness: 2.0,
-        radius: const Radius.circular(2),
-        child: ListView(
-          children: buildNoteWidget(),
-        ),
-      ),
+        );
+      },
     );
   }
 }

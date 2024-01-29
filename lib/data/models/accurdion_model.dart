@@ -188,7 +188,7 @@ class Fee {
 class FeeSet {
   String? id;
   String? label;
-  String? export;
+  List<Export>? export;
   String? restrictionExport;
   String? review;
   String? reviewValue;
@@ -212,11 +212,16 @@ class FeeSet {
   FeeSet.fromJson(Map<String, dynamic> json) {
     id = json['id'];
     label = json['label'];
-    export = json['export'];
     restrictionExport = json['restriction_export'] ?? "";
     review = json['review'] ?? "";
     reviewValue = json['review_value'] ?? "";
     idParent3 = json['id_parent_3'];
+    if (json['export_fees'] != null) {
+      export = <Export>[];
+      json['export_fees'].forEach((v) {
+        export!.add(Export.fromJson(v));
+      });
+    }
     if (json['import_fees'] != null) {
       importFees = <ImportFee>[];
       json['import_fees'].forEach((v) {
@@ -255,6 +260,31 @@ class FeeSet {
     // if (this.finance != null) {
     //   data['finance'] = this.finance!.map((v) => v.toJson()).toList();
     // }
+    return data;
+  }
+}
+
+class Export {
+  int? id;
+  String? export;
+  String? restrictionExport;
+  String? idExportfee;
+
+  Export({this.id, this.export, this.restrictionExport, this.idExportfee});
+
+  Export.fromJson(Map<String, dynamic> json) {
+    id = json['id'];
+    export = json['export'];
+    restrictionExport = json['restriction_export'];
+    idExportfee = json['id_exportfee'];
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['id'] = this.id;
+    data['export'] = this.export;
+    data['restriction_export'] = this.restrictionExport;
+    data['id_exportfee'] = this.idExportfee;
     return data;
   }
 }
@@ -576,7 +606,7 @@ class IdParent1 {
 class FeeSearch {
   String? id;
   String? label;
-  String? export;
+  List<Export>? export;
   String? restrictionExport;
   String? review;
   String? reviewValue;
@@ -602,10 +632,15 @@ class FeeSearch {
   FeeSearch.fromJson(Map<String, dynamic> json) {
     id = json['id'];
     label = json['label'];
-    export = json['export'] ?? "";
     restrictionExport = json['restriction_export'] ?? "";
     review = json['review'] ?? "";
     reviewValue = json['review_value'] ?? "";
+    if (json['export_fees'] != []) {
+      export = <Export>[];
+      json['export_fees'].forEach((v) {
+        export!.add(new Export.fromJson(v));
+      });
+    }
     if (json['stone_farming'] != []) {
       stoneFarming = <StoneFarming>[];
       json['stone_farming'].forEach((v) {

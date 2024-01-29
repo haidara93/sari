@@ -48,6 +48,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:intl/intl.dart' as intel;
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:shimmer/shimmer.dart';
 
 class TraderHomeScreen extends StatefulWidget {
@@ -538,66 +539,26 @@ class _TraderHomeScreenState extends State<TraderHomeScreen>
                                     ),
                                   ),
                                   GestureDetector(
-                                    onTap: () {
+                                    onTap: () async {
                                       if (AppLocalizations.of(context)!
                                           .isEnLocale!) {
                                         BlocProvider.of<LocaleCubit>(context)
                                             .toArabic();
+                                        SharedPreferences prefs =
+                                            await SharedPreferences
+                                                .getInstance();
+                                        prefs.setString("language", "ar");
                                       } else {
                                         BlocProvider.of<LocaleCubit>(context)
                                             .toEnglish();
+
+                                        SharedPreferences prefs =
+                                            await SharedPreferences
+                                                .getInstance();
+                                        prefs.setString("language", "en");
                                       }
-                                      switch (navigationValue) {
-                                        case 0:
-                                          {
-                                            setState(() {
-                                              title =
-                                                  AppLocalizations.of(context)!
-                                                      .translate(
-                                                          'trader_log_title');
-                                            });
-                                            break;
-                                          }
-                                        case 1:
-                                          {
-                                            setState(() {
-                                              title =
-                                                  AppLocalizations.of(context)!
-                                                      .translate(
-                                                          'calculator_title');
-                                            });
-                                            break;
-                                          }
-                                        case 2:
-                                          {
-                                            // print(MediaQuery.of(context).size.width);
-                                            setState(() {
-                                              title =
-                                                  AppLocalizations.of(context)!
-                                                      .translate('home');
-                                            });
-                                            break;
-                                          }
-                                        case 3:
-                                          {
-                                            setState(() {
-                                              title = AppLocalizations.of(
-                                                      context)!
-                                                  .translate('tariff_title');
-                                            });
-                                            break;
-                                          }
-                                        case 4:
-                                          {
-                                            setState(() {
-                                              title =
-                                                  AppLocalizations.of(context)!
-                                                      .translate(
-                                                          'broker_order_title');
-                                            });
-                                            break;
-                                          }
-                                      }
+                                      BlocProvider.of<SectionBloc>(context)
+                                          .add(SectionLoadEvent());
 
                                       Future.delayed(
                                               Duration(milliseconds: 500))
@@ -1513,1044 +1474,1177 @@ class _TraderHomeScreenState extends State<TraderHomeScreen>
   }
 
   Widget _buildPanelWidget(BuildContext context) {
-    return Scaffold(
-      resizeToAvoidBottomInset: false,
-      backgroundColor: Colors.grey[200],
-      appBar: AppBar(
-        backgroundColor: AppColor.deepBlue,
-        title: const Text(
-          "احسب الرسوم",
-          style: TextStyle(
-            color: Colors.white,
-            fontWeight: FontWeight.bold,
-          ),
-        ),
-        centerTitle: true,
-        leading: GestureDetector(
-          onTap: () {
-            setState(() {
-              selected = -1;
-              chapterselected = -1;
-              subchapterselected = -1;
-              feeselected = -1;
-            });
-            BlocProvider.of<CalculatorPanelBloc>(context)
-                .add(CalculatorPanelHideEvent());
-          },
-          child: const Padding(
-            padding: EdgeInsets.all(8.0),
-            child: Icon(Icons.arrow_back, color: Colors.white),
-          ),
-        ),
-        elevation: 0,
-      ),
-      body: SafeArea(
-          child: SingleChildScrollView(
-        child: GestureDetector(
-          onTap: () {
-            FocusManager.instance.primaryFocus?.unfocus();
-            BlocProvider.of<BottomNavBarCubit>(context).emitShow();
-          },
-          child: BlocBuilder<LocaleCubit, LocaleState>(
-            builder: (context, localeState) {
-              return Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 8),
-                child: BlocConsumer<FeeItemBloc, FeeItemState>(
-                  listener: (context, state) {
-                    if (state is FeeItemLoadedSuccess) {
-                      setState(() {
-                        _wieghtController.text = "0.0";
-                        _valueController.text = "0.0";
-                        syrianExchangeValue = "0.0";
-                        syrianTotalValue = "0.0";
-                        totalValueWithEnsurance = "0.0";
-                      });
-                      selectSuggestion(
-                          state.fee, localeState.value.languageCode);
-                    }
-                  },
-                  builder: (context, state) {
-                    if (state is FeeItemLoadedSuccess) {
-                      return Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            const SizedBox(
-                              height: 25,
-                            ),
-                            Container(
-                              padding: const EdgeInsets.symmetric(
-                                  vertical: 35, horizontal: 15),
-                              decoration: BoxDecoration(
-                                  color: Colors.white,
-                                  borderRadius: BorderRadius.circular(20)),
-                              child: Form(
-                                key: _calculatorformkey,
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    TextFormField(
-                                      controller: _typeAheadController,
-                                      enabled: false,
-                                      maxLines: null,
-                                      decoration: InputDecoration(
-                                        labelText: AppLocalizations.of(context)!
-                                            .translate('goods_name'),
-                                        contentPadding:
-                                            const EdgeInsets.symmetric(
-                                                horizontal: 9.0,
-                                                vertical: 11.0),
-                                        border: OutlineInputBorder(
-                                          borderRadius:
-                                              BorderRadius.circular(12),
-                                        ),
-                                      ),
-                                    ),
-                                    const SizedBox(
-                                      height: 12,
-                                    ),
-                                    Visibility(
-                                      visible: allowexport,
-                                      child: Text(
-                                        AppLocalizations.of(context)!
-                                            .translate('fee_import_banned'),
-                                        style: const TextStyle(
-                                          color: Colors.red,
-                                          fontSize: 13,
-                                        ),
-                                      ),
-                                    ),
-                                    const SizedBox(
-                                      height: 12,
-                                    ),
-                                    Visibility(
-                                      visible: isdropdwonVisible,
-                                      child: DropdownButtonHideUnderline(
-                                        child: DropdownButton2<Extras>(
-                                          isExpanded: true,
-                                          barrierLabel: _placeholder,
-                                          hint: Text(
-                                            _placeholder,
-                                            style: TextStyle(
-                                              fontSize: 14,
-                                              color:
-                                                  Theme.of(context).hintColor,
-                                            ),
-                                          ),
-                                          items: items
-                                              .map((Extras item) =>
-                                                  DropdownMenuItem<Extras>(
-                                                    value: item,
-                                                    child: Container(
-                                                      width: double.infinity,
-                                                      decoration: BoxDecoration(
-                                                        border: Border(
-                                                          bottom: BorderSide(
-                                                              color: AppColor
-                                                                  .goldenYellow,
-                                                              width: 1),
-                                                        ),
-                                                      ),
-                                                      child: Text(
-                                                        item.label!,
-                                                        style: const TextStyle(
-                                                          fontSize: 14,
-                                                        ),
-                                                      ),
-                                                    ),
-                                                  ))
-                                              .toList(),
-                                          value: selectedValue,
-                                          onChanged: (Extras? value) {
-                                            if (value!.countryGroup!.isEmpty) {
-                                              if (value.price! > 0) {
-                                                basePrice = value.price!;
-
-                                                _valueController.text =
-                                                    value.price!.toString();
-                                                setState(() {
-                                                  valueEnabled = false;
-                                                });
-                                              } else {
-                                                setState(() {
-                                                  basePrice = 0.0;
-
-                                                  _valueController.text = "0.0";
-                                                  valueEnabled = true;
-                                                  syrianExchangeValue = "30";
-                                                });
-                                              }
-                                              evaluatePrice();
-                                            } else {
-                                              if (value.price! > 0) {
-                                                basePrice = value.price!;
-
-                                                _valueController.text =
-                                                    value.price!.toString();
-                                                setState(() {
-                                                  valueEnabled = false;
-                                                });
-                                              } else {
-                                                setState(() {
-                                                  basePrice = 0.0;
-
-                                                  _valueController.text = "0.0";
-                                                  valueEnabled = true;
-                                                  syrianExchangeValue = "30";
-                                                });
-                                              }
-                                              evaluatePrice();
-                                            }
-                                            setState(() {
-                                              selectedValue = value;
-                                            });
-                                          },
-                                          buttonStyleData: ButtonStyleData(
-                                            height: 50,
-                                            width: double.infinity,
-
-                                            padding: const EdgeInsets.symmetric(
-                                              horizontal: 9.0,
-                                            ),
-                                            decoration: BoxDecoration(
-                                              borderRadius:
-                                                  BorderRadius.circular(12),
-                                              border: Border.all(
-                                                color: Colors.black26,
+    return BlocBuilder<LocaleCubit, LocaleState>(
+      builder: (context, localeState) {
+        return Directionality(
+          textDirection: localeState.value.languageCode == 'en'
+              ? TextDirection.ltr
+              : TextDirection.rtl,
+          child: Scaffold(
+            resizeToAvoidBottomInset: false,
+            backgroundColor: Colors.grey[200],
+            appBar: AppBar(
+              backgroundColor: AppColor.deepBlue,
+              title: Text(
+                AppLocalizations.of(context)!.translate('calculator_title'),
+                style: TextStyle(
+                  color: Colors.white,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              centerTitle: true,
+              leading: GestureDetector(
+                onTap: () {
+                  setState(() {
+                    selected = -1;
+                    chapterselected = -1;
+                    subchapterselected = -1;
+                    feeselected = -1;
+                  });
+                  BlocProvider.of<CalculatorPanelBloc>(context)
+                      .add(CalculatorPanelHideEvent());
+                },
+                child: const Padding(
+                  padding: EdgeInsets.all(8.0),
+                  child: Icon(Icons.arrow_back, color: Colors.white),
+                ),
+              ),
+              elevation: 0,
+            ),
+            body: SafeArea(
+                child: SingleChildScrollView(
+              child: GestureDetector(
+                onTap: () {
+                  FocusManager.instance.primaryFocus?.unfocus();
+                  BlocProvider.of<BottomNavBarCubit>(context).emitShow();
+                },
+                child: BlocBuilder<LocaleCubit, LocaleState>(
+                  builder: (context, localeState) {
+                    return Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 8),
+                      child: BlocConsumer<FeeItemBloc, FeeItemState>(
+                        listener: (context, state) {
+                          if (state is FeeItemLoadedSuccess) {
+                            setState(() {
+                              _wieghtController.text = "0.0";
+                              _valueController.text = "0.0";
+                              syrianExchangeValue = "0.0";
+                              syrianTotalValue = "0.0";
+                              totalValueWithEnsurance = "0.0";
+                            });
+                            selectSuggestion(
+                                state.fee, localeState.value.languageCode);
+                          }
+                        },
+                        builder: (context, state) {
+                          if (state is FeeItemLoadedSuccess) {
+                            return Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  const SizedBox(
+                                    height: 25,
+                                  ),
+                                  Container(
+                                    padding: const EdgeInsets.symmetric(
+                                        vertical: 35, horizontal: 15),
+                                    decoration: BoxDecoration(
+                                        color: Colors.white,
+                                        borderRadius:
+                                            BorderRadius.circular(20)),
+                                    child: Form(
+                                      key: _calculatorformkey,
+                                      child: Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          TextFormField(
+                                            controller: _typeAheadController,
+                                            enabled: false,
+                                            maxLines: null,
+                                            decoration: InputDecoration(
+                                              labelText:
+                                                  AppLocalizations.of(context)!
+                                                      .translate('goods_name'),
+                                              contentPadding:
+                                                  const EdgeInsets.symmetric(
+                                                      horizontal: 9.0,
+                                                      vertical: 11.0),
+                                              border: OutlineInputBorder(
+                                                borderRadius:
+                                                    BorderRadius.circular(12),
                                               ),
-                                              color: Colors.white,
-                                            ),
-                                            // elevation: 2,
-                                          ),
-                                          iconStyleData: const IconStyleData(
-                                            icon: Icon(
-                                              Icons.keyboard_arrow_down_sharp,
-                                            ),
-                                            iconSize: 20,
-                                            iconEnabledColor:
-                                                AppColor.AccentBlue,
-                                            iconDisabledColor: Colors.grey,
-                                          ),
-                                          dropdownStyleData: DropdownStyleData(
-                                            decoration: BoxDecoration(
-                                              borderRadius:
-                                                  BorderRadius.circular(14),
-                                              color: Colors.white,
-                                            ),
-                                            scrollbarTheme: ScrollbarThemeData(
-                                              radius: const Radius.circular(40),
-                                              thickness:
-                                                  MaterialStateProperty.all(6),
-                                              thumbVisibility:
-                                                  MaterialStateProperty.all(
-                                                      true),
                                             ),
                                           ),
-                                          menuItemStyleData: MenuItemStyleData(
-                                            height: 40.h,
+                                          const SizedBox(
+                                            height: 12,
                                           ),
-                                        ),
-                                      ),
-                                    ),
-                                    const SizedBox(
-                                      height: 12,
-                                    ),
-                                    Wrap(
-                                      children: [
-                                        Visibility(
-                                          visible: isfeeequal001,
-                                          child: SizedBox(
-                                            width: MediaQuery.of(context)
-                                                    .size
-                                                    .width *
-                                                .4,
-                                            child: CheckboxListTile(
-                                                value: rawMaterialValue,
-                                                contentPadding: EdgeInsets.zero,
-                                                controlAffinity:
-                                                    ListTileControlAffinity
-                                                        .leading,
-                                                title: Text(AppLocalizations.of(
-                                                        context)!
-                                                    .translate('raw_material')),
-                                                onChanged: (value) {
+                                          Visibility(
+                                            visible: allowexport,
+                                            child: Text(
+                                              AppLocalizations.of(context)!
+                                                  .translate(
+                                                      'fee_import_banned'),
+                                              style: const TextStyle(
+                                                color: Colors.red,
+                                                fontSize: 13,
+                                              ),
+                                            ),
+                                          ),
+                                          const SizedBox(
+                                            height: 12,
+                                          ),
+                                          Visibility(
+                                            visible: isdropdwonVisible,
+                                            child: DropdownButtonHideUnderline(
+                                              child: DropdownButton2<Extras>(
+                                                isExpanded: true,
+                                                barrierLabel: _placeholder,
+                                                hint: Text(
+                                                  _placeholder,
+                                                  style: TextStyle(
+                                                    fontSize: 14,
+                                                    color: Theme.of(context)
+                                                        .hintColor,
+                                                  ),
+                                                ),
+                                                items: items
+                                                    .map((Extras item) =>
+                                                        DropdownMenuItem<
+                                                            Extras>(
+                                                          value: item,
+                                                          child: Container(
+                                                            width:
+                                                                double.infinity,
+                                                            decoration:
+                                                                BoxDecoration(
+                                                              border: Border(
+                                                                bottom: BorderSide(
+                                                                    color: AppColor
+                                                                        .goldenYellow,
+                                                                    width: 1),
+                                                              ),
+                                                            ),
+                                                            child: Text(
+                                                              item.label!,
+                                                              style:
+                                                                  const TextStyle(
+                                                                fontSize: 14,
+                                                              ),
+                                                            ),
+                                                          ),
+                                                        ))
+                                                    .toList(),
+                                                value: selectedValue,
+                                                onChanged: (Extras? value) {
+                                                  if (value!
+                                                      .countryGroup!.isEmpty) {
+                                                    if (value.price! > 0) {
+                                                      basePrice = value.price!;
+
+                                                      _valueController.text =
+                                                          value.price!
+                                                              .toString();
+                                                      setState(() {
+                                                        valueEnabled = false;
+                                                      });
+                                                    } else {
+                                                      setState(() {
+                                                        basePrice = 0.0;
+
+                                                        _valueController.text =
+                                                            "0.0";
+                                                        valueEnabled = true;
+                                                        syrianExchangeValue =
+                                                            "30";
+                                                      });
+                                                    }
+                                                    evaluatePrice();
+                                                  } else {
+                                                    if (value.price! > 0) {
+                                                      basePrice = value.price!;
+
+                                                      _valueController.text =
+                                                          value.price!
+                                                              .toString();
+                                                      setState(() {
+                                                        valueEnabled = false;
+                                                      });
+                                                    } else {
+                                                      setState(() {
+                                                        basePrice = 0.0;
+
+                                                        _valueController.text =
+                                                            "0.0";
+                                                        valueEnabled = true;
+                                                        syrianExchangeValue =
+                                                            "30";
+                                                      });
+                                                    }
+                                                    evaluatePrice();
+                                                  }
                                                   setState(() {
-                                                    rawMaterialValue = value!;
+                                                    selectedValue = value;
                                                   });
-                                                  evaluatePrice();
-                                                }),
-                                          ),
-                                        ),
-                                        Visibility(
-                                          visible: isfeeequal001,
-                                          child: SizedBox(
-                                            width: MediaQuery.of(context)
-                                                    .size
-                                                    .width *
-                                                .4,
-                                            child: CheckboxListTile(
-                                                value: industrialValue,
-                                                contentPadding: EdgeInsets.zero,
-                                                controlAffinity:
-                                                    ListTileControlAffinity
-                                                        .leading,
-                                                title: Text(AppLocalizations.of(
-                                                        context)!
-                                                    .translate('industrial')),
-                                                onChanged: (value) {
-                                                  setState(() {
-                                                    industrialValue = value!;
-                                                  });
-                                                  evaluatePrice();
-                                                }),
-                                          ),
-                                        ),
-                                        Visibility(
-                                          visible: isBrand,
-                                          child: SizedBox(
-                                            width: MediaQuery.of(context)
-                                                    .size
-                                                    .width *
-                                                .4,
-                                            child: CheckboxListTile(
-                                                value: brandValue,
-                                                contentPadding: EdgeInsets.zero,
-                                                controlAffinity:
-                                                    ListTileControlAffinity
-                                                        .leading,
-                                                title: Text(AppLocalizations.of(
-                                                        context)!
-                                                    .translate('isBrand')),
-                                                onChanged: (value) {
-                                                  calculateExtrasPrice(
-                                                      1.5, value!);
-                                                  setState(() {
-                                                    brandValue = value;
-                                                  });
-                                                  evaluatePrice();
-                                                }),
-                                          ),
-                                        ),
-                                        Visibility(
-                                          visible: isTubes,
-                                          child: SizedBox(
-                                            width: MediaQuery.of(context)
-                                                    .size
-                                                    .width *
-                                                .4,
-                                            child: CheckboxListTile(
-                                                value: tubesValue,
-                                                contentPadding: EdgeInsets.zero,
-                                                controlAffinity:
-                                                    ListTileControlAffinity
-                                                        .leading,
-                                                title: Text(AppLocalizations.of(
-                                                        context)!
-                                                    .translate('isTubeValue')),
-                                                onChanged: (value) {
-                                                  calculateExtrasPrice(
-                                                      .1, value!);
-                                                  setState(() {
-                                                    tubesValue = value;
-                                                  });
-                                                  evaluatePrice();
-                                                }),
-                                          ),
-                                        ),
-                                        Visibility(
-                                          visible: isColored,
-                                          child: SizedBox(
-                                            width: MediaQuery.of(context)
-                                                    .size
-                                                    .width *
-                                                .4,
-                                            child: CheckboxListTile(
-                                                value: colorValue,
-                                                contentPadding: EdgeInsets.zero,
-                                                controlAffinity:
-                                                    ListTileControlAffinity
-                                                        .leading,
-                                                title: Text(AppLocalizations.of(
-                                                        context)!
-                                                    .translate('isColored')),
-                                                onChanged: (value) {
-                                                  calculateExtrasPrice(
-                                                      .1, value!);
-                                                  setState(() {
-                                                    colorValue = value;
-                                                  });
-                                                  evaluatePrice();
-                                                }),
-                                          ),
-                                        ),
-                                        Visibility(
-                                          visible: isLycra,
-                                          child: SizedBox(
-                                            width: MediaQuery.of(context)
-                                                    .size
-                                                    .width *
-                                                .4,
-                                            child: CheckboxListTile(
-                                                value: lycraValue,
-                                                contentPadding: EdgeInsets.zero,
-                                                controlAffinity:
-                                                    ListTileControlAffinity
-                                                        .leading,
-                                                title: Text(AppLocalizations.of(
-                                                        context)!
-                                                    .translate('isLycra')),
-                                                onChanged: (value) {
-                                                  calculateExtrasPrice(
-                                                      .05, value!);
-                                                  setState(() {
-                                                    lycraValue = value;
-                                                  });
-                                                  evaluatePrice();
-                                                }),
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                    BlocBuilder<FlagsBloc, FlagsState>(
-                                      builder: (context, flagstate) {
-                                        if (flagstate is FlagsLoadedSuccess) {
-                                          return DropdownButtonHideUnderline(
-                                            child: DropdownButton2<Origin>(
-                                              isExpanded: true,
-                                              hint: Text(
-                                                AppLocalizations.of(context)!
-                                                    .translate('select_origin'),
-                                                style: TextStyle(
-                                                  fontSize: 15,
-                                                  color: Theme.of(context)
-                                                      .hintColor,
+                                                },
+                                                buttonStyleData:
+                                                    ButtonStyleData(
+                                                  height: 50,
+                                                  width: double.infinity,
+
+                                                  padding: const EdgeInsets
+                                                      .symmetric(
+                                                    horizontal: 9.0,
+                                                  ),
+                                                  decoration: BoxDecoration(
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            12),
+                                                    border: Border.all(
+                                                      color: Colors.black26,
+                                                    ),
+                                                    color: Colors.white,
+                                                  ),
+                                                  // elevation: 2,
+                                                ),
+                                                iconStyleData:
+                                                    const IconStyleData(
+                                                  icon: Icon(
+                                                    Icons
+                                                        .keyboard_arrow_down_sharp,
+                                                  ),
+                                                  iconSize: 20,
+                                                  iconEnabledColor:
+                                                      AppColor.AccentBlue,
+                                                  iconDisabledColor:
+                                                      Colors.grey,
+                                                ),
+                                                dropdownStyleData:
+                                                    DropdownStyleData(
+                                                  decoration: BoxDecoration(
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            14),
+                                                    color: Colors.white,
+                                                  ),
+                                                  scrollbarTheme:
+                                                      ScrollbarThemeData(
+                                                    radius:
+                                                        const Radius.circular(
+                                                            40),
+                                                    thickness:
+                                                        MaterialStateProperty
+                                                            .all(6),
+                                                    thumbVisibility:
+                                                        MaterialStateProperty
+                                                            .all(true),
+                                                  ),
+                                                ),
+                                                menuItemStyleData:
+                                                    MenuItemStyleData(
+                                                  height: 40.h,
                                                 ),
                                               ),
-                                              items: flagstate.origins
-                                                  .map((Origin item) =>
-                                                      DropdownMenuItem<Origin>(
-                                                        value: item,
-                                                        child: SizedBox(
-                                                          // width: 200,
-                                                          child: Row(
-                                                            children: [
-                                                              SvgPicture
-                                                                  .network(
-                                                                item.imageURL!,
-                                                                height: 35.h,
-                                                                width: 45.w,
-                                                                // semanticsLabel: 'A shark?!',
-                                                                placeholderBuilder:
-                                                                    (BuildContext
-                                                                            context) =>
-                                                                        Container(
-                                                                  height: 35.h,
-                                                                  width: 45.w,
-                                                                  decoration:
-                                                                      BoxDecoration(
-                                                                    color: Colors
-                                                                            .grey[
-                                                                        200],
-                                                                    borderRadius:
-                                                                        BorderRadius
-                                                                            .circular(5),
-                                                                  ),
-                                                                ),
-                                                              ),
-                                                              const SizedBox(
-                                                                  width: 7),
-                                                              Container(
-                                                                constraints:
-                                                                    BoxConstraints(
-                                                                  maxWidth:
-                                                                      280.w,
-                                                                ),
-                                                                child: Text(
-                                                                  item.label!,
-                                                                  overflow:
-                                                                      TextOverflow
-                                                                          .ellipsis,
-                                                                  // maxLines: 2,
-                                                                ),
-                                                              ),
-                                                            ],
-                                                            // subtitle: Text('\$${suggestion['price']}'),
-                                                          ),
-                                                        ),
-                                                      ))
-                                                  .toList(),
-                                              value: selectedOrigin,
-                                              onChanged: (Origin? value) {
-                                                selectOrigin(value!);
-                                              },
-                                              dropdownSearchData:
-                                                  DropdownSearchData(
-                                                searchController:
-                                                    _originController,
-                                                searchInnerWidgetHeight: 60,
-                                                searchInnerWidget: Container(
-                                                  height: 60,
-                                                  padding:
-                                                      const EdgeInsets.only(
-                                                    top: 8,
-                                                    bottom: 4,
-                                                    right: 8,
-                                                    left: 8,
-                                                  ),
-                                                  child: TextFormField(
-                                                    expands: true,
-                                                    maxLines: null,
-                                                    controller:
-                                                        _originController,
-                                                    onTap: () {
-                                                      _originController
-                                                              .selection =
-                                                          TextSelection(
-                                                              baseOffset: 0,
-                                                              extentOffset:
-                                                                  _originController
-                                                                      .value
-                                                                      .text
-                                                                      .length);
-                                                    },
-                                                    decoration: InputDecoration(
-                                                      isDense: true,
+                                            ),
+                                          ),
+                                          const SizedBox(
+                                            height: 12,
+                                          ),
+                                          Wrap(
+                                            children: [
+                                              Visibility(
+                                                visible: isfeeequal001,
+                                                child: SizedBox(
+                                                  width: MediaQuery.of(context)
+                                                          .size
+                                                          .width *
+                                                      .4,
+                                                  child: CheckboxListTile(
+                                                      value: rawMaterialValue,
                                                       contentPadding:
-                                                          const EdgeInsets
-                                                              .symmetric(
-                                                        horizontal: 10,
-                                                        vertical: 8,
-                                                      ),
-                                                      hintText: AppLocalizations
+                                                          EdgeInsets.zero,
+                                                      controlAffinity:
+                                                          ListTileControlAffinity
+                                                              .leading,
+                                                      title: Text(AppLocalizations
                                                               .of(context)!
                                                           .translate(
+                                                              'raw_material')),
+                                                      onChanged: (value) {
+                                                        setState(() {
+                                                          rawMaterialValue =
+                                                              value!;
+                                                        });
+                                                        evaluatePrice();
+                                                      }),
+                                                ),
+                                              ),
+                                              Visibility(
+                                                visible: isfeeequal001,
+                                                child: SizedBox(
+                                                  width: MediaQuery.of(context)
+                                                          .size
+                                                          .width *
+                                                      .4,
+                                                  child: CheckboxListTile(
+                                                      value: industrialValue,
+                                                      contentPadding:
+                                                          EdgeInsets.zero,
+                                                      controlAffinity:
+                                                          ListTileControlAffinity
+                                                              .leading,
+                                                      title: Text(
+                                                          AppLocalizations.of(
+                                                                  context)!
+                                                              .translate(
+                                                                  'industrial')),
+                                                      onChanged: (value) {
+                                                        setState(() {
+                                                          industrialValue =
+                                                              value!;
+                                                        });
+                                                        evaluatePrice();
+                                                      }),
+                                                ),
+                                              ),
+                                              Visibility(
+                                                visible: isBrand,
+                                                child: SizedBox(
+                                                  width: MediaQuery.of(context)
+                                                          .size
+                                                          .width *
+                                                      .4,
+                                                  child: CheckboxListTile(
+                                                      value: brandValue,
+                                                      contentPadding:
+                                                          EdgeInsets.zero,
+                                                      controlAffinity:
+                                                          ListTileControlAffinity
+                                                              .leading,
+                                                      title: Text(
+                                                          AppLocalizations.of(
+                                                                  context)!
+                                                              .translate(
+                                                                  'isBrand')),
+                                                      onChanged: (value) {
+                                                        calculateExtrasPrice(
+                                                            1.5, value!);
+                                                        setState(() {
+                                                          brandValue = value;
+                                                        });
+                                                        evaluatePrice();
+                                                      }),
+                                                ),
+                                              ),
+                                              Visibility(
+                                                visible: isTubes,
+                                                child: SizedBox(
+                                                  width: MediaQuery.of(context)
+                                                          .size
+                                                          .width *
+                                                      .4,
+                                                  child: CheckboxListTile(
+                                                      value: tubesValue,
+                                                      contentPadding:
+                                                          EdgeInsets.zero,
+                                                      controlAffinity:
+                                                          ListTileControlAffinity
+                                                              .leading,
+                                                      title: Text(
+                                                          AppLocalizations.of(
+                                                                  context)!
+                                                              .translate(
+                                                                  'isTubeValue')),
+                                                      onChanged: (value) {
+                                                        calculateExtrasPrice(
+                                                            .1, value!);
+                                                        setState(() {
+                                                          tubesValue = value;
+                                                        });
+                                                        evaluatePrice();
+                                                      }),
+                                                ),
+                                              ),
+                                              Visibility(
+                                                visible: isColored,
+                                                child: SizedBox(
+                                                  width: MediaQuery.of(context)
+                                                          .size
+                                                          .width *
+                                                      .4,
+                                                  child: CheckboxListTile(
+                                                      value: colorValue,
+                                                      contentPadding:
+                                                          EdgeInsets.zero,
+                                                      controlAffinity:
+                                                          ListTileControlAffinity
+                                                              .leading,
+                                                      title: Text(
+                                                          AppLocalizations.of(
+                                                                  context)!
+                                                              .translate(
+                                                                  'isColored')),
+                                                      onChanged: (value) {
+                                                        calculateExtrasPrice(
+                                                            .1, value!);
+                                                        setState(() {
+                                                          colorValue = value;
+                                                        });
+                                                        evaluatePrice();
+                                                      }),
+                                                ),
+                                              ),
+                                              Visibility(
+                                                visible: isLycra,
+                                                child: SizedBox(
+                                                  width: MediaQuery.of(context)
+                                                          .size
+                                                          .width *
+                                                      .4,
+                                                  child: CheckboxListTile(
+                                                      value: lycraValue,
+                                                      contentPadding:
+                                                          EdgeInsets.zero,
+                                                      controlAffinity:
+                                                          ListTileControlAffinity
+                                                              .leading,
+                                                      title: Text(
+                                                          AppLocalizations.of(
+                                                                  context)!
+                                                              .translate(
+                                                                  'isLycra')),
+                                                      onChanged: (value) {
+                                                        calculateExtrasPrice(
+                                                            .05, value!);
+                                                        setState(() {
+                                                          lycraValue = value;
+                                                        });
+                                                        evaluatePrice();
+                                                      }),
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                          BlocBuilder<FlagsBloc, FlagsState>(
+                                            builder: (context, flagstate) {
+                                              if (flagstate
+                                                  is FlagsLoadedSuccess) {
+                                                return DropdownButtonHideUnderline(
+                                                  child:
+                                                      DropdownButton2<Origin>(
+                                                    isExpanded: true,
+                                                    hint: Text(
+                                                      AppLocalizations.of(
+                                                              context)!
+                                                          .translate(
                                                               'select_origin'),
-                                                      hintStyle:
-                                                          const TextStyle(
-                                                              fontSize: 12),
-                                                      border:
-                                                          OutlineInputBorder(
-                                                        borderRadius:
-                                                            BorderRadius
-                                                                .circular(8),
+                                                      style: TextStyle(
+                                                        fontSize: 15,
+                                                        color: Theme.of(context)
+                                                            .hintColor,
                                                       ),
                                                     ),
+                                                    items: flagstate.origins
+                                                        .map((Origin item) =>
+                                                            DropdownMenuItem<
+                                                                Origin>(
+                                                              value: item,
+                                                              child: SizedBox(
+                                                                // width: 200,
+                                                                child: Row(
+                                                                  children: [
+                                                                    SvgPicture
+                                                                        .network(
+                                                                      item.imageURL!,
+                                                                      height:
+                                                                          35.h,
+                                                                      width:
+                                                                          45.w,
+                                                                      // semanticsLabel: 'A shark?!',
+                                                                      placeholderBuilder:
+                                                                          (BuildContext context) =>
+                                                                              Container(
+                                                                        height:
+                                                                            35.h,
+                                                                        width:
+                                                                            45.w,
+                                                                        decoration:
+                                                                            BoxDecoration(
+                                                                          color:
+                                                                              Colors.grey[200],
+                                                                          borderRadius:
+                                                                              BorderRadius.circular(5),
+                                                                        ),
+                                                                      ),
+                                                                    ),
+                                                                    const SizedBox(
+                                                                        width:
+                                                                            7),
+                                                                    Container(
+                                                                      constraints:
+                                                                          BoxConstraints(
+                                                                        maxWidth:
+                                                                            280.w,
+                                                                      ),
+                                                                      child:
+                                                                          Text(
+                                                                        item.label!,
+                                                                        overflow:
+                                                                            TextOverflow.ellipsis,
+                                                                        // maxLines: 2,
+                                                                      ),
+                                                                    ),
+                                                                  ],
+                                                                  // subtitle: Text('\$${suggestion['price']}'),
+                                                                ),
+                                                              ),
+                                                            ))
+                                                        .toList(),
+                                                    value: selectedOrigin,
+                                                    onChanged: (Origin? value) {
+                                                      selectOrigin(value!);
+                                                    },
+                                                    dropdownSearchData:
+                                                        DropdownSearchData(
+                                                      searchController:
+                                                          _originController,
+                                                      searchInnerWidgetHeight:
+                                                          60,
+                                                      searchInnerWidget:
+                                                          Container(
+                                                        height: 60,
+                                                        padding:
+                                                            const EdgeInsets
+                                                                .only(
+                                                          top: 8,
+                                                          bottom: 4,
+                                                          right: 8,
+                                                          left: 8,
+                                                        ),
+                                                        child: TextFormField(
+                                                          expands: true,
+                                                          maxLines: null,
+                                                          controller:
+                                                              _originController,
+                                                          onTap: () {
+                                                            _originController
+                                                                    .selection =
+                                                                TextSelection(
+                                                                    baseOffset:
+                                                                        0,
+                                                                    extentOffset:
+                                                                        _originController
+                                                                            .value
+                                                                            .text
+                                                                            .length);
+                                                          },
+                                                          decoration:
+                                                              InputDecoration(
+                                                            isDense: true,
+                                                            contentPadding:
+                                                                const EdgeInsets
+                                                                    .symmetric(
+                                                              horizontal: 10,
+                                                              vertical: 8,
+                                                            ),
+                                                            hintText: AppLocalizations
+                                                                    .of(
+                                                                        context)!
+                                                                .translate(
+                                                                    'select_origin'),
+                                                            hintStyle:
+                                                                const TextStyle(
+                                                                    fontSize:
+                                                                        12),
+                                                            border:
+                                                                OutlineInputBorder(
+                                                              borderRadius:
+                                                                  BorderRadius
+                                                                      .circular(
+                                                                          8),
+                                                            ),
+                                                          ),
+                                                        ),
+                                                      ),
+                                                      searchMatchFn:
+                                                          (item, searchValue) {
+                                                        return item
+                                                            .value!.label!
+                                                            .contains(
+                                                                searchValue);
+                                                      },
+                                                    ),
+                                                    onMenuStateChange:
+                                                        (isOpen) {
+                                                      if (isOpen) {
+                                                        setState(() {
+                                                          _originController
+                                                              .clear();
+                                                        });
+                                                      }
+                                                    },
+                                                    barrierColor:
+                                                        Colors.black45,
+                                                    buttonStyleData:
+                                                        ButtonStyleData(
+                                                      height: 50,
+                                                      width: double.infinity,
+                                                      padding:
+                                                          const EdgeInsets.only(
+                                                              left: 14,
+                                                              right: 14),
+                                                      decoration: BoxDecoration(
+                                                        borderRadius:
+                                                            BorderRadius
+                                                                .circular(12),
+                                                        border: Border.all(
+                                                          color: Colors.black26,
+                                                        ),
+                                                        color: Colors.white,
+                                                      ),
+                                                      // elevation: 2,
+                                                    ),
+                                                    iconStyleData:
+                                                        const IconStyleData(
+                                                      icon: Icon(
+                                                        Icons
+                                                            .keyboard_arrow_down_sharp,
+                                                      ),
+                                                      iconSize: 20,
+                                                      iconEnabledColor:
+                                                          AppColor.AccentBlue,
+                                                      iconDisabledColor:
+                                                          Colors.grey,
+                                                    ),
+                                                    dropdownStyleData:
+                                                        DropdownStyleData(
+                                                      maxHeight:
+                                                          MediaQuery.of(context)
+                                                              .size
+                                                              .height,
+                                                      padding:
+                                                          const EdgeInsets.all(
+                                                              8.0),
+                                                      decoration: BoxDecoration(
+                                                        borderRadius:
+                                                            BorderRadius
+                                                                .circular(14),
+                                                        color: Colors.white,
+                                                      ),
+                                                      scrollbarTheme:
+                                                          ScrollbarThemeData(
+                                                        radius: const Radius
+                                                            .circular(40),
+                                                        thickness:
+                                                            MaterialStateProperty
+                                                                .all(6),
+                                                        thumbVisibility:
+                                                            MaterialStateProperty
+                                                                .all(true),
+                                                      ),
+                                                    ),
+                                                    menuItemStyleData:
+                                                        const MenuItemStyleData(
+                                                      height: 40,
+                                                    ),
                                                   ),
+                                                );
+                                              } else if (flagstate
+                                                  is FlagsLoadingProgressState) {
+                                                return const Center(
+                                                  child:
+                                                      LinearProgressIndicator(),
+                                                );
+                                              } else {
+                                                return Center(
+                                                  child: GestureDetector(
+                                                    onTap: () {
+                                                      BlocProvider.of<
+                                                                  FlagsBloc>(
+                                                              context)
+                                                          .add(
+                                                              FlagsLoadEvent());
+                                                    },
+                                                    child: Row(
+                                                      mainAxisAlignment:
+                                                          MainAxisAlignment
+                                                              .center,
+                                                      children: [
+                                                        Text(
+                                                          AppLocalizations.of(
+                                                                  context)!
+                                                              .translate(
+                                                                  'list_error'),
+                                                          style:
+                                                              const TextStyle(
+                                                                  color: Colors
+                                                                      .red),
+                                                        ),
+                                                        const Icon(
+                                                          Icons.refresh,
+                                                          color: Colors.grey,
+                                                        )
+                                                      ],
+                                                    ),
+                                                  ),
+                                                );
+                                              }
+                                            },
+                                          ),
+                                          Visibility(
+                                              visible: originerror,
+                                              child: Text(
+                                                AppLocalizations.of(context)!
+                                                    .translate(
+                                                        'select_origin_error'),
+                                                style: const TextStyle(
+                                                    color: Colors.red),
+                                              )),
+                                          Visibility(
+                                            visible: originerror,
+                                            child: const SizedBox(
+                                              height: 12,
+                                            ),
+                                          ),
+                                          const SizedBox(
+                                            height: 12,
+                                          ),
+                                          Focus(
+                                            focusNode: _statenode,
+                                            onFocusChange: (bool focus) {
+                                              if (!focus) {
+                                                FocusManager
+                                                    .instance.primaryFocus
+                                                    ?.unfocus();
+                                                BlocProvider.of<
+                                                            BottomNavBarCubit>(
+                                                        context)
+                                                    .emitShow();
+                                              }
+                                            },
+                                            child: TextFormField(
+                                              controller: _wieghtController,
+                                              onTap: () =>
+                                                  _wieghtController.selection =
+                                                      TextSelection(
+                                                          baseOffset: 0,
+                                                          extentOffset:
+                                                              _wieghtController
+                                                                  .value
+                                                                  .text
+                                                                  .length),
+                                              // enabled: !valueEnabled,textInputAction: TextInputAction.done,
+                                              keyboardType: const TextInputType
+                                                  .numberWithOptions(
+                                                  decimal: true, signed: true),
+                                              inputFormatters: [
+                                                DecimalFormatter(),
+                                              ],
+                                              decoration: InputDecoration(
+                                                suffixText:
+                                                    showunit ? wieghtUnit : "",
+                                                labelText: wieghtLabel,
+                                                contentPadding:
+                                                    const EdgeInsets.symmetric(
+                                                        horizontal: 9.0,
+                                                        vertical: 11.0),
+                                                border: OutlineInputBorder(
+                                                  borderRadius:
+                                                      BorderRadius.circular(12),
                                                 ),
-                                                searchMatchFn:
-                                                    (item, searchValue) {
-                                                  return item.value!.label!
-                                                      .contains(searchValue);
-                                                },
                                               ),
-                                              onMenuStateChange: (isOpen) {
-                                                if (isOpen) {
+                                              onChanged: (value) {
+                                                if (_originController
+                                                    .text.isNotEmpty) {
                                                   setState(() {
-                                                    _originController.clear();
+                                                    originerror = false;
+                                                  });
+                                                  if (value.isNotEmpty) {
+                                                    // calculateTotalValueWithPrice(value);
+                                                    wieghtValue =
+                                                        double.parse(value);
+                                                  } else {
+                                                    wieghtValue = 0.0;
+                                                  }
+                                                  evaluatePrice();
+                                                } else {
+                                                  setState(() {
+                                                    originerror = true;
                                                   });
                                                 }
                                               },
-                                              barrierColor: Colors.black45,
-                                              buttonStyleData: ButtonStyleData(
-                                                height: 50,
-                                                width: double.infinity,
-                                                padding: const EdgeInsets.only(
-                                                    left: 14, right: 14),
-                                                decoration: BoxDecoration(
-                                                  borderRadius:
-                                                      BorderRadius.circular(12),
-                                                  border: Border.all(
-                                                    color: Colors.black26,
-                                                  ),
-                                                  color: Colors.white,
-                                                ),
-                                                // elevation: 2,
-                                              ),
-                                              iconStyleData:
-                                                  const IconStyleData(
-                                                icon: Icon(
-                                                  Icons
-                                                      .keyboard_arrow_down_sharp,
-                                                ),
-                                                iconSize: 20,
-                                                iconEnabledColor:
-                                                    AppColor.AccentBlue,
-                                                iconDisabledColor: Colors.grey,
-                                              ),
-                                              dropdownStyleData:
-                                                  DropdownStyleData(
-                                                maxHeight:
-                                                    MediaQuery.of(context)
-                                                        .size
-                                                        .height,
-                                                padding:
-                                                    const EdgeInsets.all(8.0),
-                                                decoration: BoxDecoration(
-                                                  borderRadius:
-                                                      BorderRadius.circular(14),
-                                                  color: Colors.white,
-                                                ),
-                                                scrollbarTheme:
-                                                    ScrollbarThemeData(
-                                                  radius:
-                                                      const Radius.circular(40),
-                                                  thickness:
-                                                      MaterialStateProperty.all(
-                                                          6),
-                                                  thumbVisibility:
-                                                      MaterialStateProperty.all(
-                                                          true),
-                                                ),
-                                              ),
-                                              menuItemStyleData:
-                                                  const MenuItemStyleData(
-                                                height: 40,
-                                              ),
                                             ),
-                                          );
-                                        } else if (flagstate
-                                            is FlagsLoadingProgressState) {
-                                          return const Center(
-                                            child: LinearProgressIndicator(),
-                                          );
-                                        } else {
-                                          return Center(
-                                            child: GestureDetector(
-                                              onTap: () {
-                                                BlocProvider.of<FlagsBloc>(
+                                          ),
+                                          const SizedBox(
+                                            height: 12,
+                                          ),
+                                          Focus(
+                                            focusNode: _statenode,
+                                            onFocusChange: (bool focus) {
+                                              if (!focus) {
+                                                FocusManager
+                                                    .instance.primaryFocus
+                                                    ?.unfocus();
+                                                BlocProvider.of<
+                                                            BottomNavBarCubit>(
                                                         context)
-                                                    .add(FlagsLoadEvent());
-                                              },
-                                              child: Row(
-                                                mainAxisAlignment:
-                                                    MainAxisAlignment.center,
-                                                children: [
-                                                  Text(
-                                                    AppLocalizations.of(
+                                                    .emitShow();
+                                              }
+                                            },
+                                            child: TextFormField(
+                                              controller: _valueController,
+                                              onTap: () =>
+                                                  _valueController.selection =
+                                                      TextSelection(
+                                                          baseOffset: 0,
+                                                          extentOffset:
+                                                              _valueController
+                                                                  .value
+                                                                  .text
+                                                                  .length),
+                                              // enabled: valueEnabled,
+                                              textInputAction:
+                                                  TextInputAction.done,
+                                              keyboardType: const TextInputType
+                                                  .numberWithOptions(
+                                                  decimal: true, signed: true),
+                                              inputFormatters: [
+                                                DecimalFormatter(),
+                                              ],
+                                              style:
+                                                  const TextStyle(fontSize: 18),
+                                              decoration: InputDecoration(
+                                                labelText: valueEnabled
+                                                    ? AppLocalizations.of(
                                                             context)!
                                                         .translate(
-                                                            'list_error'),
-                                                    style: const TextStyle(
-                                                        color: Colors.red),
-                                                  ),
-                                                  const Icon(
-                                                    Icons.refresh,
-                                                    color: Colors.grey,
-                                                  )
-                                                ],
+                                                            'total_value_in_dollar')
+                                                    : AppLocalizations.of(
+                                                            context)!
+                                                        .translate(
+                                                            'price_for_custome'),
+                                                suffixText: "\$",
+                                                contentPadding:
+                                                    const EdgeInsets.symmetric(
+                                                        horizontal: 9.0,
+                                                        vertical: 11.0),
+                                                border: OutlineInputBorder(
+                                                  borderRadius:
+                                                      BorderRadius.circular(12),
+                                                ),
                                               ),
+                                              onChanged: (value) {
+                                                if (_originController
+                                                    .text.isNotEmpty) {
+                                                  setState(() {
+                                                    originerror = false;
+                                                  });
+                                                  if (value.isNotEmpty) {
+                                                    basePrice =
+                                                        double.parse(value);
+                                                    // calculateTotalValue();
+                                                  } else {
+                                                    basePrice = 0.0;
+                                                    // calculateTotalValue();
+                                                  }
+                                                  evaluatePrice();
+                                                } else {
+                                                  setState(() {
+                                                    originerror = true;
+                                                  });
+                                                }
+                                              },
+                                              validator: (value) {
+                                                if (value!.isEmpty) {
+                                                  return AppLocalizations.of(
+                                                          context)!
+                                                      .translate(
+                                                          'insert_value_validate');
+                                                }
+                                                return null;
+                                              },
                                             ),
-                                          );
-                                        }
-                                      },
-                                    ),
-                                    Visibility(
-                                        visible: originerror,
-                                        child: Text(
-                                          AppLocalizations.of(context)!
-                                              .translate('select_origin_error'),
-                                          style: const TextStyle(
-                                              color: Colors.red),
-                                        )),
-                                    Visibility(
-                                      visible: originerror,
-                                      child: const SizedBox(
-                                        height: 12,
-                                      ),
-                                    ),
-                                    const SizedBox(
-                                      height: 12,
-                                    ),
-                                    Focus(
-                                      focusNode: _statenode,
-                                      onFocusChange: (bool focus) {
-                                        if (!focus) {
-                                          FocusManager.instance.primaryFocus
-                                              ?.unfocus();
-                                          BlocProvider.of<BottomNavBarCubit>(
-                                                  context)
-                                              .emitShow();
-                                        }
-                                      },
-                                      child: TextFormField(
-                                        controller: _wieghtController,
-                                        onTap: () => _wieghtController
-                                                .selection =
-                                            TextSelection(
-                                                baseOffset: 0,
-                                                extentOffset: _wieghtController
-                                                    .value.text.length),
-                                        // enabled: !valueEnabled,textInputAction: TextInputAction.done,
-                                        keyboardType: const TextInputType
-                                            .numberWithOptions(
-                                            decimal: true, signed: true),
-                                        inputFormatters: [
-                                          DecimalFormatter(),
-                                        ],
-                                        decoration: InputDecoration(
-                                          suffixText:
-                                              showunit ? wieghtUnit : "",
-                                          labelText: wieghtLabel,
-                                          contentPadding:
-                                              const EdgeInsets.symmetric(
-                                                  horizontal: 9.0,
-                                                  vertical: 11.0),
-                                          border: OutlineInputBorder(
-                                            borderRadius:
-                                                BorderRadius.circular(12),
                                           ),
-                                        ),
-                                        onChanged: (value) {
-                                          if (_originController
-                                              .text.isNotEmpty) {
-                                            setState(() {
-                                              originerror = false;
-                                            });
-                                            if (value.isNotEmpty) {
-                                              // calculateTotalValueWithPrice(value);
-                                              wieghtValue = double.parse(value);
-                                            } else {
-                                              wieghtValue = 0.0;
-                                            }
-                                            evaluatePrice();
-                                          } else {
-                                            setState(() {
-                                              originerror = true;
-                                            });
-                                          }
-                                        },
-                                      ),
-                                    ),
-                                    const SizedBox(
-                                      height: 12,
-                                    ),
-                                    Focus(
-                                      focusNode: _statenode,
-                                      onFocusChange: (bool focus) {
-                                        if (!focus) {
-                                          FocusManager.instance.primaryFocus
-                                              ?.unfocus();
-                                          BlocProvider.of<BottomNavBarCubit>(
-                                                  context)
-                                              .emitShow();
-                                        }
-                                      },
-                                      child: TextFormField(
-                                        controller: _valueController,
-                                        onTap: () => _valueController
-                                                .selection =
-                                            TextSelection(
-                                                baseOffset: 0,
-                                                extentOffset: _valueController
-                                                    .value.text.length),
-                                        // enabled: valueEnabled,
-                                        textInputAction: TextInputAction.done,
-                                        keyboardType: const TextInputType
-                                            .numberWithOptions(
-                                            decimal: true, signed: true),
-                                        inputFormatters: [
-                                          DecimalFormatter(),
-                                        ],
-                                        style: const TextStyle(fontSize: 18),
-                                        decoration: InputDecoration(
-                                          labelText: valueEnabled
-                                              ? AppLocalizations.of(context)!
-                                                  .translate(
-                                                      'total_value_in_dollar')
-                                              : AppLocalizations.of(context)!
-                                                  .translate(
-                                                      'price_for_custome'),
-                                          suffixText: "\$",
-                                          contentPadding:
-                                              const EdgeInsets.symmetric(
-                                                  horizontal: 9.0,
-                                                  vertical: 11.0),
-                                          border: OutlineInputBorder(
-                                            borderRadius:
-                                                BorderRadius.circular(12),
+                                          const SizedBox(
+                                            height: 12,
                                           ),
-                                        ),
-                                        onChanged: (value) {
-                                          if (_originController
-                                              .text.isNotEmpty) {
-                                            setState(() {
-                                              originerror = false;
-                                            });
-                                            if (value.isNotEmpty) {
-                                              basePrice = double.parse(value);
-                                              // calculateTotalValue();
-                                            } else {
-                                              basePrice = 0.0;
-                                              // calculateTotalValue();
-                                            }
-                                            evaluatePrice();
-                                          } else {
-                                            setState(() {
-                                              originerror = true;
-                                            });
-                                          }
-                                        },
-                                        validator: (value) {
-                                          if (value!.isEmpty) {
-                                            return AppLocalizations.of(context)!
-                                                .translate(
-                                                    'insert_value_validate');
-                                          }
-                                          return null;
-                                        },
+                                          Text(
+                                            "${AppLocalizations.of(context)!.translate('convert_to_dollar_value')}: ${f.format(double.parse(syrianExchangeValue).toInt())}\$",
+                                            style: TextStyle(fontSize: 17.sp),
+                                          ),
+                                          Text(
+                                            "${AppLocalizations.of(context)!.translate('total_value_in_eygptian_pound')}: ${f.format(double.parse(syrianTotalValue).toInt())} E.P",
+                                            style: TextStyle(fontSize: 17.sp),
+                                          ),
+                                          Text(
+                                            "${AppLocalizations.of(context)!.translate('total_value_with_insurance')}: ${f.format(double.parse(totalValueWithEnsurance).toInt())} E.P",
+                                            style: TextStyle(fontSize: 17.sp),
+                                          ),
+                                          const SizedBox(
+                                            height: 12,
+                                          ),
+                                          Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.center,
+                                            children: [
+                                              BlocConsumer<CalculateResultBloc,
+                                                  CalculateResultState>(
+                                                listener: (context, state) {
+                                                  if (state
+                                                      is CalculateResultSuccessed) {}
+                                                },
+                                                builder: (context, state) {
+                                                  if (state
+                                                      is CalculateResultLoading) {
+                                                    return ElevatedButton(
+                                                        onPressed: () {},
+                                                        child:
+                                                            const CircularProgressIndicator());
+                                                  }
+                                                  if (state
+                                                      is CalculateResultFailed) {
+                                                    return Text(state.error);
+                                                  } else {
+                                                    return CustomButton(
+                                                        onTap: () {
+                                                          result.insurance =
+                                                              int.parse(
+                                                                  totalValueWithEnsurance);
+                                                          result.fee =
+                                                              selectedPackage!
+                                                                  .fee!;
+                                                          result.rawMaterial =
+                                                              rawMaterialValue
+                                                                  ? 1
+                                                                  : 0;
+                                                          result.industrial =
+                                                              industrialValue
+                                                                  ? 1
+                                                                  : 0;
+                                                          result.totalTax =
+                                                              selectedPackage!
+                                                                  .totalTaxes!
+                                                                  .totalTax!;
+                                                          result.partialTax =
+                                                              selectedPackage!
+                                                                  .totalTaxes!
+                                                                  .partialTax!;
+                                                          result.origin =
+                                                              selectedOrigin!
+                                                                  .label!;
+                                                          result.spendingFee =
+                                                              selectedPackage!
+                                                                  .spendingFee!;
+                                                          result.supportFee =
+                                                              selectedPackage!
+                                                                  .supportFee!;
+                                                          result.localFee =
+                                                              selectedPackage!
+                                                                  .localFee!;
+                                                          result.protectionFee =
+                                                              selectedPackage!
+                                                                  .protectionFee!;
+                                                          result.naturalFee =
+                                                              selectedPackage!
+                                                                  .naturalFee!;
+                                                          result.taxFee =
+                                                              selectedPackage!
+                                                                  .taxFee!;
+                                                          result.weight =
+                                                              wieghtValue
+                                                                  .toInt();
+                                                          result.price =
+                                                              basePrice.toInt();
+                                                          result.cnsulate = 1;
+                                                          result.dolar = 8585;
+                                                          result.arabic_stamp =
+                                                              650;
+                                                          result.import_fee =
+                                                              0.01;
+                                                          BlocProvider.of<
+                                                                      CalculateResultBloc>(
+                                                                  context)
+                                                              .add(
+                                                                  CalculateTheResultEvent(
+                                                                      result));
+                                                          // Navigator.push(
+                                                          //     context,
+                                                          //     MaterialPageRoute(
+                                                          //       builder: (context) =>
+                                                          //           const TraderCalculatorResultScreen(),
+                                                          //     ));
+                                                          setState(() {
+                                                            calculateFeeScreen =
+                                                                true;
+                                                          });
+                                                        },
+                                                        title: Padding(
+                                                          padding: EdgeInsets
+                                                              .symmetric(
+                                                                  vertical: 8.0,
+                                                                  horizontal:
+                                                                      12.w),
+                                                          child: Text(
+                                                              AppLocalizations.of(
+                                                                      context)!
+                                                                  .translate(
+                                                                      'calculate_costume_fee')),
+                                                        ));
+                                                  }
+                                                },
+                                              ),
+                                            ],
+                                          )
+                                        ],
                                       ),
                                     ),
-                                    const SizedBox(
-                                      height: 12,
-                                    ),
-                                    Text(
-                                      "${AppLocalizations.of(context)!.translate('convert_to_dollar_value')}: ${f.format(double.parse(syrianExchangeValue).toInt())}\$",
-                                      style: TextStyle(fontSize: 17.sp),
-                                    ),
-                                    Text(
-                                      "${AppLocalizations.of(context)!.translate('total_value_in_eygptian_pound')}: ${f.format(double.parse(syrianTotalValue).toInt())} E.P",
-                                      style: TextStyle(fontSize: 17.sp),
-                                    ),
-                                    Text(
-                                      "${AppLocalizations.of(context)!.translate('total_value_with_insurance')}: ${f.format(double.parse(totalValueWithEnsurance).toInt())} E.P",
-                                      style: TextStyle(fontSize: 17.sp),
-                                    ),
-                                    const SizedBox(
-                                      height: 12,
-                                    ),
-                                    Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.center,
-                                      children: [
-                                        BlocConsumer<CalculateResultBloc,
-                                            CalculateResultState>(
-                                          listener: (context, state) {
-                                            if (state
-                                                is CalculateResultSuccessed) {}
-                                          },
-                                          builder: (context, state) {
-                                            if (state
-                                                is CalculateResultLoading) {
-                                              return ElevatedButton(
-                                                  onPressed: () {},
-                                                  child:
-                                                      const CircularProgressIndicator());
-                                            }
-                                            if (state
-                                                is CalculateResultFailed) {
-                                              return Text(state.error);
-                                            } else {
-                                              return CustomButton(
-                                                  onTap: () {
-                                                    result.insurance = int.parse(
-                                                        totalValueWithEnsurance);
-                                                    result.fee =
-                                                        selectedPackage!.fee!;
-                                                    result.rawMaterial =
-                                                        rawMaterialValue
-                                                            ? 1
-                                                            : 0;
-                                                    result.industrial =
-                                                        industrialValue ? 1 : 0;
-                                                    result.totalTax =
-                                                        selectedPackage!
-                                                            .totalTaxes!
-                                                            .totalTax!;
-                                                    result.partialTax =
-                                                        selectedPackage!
-                                                            .totalTaxes!
-                                                            .partialTax!;
-                                                    result.origin =
-                                                        selectedOrigin!.label!;
-                                                    result.spendingFee =
-                                                        selectedPackage!
-                                                            .spendingFee!;
-                                                    result.supportFee =
-                                                        selectedPackage!
-                                                            .supportFee!;
-                                                    result.localFee =
-                                                        selectedPackage!
-                                                            .localFee!;
-                                                    result.protectionFee =
-                                                        selectedPackage!
-                                                            .protectionFee!;
-                                                    result.naturalFee =
-                                                        selectedPackage!
-                                                            .naturalFee!;
-                                                    result.taxFee =
-                                                        selectedPackage!
-                                                            .taxFee!;
-                                                    result.weight =
-                                                        wieghtValue.toInt();
-                                                    result.price =
-                                                        basePrice.toInt();
-                                                    result.cnsulate = 1;
-                                                    result.dolar = 8585;
-                                                    result.arabic_stamp = 650;
-                                                    result.import_fee = 0.01;
-                                                    BlocProvider.of<
-                                                                CalculateResultBloc>(
-                                                            context)
-                                                        .add(
-                                                            CalculateTheResultEvent(
-                                                                result));
-                                                    // Navigator.push(
-                                                    //     context,
-                                                    //     MaterialPageRoute(
-                                                    //       builder: (context) =>
-                                                    //           const TraderCalculatorResultScreen(),
-                                                    //     ));
-                                                    setState(() {
-                                                      calculateFeeScreen = true;
-                                                    });
-                                                  },
-                                                  title: Padding(
-                                                    padding:
-                                                        EdgeInsets.symmetric(
-                                                            vertical: 8.0,
-                                                            horizontal: 12.w),
-                                                    child: const Text(
-                                                        "احسب الرسم الجمركي"),
-                                                  ));
-                                            }
-                                          },
-                                        ),
-                                      ],
-                                    )
-                                  ],
-                                ),
-                              ),
-                            ),
-                          ]);
-                    } else {
-                      return const Center(child: CircularProgressIndicator());
-                    }
+                                  ),
+                                ]);
+                          } else {
+                            return const Center(
+                                child: CircularProgressIndicator());
+                          }
+                        },
+                      ),
+                    );
                   },
                 ),
-              );
-            },
+              ),
+            )),
           ),
-        ),
-      )),
+        );
+      },
     );
   }
 
   Widget _buildResultPanel(BuildContext context) {
-    return Directionality(
-      textDirection: TextDirection.rtl,
-      child: Scaffold(
-        backgroundColor: Colors.grey[200],
-        appBar: AppBar(
-          backgroundColor: AppColor.deepBlue,
-          title: Text(
-            AppLocalizations.of(context)!.translate('fees_taxes'),
-            style: const TextStyle(
-              color: Colors.white,
-              fontWeight: FontWeight.bold,
-            ),
-          ),
-          centerTitle: true,
-          leading: GestureDetector(
-            onTap: () {
-              setState(() {
-                calculateFeeScreen = false;
-              });
-            },
-            child: const Padding(
-              padding: EdgeInsets.all(8.0),
-              child: Icon(Icons.arrow_back, color: Colors.white),
-            ),
-          ),
-          elevation: 0,
-        ),
-        body: SingleChildScrollView(
-          child: Column(
-            children: [
-              SizedBox(
-                height: 20.h,
-              ),
-              Padding(
-                padding: EdgeInsets.symmetric(horizontal: 25.w),
-                child: BlocBuilder<CalculateResultBloc, CalculateResultState>(
-                  builder: (context, state) {
-                    if (state is CalculateResultSuccessed) {
-                      return ItemTaxesWidget(
-                        customsFee: state.result.customsFee!,
-                        spendingFee: state.result.spendingFee!,
-                        conservativeLocality:
-                            state.result.conservativeLocality!,
-                        citiesProtectionFee: state.result.citiesProtectionFee!,
-                        feeSupportingLocalProduction:
-                            state.result.feeSupportingLocalProduction!,
-                        imranLocality: state.result.imranLocality!,
-                        incomeTaxFee: state.result.incomeTaxFee!,
-                        naturalDisasterFee: state.result.naturalDisasterFee!,
-                        finalFee: state.result.finalTotal!,
-                        addedTaxes: state.result.addedTaxes!,
-                        customsCertificate: state.result.customsCertificate!,
-                        billTax: state.result.billTax!,
-                        stampFee: state.result.stampFee!,
-                        provincialLocalTax: state.result.provincialLocalTax!,
-                        advanceIncomeTax: state.result.advanceIncomeTax!,
-                        reconstructionFee: state.result.reconstructionFee!,
-                        finalTaxes: state.result.finalTaxes!,
-                        finalTotal: state.result.finalTotal!,
-                      );
-                    } else {
-                      return const CalculatorLoadingScreen();
-                    }
-                  },
+    return BlocBuilder<LocaleCubit, LocaleState>(
+      builder: (context, localeState) {
+        return Directionality(
+          textDirection: localeState.value.languageCode == 'en'
+              ? TextDirection.ltr
+              : TextDirection.rtl,
+          child: Scaffold(
+            backgroundColor: Colors.grey[200],
+            appBar: AppBar(
+              backgroundColor: AppColor.deepBlue,
+              title: Text(
+                AppLocalizations.of(context)!.translate('fees_taxes'),
+                style: const TextStyle(
+                  color: Colors.white,
+                  fontWeight: FontWeight.bold,
                 ),
               ),
-              SizedBox(
-                height: 30.h,
+              centerTitle: true,
+              leading: GestureDetector(
+                onTap: () {
+                  setState(() {
+                    calculateFeeScreen = false;
+                  });
+                },
+                child: const Padding(
+                  padding: EdgeInsets.all(8.0),
+                  child: Icon(Icons.arrow_back, color: Colors.white),
+                ),
               ),
-              Text(AppLocalizations.of(context)!.translate('calculater_hint')),
-              SizedBox(
-                height: 30.h,
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
+              elevation: 0,
+            ),
+            body: SingleChildScrollView(
+              child: Column(
                 children: [
-                  CustomButton(
-                    onTap: () {
-                      setState(() {
-                        calculateFeeScreen = false;
-                      });
-                    },
-                    title: const SizedBox(
-                        width: 100, child: Center(child: Text("رجوع"))),
+                  SizedBox(
+                    height: 20.h,
                   ),
-                  // CustomButton(
-                  //   onTap: () {
-                  //     // Navigator.push(
-                  //     //     context,
-                  //     //     MaterialPageRoute(
-                  //     //       builder: (context) => TraderBillReview(),
-                  //     //     ));
-                  //   },
-                  //   title: const SizedBox(
-                  //       width: 100, child: Center(child: Text("حفظ"))),
-                  // ),
-                  // CustomButton(
-                  //   onTap: () {
-                  //     // Navigator.push(
-                  //     //     context,
-                  //     //     MaterialPageRoute(
-                  //     //       builder: (context) => TraderAttachementScreen(),
-                  //     //     ));
-                  //   },
-                  //   title: const SizedBox(
-                  //       width: 100, child: Center(child: Text("طلب مخلص"))),
-                  // ),
+                  Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 10.w),
+                    child:
+                        BlocBuilder<CalculateResultBloc, CalculateResultState>(
+                      builder: (context, state) {
+                        if (state is CalculateResultSuccessed) {
+                          return ItemTaxesWidget(
+                            customsFee: state.result.customsFee!,
+                            spendingFee: state.result.spendingFee!,
+                            conservativeLocality:
+                                state.result.conservativeLocality!,
+                            citiesProtectionFee:
+                                state.result.citiesProtectionFee!,
+                            feeSupportingLocalProduction:
+                                state.result.feeSupportingLocalProduction!,
+                            imranLocality: state.result.imranLocality!,
+                            incomeTaxFee: state.result.incomeTaxFee!,
+                            naturalDisasterFee:
+                                state.result.naturalDisasterFee!,
+                            finalFee: state.result.finalTotal!,
+                            addedTaxes: state.result.addedTaxes!,
+                            customsCertificate:
+                                state.result.customsCertificate!,
+                            billTax: state.result.billTax!,
+                            stampFee: state.result.stampFee!,
+                            provincialLocalTax:
+                                state.result.provincialLocalTax!,
+                            advanceIncomeTax: state.result.advanceIncomeTax!,
+                            reconstructionFee: state.result.reconstructionFee!,
+                            finalTaxes: state.result.finalTaxes!,
+                            finalTotal: state.result.finalTotal!,
+                          );
+                        } else {
+                          return const CalculatorLoadingScreen();
+                        }
+                      },
+                    ),
+                  ),
+                  SizedBox(
+                    height: 30.h,
+                  ),
+                  Text(AppLocalizations.of(context)!
+                      .translate('calculater_hint')),
+                  SizedBox(
+                    height: 30.h,
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    children: [
+                      CustomButton(
+                        onTap: () {
+                          setState(() {
+                            calculateFeeScreen = false;
+                          });
+                        },
+                        title: const SizedBox(
+                            width: 100, child: Center(child: Text("رجوع"))),
+                      ),
+                      // CustomButton(
+                      //   onTap: () {
+                      //     // Navigator.push(
+                      //     //     context,
+                      //     //     MaterialPageRoute(
+                      //     //       builder: (context) => TraderBillReview(),
+                      //     //     ));
+                      //   },
+                      //   title: const SizedBox(
+                      //       width: 100, child: Center(child: Text("حفظ"))),
+                      // ),
+                      // CustomButton(
+                      //   onTap: () {
+                      //     // Navigator.push(
+                      //     //     context,
+                      //     //     MaterialPageRoute(
+                      //     //       builder: (context) => TraderAttachementScreen(),
+                      //     //     ));
+                      //   },
+                      //   title: const SizedBox(
+                      //       width: 100, child: Center(child: Text("طلب مخلص"))),
+                      // ),
+                    ],
+                  ),
+                  SizedBox(
+                    height: 30.h,
+                  ),
                 ],
               ),
-              SizedBox(
-                height: 30.h,
-              ),
-            ],
+            ),
           ),
-        ),
-      ),
+        );
+      },
     );
   }
 
@@ -2765,7 +2859,13 @@ class _TraderHomeScreenState extends State<TraderHomeScreen>
                                                     maxWidth: 280.w,
                                                   ),
                                                   child: Text(
-                                                    state.origins[index].label!,
+                                                    localeState.value
+                                                                .languageCode ==
+                                                            'en'
+                                                        ? state.origins[index]
+                                                            .label!
+                                                        : state.origins[index]
+                                                            .labelar!,
                                                     // overflow:
                                                     //     TextOverflow.ellipsis,
                                                     maxLines: 2,
@@ -2904,533 +3004,568 @@ class _TraderHomeScreenState extends State<TraderHomeScreen>
   }
 
   Widget _buildTariffPanel(BuildContext context) {
-    return Directionality(
-      textDirection: TextDirection.rtl,
-      child: Scaffold(
-        backgroundColor: Colors.grey[200],
-        appBar: AppBar(
-          backgroundColor: AppColor.deepBlue,
-          title: Text(
-            AppLocalizations.of(context)!.translate('select_costume_fee'),
-            style: const TextStyle(
-              color: Colors.white,
-              fontWeight: FontWeight.bold,
+    return BlocBuilder<LocaleCubit, LocaleState>(
+      builder: (context, localeState) {
+        return Directionality(
+          textDirection: localeState.value.languageCode == 'en'
+              ? TextDirection.ltr
+              : TextDirection.rtl,
+          child: Scaffold(
+            backgroundColor: Colors.grey[200],
+            appBar: AppBar(
+              backgroundColor: AppColor.deepBlue,
+              title: Text(
+                AppLocalizations.of(context)!.translate('select_costume_fee'),
+                style: const TextStyle(
+                  color: Colors.white,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              centerTitle: true,
+              leading: GestureDetector(
+                onTap: () {
+                  setState(() {
+                    selected = -1;
+                    chapterselected = -1;
+                    subchapterselected = -1;
+                    feeselected = -1;
+                  });
+                  BlocProvider.of<CalculatorPanelBloc>(context)
+                      .add(CalculatorPanelHideEvent());
+                },
+                child: const Padding(
+                  padding: EdgeInsets.all(8.0),
+                  child: Icon(Icons.arrow_back, color: Colors.white),
+                ),
+              ),
+              elevation: 0,
             ),
-          ),
-          centerTitle: true,
-          leading: GestureDetector(
-            onTap: () {
-              setState(() {
-                selected = -1;
-                chapterselected = -1;
-                subchapterselected = -1;
-                feeselected = -1;
-              });
-              BlocProvider.of<CalculatorPanelBloc>(context)
-                  .add(CalculatorPanelHideEvent());
-            },
-            child: const Padding(
-              padding: EdgeInsets.all(8.0),
-              child: Icon(Icons.arrow_back, color: Colors.white),
-            ),
-          ),
-          elevation: 0,
-        ),
-        body: Stack(
-          children: [
-            SingleChildScrollView(
-              child: Column(
-                children: [
-                  SizedBox(
-                    height: 10.h,
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Focus(
-                      focusNode: _statenode,
-                      onFocusChange: (bool focus) {
-                        if (!focus) {
-                          FocusManager.instance.primaryFocus?.unfocus();
-                          BlocProvider.of<BottomNavBarCubit>(context)
-                              .emitShow();
-                        }
-                      },
-                      child:
-                          BlocListener<SearchSectionBloc, SearchSectionState>(
-                        listener: (context, state) {
-                          if (state is SearchSectionLoadedSuccess) {
-                            // print(jsonEncode(state.sections));
-                          }
-                          if (state is SearchSectionLoadedFailed) {
-                            print(state.error);
-                          }
-                        },
-                        child: TextFormField(
-                          controller: _searchController,
-                          onTap: () {
-                            BlocProvider.of<BottomNavBarCubit>(context)
-                                .emitHide();
-                            _searchController.selection = TextSelection(
-                                baseOffset: 0,
-                                extentOffset:
-                                    _searchController.value.text.length);
+            body: Stack(
+              children: [
+                SingleChildScrollView(
+                  child: Column(
+                    children: [
+                      SizedBox(
+                        height: 10.h,
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Focus(
+                          focusNode: _statenode,
+                          onFocusChange: (bool focus) {
+                            if (!focus) {
+                              FocusManager.instance.primaryFocus?.unfocus();
+                              BlocProvider.of<BottomNavBarCubit>(context)
+                                  .emitShow();
+                            }
                           },
-                          scrollPadding: EdgeInsets.only(
-                              bottom: MediaQuery.of(context).viewInsets.bottom +
-                                  50),
-                          decoration: InputDecoration(
-                            labelText: AppLocalizations.of(context)!
-                                .translate('search'),
-                            suffixIcon: InkWell(
+                          child: BlocListener<SearchSectionBloc,
+                              SearchSectionState>(
+                            listener: (context, state) {
+                              if (state is SearchSectionLoadedSuccess) {
+                                // print(jsonEncode(state.sections));
+                              }
+                              if (state is SearchSectionLoadedFailed) {
+                                print(state.error);
+                              }
+                            },
+                            child: TextFormField(
+                              controller: _searchController,
                               onTap: () {
+                                BlocProvider.of<BottomNavBarCubit>(context)
+                                    .emitHide();
+                                _searchController.selection = TextSelection(
+                                    baseOffset: 0,
+                                    extentOffset:
+                                        _searchController.value.text.length);
+                              },
+                              scrollPadding: EdgeInsets.only(
+                                  bottom:
+                                      MediaQuery.of(context).viewInsets.bottom +
+                                          50),
+                              decoration: InputDecoration(
+                                labelText: AppLocalizations.of(context)!
+                                    .translate('search'),
+                                suffixIcon: InkWell(
+                                  onTap: () {
+                                    FocusManager.instance.primaryFocus
+                                        ?.unfocus();
+                                    BlocProvider.of<BottomNavBarCubit>(context)
+                                        .emitShow();
+
+                                    if (_searchController.text.isNotEmpty) {
+                                      BlocProvider.of<SearchSectionBloc>(
+                                              context)
+                                          .add(SearchSectionLoadEvent(
+                                              _searchController.text));
+                                      setState(() {
+                                        isSearch = true;
+                                      });
+                                    }
+                                  },
+                                  child: const Icon(
+                                    Icons.search,
+                                    color: Colors.grey,
+                                  ),
+                                ),
+                              ),
+                              onChanged: (value) {
+                                if (value.isEmpty) {
+                                  setState(() {
+                                    isSearch = false;
+                                  });
+                                }
+                              },
+                              onFieldSubmitted: (value) {
                                 FocusManager.instance.primaryFocus?.unfocus();
                                 BlocProvider.of<BottomNavBarCubit>(context)
                                     .emitShow();
-
-                                if (_searchController.text.isNotEmpty) {
+                                _searchController.text = value;
+                                if (value.isNotEmpty) {
                                   BlocProvider.of<SearchSectionBloc>(context)
-                                      .add(SearchSectionLoadEvent(
-                                          _searchController.text));
+                                      .add(SearchSectionLoadEvent(value));
                                   setState(() {
                                     isSearch = true;
                                   });
                                 }
                               },
-                              child: const Icon(
-                                Icons.search,
-                                color: Colors.grey,
-                              ),
                             ),
                           ),
-                          onChanged: (value) {
-                            if (value.isEmpty) {
-                              setState(() {
-                                isSearch = false;
-                              });
-                            }
-                          },
-                          onFieldSubmitted: (value) {
-                            FocusManager.instance.primaryFocus?.unfocus();
-                            BlocProvider.of<BottomNavBarCubit>(context)
-                                .emitShow();
-                            _searchController.text = value;
-                            if (value.isNotEmpty) {
-                              BlocProvider.of<SearchSectionBloc>(context)
-                                  .add(SearchSectionLoadEvent(value));
-                              setState(() {
-                                isSearch = true;
-                              });
-                            }
-                          },
                         ),
                       ),
-                    ),
-                  ),
-                  isSearch
-                      ? BlocBuilder<SearchSectionBloc, SearchSectionState>(
-                          builder: (context, state) {
-                            if (state is SearchSectionLoadedSuccess) {
-                              return ListView.builder(
-                                key: Key('builder ${selected.toString()}'),
-                                shrinkWrap: true,
-                                physics: const NeverScrollableScrollPhysics(),
-                                itemCount: state.sections.length,
-                                itemBuilder: (context, index) {
-                                  return Card(
-                                    margin: EdgeInsets.symmetric(
-                                        vertical: 4.h, horizontal: 3.w),
-                                    clipBehavior: Clip.none,
-                                    shape: RoundedRectangleBorder(
-                                      borderRadius: const BorderRadius.all(
-                                        Radius.circular(10),
-                                      ),
-                                      side: BorderSide(
-                                          color: AppColor.goldenYellow,
-                                          width: 2),
-                                    ),
-                                    color: Colors.white,
-                                    // decoration: BoxDecoration(
-                                    //   borderRadius: BorderRadius.circular(10),
-                                    //   border: selected == index
-                                    //       ? Border.all(
-                                    //           color: Colors.yellow[600]!, width: 2)
-                                    //       : null,
-                                    // ),
-                                    child: Theme(
-                                      data: Theme.of(context).copyWith(
-                                          dividerColor: Colors.transparent),
-                                      child: ExpansionTile(
-                                        key: Key(index.toString()), //attention
-                                        initiallyExpanded: true,
-                                        tilePadding: EdgeInsets.symmetric(
-                                            horizontal: 5.w),
-
-                                        title: Row(
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.center,
-                                          children: [
-                                            SizedBox(
-                                              width: 65.w,
-                                              child: Column(
-                                                children: [
-                                                  SizedBox(
-                                                    width: 36.w,
-                                                    height: 36.h,
-                                                    child: Img(
-                                                      "https://across-mena.com${state.sections[index]!.image!}",
-                                                      placeholder: Container(
-                                                        color: Colors.grey[200],
-                                                        width: 36.w,
-                                                        height: 36.h,
-                                                      ),
-                                                      errorWidget: Container(
-                                                        color: Colors.grey[200],
-                                                        width: 36.w,
-                                                        height: 36.h,
-                                                        child: const Center(
-                                                            child:
-                                                                Text("error")),
-                                                      ),
-                                                    ),
-                                                  ),
-                                                  Text(
-                                                    "(${state.sections[index]!.end!}__${state.sections[index]!.start!})",
-                                                    style: const TextStyle(
-                                                        fontSize: 14),
-                                                  ),
-                                                ],
-                                              ),
-                                            ),
-                                            SizedBox(
-                                              height: 5.w,
-                                            ),
-                                            Flexible(
-                                              child: HighlightText(
-                                                highlightStyle: TextStyle(
-                                                  height: 1.3,
-                                                  fontSize: 17,
-                                                  fontWeight: FontWeight.bold,
-                                                  color: AppColor.goldenYellow,
-                                                ),
-                                                style: const TextStyle(
-                                                  height: 1.3,
-                                                  fontSize: 17,
-                                                  fontWeight: FontWeight.bold,
-                                                ),
-                                                text: state
-                                                    .sections[index]!.label!,
-                                                highlight:
-                                                    _searchController.text,
-                                                ignoreCase: false,
-                                              ),
-                                            ),
-                                          ],
+                      isSearch
+                          ? BlocBuilder<SearchSectionBloc, SearchSectionState>(
+                              builder: (context, state) {
+                                if (state is SearchSectionLoadedSuccess) {
+                                  return ListView.builder(
+                                    key: Key('builder ${selected.toString()}'),
+                                    shrinkWrap: true,
+                                    physics:
+                                        const NeverScrollableScrollPhysics(),
+                                    itemCount: state.sections.length,
+                                    itemBuilder: (context, index) {
+                                      return Card(
+                                        margin: EdgeInsets.symmetric(
+                                            vertical: 4.h, horizontal: 3.w),
+                                        clipBehavior: Clip.none,
+                                        shape: RoundedRectangleBorder(
+                                          borderRadius: const BorderRadius.all(
+                                            Radius.circular(10),
+                                          ),
+                                          side: BorderSide(
+                                              color: AppColor.goldenYellow,
+                                              width: 2),
                                         ),
+                                        color: Colors.white,
+                                        // decoration: BoxDecoration(
+                                        //   borderRadius: BorderRadius.circular(10),
+                                        //   border: selected == index
+                                        //       ? Border.all(
+                                        //           color: Colors.yellow[600]!, width: 2)
+                                        //       : null,
+                                        // ),
+                                        child: Theme(
+                                          data: Theme.of(context).copyWith(
+                                              dividerColor: Colors.transparent),
+                                          child: ExpansionTile(
+                                            key: Key(
+                                                index.toString()), //attention
+                                            initiallyExpanded: true,
+                                            tilePadding: EdgeInsets.symmetric(
+                                                horizontal: 5.w),
 
-                                        children: buildSearchChapterTiles(
-                                            state.sections[index]!.chapterSet!),
+                                            title: Row(
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.center,
+                                              children: [
+                                                SizedBox(
+                                                  width: 65.w,
+                                                  child: Column(
+                                                    children: [
+                                                      SizedBox(
+                                                        width: 36.w,
+                                                        height: 36.h,
+                                                        child: Img(
+                                                          "https://across-mena.com${state.sections[index]!.image!}",
+                                                          placeholder:
+                                                              Container(
+                                                            color: Colors
+                                                                .grey[200],
+                                                            width: 36.w,
+                                                            height: 36.h,
+                                                          ),
+                                                          errorWidget:
+                                                              Container(
+                                                            color: Colors
+                                                                .grey[200],
+                                                            width: 36.w,
+                                                            height: 36.h,
+                                                            child: const Center(
+                                                                child: Text(
+                                                                    "error")),
+                                                          ),
+                                                        ),
+                                                      ),
+                                                      Text(
+                                                        "(${state.sections[index]!.end!}__${state.sections[index]!.start!})",
+                                                        style: const TextStyle(
+                                                            fontSize: 14),
+                                                      ),
+                                                    ],
+                                                  ),
+                                                ),
+                                                SizedBox(
+                                                  height: 5.w,
+                                                ),
+                                                Flexible(
+                                                  child: HighlightText(
+                                                    highlightStyle: TextStyle(
+                                                      height: 1.3,
+                                                      fontSize: 17,
+                                                      fontWeight:
+                                                          FontWeight.bold,
+                                                      color:
+                                                          AppColor.goldenYellow,
+                                                    ),
+                                                    style: const TextStyle(
+                                                      height: 1.3,
+                                                      fontSize: 17,
+                                                      fontWeight:
+                                                          FontWeight.bold,
+                                                    ),
+                                                    text: state.sections[index]!
+                                                        .label!,
+                                                    highlight:
+                                                        _searchController.text,
+                                                    ignoreCase: false,
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
+
+                                            children: buildSearchChapterTiles(
+                                                state.sections[index]!
+                                                    .chapterSet!),
+                                          ),
+                                        ),
+                                      );
+                                    },
+                                  );
+                                } else if (state is SearchSectionLoading) {
+                                  return Shimmer.fromColors(
+                                    baseColor: (Colors.grey[300])!,
+                                    highlightColor: (Colors.grey[100])!,
+                                    enabled: true,
+                                    child: ListView.builder(
+                                      shrinkWrap: true,
+                                      itemBuilder: (_, __) => Container(
+                                        margin: const EdgeInsets.symmetric(
+                                            vertical: 4, horizontal: 3),
+                                        clipBehavior: Clip.antiAlias,
+                                        decoration: BoxDecoration(
+                                          color: Colors.white,
+                                          borderRadius:
+                                              BorderRadius.circular(10),
+                                        ),
+                                        child: SizedBox(
+                                          height: 90.h,
+                                        ),
+                                      ),
+                                      itemCount: 10,
+                                    ),
+                                  );
+                                } else {
+                                  return Center(
+                                    child: GestureDetector(
+                                      onTap: () {
+                                        // BlocProvider.of<SectionBloc>(context)
+                                        //     .add(SectionLoadEvent());
+                                      },
+                                      child: Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        children: [
+                                          Text(
+                                            AppLocalizations.of(context)!
+                                                .translate('list_error'),
+                                            style: const TextStyle(
+                                                color: Colors.red),
+                                          ),
+                                          const Icon(
+                                            Icons.refresh,
+                                            color: Colors.grey,
+                                          )
+                                        ],
                                       ),
                                     ),
                                   );
+                                }
+                              },
+                            )
+                          : Padding(
+                              padding: EdgeInsets.all(8.h),
+                              child: BlocConsumer<SectionBloc, SectionState>(
+                                listener: (context, state) {
+                                  // if(state is)
                                 },
-                              );
-                            } else if (state is SearchSectionLoading) {
-                              return Shimmer.fromColors(
-                                baseColor: (Colors.grey[300])!,
-                                highlightColor: (Colors.grey[100])!,
-                                enabled: true,
-                                child: ListView.builder(
-                                  shrinkWrap: true,
-                                  itemBuilder: (_, __) => Container(
-                                    margin: const EdgeInsets.symmetric(
-                                        vertical: 4, horizontal: 3),
-                                    clipBehavior: Clip.antiAlias,
-                                    decoration: BoxDecoration(
-                                      color: Colors.white,
-                                      borderRadius: BorderRadius.circular(10),
-                                    ),
-                                    child: SizedBox(
-                                      height: 90.h,
-                                    ),
-                                  ),
-                                  itemCount: 10,
-                                ),
-                              );
-                            } else {
-                              return Center(
-                                child: GestureDetector(
-                                  onTap: () {
-                                    // BlocProvider.of<SectionBloc>(context)
-                                    //     .add(SectionLoadEvent());
-                                  },
-                                  child: Row(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: [
-                                      Text(
-                                        AppLocalizations.of(context)!
-                                            .translate('list_error'),
-                                        style:
-                                            const TextStyle(color: Colors.red),
-                                      ),
-                                      const Icon(
-                                        Icons.refresh,
-                                        color: Colors.grey,
-                                      )
-                                    ],
-                                  ),
-                                ),
-                              );
-                            }
-                          },
-                        )
-                      : Padding(
-                          padding: EdgeInsets.all(8.h),
-                          child: BlocConsumer<SectionBloc, SectionState>(
-                            listener: (context, state) {
-                              // if(state is)
-                            },
-                            builder: (context, state) {
-                              if (state is SectionLoadedSuccess) {
-                                return ListView.builder(
-                                  key: Key('builder ${selected.toString()}'),
-                                  shrinkWrap: true,
-                                  controller: scroll,
-                                  physics: const NeverScrollableScrollPhysics(),
-                                  itemCount: state.sections.length,
-                                  itemBuilder: (context, index) {
-                                    return Card(
-                                      margin: EdgeInsets.symmetric(
-                                          vertical: 4.h, horizontal: 3.w),
-                                      clipBehavior: Clip.none,
-                                      shape: RoundedRectangleBorder(
-                                        borderRadius: const BorderRadius.all(
-                                          Radius.circular(10),
-                                        ),
-                                        side: BorderSide(
-                                            color: AppColor.goldenYellow,
-                                            width: 2),
-                                      ),
-                                      color: Colors.white,
-                                      child: Theme(
-                                        data: Theme.of(context).copyWith(
-                                            dividerColor: Colors.transparent),
-                                        child: ExpansionTile(
-                                          key:
-                                              Key(index.toString()), //attention
-                                          initiallyExpanded: index == selected,
-                                          tilePadding: EdgeInsets.symmetric(
-                                              horizontal: 5.w),
-                                          title: Row(
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.center,
-                                            children: [
-                                              // Padding(
-                                              //   padding: const EdgeInsets.symmetric(
-                                              //       horizontal: 3),
-                                              //   child: SizedBox(
-                                              //     width: 36.w,
-                                              //     height: 36.h,
-                                              //     child: Img(
-                                              //       state.sections[index].image!,
-                                              //     ),
-                                              //   ),
-                                              // ),
-                                              SizedBox(
-                                                width: 65.w,
-                                                child: Column(
-                                                  children: [
-                                                    SizedBox(
-                                                      width: 36.w,
-                                                      height: 36.h,
-                                                      child: Img(
-                                                        state.sections[index]!
-                                                            .image!,
-                                                        placeholder: Container(
-                                                          color:
-                                                              Colors.grey[200],
+                                builder: (context, state) {
+                                  if (state is SectionLoadedSuccess) {
+                                    return ListView.builder(
+                                      key:
+                                          Key('builder ${selected.toString()}'),
+                                      shrinkWrap: true,
+                                      controller: scroll,
+                                      physics:
+                                          const NeverScrollableScrollPhysics(),
+                                      itemCount: state.sections.length,
+                                      itemBuilder: (context, index) {
+                                        return Card(
+                                          margin: EdgeInsets.symmetric(
+                                              vertical: 4.h, horizontal: 3.w),
+                                          clipBehavior: Clip.none,
+                                          shape: RoundedRectangleBorder(
+                                            borderRadius:
+                                                const BorderRadius.all(
+                                              Radius.circular(10),
+                                            ),
+                                            side: BorderSide(
+                                                color: AppColor.goldenYellow,
+                                                width: 2),
+                                          ),
+                                          color: Colors.white,
+                                          child: Theme(
+                                            data: Theme.of(context).copyWith(
+                                                dividerColor:
+                                                    Colors.transparent),
+                                            child: ExpansionTile(
+                                              key: Key(
+                                                  index.toString()), //attention
+                                              initiallyExpanded:
+                                                  index == selected,
+                                              tilePadding: EdgeInsets.symmetric(
+                                                  horizontal: 5.w),
+                                              title: Row(
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment.center,
+                                                children: [
+                                                  // Padding(
+                                                  //   padding: const EdgeInsets.symmetric(
+                                                  //       horizontal: 3),
+                                                  //   child: SizedBox(
+                                                  //     width: 36.w,
+                                                  //     height: 36.h,
+                                                  //     child: Img(
+                                                  //       state.sections[index].image!,
+                                                  //     ),
+                                                  //   ),
+                                                  // ),
+                                                  SizedBox(
+                                                    width: 65.w,
+                                                    child: Column(
+                                                      children: [
+                                                        SizedBox(
                                                           width: 36.w,
                                                           height: 36.h,
+                                                          child: Img(
+                                                            state
+                                                                .sections[
+                                                                    index]!
+                                                                .image!,
+                                                            placeholder:
+                                                                Container(
+                                                              color: Colors
+                                                                  .grey[200],
+                                                              width: 36.w,
+                                                              height: 36.h,
+                                                            ),
+                                                            errorWidget:
+                                                                Container(
+                                                              color: Colors
+                                                                  .grey[200],
+                                                              width: 36.w,
+                                                              height: 36.h,
+                                                              child: const Center(
+                                                                  child: Text(
+                                                                      "error")),
+                                                            ),
+                                                          ),
                                                         ),
-                                                        errorWidget: Container(
-                                                          color:
-                                                              Colors.grey[200],
-                                                          width: 36.w,
-                                                          height: 36.h,
-                                                          child: const Center(
-                                                              child: Text(
-                                                                  "error")),
+                                                        Text(
+                                                          "(${state.sections[index]!.end!}__${state.sections[index]!.start!})",
+                                                          style:
+                                                              const TextStyle(
+                                                                  fontSize: 14),
                                                         ),
+                                                      ],
+                                                    ),
+                                                  ),
+                                                  SizedBox(
+                                                    height: 5.w,
+                                                  ),
+                                                  Flexible(
+                                                    child: Text(
+                                                      state.sections[index]!
+                                                          .label!,
+                                                      maxLines: 10,
+                                                      overflow:
+                                                          TextOverflow.ellipsis,
+                                                      style: const TextStyle(
+                                                        fontWeight:
+                                                            FontWeight.bold,
                                                       ),
                                                     ),
-                                                    Text(
-                                                      "(${state.sections[index]!.end!}__${state.sections[index]!.start!})",
-                                                      style: const TextStyle(
-                                                          fontSize: 14),
-                                                    ),
-                                                  ],
-                                                ),
-                                              ),
-                                              SizedBox(
-                                                height: 5.w,
-                                              ),
-                                              Flexible(
-                                                child: Text(
-                                                  state.sections[index]!.label!,
-                                                  maxLines: 10,
-                                                  overflow:
-                                                      TextOverflow.ellipsis,
-                                                  style: const TextStyle(
-                                                    fontWeight: FontWeight.bold,
                                                   ),
-                                                ),
+                                                ],
                                               ),
-                                            ],
+
+                                              onExpansionChanged: (value) {
+                                                if (value) {
+                                                  BlocProvider.of<ChapterBloc>(
+                                                          context)
+                                                      .add(ChapterLoadEvent(
+                                                          state.sections[index]!
+                                                              .id!));
+                                                  setState(() {
+                                                    selected = index;
+                                                    chapterselected = -1;
+                                                    subchapterselected = -1;
+                                                  });
+
+                                                  scroll.animateTo(
+                                                      index +
+                                                          MediaQuery.of(context)
+                                                                  .size
+                                                                  .width /
+                                                              2,
+                                                      duration: const Duration(
+                                                          seconds: 1),
+                                                      curve: Curves.easeIn);
+                                                } else {
+                                                  setState(() {
+                                                    selected = -1;
+                                                    shownote = false;
+                                                    noteType = NoteType.None;
+                                                  });
+                                                }
+                                              },
+                                              children: buildChapterTiles(),
+                                            ),
                                           ),
-
-                                          onExpansionChanged: (value) {
-                                            if (value) {
-                                              BlocProvider.of<ChapterBloc>(
-                                                      context)
-                                                  .add(ChapterLoadEvent(state
-                                                      .sections[index]!.id!));
-                                              setState(() {
-                                                selected = index;
-                                                chapterselected = -1;
-                                                subchapterselected = -1;
-                                              });
-
-                                              scroll.animateTo(
-                                                  index +
-                                                      MediaQuery.of(context)
-                                                              .size
-                                                              .width /
-                                                          2,
-                                                  duration: const Duration(
-                                                      seconds: 1),
-                                                  curve: Curves.easeIn);
-                                            } else {
-                                              setState(() {
-                                                selected = -1;
-                                                shownote = false;
-                                                noteType = NoteType.None;
-                                              });
-                                            }
-                                          },
-                                          children: buildChapterTiles(),
+                                        );
+                                      },
+                                    );
+                                  } else if (state is SectionLoadingProgress) {
+                                    return Shimmer.fromColors(
+                                      baseColor: (Colors.grey[300])!,
+                                      highlightColor: (Colors.grey[100])!,
+                                      enabled: true,
+                                      child: ListView.builder(
+                                        shrinkWrap: true,
+                                        itemBuilder: (_, __) => Container(
+                                          margin: const EdgeInsets.symmetric(
+                                              vertical: 4, horizontal: 3),
+                                          clipBehavior: Clip.antiAlias,
+                                          decoration: BoxDecoration(
+                                            color: Colors.white,
+                                            borderRadius:
+                                                BorderRadius.circular(10),
+                                          ),
+                                          child: SizedBox(
+                                            height: 90.h,
+                                          ),
+                                        ),
+                                        itemCount: 10,
+                                      ),
+                                    );
+                                  } else {
+                                    return Center(
+                                      child: GestureDetector(
+                                        onTap: () {
+                                          BlocProvider.of<SectionBloc>(context)
+                                              .add(SectionLoadEvent());
+                                        },
+                                        child: Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.center,
+                                          children: [
+                                            Text(
+                                              AppLocalizations.of(context)!
+                                                  .translate('list_error'),
+                                              style: const TextStyle(
+                                                  color: Colors.red),
+                                            ),
+                                            const Icon(
+                                              Icons.refresh,
+                                              color: Colors.grey,
+                                            )
+                                          ],
                                         ),
                                       ),
                                     );
-                                  },
-                                );
-                              } else if (state is SectionLoadingProgress) {
-                                return Shimmer.fromColors(
-                                  baseColor: (Colors.grey[300])!,
-                                  highlightColor: (Colors.grey[100])!,
-                                  enabled: true,
-                                  child: ListView.builder(
-                                    shrinkWrap: true,
-                                    itemBuilder: (_, __) => Container(
-                                      margin: const EdgeInsets.symmetric(
-                                          vertical: 4, horizontal: 3),
-                                      clipBehavior: Clip.antiAlias,
-                                      decoration: BoxDecoration(
-                                        color: Colors.white,
-                                        borderRadius: BorderRadius.circular(10),
-                                      ),
-                                      child: SizedBox(
-                                        height: 90.h,
-                                      ),
-                                    ),
-                                    itemCount: 10,
-                                  ),
-                                );
-                              } else {
-                                return Center(
-                                  child: GestureDetector(
-                                    onTap: () {
-                                      BlocProvider.of<SectionBloc>(context)
-                                          .add(SectionLoadEvent());
-                                    },
-                                    child: Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.center,
-                                      children: [
-                                        Text(
-                                          AppLocalizations.of(context)!
-                                              .translate('list_error'),
-                                          style: const TextStyle(
-                                              color: Colors.red),
-                                        ),
-                                        const Icon(
-                                          Icons.refresh,
-                                          color: Colors.grey,
-                                        )
-                                      ],
-                                    ),
-                                  ),
-                                );
-                              }
-                            },
-                          ),
-                        ),
-                  SizedBox(
-                    height: 70.h,
-                  )
-                ],
-              ),
-            ),
-            Visibility(
-              visible: feeselected != -1,
-              child: Positioned(
-                bottom: 0.h,
-                child: Container(
-                  padding: const EdgeInsets.all(8),
-                  color: AppColor.deepBlue,
-                  width: MediaQuery.of(context).size.width,
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceAround,
-                    children: [
-                      // CustomButton(
-                      //   onTap: () {
-                      //     setState(() {
-                      //       feeselected = -1;
-                      //       feeselectedId = "";
-                      //     });
-                      //   },
-                      //   color: Colors.white,
-                      //   bordercolor: Colors.red,
-                      //   title: const SizedBox(
-                      //       width: 100, child: Center(child: Text("إلغاء"))),
-                      // ),
-                      CustomButton(
-                        onTap: () {
-                          setState(() {
-                            selected = -1;
-                            chapterselected = -1;
-                            subchapterselected = -1;
-                            feeselected = -1;
-                            _searchController.text = "";
-                            isSearch = false;
-                          });
-                          BlocProvider.of<FeeSelectBloc>(context)
-                              .add(FeeSelectLoadEvent(id: feeselectedId!));
-                          BlocProvider.of<CalculatorPanelBloc>(context)
-                              .add(CalculatorPanelHideEvent());
-                        },
-                        color: Colors.white,
-                        bordercolor: Colors.green,
-                        title: SizedBox(
-                            width: 100.w,
-                            child: const Center(child: Text("موافق"))),
-                      ),
+                                  }
+                                },
+                              ),
+                            ),
+                      SizedBox(
+                        height: 70.h,
+                      )
                     ],
                   ),
                 ),
-              ),
-            )
-          ],
-        ),
-      ),
+                Visibility(
+                  visible: feeselected != -1,
+                  child: Positioned(
+                    bottom: 0.h,
+                    child: Container(
+                      padding: const EdgeInsets.all(8),
+                      color: AppColor.deepBlue,
+                      width: MediaQuery.of(context).size.width,
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceAround,
+                        children: [
+                          // CustomButton(
+                          //   onTap: () {
+                          //     setState(() {
+                          //       feeselected = -1;
+                          //       feeselectedId = "";
+                          //     });
+                          //   },
+                          //   color: Colors.white,
+                          //   bordercolor: Colors.red,
+                          //   title: const SizedBox(
+                          //       width: 100, child: Center(child: Text("إلغاء"))),
+                          // ),
+                          CustomButton(
+                            onTap: () {
+                              setState(() {
+                                selected = -1;
+                                chapterselected = -1;
+                                subchapterselected = -1;
+                                feeselected = -1;
+                                _searchController.text = "";
+                                isSearch = false;
+                              });
+                              BlocProvider.of<FeeSelectBloc>(context)
+                                  .add(FeeSelectLoadEvent(id: feeselectedId!));
+                              BlocProvider.of<CalculatorPanelBloc>(context)
+                                  .add(CalculatorPanelHideEvent());
+                            },
+                            color: Colors.white,
+                            bordercolor: Colors.green,
+                            title: SizedBox(
+                                width: 100.w,
+                                child: const Center(child: Text("accept"))),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                )
+              ],
+            ),
+          ),
+        );
+      },
     );
   }
 

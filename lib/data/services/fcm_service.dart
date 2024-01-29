@@ -73,9 +73,9 @@ class NotificationServices {
       alert: true,
       announcement: true,
       badge: true,
-      carPlay: true,
-      criticalAlert: true,
-      provisional: true,
+      // carPlay: true,
+      // criticalAlert: true,
+      // provisional: true,
       sound: true,
     );
 

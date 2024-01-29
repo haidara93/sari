@@ -51,18 +51,21 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
                             onTap: () {
                               Navigator.pop(context);
                             },
-                            child: Padding(
-                              padding: EdgeInsets.symmetric(
-                                  vertical: 13.h, horizontal: 5.w),
-                              child: SizedBox(
-                                // margin:
-                                //     EdgeInsets.symmetric(vertical: 13.h, horizontal: 3.w),
-                                height: 35.h,
-                                width: 35.w,
+                            child: AbsorbPointer(
+                              absorbing: true,
+                              child: Padding(
+                                padding: EdgeInsets.symmetric(
+                                    vertical: 13.h, horizontal: 5.w),
+                                child: SizedBox(
+                                  // margin:
+                                  //     EdgeInsets.symmetric(vertical: 13.h, horizontal: 3.w),
+                                  height: 35.h,
+                                  width: 35.w,
 
-                                child: Center(
-                                  child: Image.asset(
-                                      "assets/icons/ios_back_arrow.png"),
+                                  child: Center(
+                                    child: Image.asset(
+                                        "assets/icons/ios_back_arrow.png"),
+                                  ),
                                 ),
                               ),
                             ),
@@ -71,15 +74,18 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
                             onTap: () {
                               scaffoldKey!.currentState!.openDrawer();
                             },
-                            child: Padding(
-                              padding: EdgeInsets.symmetric(
-                                  vertical: 13.h, horizontal: 5.w),
-                              child: SizedBox(
-                                height: 35.h,
-                                width: 35.w,
-                                child: Center(
-                                  child: Image.asset(
-                                      "assets/icons/drawer_icon.png"),
+                            child: AbsorbPointer(
+                              absorbing: true,
+                              child: Padding(
+                                padding: EdgeInsets.symmetric(
+                                    vertical: 13.h, horizontal: 5.w),
+                                child: SizedBox(
+                                  height: 35.h,
+                                  width: 35.w,
+                                  child: Center(
+                                    child: Image.asset(
+                                        "assets/icons/drawer_icon.png"),
+                                  ),
                                 ),
                               ),
                             ),
@@ -181,11 +187,14 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
                 ),
                 GestureDetector(
                   onTap: onTap ?? () {},
-                  child: Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: SvgPicture.asset(
-                      "assets/images/sari_blue.svg",
-                      height: 40.h,
+                  child: AbsorbPointer(
+                    absorbing: true,
+                    child: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: SvgPicture.asset(
+                        "assets/images/sari_blue.svg",
+                        height: 40.h,
+                      ),
                     ),
                   ),
                 ),
