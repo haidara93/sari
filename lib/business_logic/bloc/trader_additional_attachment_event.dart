@@ -8,7 +8,7 @@ class TraderAdditionalAttachmentEvent extends Equatable {
 }
 
 class AddAdditionalAttachmentEvent extends TraderAdditionalAttachmentEvent {
-  final int type;
+  final AttachmentType type;
   final List<File> images;
   final List<File> files;
   final int offerId;

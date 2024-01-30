@@ -6,6 +6,7 @@ import 'package:custome_mobile/business_logic/bloc/offer_bloc.dart';
 import 'package:custome_mobile/data/models/package_model.dart';
 import 'package:custome_mobile/data/models/state_custome_agency_model.dart';
 import 'package:custome_mobile/data/models/user_model.dart';
+import 'package:custome_mobile/data/providers/directorate_provider.dart';
 import 'package:custome_mobile/data/providers/order_broker_provider.dart';
 import 'package:custome_mobile/helpers/color_constants.dart';
 import 'package:custome_mobile/views/control_view.dart';
@@ -103,6 +104,18 @@ class _SelectBrokerProfileScreenState extends State<SelectBrokerProfileScreen> {
         );
       },
     );
+  }
+
+  DirectorateProvider? directorate_provider;
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+      directorate_provider =
+          Provider.of<DirectorateProvider>(context, listen: false);
+    });
   }
 
   @override
@@ -598,9 +611,9 @@ class _SelectBrokerProfileScreenState extends State<SelectBrokerProfileScreen> {
                                               widget.tubes!,
                                               widget.colored!,
                                               widget.lycra!,
-                                              orderBrokerProvider
+                                              directorate_provider!
                                                   .selectedCustomeAgency!.id!,
-                                              orderBrokerProvider
+                                              directorate_provider!
                                                   .selectedStateCustome!.id!,
                                               orderBrokerProvider.packageTypeId,
                                               "${orderBrokerProvider.productExpireDate!.year}-${orderBrokerProvider.productExpireDate!.month}-${orderBrokerProvider.productExpireDate!.day}",

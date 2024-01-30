@@ -11,7 +11,9 @@ import 'package:custome_mobile/business_logic/bloc/package_type_bloc.dart';
 import 'package:custome_mobile/business_logic/cubit/bottom_nav_bar_cubit.dart';
 import 'package:custome_mobile/data/models/attachments_models.dart';
 import 'package:custome_mobile/data/models/package_model.dart';
+import 'package:custome_mobile/data/models/state_custome_agency_model.dart';
 import 'package:custome_mobile/data/providers/add_attachment_provider.dart';
+import 'package:custome_mobile/data/providers/directorate_provider.dart';
 import 'package:custome_mobile/data/providers/order_broker_provider.dart';
 import 'package:custome_mobile/helpers/color_constants.dart';
 import 'package:custome_mobile/helpers/formatter.dart';
@@ -138,7 +140,7 @@ class _TraderAttachementScreenState extends State<TraderAttachementScreen> {
                 Navigator.pop(context);
               },
               child: Text(
-                "تم",
+                "Ok",
                 style: TextStyle(
                   color: AppColor.lightBlue,
                   fontSize: 20,
@@ -967,7 +969,7 @@ class _TraderAttachementScreenState extends State<TraderAttachementScreen> {
                                                             backgroundColor:
                                                                 Colors.white,
                                                             title: const Text(
-                                                                'إضافة مرفق'),
+                                                                'add attachment'),
                                                             shape:
                                                                 RoundedRectangleBorder(
                                                               borderRadius:
@@ -984,61 +986,61 @@ class _TraderAttachementScreenState extends State<TraderAttachementScreen> {
                                                                     MainAxisAlignment
                                                                         .spaceEvenly,
                                                                 children: [
-                                                                  Padding(
-                                                                    padding: EdgeInsets.symmetric(
-                                                                        horizontal:
-                                                                            5.w,
-                                                                        vertical:
-                                                                            15.h),
-                                                                    child:
-                                                                        InkWell(
-                                                                      child:
-                                                                          Stack(
-                                                                        clipBehavior:
-                                                                            Clip.none,
-                                                                        children: [
-                                                                          Card(
-                                                                            elevation:
-                                                                                1,
-                                                                            child:
-                                                                                Padding(
-                                                                              padding: const EdgeInsets.all(8.0),
-                                                                              child: Center(
-                                                                                child: SizedBox(
-                                                                                  height: 55.h,
-                                                                                  width: 50.w,
-                                                                                  child: SvgPicture.asset("assets/icons/pdf_icon.svg"),
-                                                                                ),
-                                                                              ),
-                                                                            ),
-                                                                          ),
-                                                                          _files!.isNotEmpty
-                                                                              ? Positioned(
-                                                                                  right: -7.w,
-                                                                                  top: -10.h,
-                                                                                  child: Container(
-                                                                                    height: 25.h,
-                                                                                    width: 25.h,
-                                                                                    padding: const EdgeInsets.all(2),
-                                                                                    decoration: BoxDecoration(
-                                                                                      color: AppColor.goldenYellow,
-                                                                                      borderRadius: BorderRadius.circular(45),
-                                                                                    ),
-                                                                                    child: Center(
-                                                                                      child: Text(
-                                                                                        _files!.length.toString(),
-                                                                                        style: const TextStyle(
-                                                                                          color: Colors.white,
-                                                                                        ),
-                                                                                      ),
-                                                                                    ),
-                                                                                  ),
-                                                                                )
-                                                                              : const SizedBox.shrink()
-                                                                        ],
-                                                                      ),
-                                                                    ),
-                                                                  ),
+                                                                  // Padding(
+                                                                  //   padding: EdgeInsets.symmetric(
+                                                                  //       horizontal:
+                                                                  //           5.w,
+                                                                  //       vertical:
+                                                                  //           15.h),
+                                                                  //   child:
+                                                                  //       InkWell(
+                                                                  //     child:
+                                                                  //         Stack(
+                                                                  //       clipBehavior:
+                                                                  //           Clip.none,
+                                                                  //       children: [
+                                                                  //         Card(
+                                                                  //           elevation:
+                                                                  //               1,
+                                                                  //           child:
+                                                                  //               Padding(
+                                                                  //             padding: const EdgeInsets.all(8.0),
+                                                                  //             child: Center(
+                                                                  //               child: SizedBox(
+                                                                  //                 height: 55.h,
+                                                                  //                 width: 50.w,
+                                                                  //                 child: SvgPicture.asset("assets/icons/pdf_icon.svg"),
+                                                                  //               ),
+                                                                  //             ),
+                                                                  //           ),
+                                                                  //         ),
+                                                                  //         _files!.isNotEmpty
+                                                                  //             ? Positioned(
+                                                                  //                 right: -7.w,
+                                                                  //                 top: -10.h,
+                                                                  //                 child: Container(
+                                                                  //                   height: 25.h,
+                                                                  //                   width: 25.h,
+                                                                  //                   padding: const EdgeInsets.all(2),
+                                                                  //                   decoration: BoxDecoration(
+                                                                  //                     color: AppColor.goldenYellow,
+                                                                  //                     borderRadius: BorderRadius.circular(45),
+                                                                  //                   ),
+                                                                  //                   child: Center(
+                                                                  //                     child: Text(
+                                                                  //                       _files!.length.toString(),
+                                                                  //                       style: const TextStyle(
+                                                                  //                         color: Colors.white,
+                                                                  //                       ),
+                                                                  //                     ),
+                                                                  //                   ),
+                                                                  //                 ),
+                                                                  //               )
+                                                                  //             : const SizedBox.shrink()
+                                                                  //       ],
+                                                                  //     ),
+                                                                  //   ),
+                                                                  // ),
                                                                   Padding(
                                                                     padding: EdgeInsets.symmetric(
                                                                         horizontal:
@@ -1221,10 +1223,10 @@ class _TraderAttachementScreenState extends State<TraderAttachementScreen> {
                                                                             }),
                                                                         CustomButton(
                                                                             title:
-                                                                                const SizedBox(width: 90, child: Center(child: Text("حفظ"))),
+                                                                                const SizedBox(width: 90, child: Center(child: Text("Save"))),
                                                                             onTap: () {
                                                                               BlocProvider.of<AttachmentBloc>(context).add(AddAttachmentEvent(
-                                                                                attachmentTypeState.attachmentTypes[index].id!,
+                                                                                attachmentTypeState.attachmentTypes[index],
                                                                                 _otherAttachmentController.text,
                                                                                 _images!,
                                                                                 _files!,

@@ -7,6 +7,7 @@ import 'package:custome_mobile/business_logic/bloc/offer_bloc.dart';
 import 'package:custome_mobile/business_logic/cubit/locale_cubit.dart';
 import 'package:custome_mobile/data/models/package_model.dart';
 import 'package:custome_mobile/data/models/state_custome_agency_model.dart';
+import 'package:custome_mobile/data/providers/directorate_provider.dart';
 import 'package:custome_mobile/data/providers/order_broker_provider.dart';
 import 'package:custome_mobile/helpers/color_constants.dart';
 import 'package:custome_mobile/views/control_view.dart';
@@ -119,8 +120,8 @@ class _SelectBrokerScreenState extends State<SelectBrokerScreen> {
                       widget.tubes!,
                       widget.colored!,
                       widget.lycra!,
-                      provider.selectedCustomeAgency!.id!,
-                      provider.selectedStateCustome!.id!,
+                      directorate_provider!.selectedCustomeAgency!.id!,
+                      directorate_provider!.selectedStateCustome!.id!,
                       provider.packageTypeId,
                       "${provider.productExpireDate!.year}-${provider.productExpireDate!.month}-${provider.productExpireDate!.day}",
                       provider.note,
@@ -139,6 +140,17 @@ class _SelectBrokerScreenState extends State<SelectBrokerScreen> {
         );
       },
     );
+  }
+
+  DirectorateProvider? directorate_provider;
+
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+      directorate_provider =
+          Provider.of<DirectorateProvider>(context, listen: false);
+    });
   }
 
   @override

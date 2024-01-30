@@ -8,7 +8,7 @@ class AttachmentEvent extends Equatable {
 }
 
 class AddAttachmentEvent extends AttachmentEvent {
-  final int type;
+  final AttachmentType type;
   final String other_attachment_name;
   final List<File> images;
   final List<File> files;

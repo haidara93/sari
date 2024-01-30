@@ -58,8 +58,60 @@ class Attachment {
       image = <AttachmentImage>[];
     }
     attachmentType = json['attachment_type'] != null
-        ? AttachmentType.fromJson(json['attachment_type'])
+        ? (json['attachment_type'] is int)
+            ? AttachmentType(id: json['attachment_type'])
+            : AttachmentType.fromJson(json['attachment_type'])
         : null;
+    otherAttachmentName = json['other_attachment_name'];
+    user = json['user'];
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['id'] = id;
+    data['file'] = file;
+    data['image'] = image;
+    data['attachment_type'] = attachmentType;
+    data['user'] = user;
+    return data;
+  }
+}
+
+class CreateAttachment {
+  int? id;
+  List<AttachmentFile>? file;
+  List<AttachmentImage>? image;
+  int? attachmentType;
+  String? otherAttachmentName;
+  int? user;
+
+  CreateAttachment(
+      {this.id,
+      this.file,
+      this.image,
+      this.attachmentType,
+      this.otherAttachmentName,
+      this.user});
+
+  CreateAttachment.fromJson(Map<String, dynamic> json) {
+    id = json['id'];
+    if (json['files'] != null) {
+      file = <AttachmentFile>[];
+      json['files'].forEach((v) {
+        file!.add(AttachmentFile.fromJson(v));
+      });
+    } else {
+      file = <AttachmentFile>[];
+    }
+    if (json['images'] != null) {
+      image = <AttachmentImage>[];
+      json['images'].forEach((v) {
+        image!.add(AttachmentImage.fromJson(v));
+      });
+    } else {
+      image = <AttachmentImage>[];
+    }
+    attachmentType = json['attachment_type'];
     otherAttachmentName = json['other_attachment_name'];
     user = json['user'];
   }

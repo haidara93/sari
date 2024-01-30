@@ -97,7 +97,7 @@ class StateAgencyRepository {
   }
 
   Future<Attachment?> postAttachment(List<File> images, List<File> files,
-      int attachmentTypeId, String otherName) async {
+      AttachmentType attachmentTypeId, String otherName) async {
     var prefs = await SharedPreferences.getInstance();
     var token = prefs.getString("token");
     var jwt = token!.split(".");
@@ -140,18 +140,20 @@ class StateAgencyRepository {
       request.files.add(element);
     }
 
-    request.fields['attachment_type'] = attachmentTypeId.toString();
+    print(attachmentTypeId.toString());
+    request.fields['attachment_type'] = attachmentTypeId.id!.toString();
     request.fields['user'] = payload["user_id"].toString();
     request.fields['other_attachment_name'] = otherName;
     var response = await request.send();
 
+    print(response.statusCode);
     if (response.statusCode == 201) {
       final respStr = await response.stream.bytesToString();
-      print(respStr);
       var res = jsonDecode(respStr);
       return Attachment.fromJson(res);
     } else {
       final respStr = await response.stream.bytesToString();
+      print(respStr);
       return null;
     }
   }
@@ -206,7 +208,7 @@ class StateAgencyRepository {
     var jwt = prefs.getString("token");
 
     List<Map<String, dynamic>> objects = [];
-
+    print(jsonEncode(cal));
     for (var element in cal) {
       var obj = {
         "insurance": element.insurance,
@@ -245,7 +247,7 @@ class StateAgencyRepository {
 
     var result = CalculateMultiResult.fromJson(json);
     print(response.statusCode);
-    print(jsonEncode(result.toJson()));
+    print(myDataString);
     return result;
   }
 

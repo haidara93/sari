@@ -575,7 +575,7 @@ class _BrokerAttachmentsScreenState extends State<BrokerAttachmentsScreen> {
                                                       TraderAdditionalAttachmentBloc>(
                                                   context)
                                               .add(AddAdditionalAttachmentEvent(
-                                                  element.id!,
+                                                  element,
                                                   _images!,
                                                   _files!,
                                                   widget.offerId,

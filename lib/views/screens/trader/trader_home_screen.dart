@@ -23,6 +23,7 @@ import 'package:custome_mobile/constants/enums.dart';
 import 'package:custome_mobile/data/models/accurdion_model.dart';
 import 'package:custome_mobile/data/models/package_model.dart';
 import 'package:custome_mobile/data/providers/calculator_provider.dart';
+import 'package:custome_mobile/data/providers/directorate_provider.dart';
 import 'package:custome_mobile/data/providers/order_broker_provider.dart';
 import 'package:custome_mobile/data/services/fcm_service.dart';
 import 'package:custome_mobile/enum/panel_state.dart';
@@ -74,6 +75,7 @@ class _TraderHomeScreenState extends State<TraderHomeScreen>
   bool calculateFeeScreen = false;
   CalculatorProvider? calculator_Provider;
   OrderBrokerProvider? order_broker_Provider;
+  DirectorateProvider? directorate_provider;
   NotificationServices notificationServices = NotificationServices();
   @override
   void initState() {
@@ -99,6 +101,8 @@ class _TraderHomeScreenState extends State<TraderHomeScreen>
       });
       calculator_Provider =
           Provider.of<CalculatorProvider>(context, listen: false);
+      directorate_provider =
+          Provider.of<DirectorateProvider>(context, listen: false);
       order_broker_Provider =
           Provider.of<OrderBrokerProvider>(context, listen: false);
     });
@@ -180,9 +184,12 @@ class _TraderHomeScreenState extends State<TraderHomeScreen>
       case 4:
         {
           order_broker_Provider!.initProvider();
+          directorate_provider!.init();
           setState(() {
             title =
                 AppLocalizations.of(context)!.translate('broker_order_title');
+            BlocProvider.of<StateCustomeBloc>(context)
+                .add(StateCustomeLoadEvent());
 
             BlocProvider.of<PackageTypeBloc>(context)
                 .add(PackageTypeLoadEvent());
@@ -2988,7 +2995,7 @@ class _TraderHomeScreenState extends State<TraderHomeScreen>
                             bordercolor: Colors.green,
                             title: SizedBox(
                                 width: 100.w,
-                                child: const Center(child: Text("accept"))),
+                                child: const Center(child: Text("select"))),
                           ),
                         ],
                       ),
@@ -3554,7 +3561,7 @@ class _TraderHomeScreenState extends State<TraderHomeScreen>
                             bordercolor: Colors.green,
                             title: SizedBox(
                                 width: 100.w,
-                                child: const Center(child: Text("accept"))),
+                                child: const Center(child: Text("Select"))),
                           ),
                         ],
                       ),

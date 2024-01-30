@@ -30,14 +30,6 @@ class ControlView extends StatelessWidget {
             );
           } else if (state is InternetConnected) {
             BlocProvider.of<BottomNavBarCubit>(context).emitShow();
-            BlocProvider.of<NotificationBloc>(context)
-                .add(NotificationLoadEvent());
-            BlocProvider.of<AttachmentTypeBloc>(context)
-                .add(AttachmentTypeLoadEvent());
-            BlocProvider.of<SectionBloc>(context).add(SectionLoadEvent());
-            BlocProvider.of<FlagsBloc>(context).add(FlagsLoadEvent());
-            BlocProvider.of<StateCustomeBloc>(context)
-                .add(StateCustomeLoadEvent());
 
             return BlocBuilder<AuthBloc, AuthState>(
               builder: (context, state) {

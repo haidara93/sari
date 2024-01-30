@@ -15,6 +15,7 @@ import 'package:custome_mobile/business_logic/cubit/locale_cubit.dart';
 import 'package:custome_mobile/business_logic/cubit/stop_scroll_cubit.dart';
 import 'package:custome_mobile/data/models/package_model.dart';
 import 'package:custome_mobile/data/models/state_custome_agency_model.dart';
+import 'package:custome_mobile/data/providers/directorate_provider.dart';
 import 'package:custome_mobile/data/providers/order_broker_provider.dart';
 import 'package:custome_mobile/data/services/calculator_service.dart';
 import 'package:custome_mobile/helpers/color_constants.dart';
@@ -52,6 +53,8 @@ class _StepperMultiOrderBrokerScreenState
   var key1 = GlobalKey();
   var key2 = GlobalKey();
   var key3 = GlobalKey();
+
+  StateCustome? selectedStateCustome;
 
   String totalFees = "0.0";
   bool totalFeesloading = false;
@@ -130,9 +133,14 @@ class _StepperMultiOrderBrokerScreenState
   // final FocusNode _agencynode = FocusNode();
   // Timer? _debounceTimer;
 
+  DirectorateProvider? directorate_provider;
   @override
   void initState() {
     super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+      directorate_provider =
+          Provider.of<DirectorateProvider>(context, listen: false);
+    });
     BlocProvider.of<FeeAddLoadingBloc>(context).add(FeeLoadingProgressEvent());
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
       TextEditingController package_controller = TextEditingController();
@@ -595,7 +603,6 @@ class _StepperMultiOrderBrokerScreenState
       // List<CalculateObject> objects = [];
       objects = [];
       if (!publicOriginError && !publicPackageError) {
-        print("asd4");
         for (var i = 0; i < packages.length; i++) {
           objects.add(CalculateObject());
           objects[i].insurance = int.parse(totalValueWithEnsurance[i]);
@@ -930,349 +937,383 @@ class _StepperMultiOrderBrokerScreenState
                                   const SizedBox(
                                     height: 15,
                                   ),
-                                  BlocBuilder<StateCustomeBloc,
-                                      StateCustomeState>(
-                                    builder: (context, state) {
-                                      if (state is StateCustomeLoadedSuccess) {
-                                        return Column(
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.start,
-                                          children: [
-                                            DropdownButtonHideUnderline(
-                                              child: Focus(
-                                                focusNode: _statenode,
-                                                onFocusChange: (bool focus) {
-                                                  if (focus) {
-                                                    setSelectedPanel(1);
-                                                  }
-                                                },
-                                                child: DropdownButton2<
-                                                    StateCustome?>(
-                                                  isExpanded: true,
-                                                  barrierLabel:
+                                  Consumer<DirectorateProvider>(builder:
+                                      (context, directorateProvider, child) {
+                                    return BlocConsumer<StateCustomeBloc,
+                                        StateCustomeState>(
+                                      listener: (context, state) {
+                                        if (state
+                                            is StateCustomeLoadedSuccess) {
+                                          directorateProvider
+                                              .setstateCustome(state.states);
+                                        }
+                                      },
+                                      builder: (context, state) {
+                                        if (state
+                                            is StateCustomeLoadedSuccess) {
+                                          return Column(
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
+                                            children: [
+                                              DropdownButtonHideUnderline(
+                                                child: Focus(
+                                                  focusNode: _statenode,
+                                                  onFocusChange: (bool focus) {
+                                                    if (focus) {
+                                                      setSelectedPanel(1);
+                                                    }
+                                                  },
+                                                  child: DropdownButton2<
+                                                      StateCustome?>(
+                                                    isExpanded: true,
+                                                    barrierLabel:
+                                                        AppLocalizations.of(
+                                                                context)!
+                                                            .translate(
+                                                                'select_state'),
+                                                    hint: Text(
                                                       AppLocalizations.of(
                                                               context)!
                                                           .translate(
                                                               'select_state'),
-                                                  hint: Text(
-                                                    AppLocalizations.of(
-                                                            context)!
-                                                        .translate(
-                                                            'select_state'),
-                                                    style: TextStyle(
-                                                      fontSize: 18,
-                                                      color: Theme.of(context)
-                                                          .hintColor,
-                                                    ),
-                                                  ),
-                                                  items: state.states
-                                                      .map(
-                                                          (StateCustome item) =>
-                                                              DropdownMenuItem<
-                                                                  StateCustome>(
-                                                                value: item,
-                                                                child: Text(
-                                                                  item.name!,
-                                                                  style:
-                                                                      const TextStyle(
-                                                                    fontSize:
-                                                                        17,
-                                                                  ),
-                                                                ),
-                                                              ))
-                                                      .toList(),
-                                                  value: orderBrokerProvider
-                                                              .selectedStateCustome !=
-                                                          null
-                                                      ? orderBrokerProvider
-                                                          .selectedStateCustome
-                                                      : null,
-                                                  onChanged:
-                                                      (StateCustome? value) {
-                                                    BlocProvider.of<AgencyBloc>(
-                                                            context)
-                                                        .add(AgenciesLoadEvent(
-                                                            value!.id!));
-                                                    orderBrokerProvider
-                                                        .setSelectedStateCustome(
-                                                            value);
-                                                    orderBrokerProvider
-                                                        .setSelectedCustomeAgency(
-                                                            null);
-                                                  },
-                                                  buttonStyleData:
-                                                      ButtonStyleData(
-                                                    height: 50,
-                                                    width: double.infinity,
-
-                                                    padding: const EdgeInsets
-                                                        .symmetric(
-                                                      horizontal: 9.0,
-                                                    ),
-                                                    decoration: BoxDecoration(
-                                                      borderRadius:
-                                                          BorderRadius.circular(
-                                                              12),
-                                                      border: Border.all(
-                                                        color: Colors.black26,
+                                                      style: TextStyle(
+                                                        fontSize: 18,
+                                                        color: Theme.of(context)
+                                                            .hintColor,
                                                       ),
-                                                      color: Colors.white,
                                                     ),
-                                                    // elevation: 2,
-                                                  ),
-                                                  iconStyleData:
-                                                      const IconStyleData(
-                                                    icon: Icon(
-                                                      Icons
-                                                          .keyboard_arrow_down_sharp,
+                                                    items: directorateProvider
+                                                        .stateCustomes!
+                                                        .map((StateCustome
+                                                                item) =>
+                                                            DropdownMenuItem<
+                                                                StateCustome>(
+                                                              value: item,
+                                                              child: Text(
+                                                                item.name!,
+                                                                style:
+                                                                    const TextStyle(
+                                                                  fontSize: 17,
+                                                                ),
+                                                              ),
+                                                            ))
+                                                        .toList(),
+                                                    value: directorateProvider
+                                                        .selectedStateCustome,
+                                                    onChanged:
+                                                        (StateCustome? value) {
+                                                      BlocProvider.of<
+                                                                  AgencyBloc>(
+                                                              context)
+                                                          .add(
+                                                              AgenciesLoadEvent(
+                                                                  value!.id!));
+                                                      directorateProvider
+                                                          .setSelectedStateCustome(
+                                                              value!);
+
+                                                      directorateProvider
+                                                          .setSelectedCustomeAgency(
+                                                              null);
+
+                                                      // orderBrokerProvider
+                                                      //     .setSelectedCustomeAgency(
+                                                      //         null);
+                                                    },
+                                                    buttonStyleData:
+                                                        ButtonStyleData(
+                                                      height: 50,
+                                                      width: double.infinity,
+
+                                                      padding: const EdgeInsets
+                                                          .symmetric(
+                                                        horizontal: 9.0,
+                                                      ),
+                                                      decoration: BoxDecoration(
+                                                        borderRadius:
+                                                            BorderRadius
+                                                                .circular(12),
+                                                        border: Border.all(
+                                                          color: Colors.black26,
+                                                        ),
+                                                        color: Colors.white,
+                                                      ),
+                                                      // elevation: 2,
                                                     ),
-                                                    iconSize: 20,
-                                                    iconEnabledColor:
-                                                        AppColor.AccentBlue,
-                                                    iconDisabledColor:
-                                                        Colors.grey,
-                                                  ),
-                                                  dropdownStyleData:
-                                                      DropdownStyleData(
-                                                    decoration: BoxDecoration(
-                                                      borderRadius:
-                                                          BorderRadius.circular(
-                                                              14),
-                                                      color: Colors.white,
+                                                    iconStyleData:
+                                                        const IconStyleData(
+                                                      icon: Icon(
+                                                        Icons
+                                                            .keyboard_arrow_down_sharp,
+                                                      ),
+                                                      iconSize: 20,
+                                                      iconEnabledColor:
+                                                          AppColor.AccentBlue,
+                                                      iconDisabledColor:
+                                                          Colors.grey,
                                                     ),
-                                                    scrollbarTheme:
-                                                        ScrollbarThemeData(
-                                                      radius:
-                                                          const Radius.circular(
-                                                              40),
-                                                      thickness:
-                                                          MaterialStateProperty
-                                                              .all(6),
-                                                      thumbVisibility:
-                                                          MaterialStateProperty
-                                                              .all(true),
+                                                    dropdownStyleData:
+                                                        DropdownStyleData(
+                                                      decoration: BoxDecoration(
+                                                        borderRadius:
+                                                            BorderRadius
+                                                                .circular(14),
+                                                        color: Colors.white,
+                                                      ),
+                                                      scrollbarTheme:
+                                                          ScrollbarThemeData(
+                                                        radius: const Radius
+                                                            .circular(40),
+                                                        thickness:
+                                                            MaterialStateProperty
+                                                                .all(6),
+                                                        thumbVisibility:
+                                                            MaterialStateProperty
+                                                                .all(true),
+                                                      ),
                                                     ),
-                                                  ),
-                                                  menuItemStyleData:
-                                                      MenuItemStyleData(
-                                                    height: 40.h,
+                                                    menuItemStyleData:
+                                                        MenuItemStyleData(
+                                                      height: 40.h,
+                                                    ),
                                                   ),
                                                 ),
                                               ),
-                                            ),
-                                            const SizedBox(
-                                              height: 24,
-                                            ),
-                                            BlocBuilder<AgencyBloc,
-                                                AgencyState>(
-                                              builder: (context, state2) {
-                                                if (state2
-                                                    is AgencyLoadedSuccess) {
-                                                  return DropdownButtonHideUnderline(
-                                                    child: Focus(
-                                                      focusNode: _statenode,
-                                                      onFocusChange:
-                                                          (bool focus) {
-                                                        if (focus) {
-                                                          setSelectedPanel(1);
-                                                        }
-                                                      },
-                                                      child: DropdownButton2<
-                                                          CustomeAgency>(
-                                                        isExpanded: true,
-                                                        hint: Text(
-                                                          AppLocalizations.of(
-                                                                  context)!
-                                                              .translate(
-                                                                  'select_agency'),
-                                                          style: TextStyle(
-                                                            fontSize: 18,
-                                                            color: Theme.of(
-                                                                    context)
-                                                                .hintColor,
-                                                          ),
-                                                        ),
-                                                        items: state2.agencies
-                                                            .map((CustomeAgency
-                                                                    item) =>
-                                                                DropdownMenuItem<
-                                                                    CustomeAgency>(
-                                                                  value: item,
-                                                                  child:
-                                                                      SizedBox(
-                                                                    width: 200,
-                                                                    child: Text(
-                                                                      item.name!,
-                                                                      style:
-                                                                          const TextStyle(
-                                                                        fontSize:
-                                                                            17,
-                                                                      ),
-                                                                    ),
-                                                                  ),
-                                                                ))
-                                                            .toList(),
-                                                        value: orderBrokerProvider
-                                                            .selectedCustomeAgency,
-                                                        onChanged:
-                                                            (CustomeAgency?
-                                                                value) {
-                                                          orderBrokerProvider
-                                                              .setSelectedCustomeAgency(
-                                                                  value);
-                                                          orderBrokerProvider
-                                                              .setselectedStateError(
-                                                                  false);
+                                              const SizedBox(
+                                                height: 24,
+                                              ),
+                                              BlocConsumer<AgencyBloc,
+                                                  AgencyState>(
+                                                listener: (context, state) {
+                                                  if (state
+                                                      is AgencyLoadedSuccess) {
+                                                    directorateProvider
+                                                        .setcustomeAgency(
+                                                            state.agencies);
+                                                  }
+                                                },
+                                                builder: (context, state2) {
+                                                  if (state2
+                                                      is AgencyLoadedSuccess) {
+                                                    return DropdownButtonHideUnderline(
+                                                      child: Focus(
+                                                        focusNode: _statenode,
+                                                        onFocusChange:
+                                                            (bool focus) {
+                                                          if (focus) {
+                                                            setSelectedPanel(1);
+                                                          }
                                                         },
-                                                        buttonStyleData:
-                                                            ButtonStyleData(
-                                                          height: 50,
-                                                          width:
-                                                              double.infinity,
-                                                          padding:
-                                                              const EdgeInsets
-                                                                  .symmetric(
-                                                            horizontal: 9.0,
-                                                          ),
-                                                          decoration:
-                                                              BoxDecoration(
-                                                            borderRadius:
-                                                                BorderRadius
-                                                                    .circular(
-                                                                        12),
-                                                            border: Border.all(
-                                                              color: Colors
-                                                                  .black26,
-                                                            ),
-                                                            color: Colors.white,
-                                                          ),
-                                                          // elevation: 2,
-                                                        ),
-                                                        iconStyleData:
-                                                            const IconStyleData(
-                                                          icon: Icon(
-                                                            Icons
-                                                                .keyboard_arrow_down_sharp,
-                                                          ),
-                                                          iconSize: 20,
-                                                          iconEnabledColor:
-                                                              AppColor
-                                                                  .AccentBlue,
-                                                          iconDisabledColor:
-                                                              Colors.grey,
-                                                        ),
-                                                        dropdownStyleData:
-                                                            DropdownStyleData(
-                                                          decoration:
-                                                              BoxDecoration(
-                                                            borderRadius:
-                                                                BorderRadius
-                                                                    .circular(
-                                                                        14),
-                                                            color: Colors.white,
-                                                          ),
-                                                          scrollbarTheme:
-                                                              ScrollbarThemeData(
-                                                            radius: const Radius
-                                                                .circular(40),
-                                                            thickness:
-                                                                MaterialStateProperty
-                                                                    .all(6),
-                                                            thumbVisibility:
-                                                                MaterialStateProperty
-                                                                    .all(true),
-                                                          ),
-                                                        ),
-                                                        menuItemStyleData:
-                                                            const MenuItemStyleData(
-                                                          height: 40,
-                                                        ),
-                                                      ),
-                                                    ),
-                                                  );
-                                                } else if (state2
-                                                    is AgencyLoadingProgress) {
-                                                  return const Center(
-                                                    child:
-                                                        LinearProgressIndicator(),
-                                                  );
-                                                } else if (state
-                                                    is AgencyLoadedFailed) {
-                                                  return Center(
-                                                    child: GestureDetector(
-                                                      onTap: () {
-                                                        BlocProvider.of<
-                                                                    AgencyBloc>(
-                                                                context)
-                                                            .add(AgenciesLoadEvent(
-                                                                orderBrokerProvider
-                                                                    .selectedStateCustome!
-                                                                    .id!));
-                                                      },
-                                                      child: Row(
-                                                        mainAxisAlignment:
-                                                            MainAxisAlignment
-                                                                .center,
-                                                        children: [
-                                                          Text(
+                                                        child: DropdownButton2<
+                                                            CustomeAgency>(
+                                                          isExpanded: true,
+                                                          hint: Text(
                                                             AppLocalizations.of(
                                                                     context)!
                                                                 .translate(
-                                                                    'list_error'),
-                                                            style:
-                                                                const TextStyle(
-                                                                    color: Colors
-                                                                        .red),
+                                                                    'select_agency'),
+                                                            style: TextStyle(
+                                                              fontSize: 18,
+                                                              color: Theme.of(
+                                                                      context)
+                                                                  .hintColor,
+                                                            ),
                                                           ),
-                                                          const Icon(
-                                                            Icons.refresh,
-                                                            color: Colors.grey,
-                                                          )
-                                                        ],
+                                                          items: directorateProvider
+                                                              .customeAgencies!
+                                                              .map((CustomeAgency
+                                                                      item) =>
+                                                                  DropdownMenuItem<
+                                                                      CustomeAgency>(
+                                                                    value: item,
+                                                                    child:
+                                                                        SizedBox(
+                                                                      width:
+                                                                          200,
+                                                                      child:
+                                                                          Text(
+                                                                        item.name!,
+                                                                        style:
+                                                                            const TextStyle(
+                                                                          fontSize:
+                                                                              17,
+                                                                        ),
+                                                                      ),
+                                                                    ),
+                                                                  ))
+                                                              .toList(),
+                                                          value: directorateProvider
+                                                              .selectedCustomeAgency,
+                                                          onChanged:
+                                                              (CustomeAgency?
+                                                                  value) {
+                                                            directorateProvider
+                                                                .setSelectedCustomeAgency(
+                                                                    value);
+                                                            orderBrokerProvider
+                                                                .setselectedStateError(
+                                                                    false);
+                                                          },
+                                                          buttonStyleData:
+                                                              ButtonStyleData(
+                                                            height: 50,
+                                                            width:
+                                                                double.infinity,
+                                                            padding:
+                                                                const EdgeInsets
+                                                                    .symmetric(
+                                                              horizontal: 9.0,
+                                                            ),
+                                                            decoration:
+                                                                BoxDecoration(
+                                                              borderRadius:
+                                                                  BorderRadius
+                                                                      .circular(
+                                                                          12),
+                                                              border:
+                                                                  Border.all(
+                                                                color: Colors
+                                                                    .black26,
+                                                              ),
+                                                              color:
+                                                                  Colors.white,
+                                                            ),
+                                                            // elevation: 2,
+                                                          ),
+                                                          iconStyleData:
+                                                              const IconStyleData(
+                                                            icon: Icon(
+                                                              Icons
+                                                                  .keyboard_arrow_down_sharp,
+                                                            ),
+                                                            iconSize: 20,
+                                                            iconEnabledColor:
+                                                                AppColor
+                                                                    .AccentBlue,
+                                                            iconDisabledColor:
+                                                                Colors.grey,
+                                                          ),
+                                                          dropdownStyleData:
+                                                              DropdownStyleData(
+                                                            decoration:
+                                                                BoxDecoration(
+                                                              borderRadius:
+                                                                  BorderRadius
+                                                                      .circular(
+                                                                          14),
+                                                              color:
+                                                                  Colors.white,
+                                                            ),
+                                                            scrollbarTheme:
+                                                                ScrollbarThemeData(
+                                                              radius:
+                                                                  const Radius
+                                                                      .circular(
+                                                                      40),
+                                                              thickness:
+                                                                  MaterialStateProperty
+                                                                      .all(6),
+                                                              thumbVisibility:
+                                                                  MaterialStateProperty
+                                                                      .all(
+                                                                          true),
+                                                            ),
+                                                          ),
+                                                          menuItemStyleData:
+                                                              const MenuItemStyleData(
+                                                            height: 40,
+                                                          ),
+                                                        ),
                                                       ),
-                                                    ),
-                                                  );
-                                                } else {
-                                                  return Container();
-                                                }
+                                                    );
+                                                  } else if (state2
+                                                      is AgencyLoadingProgress) {
+                                                    return const Center(
+                                                      child:
+                                                          LinearProgressIndicator(),
+                                                    );
+                                                  } else if (state
+                                                      is AgencyLoadedFailed) {
+                                                    return Center(
+                                                      child: GestureDetector(
+                                                        onTap: () {
+                                                          BlocProvider.of<
+                                                                      AgencyBloc>(
+                                                                  context)
+                                                              .add(AgenciesLoadEvent(
+                                                                  orderBrokerProvider
+                                                                      .selectedStateCustome!
+                                                                      .id!));
+                                                        },
+                                                        child: Row(
+                                                          mainAxisAlignment:
+                                                              MainAxisAlignment
+                                                                  .center,
+                                                          children: [
+                                                            Text(
+                                                              AppLocalizations.of(
+                                                                      context)!
+                                                                  .translate(
+                                                                      'list_error'),
+                                                              style: const TextStyle(
+                                                                  color: Colors
+                                                                      .red),
+                                                            ),
+                                                            const Icon(
+                                                              Icons.refresh,
+                                                              color:
+                                                                  Colors.grey,
+                                                            )
+                                                          ],
+                                                        ),
+                                                      ),
+                                                    );
+                                                  } else {
+                                                    return Container();
+                                                  }
+                                                },
+                                              ),
+                                            ],
+                                          );
+                                        } else if (state
+                                            is StateCustomeLoadedFailed) {
+                                          return Center(
+                                            child: GestureDetector(
+                                              onTap: () {
+                                                BlocProvider.of<
+                                                            StateCustomeBloc>(
+                                                        context)
+                                                    .add(
+                                                        StateCustomeLoadEvent());
                                               },
+                                              child: Row(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment.center,
+                                                children: [
+                                                  Text(
+                                                    AppLocalizations.of(
+                                                            context)!
+                                                        .translate(
+                                                            'list_error'),
+                                                    style: const TextStyle(
+                                                        color: Colors.red),
+                                                  ),
+                                                  const Icon(
+                                                    Icons.refresh,
+                                                    color: Colors.grey,
+                                                  )
+                                                ],
+                                              ),
                                             ),
-                                          ],
-                                        );
-                                      } else if (state
-                                          is StateCustomeLoadedFailed) {
-                                        return Center(
-                                          child: GestureDetector(
-                                            onTap: () {
-                                              BlocProvider.of<StateCustomeBloc>(
-                                                      context)
-                                                  .add(StateCustomeLoadEvent());
-                                            },
-                                            child: Row(
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment.center,
-                                              children: [
-                                                Text(
-                                                  AppLocalizations.of(context)!
-                                                      .translate('list_error'),
-                                                  style: const TextStyle(
-                                                      color: Colors.red),
-                                                ),
-                                                const Icon(
-                                                  Icons.refresh,
-                                                  color: Colors.grey,
-                                                )
-                                              ],
-                                            ),
-                                          ),
-                                        );
-                                      } else {
-                                        return const Center(
-                                          child: LinearProgressIndicator(),
-                                        );
-                                      }
-                                    },
-                                  ),
+                                          );
+                                        } else {
+                                          return const Center(
+                                            child: LinearProgressIndicator(),
+                                          );
+                                        }
+                                      },
+                                    );
+                                  }),
                                   const SizedBox(
                                     height: 7,
                                   ),
@@ -3094,10 +3135,10 @@ class _StepperMultiOrderBrokerScreenState
                                                       if (orderBrokerProvider
                                                           .selectedRadioTile
                                                           .isNotEmpty) {
-                                                        if (orderBrokerProvider
+                                                        if (directorate_provider!
                                                                     .selectedStateCustome !=
                                                                 null &&
-                                                            orderBrokerProvider
+                                                            directorate_provider!
                                                                     .selectedCustomeAgency !=
                                                                 null) {
                                                           _ordercalformkey

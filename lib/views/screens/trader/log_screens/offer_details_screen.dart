@@ -646,6 +646,7 @@ class _OfferDetailsScreenState extends State<OfferDetailsScreen>
                                                   broker_offerProvider!.costs,
                                             ),
                                           ));
+                                      objects = [];
                                       for (var i = 0;
                                           i <
                                               broker_offerProvider!
@@ -813,8 +814,7 @@ class _OfferDetailsScreenState extends State<OfferDetailsScreen>
                                   trailing: SizedBox(
                                     height: 45,
                                     width: 45,
-                                    child: Image.asset(
-                                        "assets/icons/radar.gif.mp4",
+                                    child: Image.asset("assets/icons/radar.gif",
                                         gaplessPlayback: true,
                                         fit: BoxFit.fill),
                                   ),

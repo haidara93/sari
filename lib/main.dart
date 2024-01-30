@@ -43,6 +43,7 @@ import 'package:custome_mobile/business_logic/cubit/stop_scroll_cubit.dart';
 import 'package:custome_mobile/data/providers/add_attachment_provider.dart';
 import 'package:custome_mobile/data/providers/broker_offer_provider.dart';
 import 'package:custome_mobile/data/providers/calculator_provider.dart';
+import 'package:custome_mobile/data/providers/directorate_provider.dart';
 import 'package:custome_mobile/data/providers/fee_add_provider.dart';
 import 'package:custome_mobile/data/providers/notification_provider.dart';
 import 'package:custome_mobile/data/providers/order_broker_provider.dart';
@@ -315,11 +316,21 @@ class MyApp extends StatelessWidget {
                         create: (_) => TraderOfferProvider()),
                     ChangeNotifierProvider(
                         create: (_) => BrokerOfferProvider()),
+                    ChangeNotifierProvider(
+                        create: (_) => DirectorateProvider()),
                     ChangeNotifierProvider(create: (_) => FeeAddProvider()),
                   ],
                   child: BlocBuilder<LocaleCubit, LocaleState>(
                     buildWhen: (previous, current) => previous != current,
                     builder: (context, localeState) {
+                      BlocProvider.of<NotificationBloc>(context)
+                          .add(NotificationLoadEvent());
+                      BlocProvider.of<AttachmentTypeBloc>(context)
+                          .add(AttachmentTypeLoadEvent());
+                      BlocProvider.of<SectionBloc>(context)
+                          .add(SectionLoadEvent());
+                      BlocProvider.of<FlagsBloc>(context).add(FlagsLoadEvent());
+
                       return MaterialApp(
                         title: 'SARI',
                         debugShowCheckedModeBanner: false,
