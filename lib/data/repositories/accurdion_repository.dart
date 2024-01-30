@@ -175,6 +175,7 @@ class AccordionRepository {
           chapterSearch.add(ChapterSearch.fromJson(element['data'][0]));
         }
       }
+      print("chapter");
       if (result['Sub_Chapter'] != null) {
         for (var element in result['Sub_Chapter']) {
           subchapterSearch.add(SubChapterSearch.fromJson(element['data'][0]));
@@ -185,6 +186,7 @@ class AccordionRepository {
           feeSearch.add(FeeSearch.fromJson(element['data'][0]));
         }
       }
+      print("fee");
 
       for (var element in chapterSearch) {
         if ((sections.singleWhere((it) => it!.id == element.idParent1!.id,
@@ -277,8 +279,10 @@ class AccordionRepository {
       bool chexist = false;
       bool subchexist = false;
       bool feeexist = false;
-
+      print("fee.idParent3!.idParent2!.idParent1!.id");
+      print(feeSearch[0].idParent3!.idParent2!.idParent1!.id);
       for (var fee in feeSearch) {
+        print(fee.idParent3!.idParent2!.idParent1!.id);
         if ((sections.singleWhere(
                 (it) => it!.id == fee.idParent3!.idParent2!.idParent1!.id,
                 orElse: () => null)) !=

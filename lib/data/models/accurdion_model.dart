@@ -635,8 +635,8 @@ class FeeSearch {
     restrictionExport = json['restriction_export'] ?? "";
     review = json['review'] ?? "";
     reviewValue = json['review_value'] ?? "";
+    export = <Export>[];
     if (json['export_fees'] != []) {
-      export = <Export>[];
       json['export_fees'].forEach((v) {
         export!.add(new Export.fromJson(v));
       });
