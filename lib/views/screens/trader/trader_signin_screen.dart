@@ -259,7 +259,7 @@ class _TraderSigninScreenState extends State<TraderSigninScreen> {
                                                 backgroundColor:
                                                     AppColor.deepYellow,
                                                 content: const Text(
-                                                    'تم تسجيل الدخول بنجاح! أهلا بك.!'),
+                                                    'log in successfully, welcome.!'),
                                                 duration:
                                                     const Duration(seconds: 3),
                                               ),
@@ -281,7 +281,7 @@ class _TraderSigninScreenState extends State<TraderSigninScreen> {
                                                 backgroundColor:
                                                     AppColor.deepYellow,
                                                 content: const Text(
-                                                    'تم تسجيل الدخول بنجاح! أهلا بك.!'),
+                                                    'log in successfully, welcome.!'),
                                                 duration:
                                                     const Duration(seconds: 3),
                                               ),
@@ -301,7 +301,7 @@ class _TraderSigninScreenState extends State<TraderSigninScreen> {
                                                 backgroundColor:
                                                     Colors.red[300],
                                                 content: const Text(
-                                                    'لا يوجد حساب فعال وفقا للبيانات المدخلة!'),
+                                                    'there is no vaild account match these input!'),
                                                 duration:
                                                     const Duration(seconds: 3),
                                               ),
