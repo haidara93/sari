@@ -3055,91 +3055,91 @@ class _TraderHomeScreenState extends State<TraderHomeScreen>
                       SizedBox(
                         height: 10.h,
                       ),
-                      Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: Focus(
-                          focusNode: _statenode,
-                          onFocusChange: (bool focus) {
-                            if (!focus) {
-                              FocusManager.instance.primaryFocus?.unfocus();
-                              BlocProvider.of<BottomNavBarCubit>(context)
-                                  .emitShow();
-                            }
-                          },
-                          child: BlocListener<SearchSectionBloc,
-                              SearchSectionState>(
-                            listener: (context, state) {
-                              if (state is SearchSectionLoadedSuccess) {
-                                // print(jsonEncode(state.sections));
-                              }
-                              if (state is SearchSectionLoadedFailed) {
-                                print(state.error);
-                              }
-                            },
-                            child: TextFormField(
-                              controller: _searchController,
-                              onTap: () {
-                                BlocProvider.of<BottomNavBarCubit>(context)
-                                    .emitHide();
-                                _searchController.selection = TextSelection(
-                                    baseOffset: 0,
-                                    extentOffset:
-                                        _searchController.value.text.length);
-                              },
-                              scrollPadding: EdgeInsets.only(
-                                  bottom:
-                                      MediaQuery.of(context).viewInsets.bottom +
-                                          50),
-                              decoration: InputDecoration(
-                                labelText: AppLocalizations.of(context)!
-                                    .translate('search'),
-                                suffixIcon: InkWell(
-                                  onTap: () {
-                                    FocusManager.instance.primaryFocus
-                                        ?.unfocus();
-                                    BlocProvider.of<BottomNavBarCubit>(context)
-                                        .emitShow();
+                      // Padding(
+                      //   padding: const EdgeInsets.all(8.0),
+                      //   child: Focus(
+                      //     focusNode: _statenode,
+                      //     onFocusChange: (bool focus) {
+                      //       if (!focus) {
+                      //         FocusManager.instance.primaryFocus?.unfocus();
+                      //         BlocProvider.of<BottomNavBarCubit>(context)
+                      //             .emitShow();
+                      //       }
+                      //     },
+                      //     child: BlocListener<SearchSectionBloc,
+                      //         SearchSectionState>(
+                      //       listener: (context, state) {
+                      //         if (state is SearchSectionLoadedSuccess) {
+                      //           // print(jsonEncode(state.sections));
+                      //         }
+                      //         if (state is SearchSectionLoadedFailed) {
+                      //           print(state.error);
+                      //         }
+                      //       },
+                      //       child: TextFormField(
+                      //         controller: _searchController,
+                      //         onTap: () {
+                      //           BlocProvider.of<BottomNavBarCubit>(context)
+                      //               .emitHide();
+                      //           _searchController.selection = TextSelection(
+                      //               baseOffset: 0,
+                      //               extentOffset:
+                      //                   _searchController.value.text.length);
+                      //         },
+                      //         scrollPadding: EdgeInsets.only(
+                      //             bottom:
+                      //                 MediaQuery.of(context).viewInsets.bottom +
+                      //                     50),
+                      //         decoration: InputDecoration(
+                      //           labelText: AppLocalizations.of(context)!
+                      //               .translate('search'),
+                      //           suffixIcon: InkWell(
+                      //             onTap: () {
+                      //               FocusManager.instance.primaryFocus
+                      //                   ?.unfocus();
+                      //               BlocProvider.of<BottomNavBarCubit>(context)
+                      //                   .emitShow();
 
-                                    if (_searchController.text.isNotEmpty) {
-                                      BlocProvider.of<SearchSectionBloc>(
-                                              context)
-                                          .add(SearchSectionLoadEvent(
-                                              _searchController.text));
-                                      setState(() {
-                                        isSearch = true;
-                                      });
-                                    }
-                                  },
-                                  child: const Icon(
-                                    Icons.search,
-                                    color: Colors.grey,
-                                  ),
-                                ),
-                              ),
-                              onChanged: (value) {
-                                if (value.isEmpty) {
-                                  setState(() {
-                                    isSearch = false;
-                                  });
-                                }
-                              },
-                              onFieldSubmitted: (value) {
-                                FocusManager.instance.primaryFocus?.unfocus();
-                                BlocProvider.of<BottomNavBarCubit>(context)
-                                    .emitShow();
-                                _searchController.text = value;
-                                if (value.isNotEmpty) {
-                                  BlocProvider.of<SearchSectionBloc>(context)
-                                      .add(SearchSectionLoadEvent(value));
-                                  setState(() {
-                                    isSearch = true;
-                                  });
-                                }
-                              },
-                            ),
-                          ),
-                        ),
-                      ),
+                      //               if (_searchController.text.isNotEmpty) {
+                      //                 BlocProvider.of<SearchSectionBloc>(
+                      //                         context)
+                      //                     .add(SearchSectionLoadEvent(
+                      //                         _searchController.text));
+                      //                 setState(() {
+                      //                   isSearch = true;
+                      //                 });
+                      //               }
+                      //             },
+                      //             child: const Icon(
+                      //               Icons.search,
+                      //               color: Colors.grey,
+                      //             ),
+                      //           ),
+                      //         ),
+                      //         onChanged: (value) {
+                      //           if (value.isEmpty) {
+                      //             setState(() {
+                      //               isSearch = false;
+                      //             });
+                      //           }
+                      //         },
+                      //         onFieldSubmitted: (value) {
+                      //           FocusManager.instance.primaryFocus?.unfocus();
+                      //           BlocProvider.of<BottomNavBarCubit>(context)
+                      //               .emitShow();
+                      //           _searchController.text = value;
+                      //           if (value.isNotEmpty) {
+                      //             BlocProvider.of<SearchSectionBloc>(context)
+                      //                 .add(SearchSectionLoadEvent(value));
+                      //             setState(() {
+                      //               isSearch = true;
+                      //             });
+                      //           }
+                      //         },
+                      //       ),
+                      //     ),
+                      //   ),
+                      // ),
                       isSearch
                           ? BlocBuilder<SearchSectionBloc, SearchSectionState>(
                               builder: (context, state) {
