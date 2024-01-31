@@ -474,7 +474,7 @@ class _SelectBrokerProfileScreenState extends State<SelectBrokerProfileScreen> {
                                           ),
                                         ),
                                         const SizedBox(
-                                          height: 50,
+                                          height: 80,
                                         ),
                                       ],
                                     ),

@@ -3038,9 +3038,10 @@ class _StepperMultiOrderBrokerScreenState
                                                                     .translate(
                                                                         'fees_details'),
                                                                 style:
-                                                                    const TextStyle(
+                                                                    TextStyle(
                                                                   color: Colors
-                                                                      .white,
+                                                                          .blue[
+                                                                      200],
                                                                   fontWeight:
                                                                       FontWeight
                                                                           .bold,
