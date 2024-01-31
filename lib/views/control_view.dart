@@ -30,14 +30,27 @@ class ControlView extends StatelessWidget {
               child: Text("no internet connection"),
             );
           } else if (state is InternetConnected) {
-            BlocProvider.of<BottomNavBarCubit>(context).emitShow();
-
             return BlocBuilder<AuthBloc, AuthState>(
               builder: (context, state) {
                 if (state is AuthTraderSuccessState) {
+                  BlocProvider.of<BottomNavBarCubit>(context).emitShow();
+                  BlocProvider.of<NotificationBloc>(context)
+                      .add(NotificationLoadEvent());
+                  BlocProvider.of<AttachmentTypeBloc>(context)
+                      .add(AttachmentTypeLoadEvent());
+                  BlocProvider.of<SectionBloc>(context).add(SectionLoadEvent());
+                  BlocProvider.of<FlagsBloc>(context).add(FlagsLoadEvent());
                   return const TraderHomeScreen();
                 }
                 if (state is AuthBrokerSuccessState) {
+                  BlocProvider.of<BottomNavBarCubit>(context).emitShow();
+                  BlocProvider.of<NotificationBloc>(context)
+                      .add(NotificationLoadEvent());
+                  BlocProvider.of<AttachmentTypeBloc>(context)
+                      .add(AttachmentTypeLoadEvent());
+                  BlocProvider.of<SectionBloc>(context).add(SectionLoadEvent());
+                  BlocProvider.of<FlagsBloc>(context).add(FlagsLoadEvent());
+
                   return const BrokerHomeScreen();
                 } else if (state is AuthInitial) {
                   BlocProvider.of<AuthBloc>(context).add(AuthCheckRequested());

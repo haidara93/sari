@@ -323,14 +323,6 @@ class MyApp extends StatelessWidget {
                   child: BlocBuilder<LocaleCubit, LocaleState>(
                     buildWhen: (previous, current) => previous != current,
                     builder: (context, localeState) {
-                      BlocProvider.of<NotificationBloc>(context)
-                          .add(NotificationLoadEvent());
-                      BlocProvider.of<AttachmentTypeBloc>(context)
-                          .add(AttachmentTypeLoadEvent());
-                      BlocProvider.of<SectionBloc>(context)
-                          .add(SectionLoadEvent());
-                      BlocProvider.of<FlagsBloc>(context).add(FlagsLoadEvent());
-
                       return MaterialApp(
                         title: 'SARI',
                         debugShowCheckedModeBanner: false,
