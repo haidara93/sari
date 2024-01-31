@@ -59,6 +59,7 @@ class NotificationServices {
       RemoteMessage message) async {
     // you need to initialize firebase first
     await Firebase.initializeApp(
+      name: "Sari",
       options: DefaultFirebaseOptions.currentPlatform,
     );
     if (notificationProvider != null) {
