@@ -19,6 +19,7 @@ import 'package:custome_mobile/views/screens/trader/trader_attachement_screen.da
 import 'package:custome_mobile/views/screens/trader/trader_calculator_result_screen.dart';
 import 'package:custome_mobile/views/widgets/custom_botton.dart';
 import 'package:custome_mobile/views/widgets/highlight_text.dart';
+import 'package:custome_mobile/views/widgets/loading_indicator.dart';
 import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:ensure_visible_when_focused/ensure_visible_when_focused.dart';
 import 'package:flutter/material.dart';
@@ -1242,8 +1243,7 @@ class _StepperOrderBrokerScreenState extends State<StepperOrderBrokerScreen> {
                                             return Container(
                                               color: Colors.white,
                                               child: const Center(
-                                                child:
-                                                    CircularProgressIndicator(),
+                                                child: LoadingIndicator(),
                                               ),
                                             );
                                           },
@@ -2287,7 +2287,7 @@ class _StepperOrderBrokerScreenState extends State<StepperOrderBrokerScreen> {
                                                   width: 250.w,
                                                   child: const Center(
                                                       child:
-                                                          CircularProgressIndicator())),
+                                                          LoadingIndicator())),
                                               // color: AppColor.deepYellow,
                                               onTap: () {});
                                         }

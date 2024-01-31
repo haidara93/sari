@@ -1,5 +1,7 @@
 // ignore_for_file: non_constant_identifier_names
 
+import 'dart:convert';
+
 class Section {
   String? id;
   String? label;
@@ -613,7 +615,7 @@ class FeeSearch {
   List<StoneFarming>? stoneFarming;
   List<ImportFee>? importFees;
   List<Finance>? finance;
-  List<Fees>? fees;
+  Fees? fees;
   IdParent3? idParent3;
 
   FeeSearch(
@@ -659,12 +661,13 @@ class FeeSearch {
         finance!.add(new Finance.fromJson(v));
       });
     }
-    if (json['fees'] != []) {
-      fees = <Fees>[];
-      json['fees'].forEach((v) {
-        fees!.add(new Fees.fromJson(v));
-      });
-    }
+    print(jsonEncode(json['fees']));
+    fees = Fees.fromJson(json['fees']);
+    // if ( != []) {
+    //   json['fees'].forEach((v) {
+    //     fees!.add(new Fees.fromJson(v));
+    //   });
+    // }
     idParent3 = json['id_parent_3'] != null
         ? new IdParent3.fromJson(json['id_parent_3'])
         : null;
@@ -673,15 +676,118 @@ class FeeSearch {
 
 class Fees {
   String? id;
-  double? price;
+  String? label;
+  String? export1;
   double? fee;
+  double? spendingFee;
+  double? supportFee;
+  double? protectionFee;
+  double? naturalFee;
+  double? taxFee;
+  double? localFee;
+  double? gold;
+  double? paper;
+  double? brid;
+  double? price;
+  String? unit;
+  String? unitEn;
+  double? importFee;
+  String? placeholder;
+  String? placeholderEn;
+  String? decision;
+  String? decisionEn;
+  int? dolar;
+  int? totalTaxes;
+  // List<Null>? feesGroup;
 
-  Fees({this.id, this.price, this.fee});
+  Fees({
+    this.id,
+    this.label,
+    this.export1,
+    this.fee,
+    this.spendingFee,
+    this.supportFee,
+    this.protectionFee,
+    this.naturalFee,
+    this.taxFee,
+    this.localFee,
+    this.gold,
+    this.paper,
+    this.brid,
+    this.price,
+    this.unit,
+    this.unitEn,
+    this.importFee,
+    this.placeholder,
+    this.placeholderEn,
+    this.decision,
+    this.decisionEn,
+    this.dolar,
+    this.totalTaxes,
+    // this.feesGroup,
+  });
 
   Fees.fromJson(Map<String, dynamic> json) {
     id = json['id'];
-    price = json['price'] ?? 0.0;
-    fee = json['fee'] ?? 0.0;
+    label = json['label'];
+    export1 = json['export1'];
+    fee = json['fee'];
+    spendingFee = json['spending_fee'];
+    supportFee = json['support_fee'];
+    protectionFee = json['protection_fee'];
+    naturalFee = json['natural_fee'];
+    taxFee = json['tax_fee'];
+    localFee = json['local_fee'];
+    gold = json['gold'];
+    paper = json['paper'];
+    brid = json['brid'];
+    price = json['price'];
+    unit = json['unit'];
+    unitEn = json['unit_en'];
+    importFee = json['Import_fee'];
+    placeholder = json['placeholder'];
+    placeholderEn = json['placeholder_en'];
+    decision = json['decision'];
+    decisionEn = json['decision_en'];
+    dolar = json['dolar'];
+    totalTaxes = json['total_taxes'];
+    // if (json['feesGroup'] != null) {
+    //   feesGroup = <Null>[];
+    //   json['feesGroup'].forEach((v) {
+    //     feesGroup!.add(new Null.fromJson(v));
+    //   });
+    // }
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['id'] = this.id;
+    data['label'] = this.label;
+    data['export1'] = this.export1;
+    data['fee'] = this.fee;
+    data['spending_fee'] = this.spendingFee;
+    data['support_fee'] = this.supportFee;
+    data['protection_fee'] = this.protectionFee;
+    data['natural_fee'] = this.naturalFee;
+    data['tax_fee'] = this.taxFee;
+    data['local_fee'] = this.localFee;
+    data['gold'] = this.gold;
+    data['paper'] = this.paper;
+    data['brid'] = this.brid;
+    data['price'] = this.price;
+    data['unit'] = this.unit;
+    data['unit_en'] = this.unitEn;
+    data['Import_fee'] = this.importFee;
+    data['placeholder'] = this.placeholder;
+    data['placeholder_en'] = this.placeholderEn;
+    data['decision'] = this.decision;
+    data['decision_en'] = this.decisionEn;
+    data['dolar'] = this.dolar;
+    data['total_taxes'] = this.totalTaxes;
+    // if (this.feesGroup != null) {
+    //   data['feesGroup'] = this.feesGroup!.map((v) => v.toJson()).toList();
+    // }
+    return data;
   }
 }
 

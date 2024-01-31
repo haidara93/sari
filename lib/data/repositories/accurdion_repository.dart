@@ -175,12 +175,12 @@ class AccordionRepository {
           chapterSearch.add(ChapterSearch.fromJson(element['data'][0]));
         }
       }
-      print("chapter");
       if (result['Sub_Chapter'] != null) {
         for (var element in result['Sub_Chapter']) {
           subchapterSearch.add(SubChapterSearch.fromJson(element['data'][0]));
         }
       }
+      print("chapter");
       if (result['Fee'] != null) {
         for (var element in result['Fee']) {
           feeSearch.add(FeeSearch.fromJson(element['data'][0]));
@@ -280,116 +280,42 @@ class AccordionRepository {
       bool subchexist = false;
       bool feeexist = false;
       print("fee.idParent3!.idParent2!.idParent1!.id");
-      print(feeSearch[0].idParent3!.idParent2!.idParent1!.id);
-      for (var fee in feeSearch) {
-        print(fee.idParent3!.idParent2!.idParent1!.id);
-        if ((sections.singleWhere(
-                (it) => it!.id == fee.idParent3!.idParent2!.idParent1!.id,
-                orElse: () => null)) !=
-            null) {
-          var feesection = sections.singleWhere(
-              (it) => it!.id == fee.idParent3!.idParent2!.idParent1!.id,
-              orElse: () => null);
-          var chapterSetlist = feesection!.chapterSet!;
-          for (var ch in chapterSetlist) {
-            if ((feesection.chapterSet!.singleWhere(
-                    (it) => it!.id == fee.idParent3!.idParent2!.id,
-                    orElse: () => null)) !=
-                null) {
-              var feechapter = feesection.chapterSet!.singleWhere(
-                  (it) => it!.id == fee.idParent3!.idParent2!.id,
-                  orElse: () => null);
-              var subChapterSetlist = feechapter!.subChapterSet!;
-              for (var subch in subChapterSetlist.toList()) {
-                if ((feechapter.subChapterSet!.singleWhere(
-                        (it) => it!.id == fee.idParent3!.id,
-                        orElse: () => null)) !=
-                    null) {
-                  var feesubchapter = feechapter.subChapterSet!.singleWhere(
-                      (it) => it!.id == fee.idParent3!.id,
-                      orElse: () => null);
-                  feesubchapter!.feeSet ??= [];
-                  feesubchapter.feeSet!.add(
-                    FeeSet(
-                      id: fee.id,
-                      label: fee.label,
-                      export: fee.export,
-                      finance: fee.finance,
-                      importFees: fee.importFees,
-                      restrictionExport: fee.restrictionExport,
-                      review: fee.review,
-                      stoneFarming: fee.stoneFarming,
-                      reviewValue: fee.reviewValue,
-                    ),
-                  );
-                } else {
-                  var newSubChapter = SubChapterSet(
-                    id: fee.idParent3!.id,
-                    label: fee.idParent3!.label,
-                    feeSet: [
-                      FeeSet(
-                        id: fee.id,
-                        label: fee.label,
-                        export: fee.export,
-                        finance: fee.finance,
-                        importFees: fee.importFees,
-                        restrictionExport: fee.restrictionExport,
-                        review: fee.review,
-                        stoneFarming: fee.stoneFarming,
-                        reviewValue: fee.reviewValue,
-                      ),
-                    ],
-                  );
-                  feechapter!.subChapterSet = [
-                    ...feechapter.subChapterSet!,
-                    newSubChapter
-                  ];
-                }
-              }
-            } else {
-              var newChapter = ChapterSet(
-                id: fee.idParent3!.idParent2!.id,
-                label: fee.idParent3!.idParent2!.label,
-                subChapterSet: [
-                  SubChapterSet(
-                    id: fee.idParent3!.id,
-                    label: fee.idParent3!.label,
-                    feeSet: [
-                      FeeSet(
-                        id: fee.id,
-                        label: fee.label,
-                        export: fee.export,
-                        finance: fee.finance,
-                        importFees: fee.importFees,
-                        restrictionExport: fee.restrictionExport,
-                        review: fee.review,
-                        stoneFarming: fee.stoneFarming,
-                        reviewValue: fee.reviewValue,
-                      ),
-                    ],
-                  )
-                ],
-              );
-
-              feesection!.chapterSet = [...feesection.chapterSet!, newChapter];
-            }
+      print(feeSearch.length);
+      int count = 0;
+      try {
+        for (var fee in feeSearch) {
+          count++;
+          if (count > 20) {
+            break;
           }
-        } else {
-          sections.add(Section(
-            id: fee.idParent3!.idParent2!.idParent1!.id!,
-            label: fee.idParent3!.idParent2!.idParent1!.label,
-            start: fee.idParent3!.idParent2!.idParent1!.start,
-            end: fee.idParent3!.idParent2!.idParent1!.end,
-            image: fee.idParent3!.idParent2!.idParent1!.image,
-            chapterSet: [
-              ChapterSet(
-                id: fee.idParent3!.idParent2!.id,
-                label: fee.idParent3!.idParent2!.label,
-                subChapterSet: [
-                  SubChapterSet(
-                    id: fee.idParent3!.id,
-                    label: fee.idParent3!.label,
-                    feeSet: [
+          print(fee.idParent3!.idParent2!.idParent1!.id);
+          if ((sections.singleWhere(
+                  (it) => it!.id == fee.idParent3!.idParent2!.idParent1!.id,
+                  orElse: () => null)) !=
+              null) {
+            var feesection = sections.singleWhere(
+                (it) => it!.id == fee.idParent3!.idParent2!.idParent1!.id,
+                orElse: () => null);
+            var chapterSetlist = feesection!.chapterSet!;
+            for (var ch in chapterSetlist) {
+              if ((feesection.chapterSet!.singleWhere(
+                      (it) => it!.id == fee.idParent3!.idParent2!.id,
+                      orElse: () => null)) !=
+                  null) {
+                var feechapter = feesection.chapterSet!.singleWhere(
+                    (it) => it!.id == fee.idParent3!.idParent2!.id,
+                    orElse: () => null);
+                var subChapterSetlist = feechapter!.subChapterSet!;
+                for (var subch in subChapterSetlist.toList()) {
+                  if ((feechapter.subChapterSet!.singleWhere(
+                          (it) => it!.id == fee.idParent3!.id,
+                          orElse: () => null)) !=
+                      null) {
+                    var feesubchapter = feechapter.subChapterSet!.singleWhere(
+                        (it) => it!.id == fee.idParent3!.id,
+                        orElse: () => null);
+                    feesubchapter!.feeSet ??= [];
+                    feesubchapter.feeSet!.add(
                       FeeSet(
                         id: fee.id,
                         label: fee.label,
@@ -401,13 +327,99 @@ class AccordionRepository {
                         stoneFarming: fee.stoneFarming,
                         reviewValue: fee.reviewValue,
                       ),
-                    ],
-                  ),
-                ],
-              ),
-            ],
-          ));
+                    );
+                  } else {
+                    var newSubChapter = SubChapterSet(
+                      id: fee.idParent3!.id,
+                      label: fee.idParent3!.label,
+                      feeSet: [
+                        FeeSet(
+                          id: fee.id,
+                          label: fee.label,
+                          export: fee.export,
+                          finance: fee.finance,
+                          importFees: fee.importFees,
+                          restrictionExport: fee.restrictionExport,
+                          review: fee.review,
+                          stoneFarming: fee.stoneFarming,
+                          reviewValue: fee.reviewValue,
+                        ),
+                      ],
+                    );
+                    feechapter!.subChapterSet = [
+                      ...feechapter.subChapterSet!,
+                      newSubChapter
+                    ];
+                  }
+                }
+              } else {
+                var newChapter = ChapterSet(
+                  id: fee.idParent3!.idParent2!.id,
+                  label: fee.idParent3!.idParent2!.label,
+                  subChapterSet: [
+                    SubChapterSet(
+                      id: fee.idParent3!.id,
+                      label: fee.idParent3!.label,
+                      feeSet: [
+                        FeeSet(
+                          id: fee.id,
+                          label: fee.label,
+                          export: fee.export,
+                          finance: fee.finance,
+                          importFees: fee.importFees,
+                          restrictionExport: fee.restrictionExport,
+                          review: fee.review,
+                          stoneFarming: fee.stoneFarming,
+                          reviewValue: fee.reviewValue,
+                        ),
+                      ],
+                    )
+                  ],
+                );
+
+                feesection!.chapterSet = [
+                  ...feesection.chapterSet!,
+                  newChapter
+                ];
+              }
+            }
+          } else {
+            sections.add(Section(
+              id: fee.idParent3!.idParent2!.idParent1!.id!,
+              label: fee.idParent3!.idParent2!.idParent1!.label,
+              start: fee.idParent3!.idParent2!.idParent1!.start,
+              end: fee.idParent3!.idParent2!.idParent1!.end,
+              image: fee.idParent3!.idParent2!.idParent1!.image,
+              chapterSet: [
+                ChapterSet(
+                  id: fee.idParent3!.idParent2!.id,
+                  label: fee.idParent3!.idParent2!.label,
+                  subChapterSet: [
+                    SubChapterSet(
+                      id: fee.idParent3!.id,
+                      label: fee.idParent3!.label,
+                      feeSet: [
+                        FeeSet(
+                          id: fee.id,
+                          label: fee.label,
+                          export: fee.export,
+                          finance: fee.finance,
+                          importFees: fee.importFees,
+                          restrictionExport: fee.restrictionExport,
+                          review: fee.review,
+                          stoneFarming: fee.stoneFarming,
+                          reviewValue: fee.reviewValue,
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+              ],
+            ));
+          }
         }
+      } catch (e) {
+        print(e);
       }
     }
 

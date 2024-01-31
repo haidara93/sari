@@ -251,7 +251,7 @@
 //                           return Container(
 //                             color: Colors.white,
 //                             child: const Center(
-//                               child: CircularProgressIndicator(),
+//                               child: LoadingIndicator(),
 //                             ),
 //                           );
 //                         },
@@ -1078,7 +1078,7 @@
 //                           return Container(
 //                             color: Colors.white,
 //                             child: const Center(
-//                               child: CircularProgressIndicator(),
+//                               child: LoadingIndicator(),
 //                             ),
 //                           );
 //                         },
@@ -1940,7 +1940,7 @@
 //                                                                   width: 250.w,
 //                                                                   child: const Center(
 //                                                                       child:
-//                                                                           CircularProgressIndicator())));
+//                                                                           LoadingIndicator())));
 //                                                         }
 //                                                         if (state
 //                                                             is CalculateMultiResultFailed) {
@@ -2160,7 +2160,7 @@
 //                         return Container(
 //                           color: Colors.white54,
 //                           child:
-//                               const Center(child: CircularProgressIndicator()),
+//                               const Center(child: LoadingIndicator()),
 //                         );
 //                       } else {
 //                         return const SizedBox.shrink();

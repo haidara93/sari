@@ -8,6 +8,7 @@ import 'package:custome_mobile/helpers/color_constants.dart';
 import 'package:custome_mobile/views/control_view.dart';
 import 'package:custome_mobile/views/screens/trader/trader_confirm_screen.dart';
 import 'package:custome_mobile/views/widgets/custom_botton.dart';
+import 'package:custome_mobile/views/widgets/loading_indicator.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -59,7 +60,7 @@ class _TraderSigninScreenState extends State<TraderSigninScreen> {
               builder: (context, state) {
                 if (state is InternetLoading) {
                   return const Center(
-                    child: CircularProgressIndicator(),
+                    child: LoadingIndicator(),
                   );
                 } else if (state is InternetDisConnected) {
                   return const Center(
@@ -337,7 +338,7 @@ class _TraderSigninScreenState extends State<TraderSigninScreen> {
                                                 child: CustomButton(
                                                   color: Colors.white,
                                                   title:
-                                                      const CircularProgressIndicator(),
+                                                      const LoadingIndicator(),
                                                   onTap: () {},
                                                 ));
                                           } else {

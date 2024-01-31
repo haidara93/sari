@@ -17,6 +17,7 @@ import 'package:custome_mobile/helpers/formatter.dart';
 import 'package:custome_mobile/views/screens/trader/trader_calculator_result_screen.dart';
 // import 'package:custome_mobile/views/widgets/calculator_dart';
 import 'package:custome_mobile/views/widgets/custom_botton.dart';
+import 'package:custome_mobile/views/widgets/loading_indicator.dart';
 import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -812,7 +813,7 @@ class _TraderCalculatorMultiScreenState
                                                         shape:
                                                             RoundedRectangleBorder(
                                                                 borderRadius:
-                                                                    BorderRadius
+                                                                    const BorderRadius
                                                                         .all(
                                                                   Radius
                                                                       .circular(
@@ -878,7 +879,7 @@ class _TraderCalculatorMultiScreenState
                                                                     CrossAxisAlignment
                                                                         .end,
                                                                 children: [
-                                                                  SizedBox(
+                                                                  const SizedBox(
                                                                     height: 5,
                                                                   ),
                                                                   // GestureDetector(
@@ -1028,7 +1029,7 @@ class _TraderCalculatorMultiScreenState
                                                                                     ],
                                                                                   ),
                                                                                 )
-                                                                              : SizedBox.shrink(),
+                                                                              : const SizedBox.shrink(),
                                                                         ),
                                                                         onSubmitted:
                                                                             (value) {
@@ -1050,7 +1051,7 @@ class _TraderCalculatorMultiScreenState
                                                                           child:
                                                                               const Center(
                                                                             child:
-                                                                                CircularProgressIndicator(),
+                                                                                LoadingIndicator(),
                                                                           ),
                                                                         );
                                                                       },
@@ -1950,7 +1951,7 @@ class _TraderCalculatorMultiScreenState
                                                                           bottom:
                                                                               MediaQuery.of(context).viewInsets.bottom + 50),
                                                                   style:
-                                                                      TextStyle(
+                                                                      const TextStyle(
                                                                     fontSize:
                                                                         18,
                                                                   ),
@@ -2205,7 +2206,19 @@ class _TraderCalculatorMultiScreenState
                                               Container(
                                                 width: double.infinity,
                                                 decoration: BoxDecoration(
-                                                  color: AppColor.lightGreen,
+                                                  gradient: LinearGradient(
+                                                    colors: [
+                                                      AppColor.deepAppBarBlue,
+                                                      AppColor.lightAppBarBlue,
+                                                      AppColor
+                                                          .lighterAppBarBlue,
+                                                      AppColor.lightAppBarBlue,
+                                                      AppColor.deepAppBarBlue,
+                                                    ],
+                                                    begin:
+                                                        Alignment.centerRight,
+                                                    end: Alignment.centerLeft,
+                                                  ),
                                                   border: Border.all(
                                                       color: Colors.black26,
                                                       width: 2),
@@ -2221,16 +2234,19 @@ class _TraderCalculatorMultiScreenState
                                                     Text(
                                                       "${AppLocalizations.of(context)!.translate('convert_to_dollar_value')}: ${f.format(double.parse(totalsyrianExchangeValue).toInt())}\$",
                                                       style: TextStyle(
+                                                          color: Colors.white,
                                                           fontSize: 17.sp),
                                                     ),
                                                     Text(
                                                       "${AppLocalizations.of(context)!.translate('total_value_in_eygptian_pound')}: ${f.format(double.parse(totalsyrianTotalValue).toInt())} E.P",
                                                       style: TextStyle(
+                                                          color: Colors.white,
                                                           fontSize: 17.sp),
                                                     ),
                                                     Text(
                                                       "${AppLocalizations.of(context)!.translate('total_value_with_insurance')}: ${f.format(double.parse(totalTotalValueWithEnsurance).toInt())} E.P",
                                                       style: TextStyle(
+                                                          color: Colors.white,
                                                           fontSize: 17.sp),
                                                     ),
                                                   ],
@@ -2259,7 +2275,7 @@ class _TraderCalculatorMultiScreenState
                                                             width: 250.w,
                                                             child: const Center(
                                                               child:
-                                                                  CircularProgressIndicator(),
+                                                                  LoadingIndicator(),
                                                             ),
                                                           ),
                                                         );
@@ -2477,8 +2493,7 @@ class _TraderCalculatorMultiScreenState
                       return value.loading
                           ? Container(
                               color: Colors.white54,
-                              child: const Center(
-                                  child: CircularProgressIndicator()),
+                              child: const Center(child: LoadingIndicator()),
                             )
                           : const SizedBox.shrink();
                     },
@@ -2488,8 +2503,7 @@ class _TraderCalculatorMultiScreenState
                       if (state is FeeSelectLoadingProgress) {
                         return Container(
                           color: Colors.white54,
-                          child:
-                              const Center(child: CircularProgressIndicator()),
+                          child: const Center(child: LoadingIndicator()),
                         );
                       } else {
                         return const SizedBox.shrink();

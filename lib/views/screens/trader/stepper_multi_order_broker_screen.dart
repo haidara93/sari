@@ -24,6 +24,7 @@ import 'package:custome_mobile/views/screens/trader/trader_attachement_screen.da
 import 'package:custome_mobile/views/screens/trader/trader_calculator_result_screen.dart';
 import 'package:custome_mobile/views/widgets/custom_botton.dart';
 import 'package:custome_mobile/views/widgets/highlight_text.dart';
+import 'package:custome_mobile/views/widgets/loading_indicator.dart';
 import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:ensure_visible_when_focused/ensure_visible_when_focused.dart';
 import 'package:flutter/material.dart';
@@ -350,10 +351,10 @@ class _StepperMultiOrderBrokerScreenState
         return lang == 'en' ? "watts" : "واط";
 
       case "عدد الأزواج":
-        return lang == 'en' ? "num" : "عدد الأزواج";
+        return lang == 'en' ? "QTY" : "عدد الأزواج";
 
       case "عدد":
-        return lang == 'en' ? "num" : "عدد";
+        return lang == 'en' ? "QTY" : "عدد";
 
       case "طرد":
         return lang == 'en' ? "package" : "طرد";
@@ -1409,7 +1410,7 @@ class _StepperMultiOrderBrokerScreenState
                                               clipBehavior: Clip.antiAlias,
                                               shape: RoundedRectangleBorder(
                                                   borderRadius:
-                                                      BorderRadius.all(
+                                                      const BorderRadius.all(
                                                     Radius.circular(15),
                                                   ),
                                                   side: BorderSide(
@@ -1465,7 +1466,7 @@ class _StepperMultiOrderBrokerScreenState
                                                           CrossAxisAlignment
                                                               .end,
                                                       children: [
-                                                        SizedBox(
+                                                        const SizedBox(
                                                           height: 5,
                                                         ),
                                                         // GestureDetector(
@@ -1637,7 +1638,7 @@ class _StepperMultiOrderBrokerScreenState
                                                                           ],
                                                                         ),
                                                                       )
-                                                                    : SizedBox
+                                                                    : const SizedBox
                                                                         .shrink(),
                                                               ),
                                                               onSubmitted:
@@ -2671,7 +2672,7 @@ class _StepperMultiOrderBrokerScreenState
                                                                     .viewInsets
                                                                     .bottom +
                                                                 50),
-                                                        style: TextStyle(
+                                                        style: const TextStyle(
                                                           fontSize: 18,
                                                         ),
                                                         decoration:
@@ -2898,7 +2899,17 @@ class _StepperMultiOrderBrokerScreenState
                                         Container(
                                           width: double.infinity,
                                           decoration: BoxDecoration(
-                                            color: AppColor.lightGreen,
+                                            gradient: LinearGradient(
+                                              colors: [
+                                                AppColor.deepAppBarBlue,
+                                                AppColor.lightAppBarBlue,
+                                                AppColor.lighterAppBarBlue,
+                                                AppColor.lightAppBarBlue,
+                                                AppColor.deepAppBarBlue,
+                                              ],
+                                              begin: Alignment.centerRight,
+                                              end: Alignment.centerLeft,
+                                            ),
                                             border: Border.all(
                                                 color: Colors.black26,
                                                 width: 1),
@@ -2912,18 +2923,21 @@ class _StepperMultiOrderBrokerScreenState
                                             children: [
                                               Text(
                                                 "${AppLocalizations.of(context)!.translate('convert_to_dollar_value')}: ${f.format(double.parse(totalsyrianExchangeValue).toInt())}\$",
-                                                style:
-                                                    TextStyle(fontSize: 17.sp),
+                                                style: TextStyle(
+                                                    color: Colors.white,
+                                                    fontSize: 17.sp),
                                               ),
                                               Text(
                                                 "${AppLocalizations.of(context)!.translate('total_value_in_eygptian_pound')}: ${f.format(double.parse(totalsyrianTotalValue).toInt())} E.P",
-                                                style:
-                                                    TextStyle(fontSize: 17.sp),
+                                                style: TextStyle(
+                                                    color: Colors.white,
+                                                    fontSize: 17.sp),
                                               ),
                                               Text(
                                                 "${AppLocalizations.of(context)!.translate('total_value_with_insurance')}: ${f.format(double.parse(totalTotalValueWithEnsurance).toInt())} E.P",
-                                                style:
-                                                    TextStyle(fontSize: 17.sp),
+                                                style: TextStyle(
+                                                    color: Colors.white,
+                                                    fontSize: 17.sp),
                                               ),
                                               Divider(
                                                   color: AppColor.deepYellow),
@@ -2938,16 +2952,15 @@ class _StepperMultiOrderBrokerScreenState
                                                     children: [
                                                       Text(
                                                         "${AppLocalizations.of(context)!.translate('fees')} :  ",
-                                                        style: TextStyle(
+                                                        style: const TextStyle(
                                                           fontSize: 17,
                                                           fontWeight:
                                                               FontWeight.bold,
-                                                          color:
-                                                              AppColor.deepBlue,
+                                                          color: Colors.white,
                                                         ),
                                                       ),
                                                       SizedBox(
-                                                        width: 200.w,
+                                                        width: 185.w,
                                                         child: BlocBuilder<
                                                             CalculateMultiResultBloc,
                                                             CalculateMultiResultState>(
@@ -2968,6 +2981,8 @@ class _StepperMultiOrderBrokerScreenState
                                                                   fontWeight:
                                                                       FontWeight
                                                                           .bold,
+                                                                  color: Colors
+                                                                      .white,
                                                                 ),
                                                               );
                                                             } else if (state
@@ -2979,6 +2994,8 @@ class _StepperMultiOrderBrokerScreenState
                                                                 style:
                                                                     TextStyle(
                                                                   fontSize: 16,
+                                                                  color: Colors
+                                                                      .white,
                                                                   fontWeight:
                                                                       FontWeight
                                                                           .bold,
@@ -3011,26 +3028,24 @@ class _StepperMultiOrderBrokerScreenState
                                                           },
                                                           child: SizedBox(
                                                             height: 50,
-                                                            child: Column(
-                                                              mainAxisAlignment:
-                                                                  MainAxisAlignment
-                                                                      .center,
-                                                              children: [
-                                                                Text(
-                                                                  AppLocalizations.of(
-                                                                          context)!
-                                                                      .translate(
-                                                                          'fees_details'),
-                                                                  style:
-                                                                      TextStyle(
-                                                                    color: AppColor
-                                                                        .lightBlue,
-                                                                    fontWeight:
-                                                                        FontWeight
-                                                                            .bold,
-                                                                  ),
+                                                            width: 70,
+                                                            child: FittedBox(
+                                                              fit: BoxFit
+                                                                  .scaleDown,
+                                                              child: Text(
+                                                                AppLocalizations.of(
+                                                                        context)!
+                                                                    .translate(
+                                                                        'fees_details'),
+                                                                style:
+                                                                    const TextStyle(
+                                                                  color: Colors
+                                                                      .white,
+                                                                  fontWeight:
+                                                                      FontWeight
+                                                                          .bold,
                                                                 ),
-                                                              ],
+                                                              ),
                                                             ),
                                                           ),
                                                         );
@@ -3099,10 +3114,14 @@ class _StepperMultiOrderBrokerScreenState
                                                     is CalculateResultLoading) {
                                                   return CustomButton(
                                                       title: SizedBox(
-                                                          width: 250.w,
+                                                          width: MediaQuery.of(
+                                                                      context)
+                                                                  .size
+                                                                  .width *
+                                                              .85,
                                                           child: const Center(
                                                               child:
-                                                                  CircularProgressIndicator())),
+                                                                  LoadingIndicator())),
                                                       // color: AppColor.deepYellow,
                                                       onTap: () {});
                                                 }
@@ -3112,7 +3131,11 @@ class _StepperMultiOrderBrokerScreenState
                                                 } else {
                                                   return CustomButton(
                                                     title: SizedBox(
-                                                      width: 250.w,
+                                                      width:
+                                                          MediaQuery.of(context)
+                                                                  .size
+                                                                  .width *
+                                                              .85,
                                                       child: Center(
                                                         child: Text(
                                                           AppLocalizations.of(

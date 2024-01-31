@@ -14,6 +14,7 @@ import 'package:custome_mobile/views/control_view.dart';
 import 'package:custome_mobile/views/screens/trader/select_broker_profile_screen.dart';
 import 'package:custome_mobile/views/widgets/custom_app_bar.dart';
 import 'package:custome_mobile/views/widgets/custom_botton.dart';
+import 'package:custome_mobile/views/widgets/loading_indicator.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -348,18 +349,16 @@ class _SelectBrokerScreenState extends State<SelectBrokerScreen> {
                                                               children: [
                                                                 Text(
                                                                     "${AppLocalizations.of(context)!.translate('directorate')}: ${state.brokers[index].agencies![0].statecustome!.name!}"),
-                                                                SizedBox(
-                                                                  width: MediaQuery.of(
-                                                                              context)
-                                                                          .size
-                                                                          .width *
-                                                                      5,
-                                                                  child: Wrap(
-                                                                    children: _buildAgenciesWidget(state
-                                                                        .brokers[
-                                                                            index]
-                                                                        .agencies!),
-                                                                  ),
+                                                                Text(
+                                                                    "Agencies:"),
+                                                                Column(
+                                                                  crossAxisAlignment:
+                                                                      CrossAxisAlignment
+                                                                          .start,
+                                                                  children: _buildAgenciesWidget(state
+                                                                      .brokers[
+                                                                          index]
+                                                                      .agencies!),
                                                                 ),
                                                               ],
                                                             ),
@@ -516,7 +515,7 @@ class _SelectBrokerScreenState extends State<SelectBrokerScreen> {
                                                                           width: 100
                                                                               .w,
                                                                           child:
-                                                                              Center(child: CircularProgressIndicator())),
+                                                                              Center(child: LoadingIndicator())),
                                                                     );
                                                                   } else {
                                                                     return CustomButton(
@@ -623,8 +622,7 @@ class _SelectBrokerScreenState extends State<SelectBrokerScreen> {
                           if (state is AssignBrokerLoadingProgress) {
                             return Container(
                               color: Colors.white54,
-                              child: const Center(
-                                  child: CircularProgressIndicator()),
+                              child: const Center(child: LoadingIndicator()),
                             );
                           } else {
                             return const SizedBox.shrink();

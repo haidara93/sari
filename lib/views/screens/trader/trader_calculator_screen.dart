@@ -3,6 +3,7 @@ import 'package:custome_mobile/business_logic/cubit/bottom_nav_bar_cubit.dart';
 import 'package:custome_mobile/business_logic/cubit/locale_cubit.dart';
 import 'package:custome_mobile/business_logic/cubit/stop_scroll_cubit.dart';
 import 'package:custome_mobile/views/widgets/calculator_widget.dart';
+import 'package:custome_mobile/views/widgets/loading_indicator.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -100,8 +101,7 @@ class TraderCalculatorScreen extends StatelessWidget {
                       if (state is FeeSelectLoadingProgress) {
                         return Container(
                           color: Colors.white54,
-                          child:
-                              const Center(child: CircularProgressIndicator()),
+                          child: const Center(child: LoadingIndicator()),
                         );
                       } else {
                         return const SizedBox.shrink();

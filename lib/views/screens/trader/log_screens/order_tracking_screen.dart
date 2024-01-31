@@ -7,6 +7,7 @@ import 'package:custome_mobile/data/providers/broker_offer_provider.dart';
 import 'package:custome_mobile/data/providers/trader_offer_provider.dart';
 import 'package:custome_mobile/views/widgets/custom_app_bar.dart';
 import 'package:custome_mobile/views/widgets/custome_timeline.dart';
+import 'package:custome_mobile/views/widgets/loading_indicator.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -511,7 +512,7 @@ class _OrderTrackingScreenState extends State<OrderTrackingScreen> {
                   } else if (offerstate is OfferDetailsLoadingProgress) {
                     return SizedBox(
                       height: MediaQuery.of(context).size.height * .6,
-                      child: const Center(child: CircularProgressIndicator()),
+                      child: const Center(child: LoadingIndicator()),
                     );
                   } else {
                     return Text("");

@@ -21,6 +21,7 @@ import 'package:custome_mobile/views/control_view.dart';
 import 'package:custome_mobile/views/screens/trader/select_broker_screen.dart';
 import 'package:custome_mobile/views/widgets/custom_app_bar.dart';
 import 'package:custome_mobile/views/widgets/custom_botton.dart';
+import 'package:custome_mobile/views/widgets/loading_indicator.dart';
 import 'package:flutter/cupertino.dart' as cupertino;
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -1494,7 +1495,7 @@ class _TraderAttachementScreenState extends State<TraderAttachementScreen> {
                                                     width: 100,
                                                     child: Center(
                                                         child:
-                                                            CircularProgressIndicator())),
+                                                            LoadingIndicator())),
                                               );
                                             } else {
                                               return CustomButton(

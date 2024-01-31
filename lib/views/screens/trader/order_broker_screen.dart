@@ -4,6 +4,7 @@ import 'package:custome_mobile/business_logic/cubit/bottom_nav_bar_cubit.dart';
 import 'package:custome_mobile/business_logic/cubit/locale_cubit.dart';
 import 'package:custome_mobile/data/repositories/state_agency_repository.dart';
 import 'package:custome_mobile/views/screens/trader/stepper_multi_order_broker_screen.dart';
+import 'package:custome_mobile/views/widgets/loading_indicator.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -55,8 +56,7 @@ class _OrderBrokerScreenState extends State<OrderBrokerScreen> {
                           if (state is FeeSelectLoadingProgress) {
                             return Container(
                               color: Colors.white54,
-                              child: const Center(
-                                  child: CircularProgressIndicator()),
+                              child: const Center(child: LoadingIndicator()),
                             );
                           } else {
                             return const SizedBox.shrink();

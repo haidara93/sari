@@ -11,6 +11,7 @@ import 'package:custome_mobile/data/providers/trader_offer_provider.dart';
 import 'package:custome_mobile/helpers/color_constants.dart';
 import 'package:custome_mobile/views/widgets/custom_app_bar.dart';
 import 'package:custome_mobile/views/widgets/custom_botton.dart';
+import 'package:custome_mobile/views/widgets/loading_indicator.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -531,7 +532,7 @@ class _BrokerAttachmentsScreenState extends State<BrokerAttachmentsScreen> {
                                 return const Row(
                                   mainAxisAlignment: MainAxisAlignment.center,
                                   children: [
-                                    Center(child: CircularProgressIndicator()),
+                                    Center(child: LoadingIndicator()),
                                   ],
                                 );
                               } else {

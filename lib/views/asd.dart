@@ -232,7 +232,7 @@
 //                   );
 //                 } else {
 //                   return Center(
-//                     child: const CircularProgressIndicator(),
+//                     child: const LoadingIndicator(),
 //                   );
 //                 }
 //               },

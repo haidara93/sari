@@ -6,6 +6,7 @@ import 'package:custome_mobile/data/models/state_custome_agency_model.dart';
 import 'package:custome_mobile/helpers/color_constants.dart';
 import 'package:custome_mobile/views/widgets/custom_app_bar.dart';
 import 'package:custome_mobile/views/widgets/custom_botton.dart';
+import 'package:custome_mobile/views/widgets/loading_indicator.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -280,8 +281,7 @@ class _OrderCostScreenState extends State<OrderCostScreen> {
                           onTap: () {},
                           title: SizedBox(
                               width: 250.w,
-                              child: const Center(
-                                  child: CircularProgressIndicator())),
+                              child: const Center(child: LoadingIndicator())),
                         );
                       } else {
                         return CustomButton(

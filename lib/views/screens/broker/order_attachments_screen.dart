@@ -11,6 +11,7 @@ import 'package:custome_mobile/data/models/offer_model.dart';
 import 'package:custome_mobile/helpers/color_constants.dart';
 import 'package:custome_mobile/views/widgets/custom_app_bar.dart';
 import 'package:custome_mobile/views/widgets/custom_botton.dart';
+import 'package:custome_mobile/views/widgets/loading_indicator.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -275,7 +276,7 @@ class _OrderAttachmentScreenState extends State<OrderAttachmentScreen> {
                                         state.attachmentTypes));
                               } else {
                                 return const Center(
-                                  child: CircularProgressIndicator(),
+                                  child: LoadingIndicator(),
                                 );
                               }
                             },
@@ -314,8 +315,7 @@ class _OrderAttachmentScreenState extends State<OrderAttachmentScreen> {
                             onTap: () {},
                             title: const SizedBox(
                                 width: 100,
-                                child:
-                                    Center(child: CircularProgressIndicator())),
+                                child: Center(child: LoadingIndicator())),
                           );
                         } else {
                           return CustomButton(

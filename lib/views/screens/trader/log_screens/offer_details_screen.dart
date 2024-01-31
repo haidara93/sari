@@ -15,12 +15,14 @@ import 'package:custome_mobile/views/screens/trader/log_screens/broker_costs_scr
 import 'package:custome_mobile/views/screens/trader/log_screens/order_tracking_screen.dart';
 import 'package:custome_mobile/views/widgets/custom_app_bar.dart';
 import 'package:custome_mobile/views/widgets/custome_timeline.dart';
+import 'package:custome_mobile/views/widgets/loading_indicator.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_gif/flutter_gif.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 // ignore: must_be_immutable
 class OfferDetailsScreen extends StatefulWidget {
@@ -40,7 +42,8 @@ class _OfferDetailsScreenState extends State<OfferDetailsScreen>
 
   TraderOfferProvider? trader_offerProvider;
   BrokerOfferProvider? broker_offerProvider;
-
+  String userType = "Trader";
+  late SharedPreferences prefs;
   String getOfferType(String offer) {
     switch (offer) {
       case "I":
@@ -108,6 +111,11 @@ class _OfferDetailsScreenState extends State<OfferDetailsScreen>
     product = await CalculatorService.getProductInfo(id);
   }
 
+  getUserType() async {
+    prefs = await SharedPreferences.getInstance();
+    userType = prefs.getString("userType") ?? "Trader";
+  }
+
   @override
   void initState() {
     controller1 = FlutterGifController(vsync: this);
@@ -117,6 +125,7 @@ class _OfferDetailsScreenState extends State<OfferDetailsScreen>
         max: 53,
         period: const Duration(milliseconds: 200),
       );
+      getUserType();
     });
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
@@ -811,12 +820,29 @@ class _OfferDetailsScreenState extends State<OfferDetailsScreen>
                                 child: ExpansionTile(
                                   initiallyExpanded: false,
                                   tilePadding: EdgeInsets.zero,
-                                  trailing: SizedBox(
-                                    height: 45,
-                                    width: 45,
-                                    child: Image.asset("assets/icons/radar.gif",
-                                        gaplessPlayback: true,
-                                        fit: BoxFit.fill),
+                                  trailing: GestureDetector(
+                                    onTap: () {
+                                      if (userType == "Broker") {
+                                        Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                              builder: (context) =>
+                                                  OrderTrackingScreen(
+                                                      offer: offerstate.offer,
+                                                      type: userType == "Broker"
+                                                          ? "broker"
+                                                          : "trader"),
+                                            ));
+                                      }
+                                    },
+                                    child: SizedBox(
+                                      height: 45,
+                                      width: 45,
+                                      child: Image.asset(
+                                          "assets/icons/radar.gif",
+                                          gaplessPlayback: true,
+                                          fit: BoxFit.fill),
+                                    ),
                                   ),
                                   // controlAffinity: ListTileControlAffinity.leading,
                                   childrenPadding: EdgeInsets.zero,
@@ -984,7 +1010,7 @@ class _OfferDetailsScreenState extends State<OfferDetailsScreen>
                   } else if (offerstate is OfferDetailsLoadingProgress) {
                     return SizedBox(
                       height: MediaQuery.of(context).size.height * .6,
-                      child: const Center(child: CircularProgressIndicator()),
+                      child: const Center(child: LoadingIndicator()),
                     );
                   } else {
                     return const Text("");

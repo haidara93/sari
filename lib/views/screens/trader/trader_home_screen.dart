@@ -40,6 +40,7 @@ import 'package:custome_mobile/views/widgets/custom_app_bar.dart';
 import 'package:custome_mobile/views/widgets/custom_botton.dart';
 import 'package:custome_mobile/views/widgets/highlight_text.dart';
 import 'package:custome_mobile/views/widgets/item_taxes_widget.dart';
+import 'package:custome_mobile/views/widgets/loading_indicator.dart';
 import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -2405,7 +2406,7 @@ class _TraderHomeScreenState extends State<TraderHomeScreen>
                                                     return ElevatedButton(
                                                         onPressed: () {},
                                                         child:
-                                                            const CircularProgressIndicator());
+                                                            const LoadingIndicator());
                                                   }
                                                   if (state
                                                       is CalculateResultFailed) {
@@ -2507,8 +2508,7 @@ class _TraderHomeScreenState extends State<TraderHomeScreen>
                                   ),
                                 ]);
                           } else {
-                            return const Center(
-                                child: CircularProgressIndicator());
+                            return const Center(child: LoadingIndicator());
                           }
                         },
                       ),

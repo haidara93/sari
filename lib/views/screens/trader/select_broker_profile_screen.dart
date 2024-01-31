@@ -11,6 +11,7 @@ import 'package:custome_mobile/data/providers/order_broker_provider.dart';
 import 'package:custome_mobile/helpers/color_constants.dart';
 import 'package:custome_mobile/views/control_view.dart';
 import 'package:custome_mobile/views/widgets/custom_botton.dart';
+import 'package:custome_mobile/views/widgets/loading_indicator.dart';
 import 'package:flutter/material.dart';
 import 'package:custome_mobile/business_logic/cubit/locale_cubit.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -128,6 +129,7 @@ class _SelectBrokerProfileScreenState extends State<SelectBrokerProfileScreen> {
               : TextDirection.rtl,
           child: SafeArea(
             child: Scaffold(
+              appBar: AppBar(backgroundColor: AppColor.deepBlue),
               body: Stack(
                 children: [
                   SingleChildScrollView(
@@ -463,14 +465,16 @@ class _SelectBrokerProfileScreenState extends State<SelectBrokerProfileScreen> {
                                                     );
                                                   } else {
                                                     return const Center(
-                                                      child:
-                                                          CircularProgressIndicator(),
+                                                      child: LoadingIndicator(),
                                                     );
                                                   }
                                                 },
                                               )
                                             ],
                                           ),
+                                        ),
+                                        const SizedBox(
+                                          height: 50,
                                         ),
                                       ],
                                     ),
@@ -538,7 +542,7 @@ class _SelectBrokerProfileScreenState extends State<SelectBrokerProfileScreen> {
                                   Navigator.pushAndRemoveUntil(
                                     context,
                                     MaterialPageRoute(
-                                      builder: (context) => ControlView(),
+                                      builder: (context) => const ControlView(),
                                     ),
                                     (route) => false,
                                   );
@@ -569,8 +573,7 @@ class _SelectBrokerProfileScreenState extends State<SelectBrokerProfileScreen> {
                                             MediaQuery.of(context).size.width *
                                                 .75,
                                         child: const Center(
-                                            child:
-                                                CircularProgressIndicator())),
+                                            child: LoadingIndicator())),
                                   );
                                 } else {
                                   return CustomButton(

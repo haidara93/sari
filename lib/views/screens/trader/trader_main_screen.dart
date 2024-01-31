@@ -7,6 +7,7 @@ import 'package:custome_mobile/business_logic/bloc/post_bloc.dart';
 import 'package:custome_mobile/business_logic/cubit/locale_cubit.dart';
 import 'package:custome_mobile/helpers/color_constants.dart';
 import 'package:custome_mobile/views/widgets/calculator_loading_screen.dart';
+import 'package:custome_mobile/views/widgets/loading_indicator.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -221,7 +222,7 @@ class _TraderMainScreenState extends State<TraderMainScreen> {
                                                                 child:
                                                                     const Center(
                                                                   child:
-                                                                      CircularProgressIndicator(),
+                                                                      LoadingIndicator(),
                                                                 ),
                                                               ),
                                                             );
@@ -462,7 +463,7 @@ class _TraderMainScreenState extends State<TraderMainScreen> {
                                                                           ),
                                                                         );
                                                                       } else {
-                                                                        return const CircularProgressIndicator();
+                                                                        return const LoadingIndicator();
                                                                       }
                                                                     },
                                                                   ),

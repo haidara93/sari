@@ -16,6 +16,7 @@ import 'package:custome_mobile/helpers/formatter.dart';
 import 'package:custome_mobile/views/screens/trader/trader_calculator_result_screen.dart';
 import 'package:custome_mobile/views/widgets/custom_botton.dart';
 import 'package:custome_mobile/views/widgets/highlight_text.dart';
+import 'package:custome_mobile/views/widgets/loading_indicator.dart';
 import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:dropdown_search/dropdown_search.dart';
 import 'package:flutter/material.dart';
@@ -252,7 +253,7 @@ class _CalculatorMultiWidgetState extends State<CalculatorMultiWidget> {
                             return Container(
                               color: Colors.white,
                               child: const Center(
-                                child: CircularProgressIndicator(),
+                                child: LoadingIndicator(),
                               ),
                             );
                           },
@@ -991,8 +992,8 @@ class _CalculatorMultiWidgetState extends State<CalculatorMultiWidget> {
                               onTap: () {},
                               title: SizedBox(
                                   width: 250.w,
-                                  child: const Center(
-                                      child: CircularProgressIndicator())));
+                                  child:
+                                      const Center(child: LoadingIndicator())));
                         }
                         if (state is CalculateResultFailed) {
                           return Text(state.error);
