@@ -365,10 +365,13 @@ class _CustomeTariffScreenState extends State<CustomeTariffScreen> {
                                     Icons.close,
                                     color: Colors.red,
                                   ),
-                                  Text(
-                                    AppLocalizations.of(context)!
-                                        .translate('import_not_allowed'),
-                                    maxLines: 2,
+                                  SizedBox(
+                                    width: 100,
+                                    child: Text(
+                                      AppLocalizations.of(context)!
+                                          .translate('import_not_allowed'),
+                                      maxLines: 2,
+                                    ),
                                   ),
                                 ],
                               ),
@@ -505,59 +508,44 @@ class _CustomeTariffScreenState extends State<CustomeTariffScreen> {
                 },
                 trailing: const SizedBox.shrink(),
               ),
-              Divider(
-                height: 1,
-                color: AppColor.goldenYellow,
-              ),
-              ExpansionTile(
-                title: Directionality(
-                  textDirection: localeState.value.languageCode == 'en'
-                      ? TextDirection.ltr
-                      : TextDirection.rtl,
-                  child: Row(
-                    children: [
-                      Container(
-                        height: 25.h,
-                        width: 25.h,
-                        margin: const EdgeInsets.symmetric(horizontal: 10),
-                        decoration: BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: BorderRadius.circular(10),
-                        ),
-                        child: Center(
-                          child: SvgPicture.asset("assets/icons/share.svg"),
-                        ),
-                      ),
-                      Container(
-                        padding: const EdgeInsets.symmetric(horizontal: 5),
-                        decoration: BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: BorderRadius.circular(10),
-                        ),
-                        child: Text(
-                          AppLocalizations.of(context)!.translate('share'),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-                trailing: const SizedBox.shrink(),
-
-                // onExpansionChanged: (value) {
-                //   if (value) {
-                //     // BlocProvider.of<FeeBloc>(context)
-                //     //     .add(FeeLoadEvent(state.subchapters[index].id!));
-                //     setState(() {
-                //       feeselected = index4;
-                //     });
-                //   } else {
-                //     setState(() {
-                //       feeselected = -1;
-                //     });
-                //   }
-                // },
-                // children: buildFeesTiles(),
-              ),
+              // Divider(
+              //   height: 1,
+              //   color: AppColor.goldenYellow,
+              // ),
+              // ExpansionTile(
+              //   title: Directionality(
+              //     textDirection: localeState.value.languageCode == 'en'
+              //         ? TextDirection.ltr
+              //         : TextDirection.rtl,
+              //     child: Row(
+              //       children: [
+              //         Container(
+              //           height: 25.h,
+              //           width: 25.h,
+              //           margin: const EdgeInsets.symmetric(horizontal: 10),
+              //           decoration: BoxDecoration(
+              //             color: Colors.white,
+              //             borderRadius: BorderRadius.circular(10),
+              //           ),
+              //           child: Center(
+              //             child: SvgPicture.asset("assets/icons/share.svg"),
+              //           ),
+              //         ),
+              //         Container(
+              //           padding: const EdgeInsets.symmetric(horizontal: 5),
+              //           decoration: BoxDecoration(
+              //             color: Colors.white,
+              //             borderRadius: BorderRadius.circular(10),
+              //           ),
+              //           child: Text(
+              //             AppLocalizations.of(context)!.translate('share'),
+              //           ),
+              //         ),
+              //       ],
+              //     ),
+              //   ),
+              //   trailing: const SizedBox.shrink(),
+              // ),
             ],
           );
         },

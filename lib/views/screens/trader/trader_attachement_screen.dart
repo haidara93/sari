@@ -948,378 +948,395 @@ class _TraderAttachementScreenState extends State<TraderAttachementScreen> {
                                             (context, attachmentTypeState) {
                                           if (attachmentTypeState
                                               is AttachmentTypeLoadedSuccess) {
-                                            return ListView.builder(
-                                              itemCount: attachmentTypeState
-                                                  .attachmentTypes.length,
-                                              scrollDirection: Axis.horizontal,
-                                              shrinkWrap: true,
-                                              itemBuilder: (context, index) {
-                                                return InkWell(
-                                                  onTap: () {
-                                                    showDialog(
-                                                      context: context,
-                                                      builder: (context) =>
-                                                          StatefulBuilder(
-                                                              builder: (context,
-                                                                  StateSetter
-                                                                      setState2) {
-                                                        return Directionality(
-                                                          textDirection:
-                                                              TextDirection.rtl,
-                                                          child: SimpleDialog(
-                                                            backgroundColor:
-                                                                Colors.white,
-                                                            title: const Text(
-                                                                'add attachment'),
-                                                            shape:
-                                                                RoundedRectangleBorder(
-                                                              borderRadius:
-                                                                  BorderRadius
-                                                                      .circular(
-                                                                          15),
-                                                            ),
-                                                            contentPadding:
-                                                                EdgeInsets.all(
-                                                                    8.h),
-                                                            children: [
-                                                              Row(
-                                                                mainAxisAlignment:
-                                                                    MainAxisAlignment
-                                                                        .spaceEvenly,
-                                                                children: [
-                                                                  // Padding(
-                                                                  //   padding: EdgeInsets.symmetric(
-                                                                  //       horizontal:
-                                                                  //           5.w,
-                                                                  //       vertical:
-                                                                  //           15.h),
-                                                                  //   child:
-                                                                  //       InkWell(
-                                                                  //     child:
-                                                                  //         Stack(
-                                                                  //       clipBehavior:
-                                                                  //           Clip.none,
-                                                                  //       children: [
-                                                                  //         Card(
-                                                                  //           elevation:
-                                                                  //               1,
-                                                                  //           child:
-                                                                  //               Padding(
-                                                                  //             padding: const EdgeInsets.all(8.0),
-                                                                  //             child: Center(
-                                                                  //               child: SizedBox(
-                                                                  //                 height: 55.h,
-                                                                  //                 width: 50.w,
-                                                                  //                 child: SvgPicture.asset("assets/icons/pdf_icon.svg"),
-                                                                  //               ),
-                                                                  //             ),
-                                                                  //           ),
-                                                                  //         ),
-                                                                  //         _files!.isNotEmpty
-                                                                  //             ? Positioned(
-                                                                  //                 right: -7.w,
-                                                                  //                 top: -10.h,
-                                                                  //                 child: Container(
-                                                                  //                   height: 25.h,
-                                                                  //                   width: 25.h,
-                                                                  //                   padding: const EdgeInsets.all(2),
-                                                                  //                   decoration: BoxDecoration(
-                                                                  //                     color: AppColor.goldenYellow,
-                                                                  //                     borderRadius: BorderRadius.circular(45),
-                                                                  //                   ),
-                                                                  //                   child: Center(
-                                                                  //                     child: Text(
-                                                                  //                       _files!.length.toString(),
-                                                                  //                       style: const TextStyle(
-                                                                  //                         color: Colors.white,
-                                                                  //                       ),
-                                                                  //                     ),
-                                                                  //                   ),
-                                                                  //                 ),
-                                                                  //               )
-                                                                  //             : const SizedBox.shrink()
-                                                                  //       ],
-                                                                  //     ),
-                                                                  //   ),
-                                                                  // ),
-                                                                  Padding(
-                                                                    padding: EdgeInsets.symmetric(
-                                                                        horizontal:
-                                                                            5.w,
-                                                                        vertical:
-                                                                            15.h),
-                                                                    child:
-                                                                        InkWell(
-                                                                      onTap:
-                                                                          () async {
-                                                                        var pickedImages =
-                                                                            await _picker.pickMultiImage();
-                                                                        for (var element
-                                                                            in pickedImages) {
-                                                                          _images!
-                                                                              .add(File(element!.path));
-                                                                        }
-                                                                        setState2(
-                                                                          () {},
-                                                                        );
-                                                                      },
+                                            return InkWell(
+                                              onTap: () {
+                                                showDialog(
+                                                  context: context,
+                                                  builder: (context) =>
+                                                      StatefulBuilder(builder:
+                                                          (context,
+                                                              StateSetter
+                                                                  setState2) {
+                                                    return SimpleDialog(
+                                                      backgroundColor:
+                                                          Colors.white,
+                                                      title: const Text(
+                                                          'add attachment'),
+                                                      shape:
+                                                          RoundedRectangleBorder(
+                                                        borderRadius:
+                                                            BorderRadius
+                                                                .circular(15),
+                                                      ),
+                                                      contentPadding:
+                                                          EdgeInsets.all(8.h),
+                                                      children: [
+                                                        Row(
+                                                          mainAxisAlignment:
+                                                              MainAxisAlignment
+                                                                  .spaceEvenly,
+                                                          children: [
+                                                            // Padding(
+                                                            //   padding: EdgeInsets.symmetric(
+                                                            //       horizontal:
+                                                            //           5.w,
+                                                            //       vertical:
+                                                            //           15.h),
+                                                            //   child:
+                                                            //       InkWell(
+                                                            //     child:
+                                                            //         Stack(
+                                                            //       clipBehavior:
+                                                            //           Clip.none,
+                                                            //       children: [
+                                                            //         Card(
+                                                            //           elevation:
+                                                            //               1,
+                                                            //           child:
+                                                            //               Padding(
+                                                            //             padding: const EdgeInsets.all(8.0),
+                                                            //             child: Center(
+                                                            //               child: SizedBox(
+                                                            //                 height: 55.h,
+                                                            //                 width: 50.w,
+                                                            //                 child: SvgPicture.asset("assets/icons/pdf_icon.svg"),
+                                                            //               ),
+                                                            //             ),
+                                                            //           ),
+                                                            //         ),
+                                                            //         _files!.isNotEmpty
+                                                            //             ? Positioned(
+                                                            //                 right: -7.w,
+                                                            //                 top: -10.h,
+                                                            //                 child: Container(
+                                                            //                   height: 25.h,
+                                                            //                   width: 25.h,
+                                                            //                   padding: const EdgeInsets.all(2),
+                                                            //                   decoration: BoxDecoration(
+                                                            //                     color: AppColor.goldenYellow,
+                                                            //                     borderRadius: BorderRadius.circular(45),
+                                                            //                   ),
+                                                            //                   child: Center(
+                                                            //                     child: Text(
+                                                            //                       _files!.length.toString(),
+                                                            //                       style: const TextStyle(
+                                                            //                         color: Colors.white,
+                                                            //                       ),
+                                                            //                     ),
+                                                            //                   ),
+                                                            //                 ),
+                                                            //               )
+                                                            //             : const SizedBox.shrink()
+                                                            //       ],
+                                                            //     ),
+                                                            //   ),
+                                                            // ),
+                                                            Padding(
+                                                              padding: EdgeInsets
+                                                                  .symmetric(
+                                                                      horizontal:
+                                                                          5.w,
+                                                                      vertical:
+                                                                          15.h),
+                                                              child: InkWell(
+                                                                onTap:
+                                                                    () async {
+                                                                  var pickedImages =
+                                                                      await _picker
+                                                                          .pickMultiImage();
+                                                                  for (var element
+                                                                      in pickedImages) {
+                                                                    _images!.add(File(
+                                                                        element!
+                                                                            .path));
+                                                                  }
+                                                                  setState2(
+                                                                    () {},
+                                                                  );
+                                                                },
+                                                                child: Stack(
+                                                                  clipBehavior:
+                                                                      Clip.none,
+                                                                  children: [
+                                                                    Card(
+                                                                      elevation:
+                                                                          1,
                                                                       child:
-                                                                          Stack(
-                                                                        clipBehavior:
-                                                                            Clip.none,
-                                                                        children: [
-                                                                          Card(
-                                                                            elevation:
-                                                                                1,
+                                                                          Padding(
+                                                                        padding: const EdgeInsets
+                                                                            .all(
+                                                                            8.0),
+                                                                        child:
+                                                                            Center(
+                                                                          child:
+                                                                              cupertino.SizedBox(
+                                                                            height:
+                                                                                55.h,
+                                                                            width:
+                                                                                50.w,
                                                                             child:
-                                                                                Padding(
-                                                                              padding: const EdgeInsets.all(8.0),
+                                                                                SvgPicture.asset("assets/icons/photo_icon.svg"),
+                                                                          ),
+                                                                        ),
+                                                                      ),
+                                                                    ),
+                                                                    _images!
+                                                                            .isNotEmpty
+                                                                        ? Positioned(
+                                                                            right:
+                                                                                -7.w,
+                                                                            top:
+                                                                                -10.h,
+                                                                            child:
+                                                                                Container(
+                                                                              height: 25.h,
+                                                                              width: 25.h,
+                                                                              padding: const EdgeInsets.all(2),
+                                                                              decoration: BoxDecoration(
+                                                                                color: AppColor.goldenYellow,
+                                                                                borderRadius: BorderRadius.circular(45),
+                                                                              ),
                                                                               child: Center(
-                                                                                child: cupertino.SizedBox(
-                                                                                  height: 55.h,
-                                                                                  width: 50.w,
-                                                                                  child: SvgPicture.asset("assets/icons/photo_icon.svg"),
+                                                                                child: Text(
+                                                                                  _images!.length.toString(),
+                                                                                  style: const TextStyle(
+                                                                                    color: Colors.white,
+                                                                                  ),
                                                                                 ),
                                                                               ),
                                                                             ),
-                                                                          ),
-                                                                          _images!.isNotEmpty
-                                                                              ? Positioned(
-                                                                                  right: -7.w,
-                                                                                  top: -10.h,
-                                                                                  child: Container(
-                                                                                    height: 25.h,
-                                                                                    width: 25.h,
-                                                                                    padding: const EdgeInsets.all(2),
-                                                                                    decoration: BoxDecoration(
-                                                                                      color: AppColor.goldenYellow,
-                                                                                      borderRadius: BorderRadius.circular(45),
-                                                                                    ),
-                                                                                    child: Center(
-                                                                                      child: Text(
-                                                                                        _images!.length.toString(),
-                                                                                        style: const TextStyle(
-                                                                                          color: Colors.white,
-                                                                                        ),
-                                                                                      ),
-                                                                                    ),
-                                                                                  ),
-                                                                                )
-                                                                              : const SizedBox.shrink()
-                                                                        ],
-                                                                      ),
-                                                                    ),
-                                                                  ),
-                                                                ],
-                                                              ),
-                                                              // _previewImages(),
-                                                              Visibility(
-                                                                visible: attachmentTypeState
-                                                                        .attachmentTypes[
-                                                                            index]
-                                                                        .number !=
-                                                                    200,
-                                                                child:
-                                                                    const SizedBox(
-                                                                  height: 15,
+                                                                          )
+                                                                        : const SizedBox
+                                                                            .shrink()
+                                                                  ],
                                                                 ),
                                                               ),
-                                                              Visibility(
-                                                                visible: attachmentTypeState
-                                                                        .attachmentTypes[
-                                                                            index]
-                                                                        .number ==
-                                                                    200,
-                                                                child: Padding(
-                                                                    padding: EdgeInsets.symmetric(
-                                                                        vertical:
-                                                                            7.h,
-                                                                        horizontal: 15
-                                                                            .w),
-                                                                    child:
-                                                                        TextField(
-                                                                      controller:
-                                                                          _otherAttachmentController,
-                                                                      decoration:
-                                                                          InputDecoration(
-                                                                        isDense:
-                                                                            true,
-                                                                        contentPadding:
-                                                                            const EdgeInsets.symmetric(
-                                                                          horizontal:
-                                                                              10,
-                                                                          vertical:
-                                                                              8,
-                                                                        ),
-                                                                        labelText:
-                                                                            AppLocalizations.of(context)!.translate('enter_attachment_name'),
-                                                                        border:
-                                                                            OutlineInputBorder(
-                                                                          borderRadius:
-                                                                              BorderRadius.circular(8),
-                                                                        ),
-                                                                      ),
-                                                                      style: const TextStyle(
-                                                                          fontSize:
-                                                                              18),
-                                                                    )),
-                                                              ),
-
-                                                              BlocConsumer<
-                                                                  AttachmentBloc,
-                                                                  AttachmentState>(
-                                                                listener:
-                                                                    (context,
-                                                                        state) {
-                                                                  if (state
-                                                                      is AttachmentLoadedSuccess) {
-                                                                    orderBrokerProvider!
-                                                                        .addAttachmentId(state
-                                                                            .attachment
-                                                                            .id!);
-                                                                    orderBrokerProvider
-                                                                        .addAttachment(
-                                                                            state.attachment);
-                                                                    setState2(
-                                                                        () {
-                                                                      _images =
-                                                                          [];
-                                                                      _files =
-                                                                          [];
-                                                                      _otherAttachmentController
-                                                                          .text = "";
-                                                                    });
-                                                                  }
-                                                                },
-                                                                builder:
-                                                                    (context,
-                                                                        state) {
-                                                                  if (state
-                                                                      is AttachmentLoadingProgress) {
-                                                                    return const Row(
-                                                                      mainAxisAlignment:
-                                                                          MainAxisAlignment
-                                                                              .center,
-                                                                      children: [
-                                                                        Center(
-                                                                            child:
-                                                                                CircularProgressIndicator()),
-                                                                      ],
-                                                                    );
-                                                                  } else {
-                                                                    return Row(
-                                                                      mainAxisAlignment:
-                                                                          MainAxisAlignment
-                                                                              .spaceAround,
-                                                                      children: [
-                                                                        CustomButton(
-                                                                            title:
-                                                                                SizedBox(
-                                                                              width: 90,
-                                                                              child: Center(child: Text(AppLocalizations.of(context)!.translate('close'))),
-                                                                            ),
-                                                                            onTap:
-                                                                                () {
-                                                                              Navigator.pop(context);
-                                                                            }),
-                                                                        CustomButton(
-                                                                            title:
-                                                                                const SizedBox(width: 90, child: Center(child: Text("Save"))),
-                                                                            onTap: () {
-                                                                              BlocProvider.of<AttachmentBloc>(context).add(AddAttachmentEvent(
-                                                                                attachmentTypeState.attachmentTypes[index],
-                                                                                _otherAttachmentController.text,
-                                                                                _images!,
-                                                                                _files!,
-                                                                              ));
-                                                                            }),
-                                                                      ],
-                                                                    );
-                                                                  }
-                                                                },
-                                                              )
-                                                            ],
-                                                          ),
-                                                        );
-                                                      }),
-                                                    );
-                                                  },
-                                                  child: Column(
-                                                    children: [
-                                                      Container(
-                                                        margin:
-                                                            EdgeInsets.all(5.h),
-                                                        decoration:
-                                                            BoxDecoration(
-                                                          borderRadius:
-                                                              BorderRadius
-                                                                  .circular(15),
-                                                          border: Border.all(
-                                                            color: AppColor
-                                                                .deepAppBarBlue,
-                                                            width: 1.0,
+                                                            ),
+                                                          ],
+                                                        ),
+                                                        // _previewImages(),
+                                                        Visibility(
+                                                          visible:
+                                                              attachmentTypeState
+                                                                      .attachmentTypes[
+                                                                          0]
+                                                                      .number !=
+                                                                  200,
+                                                          child: const SizedBox(
+                                                            height: 15,
                                                           ),
                                                         ),
-                                                        height: 140.h,
-                                                        width: 120.w,
-                                                        clipBehavior:
-                                                            Clip.antiAlias,
-                                                        child: ClipRRect(
-                                                          borderRadius:
-                                                              BorderRadius
-                                                                  .circular(15),
-                                                          child: orderBrokerProvider
-                                                                      .attachments
-                                                                      .singleWhere(
-                                                                          (it) =>
-                                                                              it!.attachmentType ==
-                                                                              attachmentTypeState.attachmentTypes[index].id,
-                                                                          orElse: () => Attachment(id: 0))
-                                                                      .id !=
-                                                                  Attachment(id: 0).id
-                                                              ? SizedBox(
-                                                                  height: 137.h,
-                                                                  width: 120.w,
-                                                                  child: Wrap(
-                                                                    children: _buildAttachmentImages(orderBrokerProvider
-                                                                        .attachments
-                                                                        .singleWhere(
-                                                                            (it) =>
-                                                                                it!.attachmentType ==
-                                                                                attachmentTypeState.attachmentTypes[index].id,
-                                                                            orElse: () => Attachment(id: 0))
-                                                                        .image),
-                                                                  ),
-                                                                )
-                                                              : cupertino.Padding(
-                                                                  padding:
+                                                        Visibility(
+                                                          visible:
+                                                              attachmentTypeState
+                                                                      .attachmentTypes[
+                                                                          0]
+                                                                      .number ==
+                                                                  200,
+                                                          child: Padding(
+                                                              padding: EdgeInsets
+                                                                  .symmetric(
+                                                                      vertical:
+                                                                          7.h,
+                                                                      horizontal:
+                                                                          15.w),
+                                                              child: TextField(
+                                                                controller:
+                                                                    _otherAttachmentController,
+                                                                decoration:
+                                                                    InputDecoration(
+                                                                  isDense: true,
+                                                                  contentPadding:
                                                                       const EdgeInsets
-                                                                          .all(
-                                                                          8.0),
-                                                                  child: SizedBox(
-                                                                      height:
-                                                                          137.h,
-                                                                      width:
-                                                                          120.w,
-                                                                      child: SvgPicture
-                                                                          .asset(
-                                                                              "assets/icons/cloud.svg")),
+                                                                          .symmetric(
+                                                                    horizontal:
+                                                                        10,
+                                                                    vertical: 8,
+                                                                  ),
+                                                                  labelText: AppLocalizations.of(
+                                                                          context)!
+                                                                      .translate(
+                                                                          'enter_attachment_name'),
+                                                                  border:
+                                                                      OutlineInputBorder(
+                                                                    borderRadius:
+                                                                        BorderRadius
+                                                                            .circular(8),
+                                                                  ),
                                                                 ),
+                                                                style:
+                                                                    const TextStyle(
+                                                                        fontSize:
+                                                                            18),
+                                                              )),
                                                         ),
-                                                      ),
-                                                      Text(
-                                                        attachmentTypeState
-                                                            .attachmentTypes[
-                                                                index]
-                                                            .name!,
-                                                        style: TextStyle(
-                                                          fontSize: 18.sp,
-                                                        ),
-                                                      ),
-                                                    ],
-                                                  ),
+
+                                                        BlocConsumer<
+                                                            AttachmentBloc,
+                                                            AttachmentState>(
+                                                          listener:
+                                                              (context, state) {
+                                                            if (state
+                                                                is AttachmentLoadedSuccess) {
+                                                              orderBrokerProvider!
+                                                                  .addAttachmentId(
+                                                                      state
+                                                                          .attachment
+                                                                          .id!);
+                                                              orderBrokerProvider
+                                                                  .addAttachment(
+                                                                      state
+                                                                          .attachment);
+                                                              setState2(() {
+                                                                _images = [];
+                                                                _files = [];
+                                                                _otherAttachmentController
+                                                                    .text = "";
+                                                              });
+                                                            }
+                                                          },
+                                                          builder:
+                                                              (context, state) {
+                                                            if (state
+                                                                is AttachmentLoadingProgress) {
+                                                              return const Row(
+                                                                mainAxisAlignment:
+                                                                    MainAxisAlignment
+                                                                        .center,
+                                                                children: [
+                                                                  Center(
+                                                                      child:
+                                                                          CircularProgressIndicator()),
+                                                                ],
+                                                              );
+                                                            } else {
+                                                              return Row(
+                                                                mainAxisAlignment:
+                                                                    MainAxisAlignment
+                                                                        .spaceAround,
+                                                                children: [
+                                                                  CustomButton(
+                                                                      title:
+                                                                          SizedBox(
+                                                                        width:
+                                                                            90,
+                                                                        child: Center(
+                                                                            child:
+                                                                                Text(AppLocalizations.of(context)!.translate('close'))),
+                                                                      ),
+                                                                      onTap:
+                                                                          () {
+                                                                        Navigator.pop(
+                                                                            context);
+                                                                      }),
+                                                                  CustomButton(
+                                                                      title: const SizedBox(
+                                                                          width:
+                                                                              90,
+                                                                          child:
+                                                                              Center(child: Text("Save"))),
+                                                                      onTap: () {
+                                                                        BlocProvider.of<AttachmentBloc>(context)
+                                                                            .add(AddAttachmentEvent(
+                                                                          attachmentTypeState
+                                                                              .attachmentTypes[0],
+                                                                          _otherAttachmentController
+                                                                              .text,
+                                                                          _images!,
+                                                                          _files!,
+                                                                        ));
+                                                                      }),
+                                                                ],
+                                                              );
+                                                            }
+                                                          },
+                                                        )
+                                                      ],
+                                                    );
+                                                  }),
                                                 );
                                               },
+                                              child: Column(
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment.center,
+                                                children: [
+                                                  Container(
+                                                    margin: EdgeInsets.all(5.h),
+                                                    decoration: BoxDecoration(
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                              15),
+                                                      border: Border.all(
+                                                        color: AppColor
+                                                            .deepAppBarBlue,
+                                                        width: 1.0,
+                                                      ),
+                                                    ),
+                                                    height: 140.h,
+                                                    width: 390.w,
+                                                    clipBehavior:
+                                                        Clip.antiAlias,
+                                                    child: ClipRRect(
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                              15),
+                                                      child: orderBrokerProvider
+                                                                  .attachments
+                                                                  .singleWhere(
+                                                                      (it) =>
+                                                                          it!.attachmentType ==
+                                                                          attachmentTypeState
+                                                                              .attachmentTypes[
+                                                                                  0]
+                                                                              .id,
+                                                                      orElse: () =>
+                                                                          Attachment(
+                                                                              id:
+                                                                                  0))
+                                                                  .id !=
+                                                              Attachment(id: 0)
+                                                                  .id
+                                                          ? SizedBox(
+                                                              height: 137.h,
+                                                              width: 120.w,
+                                                              child: Wrap(
+                                                                children: _buildAttachmentImages(orderBrokerProvider
+                                                                    .attachments
+                                                                    .singleWhere(
+                                                                        (it) =>
+                                                                            it!.attachmentType ==
+                                                                            attachmentTypeState
+                                                                                .attachmentTypes[
+                                                                                    0]
+                                                                                .id,
+                                                                        orElse: () =>
+                                                                            Attachment(id: 0))
+                                                                    .image),
+                                                              ),
+                                                            )
+                                                          : cupertino.Padding(
+                                                              padding:
+                                                                  const EdgeInsets
+                                                                      .all(8.0),
+                                                              child: SizedBox(
+                                                                  height: 137.h,
+                                                                  width: 120.w,
+                                                                  child: SvgPicture
+                                                                      .asset(
+                                                                          "assets/icons/cloud.svg")),
+                                                            ),
+                                                    ),
+                                                  ),
+                                                  Text(
+                                                    attachmentTypeState
+                                                        .attachmentTypes[0]
+                                                        .name!,
+                                                    style: TextStyle(
+                                                      fontSize: 18.sp,
+                                                    ),
+                                                  ),
+                                                ],
+                                              ),
                                             );
                                           } else if (attachmentTypeState
                                               is AttachmentTypeLoadingProgress) {

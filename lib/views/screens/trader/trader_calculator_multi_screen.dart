@@ -310,6 +310,55 @@ class _TraderCalculatorMultiScreenState
     setState(() {});
   }
 
+  String showLabel(String unit, String lang) {
+    switch (unit) {
+      case "كغ":
+        return lang == 'en' ? "Weight" : "الوزن";
+
+      case "طن":
+        return lang == 'en' ? "Weight" : "الوزن";
+
+      case "قيراط":
+        return lang == 'en' ? "Weight" : "الوزن";
+
+      case "  كيلو واط بالساعة 1000":
+        return lang == 'en' ? "Power" : "الاستطاعة";
+
+      case "  الاستطاعة بالطن":
+        return lang == 'en' ? "Power" : "الاستطاعة";
+
+      case "واط":
+        return lang == 'en' ? "Power" : "الاستطاعة";
+
+      case "عدد الأزواج":
+        return lang == 'en' ? "Quantity" : "العدد";
+
+      case "عدد":
+        return lang == 'en' ? "Quantity" : "العدد";
+
+      case "طرد":
+        return lang == 'en' ? "Quantity" : "العدد";
+
+      case "قدم":
+        return lang == 'en' ? "Length" : "الطول";
+
+      case "متر":
+        return lang == 'en' ? "Length" : "الطول";
+
+      case "متر مربع":
+        return lang == 'en' ? "Area" : "المساحة";
+
+      case "متر مكعب":
+        return lang == 'en' ? "Volume" : "الحجم";
+
+      case "لتر":
+        return lang == 'en' ? "Capacity" : "السعة";
+
+      default:
+        return lang == 'en' ? "Weight" : "الوزن";
+    }
+  }
+
   String showUnit(String unit, String lang) {
     switch (unit) {
       case "كغ":
@@ -1809,10 +1858,15 @@ class _TraderCalculatorMultiScreenState
                                                                           18),
                                                                   decoration:
                                                                       InputDecoration(
-                                                                    labelText: AppLocalizations.of(
-                                                                            context)!
-                                                                        .translate(
-                                                                            'weight'),
+                                                                    labelText: showunits[
+                                                                            index]
+                                                                        ? showLabel(
+                                                                            packages[index]!
+                                                                                .unit!,
+                                                                            localeState
+                                                                                .value.languageCode)
+                                                                        : AppLocalizations.of(context)!
+                                                                            .translate('weight'),
                                                                     suffixText: showunits[
                                                                             index]
                                                                         ? showUnit(

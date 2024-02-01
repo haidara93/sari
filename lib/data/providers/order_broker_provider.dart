@@ -9,6 +9,9 @@ class OrderBrokerProvider extends ChangeNotifier {
   bool _selectedRadioTileError = false;
   bool get selectedRadioTileError => _selectedRadioTileError;
 
+  bool _isProfile = false;
+  bool get isProfile => _isProfile;
+
   StateCustome? _selectedStateCustome;
   StateCustome? get selectedStateCustome => _selectedStateCustome;
   CustomeAgency? _selectedCustomeAgency;
@@ -99,6 +102,11 @@ class OrderBrokerProvider extends ChangeNotifier {
 
   setSource(Origin? value) {
     _source = value;
+    notifyListeners();
+  }
+
+  setIsProfile(bool value) {
+    _isProfile = value;
     notifyListeners();
   }
 

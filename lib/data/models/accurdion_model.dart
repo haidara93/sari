@@ -292,7 +292,7 @@ class Export {
 }
 
 class StoneFarming {
-  String? id;
+  int? id;
   String? stonImport;
   String? stonImportNotes;
   String? stonExport;
@@ -361,7 +361,7 @@ class Finance {
   });
 
   Finance.fromJson(Map<String, dynamic> json) {
-    id = json['id'];
+    id = json['id'].toString();
     id_finance = json['id_finance'] ?? "";
     finance = json['finance'] ?? "";
   }

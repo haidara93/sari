@@ -97,6 +97,7 @@ class _SelectBrokerScreenState extends State<SelectBrokerScreen> {
             TextButton(
               child: const Text('Yes'),
               onPressed: () {
+                provider.setIsProfile(false);
                 List<String> productsId = [];
                 List<int> originId = [];
                 for (var i = 0; i < widget.product!.length; i++) {
@@ -452,7 +453,9 @@ class _SelectBrokerScreenState extends State<SelectBrokerScreen> {
                                                                 listener: (context,
                                                                     offerstate) {
                                                                   if (offerstate
-                                                                      is OfferLoadedSuccess) {
+                                                                          is OfferLoadedSuccess &&
+                                                                      !orderBrokerProvider
+                                                                          .isProfile) {
                                                                     BlocProvider.of<AttachmentsListBloc>(
                                                                             context)
                                                                         .add(

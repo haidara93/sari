@@ -80,6 +80,7 @@ class AccordionRepository {
         "$ACCURDION_FEES_ENDPOINT$subchapterId/", lang,
         apiToken: jwt);
     fees = [];
+    print(rs.statusCode);
     if (rs.statusCode == 200) {
       var myDataString = utf8.decode(rs.bodyBytes);
       var result = jsonDecode(myDataString);
