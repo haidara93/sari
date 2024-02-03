@@ -286,7 +286,7 @@ class AccordionRepository {
       try {
         for (var fee in feeSearch) {
           count++;
-          if (count > 20) {
+          if (count > 200) {
             break;
           }
           print(fee.idParent3!.idParent2!.idParent1!.id);
