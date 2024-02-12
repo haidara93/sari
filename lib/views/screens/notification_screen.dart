@@ -127,6 +127,7 @@ class _NotificationScreenState extends State<NotificationScreen> {
                                               builder: (context) =>
                                                   OfferDetailsScreen(
                                                 type: "trader",
+                                                operationtype: 1,
                                               ),
                                             ));
                                       }

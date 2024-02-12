@@ -125,8 +125,7 @@ class _TraderCalculatorMultiScreenState
       TextEditingController weight_controller = TextEditingController();
       TextEditingController value_controller = TextEditingController();
       TextEditingController origin_controller = TextEditingController();
-      package_controller.text =
-          AppLocalizations.of(context)!.translate('goods_name');
+      package_controller.text = "";
       packageControllers.add(package_controller);
       weightControllers.add(weight_controller);
       valueControllers.add(value_controller);
@@ -177,8 +176,7 @@ class _TraderCalculatorMultiScreenState
     TextEditingController weight_controller = TextEditingController();
     TextEditingController value_controller = TextEditingController();
     TextEditingController origin_controller = TextEditingController();
-    package_controller.text =
-        AppLocalizations.of(context)!.translate('goods_name');
+    package_controller.text = "";
     packageControllers.add(package_controller);
     weightControllers.add(weight_controller);
     valueControllers.add(value_controller);
@@ -896,13 +894,16 @@ class _TraderCalculatorMultiScreenState
                                                                     .start,
                                                             children: [
                                                               const SizedBox(
-                                                                height: 30,
+                                                                height: 10,
                                                               ),
                                                               Row(
                                                                 mainAxisAlignment:
                                                                     MainAxisAlignment
-                                                                        .spaceBetween,
+                                                                        .start,
                                                                 children: [
+                                                                  const SizedBox(
+                                                                    width: 35,
+                                                                  ),
                                                                   Focus(
                                                                     // focusNode: _ordernode,
                                                                     child: Text(
@@ -1033,10 +1034,10 @@ class _TraderCalculatorMultiScreenState
                                                                             () {},
                                                                         decoration:
                                                                             InputDecoration(
-                                                                          labelText:
-                                                                              AppLocalizations.of(context)!.translate('goods_name'),
-                                                                          hintText:
-                                                                              AppLocalizations.of(context)!.translate('goods_name'),
+                                                                          // labelText:
+                                                                          //     AppLocalizations.of(context)!.translate('goods_name'),
+                                                                          // hintText:
+                                                                          //     AppLocalizations.of(context)!.translate('goods_name'),
                                                                           contentPadding:
                                                                               const EdgeInsets.symmetric(
                                                                             horizontal:
@@ -1044,7 +1045,7 @@ class _TraderCalculatorMultiScreenState
                                                                             vertical:
                                                                                 11.0,
                                                                           ),
-                                                                          suffixIcon: packageControllers[index].text == AppLocalizations.of(context)!.translate('goods_name')
+                                                                          prefixIcon: packageControllers[index].text == ""
                                                                               ? SizedBox(
                                                                                   width: 130.w,
                                                                                   child: Row(
@@ -1917,7 +1918,9 @@ class _TraderCalculatorMultiScreenState
                                                                   validator:
                                                                       (value) {
                                                                     if (value!
-                                                                        .isEmpty) {
+                                                                            .isEmpty ||
+                                                                        value ==
+                                                                            "0.0") {
                                                                       return AppLocalizations.of(
                                                                               context)!
                                                                           .translate(
@@ -2030,7 +2033,9 @@ class _TraderCalculatorMultiScreenState
                                                                   validator:
                                                                       (value) {
                                                                     if (value!
-                                                                        .isEmpty) {
+                                                                            .isEmpty ||
+                                                                        value ==
+                                                                            "0.0") {
                                                                       return AppLocalizations.of(
                                                                               context)!
                                                                           .translate(
@@ -2261,14 +2266,33 @@ class _TraderCalculatorMultiScreenState
                                                 width: double.infinity,
                                                 decoration: BoxDecoration(
                                                   gradient: LinearGradient(
-                                                    colors: [
-                                                      AppColor.deepAppBarBlue,
-                                                      AppColor.lightAppBarBlue,
-                                                      AppColor
-                                                          .lighterAppBarBlue,
-                                                      AppColor.lightAppBarBlue,
-                                                      AppColor.deepAppBarBlue,
-                                                    ],
+                                                    colors: localeState.value
+                                                                .languageCode ==
+                                                            'en'
+                                                        ? [
+                                                            AppColor
+                                                                .lighterAppBarBlue,
+                                                            AppColor
+                                                                .lightAppBarBlue,
+                                                            AppColor
+                                                                .lightAppBarBlue,
+                                                            AppColor
+                                                                .deepAppBarBlue,
+                                                            AppColor
+                                                                .deepAppBarBlue,
+                                                          ]
+                                                        : [
+                                                            AppColor
+                                                                .deepAppBarBlue,
+                                                            AppColor
+                                                                .deepAppBarBlue,
+                                                            AppColor
+                                                                .lightAppBarBlue,
+                                                            AppColor
+                                                                .lightAppBarBlue,
+                                                            AppColor
+                                                                .lighterAppBarBlue,
+                                                          ],
                                                     begin:
                                                         Alignment.centerRight,
                                                     end: Alignment.centerLeft,
@@ -2286,19 +2310,19 @@ class _TraderCalculatorMultiScreenState
                                                       CrossAxisAlignment.start,
                                                   children: [
                                                     Text(
-                                                      "${AppLocalizations.of(context)!.translate('convert_to_dollar_value')}: ${f.format(double.parse(totalsyrianExchangeValue).toInt())}\$",
+                                                      "${AppLocalizations.of(context)!.translate('convert_to_dollar_value')}: ${f.format(double.parse(totalsyrianExchangeValue).toInt())} USD",
                                                       style: TextStyle(
                                                           color: Colors.white,
                                                           fontSize: 17.sp),
                                                     ),
                                                     Text(
-                                                      "${AppLocalizations.of(context)!.translate('total_value_in_eygptian_pound')}: ${f.format(double.parse(totalsyrianTotalValue).toInt())} E.P",
+                                                      "${AppLocalizations.of(context)!.translate('total_value_in_eygptian_pound')}: ${f.format(double.parse(totalsyrianTotalValue).toInt())} EGP",
                                                       style: TextStyle(
                                                           color: Colors.white,
                                                           fontSize: 17.sp),
                                                     ),
                                                     Text(
-                                                      "${AppLocalizations.of(context)!.translate('total_value_with_insurance')}: ${f.format(double.parse(totalTotalValueWithEnsurance).toInt())} E.P",
+                                                      "${AppLocalizations.of(context)!.translate('total_value_with_insurance')}: ${f.format(double.parse(totalTotalValueWithEnsurance).toInt())} EGP",
                                                       style: TextStyle(
                                                           color: Colors.white,
                                                           fontSize: 17.sp),

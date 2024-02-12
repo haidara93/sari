@@ -534,10 +534,53 @@ class _SelectBrokerScreenState extends State<SelectBrokerScreen> {
                                                                         ),
                                                                         onTap:
                                                                             () {
-                                                                          _showAlertDialog(
-                                                                              index,
-                                                                              state.brokers[index].id!,
-                                                                              orderBrokerProvider);
+                                                                          orderBrokerProvider
+                                                                              .setIsProfile(false);
+                                                                          List<String>
+                                                                              productsId =
+                                                                              [];
+                                                                          List<int>
+                                                                              originId =
+                                                                              [];
+                                                                          for (var i = 0;
+                                                                              i < widget.product!.length;
+                                                                              i++) {
+                                                                            productsId.add(widget.product![i]!.id!);
+                                                                            originId.add(widget.origin![i]!.id!);
+                                                                          }
+                                                                          BlocProvider.of<OfferBloc>(context)
+                                                                              .add(
+                                                                            AddOfferEvent(
+                                                                                orderBrokerProvider.selectedRadioTile,
+                                                                                state.brokers[index].id!,
+                                                                                orderBrokerProvider.packageNum,
+                                                                                orderBrokerProvider.tabalehNum,
+                                                                                widget.weight!,
+                                                                                widget.price!,
+                                                                                widget.taxes!,
+                                                                                widget.totalweight!,
+                                                                                widget.totalprice!,
+                                                                                widget.totaltaxes!,
+                                                                                widget.rawmaterial!,
+                                                                                widget.industrial!,
+                                                                                widget.brands!,
+                                                                                widget.tubes!,
+                                                                                widget.colored!,
+                                                                                widget.lycra!,
+                                                                                directorate_provider!.selectedCustomeAgency!.id!,
+                                                                                directorate_provider!.selectedStateCustome!.id!,
+                                                                                orderBrokerProvider.packageTypeId,
+                                                                                "${orderBrokerProvider.productExpireDate!.year}-${orderBrokerProvider.productExpireDate!.month}-${orderBrokerProvider.productExpireDate!.day}",
+                                                                                orderBrokerProvider.note,
+                                                                                orderBrokerProvider.source!,
+                                                                                originId,
+                                                                                productsId,
+                                                                                orderBrokerProvider.attachmentsId),
+                                                                          );
+                                                                          // _showAlertDialog(
+                                                                          //     index,
+                                                                          //     state.brokers[index].id!,
+                                                                          //     orderBrokerProvider);
                                                                         });
                                                                   }
                                                                 },

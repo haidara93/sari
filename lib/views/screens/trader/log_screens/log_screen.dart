@@ -266,12 +266,14 @@ class _LogScreenState extends State<LogScreen>
                                                 context)
                                             .add(OfferDetailsLoadEvent(
                                                 state.offers[index].id!));
+                                        print(tabIndex);
                                         Navigator.push(
                                             context,
                                             MaterialPageRoute(
                                               builder: (context) =>
                                                   OfferDetailsScreen(
                                                 type: "trader",
+                                                operationtype: tabIndex,
                                               ),
                                             ));
                                       },
@@ -293,45 +295,45 @@ class _LogScreenState extends State<LogScreen>
                                                 padding:
                                                     const EdgeInsets.all(8.0),
                                                 child: Row(
-                                                    mainAxisAlignment:
-                                                        MainAxisAlignment
-                                                            .spaceBetween,
-                                                    children: [
-                                                      Row(
-                                                        children: [
-                                                          SizedBox(
-                                                            height: 35.h,
-                                                            width: 35.w,
-                                                            child: Center(
-                                                              child: SvgPicture
-                                                                  .asset(
-                                                                "assets/icons/naval_shipping.svg",
-                                                                height: 55.h,
-                                                                width: 55.w,
-                                                                fit:
-                                                                    BoxFit.fill,
-                                                              ),
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment
+                                                          .spaceBetween,
+                                                  children: [
+                                                    Row(
+                                                      children: [
+                                                        SizedBox(
+                                                          height: 35.h,
+                                                          width: 35.w,
+                                                          child: Center(
+                                                            child: SvgPicture
+                                                                .asset(
+                                                              "assets/icons/naval_shipping.svg",
+                                                              height: 55.h,
+                                                              width: 55.w,
+                                                              fit: BoxFit.fill,
                                                             ),
                                                           ),
-                                                          SizedBox(
-                                                            width: 7.h,
-                                                          ),
-                                                          Text(
-                                                            'SA-${state.offers[index].id!}',
-                                                            style: TextStyle(
-                                                                // color: AppColor.lightBlue,
-                                                                fontSize: 18.sp,
-                                                                fontWeight:
-                                                                    FontWeight
-                                                                        .bold),
-                                                          ),
-                                                        ],
-                                                      ),
-                                                      Row(children: [
-                                                        Icon(
-                                                          Icons
-                                                              .notifications_none_outlined,
                                                         ),
+                                                        SizedBox(
+                                                          width: 7.h,
+                                                        ),
+                                                        Text(
+                                                          'SA-${state.offers[index].id!}',
+                                                          style: TextStyle(
+                                                              // color: AppColor.lightBlue,
+                                                              fontSize: 18.sp,
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .bold),
+                                                        ),
+                                                      ],
+                                                    ),
+                                                    Row(
+                                                      children: [
+                                                        // const Icon(
+                                                        //   Icons
+                                                        //       .notifications_none_outlined,
+                                                        // ),
                                                         SizedBox(
                                                           width: 7.h,
                                                         ),
@@ -344,8 +346,10 @@ class _LogScreenState extends State<LogScreen>
                                                               : Icons
                                                                   .arrow_back_ios_new,
                                                         ),
-                                                      ]),
-                                                    ]),
+                                                      ],
+                                                    ),
+                                                  ],
+                                                ),
                                               ),
                                               Padding(
                                                 padding:
@@ -391,7 +395,7 @@ class _LogScreenState extends State<LogScreen>
                                                 child: FittedBox(
                                                   // fit: BoxFit.scaleDown,
                                                   child: Text(
-                                                    "costums agency: ${state.offers[index].costumeagency!.name!}",
+                                                    "${AppLocalizations.of(context)!.translate('directorate')}: ${localeState.value.languageCode == 'en' ? state.offers[index].costumeagency!.name! : state.offers[index].costumeagency!.nameAr!}",
                                                     maxLines: 2,
                                                     style: TextStyle(
                                                       color: AppColor.deepBlue,
@@ -496,36 +500,47 @@ class _LogScreenState extends State<LogScreen>
                                                   //     ),
                                                   //   ),
                                                   // ),
-                                                  Padding(
-                                                    padding:
-                                                        EdgeInsets.all(3.0),
-                                                    child:
-                                                        LinearPercentIndicator(
-                                                      // width: MediaQuery.of(context)
-                                                      //         .size
-                                                      //         .width -
-                                                      //     50,
-                                                      animation: true,
-                                                      lineHeight: 20.0,
-                                                      animationDuration: 2000,
-                                                      percent: showPercentage(
-                                                          state.offers[index]
-                                                              .track_offer!),
-                                                      center: Text(
-                                                        "${(showPercentage(state.offers[index].track_offer!) * 100).toString()}%",
-                                                        style: TextStyle(
-                                                          color: Colors.white,
-                                                        ),
-                                                      ),
-                                                      linearStrokeCap:
-                                                          LinearStrokeCap
-                                                              .roundAll,
-                                                      progressColor:
-                                                          AppColor.deepYellow,
-                                                      barRadius:
-                                                          Radius.circular(15),
-                                                    ),
-                                                  ),
+                                                  tabIndex == 0
+                                                      ? Padding(
+                                                          padding:
+                                                              const EdgeInsets
+                                                                  .all(3.0),
+                                                          child:
+                                                              LinearPercentIndicator(
+                                                            // width: MediaQuery.of(context)
+                                                            //         .size
+                                                            //         .width -
+                                                            //     50,
+                                                            animation: true,
+                                                            lineHeight: 20.0,
+                                                            animationDuration:
+                                                                2000,
+                                                            percent: showPercentage(
+                                                                state
+                                                                    .offers[
+                                                                        index]
+                                                                    .track_offer!),
+                                                            center: Text(
+                                                              "${(showPercentage(state.offers[index].track_offer!) * 100).toString()}%",
+                                                              style:
+                                                                  const TextStyle(
+                                                                color: Colors
+                                                                    .white,
+                                                              ),
+                                                            ),
+                                                            linearStrokeCap:
+                                                                LinearStrokeCap
+                                                                    .roundAll,
+                                                            progressColor:
+                                                                AppColor
+                                                                    .deepYellow,
+                                                            barRadius:
+                                                                const Radius
+                                                                    .circular(
+                                                                    15),
+                                                          ),
+                                                        )
+                                                      : const SizedBox.shrink(),
                                                 ],
                                               ),
                                             ],

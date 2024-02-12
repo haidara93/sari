@@ -23,68 +23,119 @@ class StateAgencyRepository {
     prefs = await SharedPreferences.getInstance();
     var jwt = prefs.getString("token");
 
-    var rs = await HttpHelper.get(STATE_CUSTOMES_ENDPOINT, apiToken: jwt);
-    states = [];
-    if (rs.statusCode == 200) {
-      var myDataString = utf8.decode(rs.bodyBytes);
+    String fileName = "customstates";
 
-      var result = jsonDecode(myDataString);
-      for (var element in result) {
+    if (false) {
+      var jsonData = prefs.getString(fileName)!;
+      var res = jsonDecode(jsonData);
+      for (var element in res) {
         states.add(StateCustome.fromJson(element));
       }
+    } else {
+      var rs = await HttpHelper.get(STATE_CUSTOMES_ENDPOINT, apiToken: jwt);
+      states = [];
+      if (rs.statusCode == 200) {
+        var myDataString = utf8.decode(rs.bodyBytes);
+
+        var result = jsonDecode(myDataString);
+        for (var element in result) {
+          states.add(StateCustome.fromJson(element));
+        }
+        prefs.setString(fileName, myDataString);
+      }
     }
+
     return states;
   }
 
   Future<List<CustomeAgency>> getagencies(int id) async {
     prefs = await SharedPreferences.getInstance();
     var jwt = prefs.getString("token");
+    String fileName = "agencies$id";
 
-    var rs = await HttpHelper.get('$STATE_CUSTOMES_ENDPOINT$id/agencies/',
-        apiToken: jwt);
-    agencies = [];
-    if (rs.statusCode == 200) {
-      var myDataString = utf8.decode(rs.bodyBytes);
-
-      var result = jsonDecode(myDataString);
-      for (var element in result) {
+    if (prefs.getString(fileName) != null &&
+        prefs.getString(fileName)!.isNotEmpty) {
+      var jsonData = prefs.getString(fileName)!;
+      var res = jsonDecode(jsonData);
+      agencies = [];
+      for (var element in res) {
         agencies.add(CustomeAgency.fromJson(element));
       }
+    } else {
+      var rs = await HttpHelper.get('$STATE_CUSTOMES_ENDPOINT$id/agencies/',
+          apiToken: jwt);
+      agencies = [];
+      if (rs.statusCode == 200) {
+        var myDataString = utf8.decode(rs.bodyBytes);
+
+        var result = jsonDecode(myDataString);
+        for (var element in result) {
+          agencies.add(CustomeAgency.fromJson(element));
+        }
+        prefs.setString(fileName, myDataString);
+      }
     }
+
     return agencies;
   }
 
   Future<List<PackageType>> getPackageTypes() async {
     prefs = await SharedPreferences.getInstance();
     var jwt = prefs.getString("token");
+    String fileName = "packagesType";
 
-    var rs = await HttpHelper.get(PACKAGE_TYPES_ENDPOINT, apiToken: jwt);
-    packageTypes = [];
-    if (rs.statusCode == 200) {
-      var myDataString = utf8.decode(rs.bodyBytes);
-
-      var result = jsonDecode(myDataString);
-      for (var element in result) {
+    if (prefs.getString(fileName) != null &&
+        prefs.getString(fileName)!.isNotEmpty) {
+      var jsonData = prefs.getString(fileName)!;
+      var res = jsonDecode(jsonData);
+      packageTypes = [];
+      for (var element in res) {
         packageTypes.add(PackageType.fromJson(element));
       }
+    } else {
+      var rs = await HttpHelper.get(PACKAGE_TYPES_ENDPOINT, apiToken: jwt);
+      packageTypes = [];
+      if (rs.statusCode == 200) {
+        var myDataString = utf8.decode(rs.bodyBytes);
+
+        var result = jsonDecode(myDataString);
+        for (var element in result) {
+          packageTypes.add(PackageType.fromJson(element));
+        }
+        prefs.setString(fileName, myDataString);
+      }
     }
+
     return packageTypes;
   }
 
   Future<List<AttachmentType>> getAttachmentTypes() async {
     prefs = await SharedPreferences.getInstance();
     var jwt = prefs.getString("token");
+    String fileName = "attachmentType";
 
-    var rs = await HttpHelper.get(ATTACHMENT_TYPES_ENDPOINT, apiToken: jwt);
-    attachmentTypes = [];
-    if (rs.statusCode == 200) {
-      var myDataString = utf8.decode(rs.bodyBytes);
-
-      var result = jsonDecode(myDataString);
-      for (var element in result) {
+    if (prefs.getString(fileName) != null &&
+        prefs.getString(fileName)!.isNotEmpty) {
+      var jsonData = prefs.getString(fileName)!;
+      var res = jsonDecode(jsonData);
+      attachmentTypes = [];
+      for (var element in res) {
         attachmentTypes.add(AttachmentType.fromJson(element));
       }
+    } else {
+      var rs = await HttpHelper.get(ATTACHMENT_TYPES_ENDPOINT, apiToken: jwt);
+      attachmentTypes = [];
+      if (rs.statusCode == 200) {
+        var myDataString = utf8.decode(rs.bodyBytes);
+
+        var result = jsonDecode(myDataString);
+        for (var element in result) {
+          attachmentTypes.add(AttachmentType.fromJson(element));
+        }
+        prefs.setString(fileName, myDataString);
+      }
     }
+
     return attachmentTypes;
   }
 

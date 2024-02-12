@@ -45,16 +45,27 @@ class CalculatorService {
     var prefs = await SharedPreferences.getInstance();
     var jwt = prefs.getString("token");
     var url = 'https://across-mena.com/Fee_calculator/origin/';
-    var response = await http.get(Uri.parse(url), headers: {
-      HttpHeaders.contentTypeHeader: 'application/json; charset=UTF-8',
-      HttpHeaders.acceptHeader: 'application/json',
-      HttpHeaders.authorizationHeader: 'JWT $jwt'
-    });
-    var myDataString = utf8.decode(response.bodyBytes);
+    String fileName = "origins";
+    if (prefs.getString(fileName) != null &&
+        prefs.getString(fileName)!.isNotEmpty) {
+      var jsonData = prefs.getString(fileName)!;
+      var json = convert.jsonDecode(jsonData);
+      var jsonResults = json as List;
+      return jsonResults.map((place) => Origin.fromJson(place)).toList();
+    } else {
+      var response = await http.get(Uri.parse(url), headers: {
+        HttpHeaders.contentTypeHeader: 'application/json; charset=UTF-8',
+        HttpHeaders.acceptHeader: 'application/json',
+        HttpHeaders.authorizationHeader: 'JWT $jwt'
+      });
+      var myDataString = utf8.decode(response.bodyBytes);
 
-    var json = convert.jsonDecode(myDataString);
-    var jsonResults = json as List;
-    return jsonResults.map((place) => Origin.fromJson(place)).toList();
+      var json = convert.jsonDecode(myDataString);
+      prefs.setString(fileName, myDataString);
+
+      var jsonResults = json as List;
+      return jsonResults.map((place) => Origin.fromJson(place)).toList();
+    }
   }
 
   static Future<CalculatorResult> getCalculatorResult(

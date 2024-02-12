@@ -131,7 +131,7 @@ class _SelectBrokerProfileScreenState extends State<SelectBrokerProfileScreen> {
               : TextDirection.rtl,
           child: SafeArea(
             child: Scaffold(
-              appBar: AppBar(backgroundColor: AppColor.deepBlue),
+              // appBar: AppBar(backgroundColor: Colors.transparent),
               body: Stack(
                 children: [
                   SingleChildScrollView(
@@ -143,7 +143,7 @@ class _SelectBrokerProfileScreenState extends State<SelectBrokerProfileScreen> {
                             Column(
                               children: [
                                 Container(
-                                  height: 240.h,
+                                  height: 220.h,
                                   color: AppColor.deepBlue,
                                 ),
                                 SizedBox(
@@ -530,121 +530,155 @@ class _SelectBrokerProfileScreenState extends State<SelectBrokerProfileScreen> {
                     ),
                   ),
                   Positioned(
-                    bottom: 30,
-                    child: SizedBox(
+                      top: 0,
+                      left: 0,
+                      child: GestureDetector(
+                        onTap: () {
+                          Navigator.pop(context);
+                        },
+                        child: const AbsorbPointer(
+                          absorbing: true,
+                          child: Padding(
+                            padding: EdgeInsets.all(15.0),
+                            child: Icon(Icons.arrow_back),
+                          ),
+                        ),
+                      )),
+                  Positioned(
+                    bottom: 0,
+                    child: Container(
+                      decoration: const BoxDecoration(
+                        color: Colors.white,
+                        border: Border(
+                          top: BorderSide(color: Colors.grey, width: 1),
+                        ),
+                      ),
                       width: MediaQuery.of(context).size.width,
-                      child: Consumer<OrderBrokerProvider>(
-                          builder: (context, orderBrokerProvider, child) {
-                        return Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            BlocConsumer<OfferBloc, OfferState>(
-                              listener: (context, offerstate) {
-                                if (offerstate is OfferLoadedSuccess &&
-                                    orderBrokerProvider.isProfile) {
-                                  BlocProvider.of<AttachmentsListBloc>(context)
-                                      .add(ClearAttachmentToListEvent());
-                                  // BlocProvider.of<BrokerListBloc>(
-                                  //         context)
-                                  //     .add(BrokerListLoadEvent());
-                                  Navigator.pushAndRemoveUntil(
-                                    context,
-                                    MaterialPageRoute(
-                                      builder: (context) => const ControlView(),
-                                    ),
-                                    (route) => false,
-                                  );
-                                  ScaffoldMessenger.of(context)
-                                      .showSnackBar(SnackBar(
-                                    backgroundColor: AppColor.deepYellow,
-                                    content: Text(AppLocalizations.of(context)!
-                                        .translate('order_success_message')),
-                                    duration: const Duration(seconds: 3),
-                                  ));
-                                  orderBrokerProvider.initProvider();
-                                }
-                                if (offerstate is OfferLoadedFailed) {
-                                  print(offerstate.errortext);
-                                  ScaffoldMessenger.of(context)
-                                      .showSnackBar(SnackBar(
-                                    content: Text(AppLocalizations.of(context)!
-                                        .translate('order_waring_message')),
-                                    duration: const Duration(seconds: 3),
-                                  ));
-                                }
-                              },
-                              builder: (context, offerstate) {
-                                if (offerstate is OfferLoadingProgress) {
-                                  return CustomButton(
-                                    onTap: () {},
-                                    title: SizedBox(
-                                        width:
-                                            MediaQuery.of(context).size.width *
-                                                .75,
-                                        child: const Center(
-                                            child: LoadingIndicator())),
-                                  );
-                                } else {
-                                  return CustomButton(
-                                      title: SizedBox(
-                                        width:
-                                            MediaQuery.of(context).size.width *
-                                                .75,
-                                        child: const Center(
-                                          child: Text("CB request"),
-                                        ),
+                      child: Padding(
+                        padding: const EdgeInsets.all(15.0),
+                        child: Consumer<OrderBrokerProvider>(
+                            builder: (context, orderBrokerProvider, child) {
+                          return Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              BlocConsumer<OfferBloc, OfferState>(
+                                listener: (context, offerstate) {
+                                  if (offerstate is OfferLoadedSuccess &&
+                                      orderBrokerProvider.isProfile) {
+                                    BlocProvider.of<AttachmentsListBloc>(
+                                            context)
+                                        .add(ClearAttachmentToListEvent());
+                                    // BlocProvider.of<BrokerListBloc>(
+                                    //         context)
+                                    //     .add(BrokerListLoadEvent());
+                                    Navigator.pushAndRemoveUntil(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) =>
+                                            const ControlView(),
                                       ),
-                                      onTap: () {
-                                        orderBrokerProvider.setIsProfile(true);
+                                      (route) => false,
+                                    );
+                                    ScaffoldMessenger.of(context)
+                                        .showSnackBar(SnackBar(
+                                      backgroundColor: AppColor.deepYellow,
+                                      content: Text(AppLocalizations.of(
+                                              context)!
+                                          .translate('order_success_message')),
+                                      duration: const Duration(seconds: 3),
+                                    ));
+                                    orderBrokerProvider.initProvider();
+                                  }
+                                  if (offerstate is OfferLoadedFailed) {
+                                    print(offerstate.errortext);
+                                    ScaffoldMessenger.of(context)
+                                        .showSnackBar(SnackBar(
+                                      content: Text(AppLocalizations.of(
+                                              context)!
+                                          .translate('order_waring_message')),
+                                      duration: const Duration(seconds: 3),
+                                    ));
+                                  }
+                                },
+                                builder: (context, offerstate) {
+                                  if (offerstate is OfferLoadingProgress) {
+                                    return CustomButton(
+                                      onTap: () {},
+                                      title: SizedBox(
+                                          width: MediaQuery.of(context)
+                                                  .size
+                                                  .width *
+                                              .75,
+                                          child: const Center(
+                                              child: LoadingIndicator())),
+                                    );
+                                  } else {
+                                    return CustomButton(
+                                        title: SizedBox(
+                                          width: MediaQuery.of(context)
+                                                  .size
+                                                  .width *
+                                              .75,
+                                          child: const Center(
+                                            child: Text("CB request"),
+                                          ),
+                                        ),
+                                        onTap: () {
+                                          orderBrokerProvider
+                                              .setIsProfile(true);
 
-                                        List<String> productsId = [];
-                                        List<int> originId = [];
-                                        for (var i = 0;
-                                            i < widget.product!.length;
-                                            i++) {
-                                          productsId
-                                              .add(widget.product![i]!.id!);
-                                          originId.add(widget.origin![i]!.id!);
-                                        }
-                                        BlocProvider.of<OfferBloc>(context).add(
-                                          AddOfferEvent(
-                                              orderBrokerProvider
-                                                  .selectedRadioTile,
-                                              widget.broker.id!,
-                                              orderBrokerProvider.packageNum,
-                                              orderBrokerProvider.tabalehNum,
-                                              widget.weight!,
-                                              widget.price!,
-                                              widget.taxes!,
-                                              widget.totalweight!,
-                                              widget.totalprice!,
-                                              widget.totaltaxes!,
-                                              widget.rawmaterial!,
-                                              widget.industrial!,
-                                              widget.brands!,
-                                              widget.tubes!,
-                                              widget.colored!,
-                                              widget.lycra!,
-                                              directorate_provider!
-                                                  .selectedCustomeAgency!.id!,
-                                              directorate_provider!
-                                                  .selectedStateCustome!.id!,
-                                              orderBrokerProvider.packageTypeId,
-                                              "${orderBrokerProvider.productExpireDate!.year}-${orderBrokerProvider.productExpireDate!.month}-${orderBrokerProvider.productExpireDate!.day}",
-                                              orderBrokerProvider.note,
-                                              orderBrokerProvider.source!,
-                                              originId,
-                                              productsId,
-                                              orderBrokerProvider
-                                                  .attachmentsId),
-                                        );
-                                      });
-                                }
-                              },
-                            ),
-                          ],
-                        );
-                      }),
+                                          List<String> productsId = [];
+                                          List<int> originId = [];
+                                          for (var i = 0;
+                                              i < widget.product!.length;
+                                              i++) {
+                                            productsId
+                                                .add(widget.product![i]!.id!);
+                                            originId
+                                                .add(widget.origin![i]!.id!);
+                                          }
+                                          BlocProvider.of<OfferBloc>(context)
+                                              .add(
+                                            AddOfferEvent(
+                                                orderBrokerProvider
+                                                    .selectedRadioTile,
+                                                widget.broker.id!,
+                                                orderBrokerProvider.packageNum,
+                                                orderBrokerProvider.tabalehNum,
+                                                widget.weight!,
+                                                widget.price!,
+                                                widget.taxes!,
+                                                widget.totalweight!,
+                                                widget.totalprice!,
+                                                widget.totaltaxes!,
+                                                widget.rawmaterial!,
+                                                widget.industrial!,
+                                                widget.brands!,
+                                                widget.tubes!,
+                                                widget.colored!,
+                                                widget.lycra!,
+                                                directorate_provider!
+                                                    .selectedCustomeAgency!.id!,
+                                                directorate_provider!
+                                                    .selectedStateCustome!.id!,
+                                                orderBrokerProvider
+                                                    .packageTypeId,
+                                                "${orderBrokerProvider.productExpireDate!.year}-${orderBrokerProvider.productExpireDate!.month}-${orderBrokerProvider.productExpireDate!.day}",
+                                                orderBrokerProvider.note,
+                                                orderBrokerProvider.source!,
+                                                originId,
+                                                productsId,
+                                                orderBrokerProvider
+                                                    .attachmentsId),
+                                          );
+                                        });
+                                  }
+                                },
+                              ),
+                            ],
+                          );
+                        }),
+                      ),
                     ),
                   ),
                 ],

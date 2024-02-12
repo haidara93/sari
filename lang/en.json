@@ -99,9 +99,9 @@
     "select_source":"select source",
     "weight":"Net Weight",
     "total_value_in_dollar":"Total Value in US Dollar",
-    "total_value_in_eygptian_pound":"Total Value in Eygptian Pound",
-    "convert_to_dollar_value":"Eygptian Pound Value to US Dollar",
-    "total_value_with_insurance":"value of insurance",
+    "total_value_in_eygptian_pound":"Total Value of the goods",
+    "convert_to_dollar_value":"Conversion Rate",
+    "total_value_with_insurance":"Total value with insurance",
     "calculate_costume_fee":"Calculate Custome Fee",
     "insert_value_validate":"please insert value",
     "price_for_custome":"Price for Custome",
@@ -180,6 +180,7 @@
     
     "notifications":"Notifications",
     "no_notifications_text":"You have no Notifications to show",
+    "ok":"Ok",
     
     "read_more":"read more",
     "since":"since",

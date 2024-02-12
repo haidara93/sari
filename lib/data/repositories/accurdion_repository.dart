@@ -15,19 +15,32 @@ class AccordionRepository {
 
   Future<List<Section?>> getSections() async {
     prefs = await SharedPreferences.getInstance();
+    String fileName = "sections";
+
     var jwt = prefs.getString("token");
     var lang = prefs.getString("language") ?? "en";
-    var rs = await HttpHelper.getlang(ACCURDION_SECTION_ENDPOINT, lang,
-        apiToken: jwt);
-    sections = [];
-    if (rs.statusCode == 200) {
-      var myDataString = utf8.decode(rs.bodyBytes);
-
-      var result = jsonDecode(myDataString);
-      for (var element in result) {
+    if (prefs.getString(fileName) != null &&
+        prefs.getString(fileName)!.isNotEmpty) {
+      var jsonData = prefs.getString(fileName)!;
+      var res = jsonDecode(jsonData);
+      for (var element in res) {
         sections.add(Section.fromJson(element));
       }
+    } else {
+      var rs = await HttpHelper.getlang(ACCURDION_SECTION_ENDPOINT, lang,
+          apiToken: jwt);
+      sections = [];
+      if (rs.statusCode == 200) {
+        var myDataString = utf8.decode(rs.bodyBytes);
+
+        var result = jsonDecode(myDataString);
+        for (var element in result) {
+          sections.add(Section.fromJson(element));
+        }
+        prefs.setString(fileName, myDataString);
+      }
     }
+
     return sections;
   }
 
@@ -35,19 +48,32 @@ class AccordionRepository {
     prefs = await SharedPreferences.getInstance();
     var jwt = prefs.getString("token");
     var lang = prefs.getString("language") ?? "en";
+    String fileName = "chapters$sectionId";
 
-    var rs = await HttpHelper.getlang(
-        "$ACCURDION_CHAPTERS_ENDPOINT$sectionId/", lang,
-        apiToken: jwt);
-    chapters = [];
-    if (rs.statusCode == 200) {
-      var myDataString = utf8.decode(rs.bodyBytes);
-
-      var result = jsonDecode(myDataString);
-      for (var element in result["chapters"]) {
+    if (prefs.getString(fileName) != null &&
+        prefs.getString(fileName)!.isNotEmpty) {
+      var jsonData = prefs.getString(fileName)!;
+      var res = jsonDecode(jsonData);
+      chapters = [];
+      for (var element in res["chapters"]) {
         chapters.add(Chapter.fromJson(element));
       }
+    } else {
+      var rs = await HttpHelper.getlang(
+          "$ACCURDION_CHAPTERS_ENDPOINT$sectionId/", lang,
+          apiToken: jwt);
+      chapters = [];
+      if (rs.statusCode == 200) {
+        var myDataString = utf8.decode(rs.bodyBytes);
+
+        var result = jsonDecode(myDataString);
+        for (var element in result["chapters"]) {
+          chapters.add(Chapter.fromJson(element));
+        }
+        prefs.setString(fileName, myDataString);
+      }
     }
+
     return chapters;
   }
 
@@ -56,19 +82,32 @@ class AccordionRepository {
     var jwt = prefs.getString("token");
 
     var lang = prefs.getString("language") ?? "en";
+    String fileName = "subchapters$chapterId";
 
-    var rs = await HttpHelper.getlang(
-        "$ACCURDION_SUBCHAPTERS_ENDPOINT$chapterId/", lang,
-        apiToken: jwt);
-    subchapters = [];
-    if (rs.statusCode == 200) {
-      var myDataString = utf8.decode(rs.bodyBytes);
-
-      var result = jsonDecode(myDataString);
-      for (var element in result["sub_chapters"]) {
+    if (prefs.getString(fileName) != null &&
+        prefs.getString(fileName)!.isNotEmpty) {
+      var jsonData = prefs.getString(fileName)!;
+      var res = jsonDecode(jsonData);
+      subchapters = [];
+      for (var element in res["sub_chapters"]) {
         subchapters.add(SubChapter.fromJson(element));
       }
+    } else {
+      var rs = await HttpHelper.getlang(
+          "$ACCURDION_SUBCHAPTERS_ENDPOINT$chapterId/", lang,
+          apiToken: jwt);
+      subchapters = [];
+      if (rs.statusCode == 200) {
+        var myDataString = utf8.decode(rs.bodyBytes);
+
+        var result = jsonDecode(myDataString);
+        for (var element in result["sub_chapters"]) {
+          subchapters.add(SubChapter.fromJson(element));
+        }
+        prefs.setString(fileName, myDataString);
+      }
     }
+
     return subchapters;
   }
 
@@ -76,18 +115,33 @@ class AccordionRepository {
     prefs = await SharedPreferences.getInstance();
     var jwt = prefs.getString("token");
     var lang = prefs.getString("language") ?? "en";
-    var rs = await HttpHelper.getlang(
-        "$ACCURDION_FEES_ENDPOINT$subchapterId/", lang,
-        apiToken: jwt);
-    fees = [];
-    print(rs.statusCode);
-    if (rs.statusCode == 200) {
-      var myDataString = utf8.decode(rs.bodyBytes);
-      var result = jsonDecode(myDataString);
-      for (var element in result["fees"]) {
+
+    String fileName = "fees$subchapterId";
+
+    if (prefs.getString(fileName) != null &&
+        prefs.getString(fileName)!.isNotEmpty) {
+      var jsonData = prefs.getString(fileName)!;
+      var res = jsonDecode(jsonData);
+      fees = [];
+      for (var element in res["fees"]) {
         fees.add(FeeSet.fromJson(element));
       }
+    } else {
+      var rs = await HttpHelper.getlang(
+          "$ACCURDION_FEES_ENDPOINT$subchapterId/", lang,
+          apiToken: jwt);
+      fees = [];
+      print(rs.statusCode);
+      if (rs.statusCode == 200) {
+        var myDataString = utf8.decode(rs.bodyBytes);
+        var result = jsonDecode(myDataString);
+        for (var element in result["fees"]) {
+          fees.add(FeeSet.fromJson(element));
+        }
+        prefs.setString(fileName, myDataString);
+      }
     }
+
     return fees;
   }
 

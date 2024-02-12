@@ -177,7 +177,7 @@ class BrokerCostDetailsScreen extends StatelessWidget {
                             Text(
                               AppLocalizations.of(context)!
                                   .translate('operation_costs'),
-                              style: TextStyle(
+                              style: const TextStyle(
                                   fontWeight: FontWeight.bold, fontSize: 22),
                             ),
                             const SizedBox(
@@ -217,7 +217,7 @@ class BrokerCostDetailsScreen extends StatelessWidget {
                                   maxLines: 3,
                                 ),
                                 Text(
-                                  totalCost(costs),
+                                  "${totalCost(costs)} EGP",
                                   style: TextStyle(
                                       fontSize: 20.sp,
                                       color: AppColor.deepYellow,
@@ -290,10 +290,7 @@ class BrokerCostDetailsScreen extends StatelessWidget {
                                   maxLines: 3,
                                 ),
                                 Text(
-                                  finaltotalCost(
-                                      costs,
-                                      double.parse(
-                                          state.result.totalFinalTotal!)),
+                                  "${finaltotalCost(costs, double.parse(state.result.totalFinalTotal!))} EGP",
                                   style: TextStyle(
                                       fontWeight: FontWeight.bold,
                                       fontSize: 20.sp,

@@ -82,9 +82,9 @@
     "select_source":"اختر المصدر",
     "weight":"الوزن",
     "total_value_in_dollar":"قيمة البضاعة الاجمالية بالدولار",
-    "total_value_in_eygptian_pound":"القيمة الاجمالية بالجنيه المصري",
-    "convert_to_dollar_value":"قيمة الجنيه المصري مقابل الدولار",
-    "total_value_with_insurance":"قيمةالتأمين",
+    "total_value_in_eygptian_pound":"القيمة الاجمالية للبضاعة",
+    "convert_to_dollar_value":"معدل التحويل",
+    "total_value_with_insurance":"القيمة الاجمالية مع التأمين",
     "calculate_costume_fee":"احسب الرسم الجمركي",
     "insert_value_validate":"الرجاء ادخال قيمة",
     "price_for_custome":"سعر الواحدة لدى الجمارك",
@@ -181,6 +181,7 @@
     
     "notifications":"الاشعارات",
     "no_notifications_text":"لا يوجد لديك أية اشعارات لعرضها",
+    "ok":"تم",
 
     "read_more":"اقرأ المزيد",
     "since":"منذ",

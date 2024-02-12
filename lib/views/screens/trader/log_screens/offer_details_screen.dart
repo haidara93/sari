@@ -1,6 +1,5 @@
 import 'package:custome_mobile/Localization/app_localizations.dart';
 import 'package:custome_mobile/business_logic/bloc/calculate_result/calculate_multi_result_dart_bloc.dart';
-import 'package:custome_mobile/business_logic/bloc/calculate_result/calculate_result_bloc.dart';
 import 'package:custome_mobile/business_logic/bloc/offer_details_bloc.dart';
 import 'package:custome_mobile/business_logic/cubit/locale_cubit.dart';
 import 'package:custome_mobile/data/models/offer_model.dart';
@@ -19,7 +18,7 @@ import 'package:custome_mobile/views/widgets/loading_indicator.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:flutter_svg/flutter_svg.dart';
+import 'package:intl/intl.dart' as intel;
 import 'package:provider/provider.dart';
 import 'package:flutter_gif/flutter_gif.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -28,7 +27,10 @@ import 'package:shared_preferences/shared_preferences.dart';
 class OfferDetailsScreen extends StatefulWidget {
   // final Offer offer;
   final String type;
-  OfferDetailsScreen({Key? key, required this.type}) : super(key: key);
+  final int operationtype;
+  OfferDetailsScreen(
+      {Key? key, required this.type, required this.operationtype})
+      : super(key: key);
 
   @override
   State<OfferDetailsScreen> createState() => _OfferDetailsScreenState();
@@ -39,11 +41,22 @@ class _OfferDetailsScreenState extends State<OfferDetailsScreen>
   late FlutterGifController controller1;
   CalculateObject result = CalculateObject();
   List<CalculateObject> objects = [];
+  var f = intel.NumberFormat("#,###", "en_US");
+  double finaltotalcost = 0.0;
 
   TraderOfferProvider? trader_offerProvider;
   BrokerOfferProvider? broker_offerProvider;
   String userType = "Trader";
   late SharedPreferences prefs;
+
+  String finaltotalCost(List<Costs>? costs, double finaltotal) {
+    double total = 0.0;
+    for (var element in costs!) {
+      total += element.amount!;
+    }
+    return f.format((total + finaltotal).toInt());
+  }
+
   String getOfferType(String offer) {
     switch (offer) {
       case "I":
@@ -116,10 +129,44 @@ class _OfferDetailsScreenState extends State<OfferDetailsScreen>
     userType = prefs.getString("userType") ?? "Trader";
   }
 
+  void calculateCosts() {
+    objects = [];
+    for (var i = 0; i < broker_offerProvider!.products!.length; i++) {
+      objects.add(CalculateObject());
+      objects[i].insurance = broker_offerProvider!.taxes![i];
+      objects[i].fee = broker_offerProvider!.products![i].fee;
+      objects[i].rawMaterial = broker_offerProvider!.raw_material![i] ? 1 : 0;
+      objects[i].industrial = broker_offerProvider!.industrial![i] ? 1 : 0;
+      objects[i].totalTax =
+          broker_offerProvider!.products![i]!.totalTaxes!.totalTax!.toDouble();
+      objects[i].partialTax = broker_offerProvider!
+          .products![i]!.totalTaxes!.partialTax!
+          .toDouble();
+      objects[i].origin = broker_offerProvider!.origin![i].label;
+      objects[i].spendingFee = broker_offerProvider!.products![i]!.spendingFee;
+      objects[i].supportFee = broker_offerProvider!.products![i]!.supportFee;
+      objects[i].localFee =
+          broker_offerProvider!.products![i]!.localFee!.toDouble();
+      objects[i].protectionFee =
+          broker_offerProvider!.products![i]!.protectionFee;
+      objects[i].naturalFee = broker_offerProvider!.products![i]!.naturalFee;
+      objects[i].taxFee = broker_offerProvider!.products![i]!.taxFee;
+      objects[i].weight = broker_offerProvider!.weight![i];
+      objects[i].price = broker_offerProvider!.price![i];
+      objects[i].cnsulate = 1;
+      objects[i].dolar = 8585;
+      objects[i].arabic_stamp =
+          broker_offerProvider!.products![i]!.totalTaxes!.arabicStamp!.toInt();
+      objects[i].import_fee = broker_offerProvider!.products![i]!.importFee!;
+    }
+    BlocProvider.of<CalculateMultiResultBloc>(context)
+        .add(CalculateMultiTheResultEvent(objects));
+  }
+
   @override
   void initState() {
     controller1 = FlutterGifController(vsync: this);
-    WidgetsBinding.instance?.addPostFrameCallback((_) {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
       controller1.repeat(
         min: 0,
         max: 53,
@@ -133,6 +180,7 @@ class _OfferDetailsScreenState extends State<OfferDetailsScreen>
           Provider.of<TraderOfferProvider>(context, listen: false);
       broker_offerProvider =
           Provider.of<BrokerOfferProvider>(context, listen: false);
+      calculateCosts();
     });
   }
 
@@ -458,8 +506,13 @@ class _OfferDetailsScreenState extends State<OfferDetailsScreen>
                                             ),
                                             children: [
                                               TextSpan(
-                                                text: offerstate
-                                                    .offer.costumeagency!.name,
+                                                text: localeState.value
+                                                            .languageCode ==
+                                                        'en'
+                                                    ? offerstate.offer
+                                                        .costumeagency!.name
+                                                    : offerstate.offer
+                                                        .costumeagency!.nameAr,
                                                 style: TextStyle(
                                                   color: Colors.black,
                                                   fontSize: 16.sp,
@@ -501,7 +554,7 @@ class _OfferDetailsScreenState extends State<OfferDetailsScreen>
                             ),
                           ),
                           SizedBox(
-                            height: 15.h,
+                            height: 7.h,
                           ),
                           ListView.builder(
                             itemCount: broker_offerProvider!.products!.length,
@@ -548,7 +601,7 @@ class _OfferDetailsScreenState extends State<OfferDetailsScreen>
                                                                 .width *
                                                             .84,
                                                     child: Text(
-                                                      'commodity name: ${localeState.value.languageCode == 'en' ? broker_offerProvider!.products![index].labelen! : broker_offerProvider!.products![index].label!}',
+                                                      '${AppLocalizations.of(context)!.translate('goods_name')}: ${localeState.value.languageCode == 'en' ? broker_offerProvider!.products![index].labelen! : broker_offerProvider!.products![index].label!}',
                                                       overflow:
                                                           TextOverflow.ellipsis,
                                                       maxLines: 10,
@@ -563,8 +616,14 @@ class _OfferDetailsScreenState extends State<OfferDetailsScreen>
                                               ),
                                               onExpansionChanged: (value) {},
                                               children: buildProductTiles(
-                                                  broker_offerProvider!
-                                                      .costumeagency!.name!,
+                                                  localeState.value
+                                                              .languageCode ==
+                                                          'en'
+                                                      ? broker_offerProvider!
+                                                          .costumeagency!.name!
+                                                      : broker_offerProvider!
+                                                          .costumeagency!
+                                                          .nameAr!,
                                                   broker_offerProvider!
                                                       .origin![index],
                                                   broker_offerProvider!
@@ -612,138 +671,89 @@ class _OfferDetailsScreenState extends State<OfferDetailsScreen>
                             },
                           ),
                           SizedBox(
-                            height: 15.h,
+                            height: 7.h,
                           ),
-                          Card(
-                            clipBehavior: Clip.antiAlias,
-                            shape: const RoundedRectangleBorder(
-                                borderRadius: BorderRadius.all(
-                              Radius.circular(15),
-                            )),
-                            margin: EdgeInsets.symmetric(horizontal: 10.w),
-                            elevation: 1,
-                            color: Colors.white,
-                            child: Padding(
-                              padding: EdgeInsets.symmetric(
-                                  horizontal: 15.w, vertical: 7.5.h),
-                              child: Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                children: [
-                                  Text(
-                                    "${AppLocalizations.of(context)!.translate('total_costs')}:",
-                                    style: TextStyle(
-                                      fontSize: 17.sp,
-                                      fontWeight: FontWeight.bold,
-                                    ),
-                                  ),
-                                  Text(
-                                    totalCost(broker_offerProvider!.costs),
-                                    style: TextStyle(
-                                      color: AppColor.lightBlue,
-                                      fontSize: 15.sp,
-                                    ),
-                                  ),
-                                  GestureDetector(
-                                    onTap: () async {
-                                      Navigator.push(
-                                          context,
-                                          MaterialPageRoute(
-                                            builder: (context) =>
-                                                BrokerCostDetailsScreen(
-                                              costs:
-                                                  broker_offerProvider!.costs,
-                                            ),
-                                          ));
-                                      objects = [];
-                                      for (var i = 0;
-                                          i <
-                                              broker_offerProvider!
-                                                  .products!.length;
-                                          i++) {
-                                        objects.add(CalculateObject());
-                                        objects[i].insurance =
-                                            broker_offerProvider!.taxes![i];
-                                        objects[i].fee = broker_offerProvider!
-                                            .products![i].fee;
-                                        objects[i].rawMaterial =
-                                            broker_offerProvider!
-                                                    .raw_material![i]
-                                                ? 1
-                                                : 0;
-                                        objects[i].industrial =
-                                            broker_offerProvider!.industrial![i]
-                                                ? 1
-                                                : 0;
-                                        objects[i].totalTax =
-                                            broker_offerProvider!.products![i]!
-                                                .totalTaxes!.totalTax!
-                                                .toDouble();
-                                        objects[i].partialTax =
-                                            broker_offerProvider!.products![i]!
-                                                .totalTaxes!.partialTax!
-                                                .toDouble();
-                                        objects[i].origin =
-                                            broker_offerProvider!
-                                                .origin![i].label;
-                                        objects[i].spendingFee =
-                                            broker_offerProvider!
-                                                .products![i]!.spendingFee;
-                                        objects[i].supportFee =
-                                            broker_offerProvider!
-                                                .products![i]!.supportFee;
-                                        objects[i].localFee =
-                                            broker_offerProvider!
-                                                .products![i]!.localFee!
-                                                .toDouble();
-                                        objects[i].protectionFee =
-                                            broker_offerProvider!
-                                                .products![i]!.protectionFee;
-                                        objects[i].naturalFee =
-                                            broker_offerProvider!
-                                                .products![i]!.naturalFee;
-                                        objects[i].taxFee =
-                                            broker_offerProvider!
-                                                .products![i]!.taxFee;
-                                        objects[i].weight =
-                                            broker_offerProvider!.weight![i];
-                                        objects[i].price =
-                                            broker_offerProvider!.price![i];
-                                        objects[i].cnsulate = 1;
-                                        objects[i].dolar = 8585;
-                                        objects[i].arabic_stamp =
-                                            broker_offerProvider!.products![i]!
-                                                .totalTaxes!.arabicStamp!
-                                                .toInt();
-                                        objects[i].import_fee =
-                                            broker_offerProvider!
-                                                .products![i]!.importFee!;
-                                      }
-                                      BlocProvider.of<CalculateMultiResultBloc>(
-                                              context)
-                                          .add(CalculateMultiTheResultEvent(
-                                              objects));
+                          Visibility(
+                            visible: widget.operationtype == 0,
+                            child: Column(
+                              children: [
+                                Card(
+                                  clipBehavior: Clip.antiAlias,
+                                  shape: const RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.all(
+                                    Radius.circular(15),
+                                  )),
+                                  margin:
+                                      EdgeInsets.symmetric(horizontal: 10.w),
+                                  elevation: 1,
+                                  color: Colors.white,
+                                  child: Padding(
+                                    padding: EdgeInsets.symmetric(
+                                        horizontal: 15.w, vertical: 7.5.h),
+                                    child: Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        Text(
+                                          "${AppLocalizations.of(context)!.translate('total_costs')}:",
+                                          style: TextStyle(
+                                            fontSize: 19,
+                                            fontWeight: FontWeight.bold,
+                                            color: AppColor.deepBlue,
+                                          ),
+                                        ),
+                                        BlocBuilder<CalculateMultiResultBloc,
+                                            CalculateMultiResultState>(
+                                          builder: (context, state) {
+                                            if (state
+                                                is CalculateMultiResultSuccessed) {
+                                              return Text(
+                                                "${finaltotalCost(broker_offerProvider!.costs, double.parse(state.result.totalFinalTotal!))} EGP",
+                                                style: TextStyle(
+                                                  color: AppColor.lightBlue,
+                                                  fontSize: 17.sp,
+                                                ),
+                                              );
+                                            } else {
+                                              return const LoadingIndicator();
+                                            }
+                                          },
+                                        ),
+                                        GestureDetector(
+                                          onTap: () async {
+                                            Navigator.push(
+                                                context,
+                                                MaterialPageRoute(
+                                                  builder: (context) =>
+                                                      BrokerCostDetailsScreen(
+                                                    costs: broker_offerProvider!
+                                                        .costs,
+                                                  ),
+                                                ));
 
-                                      // ignore: use_build_context_synchronously
-                                    },
-                                    child: Padding(
-                                      padding: EdgeInsets.all(8.h),
-                                      child: Text(
-                                        AppLocalizations.of(context)!
-                                            .translate('details'),
-                                        style: TextStyle(
-                                            color: AppColor.lightBlue,
-                                            fontSize: 17.sp,
-                                            fontWeight: FontWeight.bold),
-                                      ),
+                                            // ignore: use_build_context_synchronously
+                                          },
+                                          child: Padding(
+                                            padding: EdgeInsets.all(8.h),
+                                            child: Text(
+                                              AppLocalizations.of(context)!
+                                                  .translate('details'),
+                                              style: TextStyle(
+                                                  color: AppColor.lightBlue,
+                                                  fontSize: 17.sp,
+                                                  fontWeight: FontWeight.bold),
+                                            ),
+                                          ),
+                                        ),
+                                      ],
                                     ),
                                   ),
-                                ],
-                              ),
+                                ),
+                                SizedBox(
+                                  height: 7.h,
+                                ),
+                              ],
                             ),
-                          ),
-                          SizedBox(
-                            height: 15.h,
                           ),
                           Card(
                             clipBehavior: Clip.antiAlias,
@@ -764,8 +774,9 @@ class _OfferDetailsScreenState extends State<OfferDetailsScreen>
                                   Text(
                                     "${AppLocalizations.of(context)!.translate('attachments')}:",
                                     style: TextStyle(
-                                      fontSize: 17.sp,
+                                      fontSize: 19,
                                       fontWeight: FontWeight.bold,
+                                      color: AppColor.deepBlue,
                                     ),
                                   ),
                                   GestureDetector(
@@ -800,203 +811,233 @@ class _OfferDetailsScreenState extends State<OfferDetailsScreen>
                             ),
                           ),
                           SizedBox(
-                            height: 15.h,
+                            height: 7.h,
                           ),
-                          Card(
-                            clipBehavior: Clip.antiAlias,
-                            shape: const RoundedRectangleBorder(
-                                borderRadius: BorderRadius.all(
-                              Radius.circular(15),
-                            )),
-                            margin: EdgeInsets.symmetric(horizontal: 10.w),
-                            elevation: 1,
-                            color: Colors.white,
-                            child: Padding(
-                              padding: EdgeInsets.symmetric(
-                                  horizontal: 15.w, vertical: 7.5.h),
-                              child: Theme(
-                                data: Theme.of(context)
-                                    .copyWith(dividerColor: Colors.transparent),
-                                child: ExpansionTile(
-                                  initiallyExpanded: false,
-                                  tilePadding: EdgeInsets.zero,
-                                  trailing: GestureDetector(
-                                    onTap: () {
-                                      if (userType == "Broker") {
-                                        Navigator.push(
-                                            context,
-                                            MaterialPageRoute(
-                                              builder: (context) =>
-                                                  OrderTrackingScreen(
-                                                      offer: offerstate.offer,
-                                                      type: userType == "Broker"
-                                                          ? "broker"
-                                                          : "trader"),
-                                            ));
-                                      }
-                                    },
-                                    child: SizedBox(
-                                      height: 45,
-                                      width: 45,
-                                      child: Image.asset(
-                                          "assets/icons/radar.gif",
-                                          gaplessPlayback: true,
-                                          fit: BoxFit.fill),
-                                    ),
-                                  ),
-                                  // controlAffinity: ListTileControlAffinity.leading,
-                                  childrenPadding: EdgeInsets.zero,
-                                  title: const Row(
-                                    mainAxisAlignment: MainAxisAlignment.start,
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.center,
-                                    children: [Text('operation tracking:')],
-                                  ),
-                                  onExpansionChanged: (value) {},
-                                  children: [
-                                    Padding(
-                                      padding: EdgeInsets.all(12.h),
-                                      child: Column(
-                                        mainAxisSize: MainAxisSize.min,
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                        children: [
-                                          const SizedBox(
-                                            height: 15,
-                                          ),
-                                          CustomeTimeLine(
-                                            isFirst: true,
-                                            isLast: true,
-                                            isPast: offerstate
-                                                .offer
-                                                .track_offer!
-                                                .attachmentRecivment!,
-                                            imageUrl: !offerstate
-                                                    .offer
-                                                    .track_offer!
-                                                    .attachmentRecivment!
-                                                ? "assets/images/step 1 Dark.svg"
-                                                : "assets/images/step 1 blue.svg",
-                                            type: "svg",
-                                            title: AppLocalizations.of(context)!
-                                                .translate(
-                                                    'attachments_recivment'),
-                                          ),
-                                          CustomeTimeLine(
-                                            isFirst: true,
-                                            isLast: false,
-                                            isPast: offerstate
-                                                .offer
-                                                .track_offer!
-                                                .unloadDistenation!,
-                                            imageUrl: !offerstate
-                                                    .offer
-                                                    .track_offer!
-                                                    .unloadDistenation!
-                                                ? "assets/images/step 2 Dark.svg"
-                                                : "assets/images/step 2 blue.svg",
-                                            type: "svg",
-                                            title: AppLocalizations.of(context)!
-                                                .translate(
-                                                    'unload_distenation'),
-                                          ),
-                                          CustomeTimeLine(
-                                            isFirst: false,
-                                            isLast: false,
-                                            isPast: offerstate.offer
-                                                .track_offer!.deliveryPermit!,
-                                            imageUrl: !offerstate
-                                                    .offer
-                                                    .track_offer!
-                                                    .deliveryPermit!
-                                                ? "assets/images/step 3 Dark.svg"
-                                                : "assets/images/step 3 blue.svg",
-                                            type: "svg",
-                                            title: AppLocalizations.of(context)!
-                                                .translate('delivery_permit'),
-                                          ),
-                                          CustomeTimeLine(
-                                            isFirst: false,
-                                            isLast: false,
-                                            isPast: offerstate
-                                                .offer
-                                                .track_offer!
-                                                .customeDeclration!,
-                                            isCurrent: true,
-                                            imageUrl: !offerstate
-                                                    .offer
-                                                    .track_offer!
-                                                    .customeDeclration!
-                                                ? "assets/images/step 4 Dark.svg"
-                                                : "assets/images/step 4 blue.svg",
-                                            type: "svg",
-                                            title: AppLocalizations.of(context)!
-                                                .translate(
-                                                    'custome_declration'),
-                                          ),
-                                          CustomeTimeLine(
-                                            isFirst: false,
-                                            isLast: false,
-                                            isPast: offerstate.offer
-                                                .track_offer!.previewGoods!,
-                                            imageUrl: !offerstate.offer
-                                                    .track_offer!.previewGoods!
-                                                ? "assets/images/step 5 Dark.svg"
-                                                : "assets/images/step 5 blue.svg",
-                                            type: "svg",
-                                            title: AppLocalizations.of(context)!
-                                                .translate('preview_goods'),
-                                          ),
-                                          CustomeTimeLine(
-                                            isFirst: false,
-                                            isLast: false,
-                                            isPast: offerstate.offer
-                                                .track_offer!.payFeesTaxes!,
-                                            imageUrl: !offerstate.offer
-                                                    .track_offer!.payFeesTaxes!
-                                                ? "assets/images/step 6 Dark.svg"
-                                                : "assets/images/step 6 blue.svg",
-                                            type: "svg",
-                                            title: AppLocalizations.of(context)!
-                                                .translate('pay_fees_taxes'),
-                                          ),
-                                          CustomeTimeLine(
-                                            isFirst: false,
-                                            isLast: false,
-                                            isPast: offerstate
-                                                .offer
-                                                .track_offer!
-                                                .issuingExitPermit!,
-                                            imageUrl: !offerstate
-                                                    .offer
-                                                    .track_offer!
-                                                    .issuingExitPermit!
-                                                ? "assets/images/step 7 Dark.svg"
-                                                : "assets/images/step 7 blue.svg",
-                                            type: "svg",
-                                            title: AppLocalizations.of(context)!
-                                                .translate(
-                                                    'issuing_exit_permit'),
-                                          ),
-                                          CustomeTimeLine(
-                                            isFirst: false,
-                                            isLast: true,
-                                            isPast: offerstate.offer
-                                                .track_offer!.loadDistenation!,
-                                            imageUrl: !offerstate
-                                                    .offer
-                                                    .track_offer!
-                                                    .loadDistenation!
-                                                ? "assets/images/step 8 Dark.svg"
-                                                : "assets/images/step 8 blue.svg",
-                                            type: "svg",
-                                            title: AppLocalizations.of(context)!
-                                                .translate('load_distenation'),
-                                          ),
-                                        ],
+                          Visibility(
+                            visible: widget.operationtype == 0,
+                            child: Card(
+                              clipBehavior: Clip.antiAlias,
+                              shape: const RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.all(
+                                Radius.circular(15),
+                              )),
+                              margin: EdgeInsets.symmetric(horizontal: 10.w),
+                              elevation: 1,
+                              color: Colors.white,
+                              child: Padding(
+                                padding: EdgeInsets.symmetric(
+                                    horizontal: 15.w, vertical: 7.5.h),
+                                child: Theme(
+                                  data: Theme.of(context).copyWith(
+                                      dividerColor: Colors.transparent),
+                                  child: ExpansionTile(
+                                    initiallyExpanded: false,
+                                    tilePadding: EdgeInsets.zero,
+                                    trailing: GestureDetector(
+                                      onTap: () {
+                                        if (userType == "Broker") {
+                                          Navigator.push(
+                                              context,
+                                              MaterialPageRoute(
+                                                builder: (context) =>
+                                                    OrderTrackingScreen(
+                                                        offer: offerstate.offer,
+                                                        type:
+                                                            userType == "Broker"
+                                                                ? "broker"
+                                                                : "trader"),
+                                              ));
+                                        }
+                                      },
+                                      child: SizedBox(
+                                        height: 45,
+                                        width: 45,
+                                        child: Image.asset(
+                                            "assets/icons/radar.gif",
+                                            gaplessPlayback: true,
+                                            fit: BoxFit.fill),
                                       ),
-                                    )
-                                  ],
+                                    ),
+                                    // controlAffinity: ListTileControlAffinity.leading,
+                                    childrenPadding: EdgeInsets.zero,
+                                    title: Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.start,
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.center,
+                                      children: [
+                                        Text(
+                                          AppLocalizations.of(context)!
+                                              .translate('operation_tracking'),
+                                          style: TextStyle(
+                                            fontSize: 19,
+                                            fontWeight: FontWeight.bold,
+                                            color: AppColor.deepBlue,
+                                          ),
+                                        )
+                                      ],
+                                    ),
+                                    onExpansionChanged: (value) {},
+                                    children: [
+                                      Padding(
+                                        padding: EdgeInsets.all(12.h),
+                                        child: Column(
+                                          mainAxisSize: MainAxisSize.min,
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: [
+                                            const SizedBox(
+                                              height: 15,
+                                            ),
+                                            CustomeTimeLine(
+                                              isFirst: true,
+                                              isLast: true,
+                                              isPast: offerstate
+                                                  .offer
+                                                  .track_offer!
+                                                  .attachmentRecivment!,
+                                              imageUrl: !offerstate
+                                                      .offer
+                                                      .track_offer!
+                                                      .attachmentRecivment!
+                                                  ? "assets/images/step 1 Dark.svg"
+                                                  : "assets/images/step 1 blue.svg",
+                                              type: "svg",
+                                              title: AppLocalizations.of(
+                                                      context)!
+                                                  .translate(
+                                                      'attachments_recivment'),
+                                            ),
+                                            CustomeTimeLine(
+                                              isFirst: true,
+                                              isLast: false,
+                                              isPast: offerstate
+                                                  .offer
+                                                  .track_offer!
+                                                  .unloadDistenation!,
+                                              imageUrl: !offerstate
+                                                      .offer
+                                                      .track_offer!
+                                                      .unloadDistenation!
+                                                  ? "assets/images/step 2 Dark.svg"
+                                                  : "assets/images/step 2 blue.svg",
+                                              type: "svg",
+                                              title:
+                                                  AppLocalizations.of(context)!
+                                                      .translate(
+                                                          'unload_distenation'),
+                                            ),
+                                            CustomeTimeLine(
+                                              isFirst: false,
+                                              isLast: false,
+                                              isPast: offerstate.offer
+                                                  .track_offer!.deliveryPermit!,
+                                              imageUrl: !offerstate
+                                                      .offer
+                                                      .track_offer!
+                                                      .deliveryPermit!
+                                                  ? "assets/images/step 3 Dark.svg"
+                                                  : "assets/images/step 3 blue.svg",
+                                              type: "svg",
+                                              title: AppLocalizations.of(
+                                                      context)!
+                                                  .translate('delivery_permit'),
+                                            ),
+                                            CustomeTimeLine(
+                                              isFirst: false,
+                                              isLast: false,
+                                              isPast: offerstate
+                                                  .offer
+                                                  .track_offer!
+                                                  .customeDeclration!,
+                                              isCurrent: true,
+                                              imageUrl: !offerstate
+                                                      .offer
+                                                      .track_offer!
+                                                      .customeDeclration!
+                                                  ? "assets/images/step 4 Dark.svg"
+                                                  : "assets/images/step 4 blue.svg",
+                                              type: "svg",
+                                              title:
+                                                  AppLocalizations.of(context)!
+                                                      .translate(
+                                                          'custome_declration'),
+                                            ),
+                                            CustomeTimeLine(
+                                              isFirst: false,
+                                              isLast: false,
+                                              isPast: offerstate.offer
+                                                  .track_offer!.previewGoods!,
+                                              imageUrl: !offerstate
+                                                      .offer
+                                                      .track_offer!
+                                                      .previewGoods!
+                                                  ? "assets/images/step 5 Dark.svg"
+                                                  : "assets/images/step 5 blue.svg",
+                                              type: "svg",
+                                              title: AppLocalizations.of(
+                                                      context)!
+                                                  .translate('preview_goods'),
+                                            ),
+                                            CustomeTimeLine(
+                                              isFirst: false,
+                                              isLast: false,
+                                              isPast: offerstate.offer
+                                                  .track_offer!.payFeesTaxes!,
+                                              imageUrl: !offerstate
+                                                      .offer
+                                                      .track_offer!
+                                                      .payFeesTaxes!
+                                                  ? "assets/images/step 6 Dark.svg"
+                                                  : "assets/images/step 6 blue.svg",
+                                              type: "svg",
+                                              title: AppLocalizations.of(
+                                                      context)!
+                                                  .translate('pay_fees_taxes'),
+                                            ),
+                                            CustomeTimeLine(
+                                              isFirst: false,
+                                              isLast: false,
+                                              isPast: offerstate
+                                                  .offer
+                                                  .track_offer!
+                                                  .issuingExitPermit!,
+                                              imageUrl: !offerstate
+                                                      .offer
+                                                      .track_offer!
+                                                      .issuingExitPermit!
+                                                  ? "assets/images/step 7 Dark.svg"
+                                                  : "assets/images/step 7 blue.svg",
+                                              type: "svg",
+                                              title: AppLocalizations.of(
+                                                      context)!
+                                                  .translate(
+                                                      'issuing_exit_permit'),
+                                            ),
+                                            CustomeTimeLine(
+                                              isFirst: false,
+                                              isLast: true,
+                                              isPast: offerstate
+                                                  .offer
+                                                  .track_offer!
+                                                  .loadDistenation!,
+                                              imageUrl: !offerstate
+                                                      .offer
+                                                      .track_offer!
+                                                      .loadDistenation!
+                                                  ? "assets/images/step 8 Dark.svg"
+                                                  : "assets/images/step 8 blue.svg",
+                                              type: "svg",
+                                              title:
+                                                  AppLocalizations.of(context)!
+                                                      .translate(
+                                                          'load_distenation'),
+                                            ),
+                                          ],
+                                        ),
+                                      )
+                                    ],
+                                  ),
                                 ),
                               ),
                             ),

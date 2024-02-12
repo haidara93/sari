@@ -148,8 +148,7 @@ class _StepperMultiOrderBrokerScreenState
       TextEditingController weight_controller = TextEditingController();
       TextEditingController value_controller = TextEditingController();
       TextEditingController origin_controller = TextEditingController();
-      package_controller.text =
-          AppLocalizations.of(context)!.translate('goods_name');
+      package_controller.text = "";
       packageControllers.add(package_controller);
       weightControllers.add(weight_controller);
       valueControllers.add(value_controller);
@@ -201,8 +200,7 @@ class _StepperMultiOrderBrokerScreenState
     TextEditingController weight_controller = TextEditingController();
     TextEditingController value_controller = TextEditingController();
     TextEditingController origin_controller = TextEditingController();
-    package_controller.text =
-        AppLocalizations.of(context)!.translate('goods_name');
+    package_controller.text = "";
     packageControllers.add(package_controller);
     weightControllers.add(weight_controller);
     valueControllers.add(value_controller);
@@ -1040,7 +1038,12 @@ class _StepperMultiOrderBrokerScreenState
                                                                 StateCustome>(
                                                               value: item,
                                                               child: Text(
-                                                                item.name!,
+                                                                localeState.value
+                                                                            .languageCode ==
+                                                                        'en'
+                                                                    ? item.name!
+                                                                    : item
+                                                                        .nameAr!,
                                                                 style:
                                                                     const TextStyle(
                                                                   fontSize: 17,
@@ -1178,11 +1181,16 @@ class _StepperMultiOrderBrokerScreenState
                                                                     value: item,
                                                                     child:
                                                                         SizedBox(
-                                                                      width:
-                                                                          200,
+                                                                      width: MediaQuery.of(context)
+                                                                              .size
+                                                                              .width *
+                                                                          .8,
                                                                       child:
                                                                           Text(
-                                                                        item.name!,
+                                                                        localeState.value.languageCode ==
+                                                                                'en'
+                                                                            ? item.name!
+                                                                            : item.nameAr!,
                                                                         style:
                                                                             const TextStyle(
                                                                           fontSize:
@@ -1449,6 +1457,7 @@ class _StepperMultiOrderBrokerScreenState
                                       itemCount: _count,
                                       itemBuilder: (context, index) {
                                         return Stack(
+                                          clipBehavior: Clip.none,
                                           children: [
                                             Card(
                                               margin:
@@ -1484,13 +1493,16 @@ class _StepperMultiOrderBrokerScreenState
                                                       CrossAxisAlignment.start,
                                                   children: [
                                                     const SizedBox(
-                                                      height: 30,
+                                                      height: 10,
                                                     ),
                                                     Row(
                                                       mainAxisAlignment:
                                                           MainAxisAlignment
-                                                              .spaceBetween,
+                                                              .start,
                                                       children: [
+                                                        const SizedBox(
+                                                          width: 35,
+                                                        ),
                                                         Focus(
                                                           // focusNode: _ordernode,
                                                           child: Text(
@@ -1631,14 +1643,14 @@ class _StepperMultiOrderBrokerScreenState
                                                               },
                                                               decoration:
                                                                   InputDecoration(
-                                                                labelText: AppLocalizations.of(
-                                                                        context)!
-                                                                    .translate(
-                                                                        'goods_name'),
-                                                                hintText: AppLocalizations.of(
-                                                                        context)!
-                                                                    .translate(
-                                                                        'goods_name'),
+                                                                // labelText: AppLocalizations.of(
+                                                                //         context)!
+                                                                //     .translate(
+                                                                //         'goods_name'),
+                                                                // hintText: AppLocalizations.of(
+                                                                //         context)!
+                                                                //     .translate(
+                                                                //         'goods_name'),
                                                                 contentPadding:
                                                                     const EdgeInsets
                                                                         .symmetric(
@@ -1647,10 +1659,9 @@ class _StepperMultiOrderBrokerScreenState
                                                                   vertical:
                                                                       11.0,
                                                                 ),
-                                                                suffixIcon: packageControllers[index]
+                                                                prefixIcon: packageControllers[index]
                                                                             .text ==
-                                                                        AppLocalizations.of(context)!.translate(
-                                                                            'goods_name')
+                                                                        ""
                                                                     ? SizedBox(
                                                                         width:
                                                                             130.w,
@@ -2643,7 +2654,8 @@ class _StepperMultiOrderBrokerScreenState
                                                             AutovalidateMode
                                                                 .onUserInteraction,
                                                         validator: (value) {
-                                                          if (value!.isEmpty) {
+                                                          if (value!.isEmpty ||
+                                                              value == "0.0") {
                                                             return AppLocalizations
                                                                     .of(
                                                                         context)!
@@ -2756,7 +2768,8 @@ class _StepperMultiOrderBrokerScreenState
                                                           ),
                                                         ),
                                                         validator: (value) {
-                                                          if (value!.isEmpty) {
+                                                          if (value!.isEmpty ||
+                                                              value == "0.0") {
                                                             return AppLocalizations
                                                                     .of(
                                                                         context)!
@@ -2890,7 +2903,8 @@ class _StepperMultiOrderBrokerScreenState
                                                     right: 0,
                                                     child: GestureDetector(
                                                       onTap: () {
-                                                        _showAlertDialog(index);
+                                                        remove(index);
+                                                        // _showAlertDialog(index);
                                                       },
                                                       child: Container(
                                                         height: 30,
@@ -2914,7 +2928,7 @@ class _StepperMultiOrderBrokerScreenState
                                                 : const SizedBox.shrink(),
                                             index == (_count - 1)
                                                 ? Positioned(
-                                                    bottom: -20.h,
+                                                    bottom: -25.h,
                                                     left: -20.w,
                                                     child: GestureDetector(
                                                       onTap: () async {
@@ -2958,13 +2972,25 @@ class _StepperMultiOrderBrokerScreenState
                                           width: double.infinity,
                                           decoration: BoxDecoration(
                                             gradient: LinearGradient(
-                                              colors: [
-                                                AppColor.deepAppBarBlue,
-                                                AppColor.lightAppBarBlue,
-                                                AppColor.lighterAppBarBlue,
-                                                AppColor.lightAppBarBlue,
-                                                AppColor.deepAppBarBlue,
-                                              ],
+                                              colors: localeState
+                                                          .value.languageCode ==
+                                                      'en'
+                                                  ? [
+                                                      AppColor
+                                                          .lighterAppBarBlue,
+                                                      AppColor.lightAppBarBlue,
+                                                      AppColor.lightAppBarBlue,
+                                                      AppColor.deepAppBarBlue,
+                                                      AppColor.deepAppBarBlue,
+                                                    ]
+                                                  : [
+                                                      AppColor.deepAppBarBlue,
+                                                      AppColor.deepAppBarBlue,
+                                                      AppColor.lightAppBarBlue,
+                                                      AppColor.lightAppBarBlue,
+                                                      AppColor
+                                                          .lighterAppBarBlue,
+                                                    ],
                                               begin: Alignment.centerRight,
                                               end: Alignment.centerLeft,
                                             ),
@@ -2980,19 +3006,19 @@ class _StepperMultiOrderBrokerScreenState
                                                 CrossAxisAlignment.start,
                                             children: [
                                               Text(
-                                                "${AppLocalizations.of(context)!.translate('convert_to_dollar_value')}: ${f.format(double.parse(totalsyrianExchangeValue).toInt())}\$",
+                                                "${AppLocalizations.of(context)!.translate('convert_to_dollar_value')}: ${f.format(double.parse(totalsyrianExchangeValue).toInt())} USD",
                                                 style: TextStyle(
                                                     color: Colors.white,
                                                     fontSize: 17.sp),
                                               ),
                                               Text(
-                                                "${AppLocalizations.of(context)!.translate('total_value_in_eygptian_pound')}: ${f.format(double.parse(totalsyrianTotalValue).toInt())} E.P",
+                                                "${AppLocalizations.of(context)!.translate('total_value_in_eygptian_pound')}: ${f.format(double.parse(totalsyrianTotalValue).toInt())} EGP",
                                                 style: TextStyle(
                                                     color: Colors.white,
                                                     fontSize: 17.sp),
                                               ),
                                               Text(
-                                                "${AppLocalizations.of(context)!.translate('total_value_with_insurance')}: ${f.format(double.parse(totalTotalValueWithEnsurance).toInt())} E.P",
+                                                "${AppLocalizations.of(context)!.translate('total_value_with_insurance')}: ${f.format(double.parse(totalTotalValueWithEnsurance).toInt())} EGP",
                                                 style: TextStyle(
                                                     color: Colors.white,
                                                     fontSize: 17.sp),

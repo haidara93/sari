@@ -26,13 +26,16 @@ class Cost {
 class CustomeAgency {
   int? id;
   String? name;
+  String? nameAr;
   StateCustome? statecustome;
   String? shippingType;
-  CustomeAgency({this.id, this.name, this.statecustome, this.shippingType});
+  CustomeAgency(
+      {this.id, this.name, this.nameAr, this.statecustome, this.shippingType});
 
   CustomeAgency.fromJson(Map<String, dynamic> json) {
     id = json['id'];
     name = json['name'];
+    nameAr = json['name_ar'];
     shippingType = json['shipping_type'];
     statecustome = json['statecustome'] != null
         ? new StateCustome.fromJson(json['statecustome'])
@@ -43,6 +46,7 @@ class CustomeAgency {
     final Map<String, dynamic> data = <String, dynamic>{};
     data['id'] = id;
     data['name'] = name;
+    data['name_ar'] = nameAr;
     data['shipping_type'] = shippingType;
     if (this.statecustome != null) {
       data['statecustome'] = this.statecustome!.toJson();
@@ -54,18 +58,21 @@ class CustomeAgency {
 class StateCustome {
   int? id;
   String? name;
+  String? nameAr;
 
-  StateCustome({this.id, this.name});
+  StateCustome({this.id, this.name, this.nameAr});
 
   StateCustome.fromJson(Map<String, dynamic> json) {
     id = json['id'];
     name = json['name'];
+    nameAr = json['name_ar'];
   }
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = <String, dynamic>{};
     data['id'] = id;
     data['name'] = name;
+    data['name_ar'] = nameAr;
     return data;
   }
 }
@@ -73,14 +80,16 @@ class StateCustome {
 class PackageType {
   int? id;
   String? name;
+  String? nameAr;
   String? image;
   String? activeImage;
 
-  PackageType({this.id, this.name, this.image, this.activeImage});
+  PackageType({this.id, this.name, this.nameAr, this.image, this.activeImage});
 
   PackageType.fromJson(Map<String, dynamic> json) {
     id = json['id'];
     name = json['name'];
+    nameAr = json['name_ar'];
     image = json['image'];
     activeImage = json['active_image'];
   }
@@ -89,6 +98,7 @@ class PackageType {
     final Map<String, dynamic> data = <String, dynamic>{};
     data['id'] = id;
     data['name'] = name;
+    data['name_ar'] = nameAr;
     data['image'] = image;
     data['active_image'] = activeImage;
     return data;

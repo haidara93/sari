@@ -242,6 +242,7 @@ class _BrokerLogScreenState extends State<BrokerLogScreen>
                                                 builder: (context) =>
                                                     OfferDetailsScreen(
                                                   type: "broker",
+                                                  operationtype: tabIndex,
                                                 ),
                                               ));
                                         },

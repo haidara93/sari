@@ -143,6 +143,7 @@ class NotificationServices {
           MaterialPageRoute(
             builder: (context) => OfferDetailsScreen(
               type: "trader",
+              operationtype: 1,
             ),
           ));
     } else if (message.data['notefication_type'] == "O") {
@@ -161,6 +162,7 @@ class NotificationServices {
           MaterialPageRoute(
             builder: (context) => OfferDetailsScreen(
               type: "trader",
+              operationtype: 1,
             ),
           ));
     }

@@ -575,12 +575,14 @@ class _TraderHomeScreenState extends State<TraderHomeScreen>
                                               .closeDrawer());
                                     },
                                     child: ListTile(
-                                      leading: const Icon(Icons.language,
-                                          color: Colors.white),
+                                      leading: SvgPicture.asset(
+                                        "assets/icons/translate.svg",
+                                        height: 20.h,
+                                      ),
                                       title: Text(
                                         localeState.value.languageCode != 'en'
-                                            ? "اللغة: English"
-                                            : "language: العربية",
+                                            ? "English"
+                                            : "العربية",
                                         style: TextStyle(
                                             color: Colors.white,
                                             fontSize: 16.sp,
@@ -2820,15 +2822,34 @@ class _TraderHomeScreenState extends State<TraderHomeScreen>
                                           state.origins[index].label!
                                               .toLowerCase()
                                               .contains(
+                                                  querySearch.toLowerCase()) ||
+                                          state.origins[index].labelar!
+                                              .toLowerCase()
+                                              .contains(
                                                   querySearch.toLowerCase())
                                       ? InkWell(
                                           onTap: () {
+                                            // setState(() {
+                                            //   // flagselected = index;
+                                            //   // querySearch = "";
+                                            // });
                                             setState(() {
-                                              flagselected = index;
                                               originselected =
                                                   state.origins[index];
-                                              // querySearch = "";
+                                              // flagselected = -1;
+                                              _flagsearchController.text = "";
+                                              querySearch = "";
+                                              isSearch = false;
                                             });
+                                            BlocProvider.of<FlagSelectBloc>(
+                                                    context)
+                                                .add(FlagSelectLoadEvent(
+                                                    origin: originselected!));
+                                            BlocProvider.of<
+                                                        CalculatorPanelBloc>(
+                                                    context)
+                                                .add(
+                                                    CalculatorPanelHideEvent());
                                           },
                                           child: SizedBox(
                                             width: MediaQuery.of(context)
@@ -2837,13 +2858,13 @@ class _TraderHomeScreenState extends State<TraderHomeScreen>
                                             child: Row(
                                               children: [
                                                 SizedBox(
-                                                  height: 35,
-                                                  width: 55,
+                                                  height: 50,
+                                                  width: 70,
                                                   child: SvgPicture.network(
                                                     state.origins[index]
                                                         .imageURL!,
-                                                    height: 35,
-                                                    width: 55,
+                                                    height: 50,
+                                                    width: 70,
                                                     // semanticsLabel: 'A shark?!',
                                                     placeholderBuilder:
                                                         (BuildContext
@@ -2876,6 +2897,9 @@ class _TraderHomeScreenState extends State<TraderHomeScreen>
                                                     // overflow:
                                                     //     TextOverflow.ellipsis,
                                                     maxLines: 2,
+                                                    style: TextStyle(
+                                                      fontSize: 17,
+                                                    ),
                                                   ),
                                                 ),
                                                 Spacer(),
@@ -2885,12 +2909,13 @@ class _TraderHomeScreenState extends State<TraderHomeScreen>
                                                             .check_box_outlined,
                                                         color: Colors.green,
                                                       )
-                                                    : Icon(
-                                                        Icons
-                                                            .check_box_outline_blank,
-                                                        color:
-                                                            AppColor.deepBlue,
-                                                      ),
+                                                    : SizedBox.shrink(),
+                                                // : Icon(
+                                                //     Icons
+                                                //         .check_box_outline_blank,
+                                                //     color:
+                                                //         AppColor.deepBlue,
+                                                //   ),
                                               ],
                                               // subtitle: Text('\$${suggestion['price']}'),
                                             ),

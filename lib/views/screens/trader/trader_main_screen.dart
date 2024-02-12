@@ -9,6 +9,7 @@ import 'package:custome_mobile/helpers/color_constants.dart';
 import 'package:custome_mobile/views/widgets/calculator_loading_screen.dart';
 import 'package:custome_mobile/views/widgets/loading_indicator.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
@@ -59,6 +60,8 @@ class _TraderMainScreenState extends State<TraderMainScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final playDuration = 600.ms;
+
     return BlocBuilder<LocaleCubit, LocaleState>(
       builder: (context, localeState) {
         return Directionality(
@@ -126,7 +129,10 @@ class _TraderMainScreenState extends State<TraderMainScreen> {
                                         ),
                                       );
                                     },
-                                  ),
+                                  )
+                                      .animate(delay: 400.ms)
+                                      .shimmer(duration: playDuration - 200.ms)
+                                      .flip(),
                                   SizedBox(
                                     height: 7.h,
                                   ),
@@ -136,13 +142,40 @@ class _TraderMainScreenState extends State<TraderMainScreen> {
                                       crossAxisAlignment:
                                           CrossAxisAlignment.start,
                                       children: [
-                                        Text(localeState.value.languageCode ==
-                                                'en'
-                                            ? diffEnText(diff)
-                                            : diffText(diff)),
-                                        Text(state.posts[index].title!),
                                         Text(
-                                            "${AppLocalizations.of(context)!.translate('source')}: ${state.posts[index].source!}"),
+                                          localeState.value.languageCode == 'en'
+                                              ? diffEnText(diff)
+                                              : diffText(diff),
+                                          style: const TextStyle(
+                                              color: Colors.grey),
+                                        )
+                                            .animate()
+                                            .fadeIn(
+                                                duration: 300.ms,
+                                                delay: playDuration,
+                                                curve: Curves.decelerate)
+                                            .slideX(begin: 0.2, end: 0),
+                                        Text(
+                                          state.posts[index].title!,
+                                          style: TextStyle(
+                                            fontWeight: FontWeight.bold,
+                                            fontSize: 17.sp,
+                                          ),
+                                        )
+                                            .animate()
+                                            .fadeIn(
+                                                duration: 300.ms,
+                                                delay: playDuration,
+                                                curve: Curves.decelerate)
+                                            .slideX(begin: 0.2, end: 0),
+                                        Text("${AppLocalizations.of(context)!.translate('source')}: ${state.posts[index].source!}")
+                                            .animate()
+                                            .scaleXY(
+                                                begin: 0,
+                                                end: 1,
+                                                delay: 300.ms,
+                                                duration: playDuration - 100.ms,
+                                                curve: Curves.decelerate),
                                         Visibility(
                                           visible: isvisivle ==
                                               state.posts[index].id!,
@@ -502,7 +535,12 @@ class _TraderMainScreenState extends State<TraderMainScreen> {
                                     ),
                                   )
                                 ]),
-                          );
+                          ).animate().slideX(
+                              duration: 200.ms,
+                              delay: 0.ms,
+                              begin: 1,
+                              end: 0,
+                              curve: Curves.easeInOutSine);
                         },
                       );
                     } else if (state is PostLoadedFailed) {

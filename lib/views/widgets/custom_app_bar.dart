@@ -161,30 +161,6 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
                     }),
                   ],
                 ),
-                SizedBox(
-                  height: 95.h,
-                  width: MediaQuery.of(context).size.width * .3,
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    mainAxisAlignment: MainAxisAlignment.end,
-                    children: [
-                      SizedBox(
-                        height: 45.h,
-                        width: 175.w,
-                        child: FittedBox(
-                          fit: BoxFit.scaleDown,
-                          child: Text(
-                            title,
-                            style: TextStyle(
-                                color: Colors.white,
-                                fontSize: 28.sp,
-                                fontWeight: FontWeight.bold),
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
                 GestureDetector(
                   onTap: onTap ?? () {},
                   child: AbsorbPointer(
@@ -199,6 +175,20 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
                   ),
                 ),
               ],
+            ),
+            SizedBox(
+              height: 35.h,
+              width: MediaQuery.of(context).size.width,
+              child: FittedBox(
+                fit: BoxFit.scaleDown,
+                child: Text(
+                  title,
+                  style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 28.sp,
+                      fontWeight: FontWeight.bold),
+                ),
+              ),
             ),
           ]),
         ),

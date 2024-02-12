@@ -258,7 +258,7 @@ class ItemTaxesWidget extends StatelessWidget {
                   style: const TextStyle(fontWeight: FontWeight.bold),
                 ),
                 Text(
-                  f.format(finalFee!.toInt()),
+                  "${f.format(finalFee!.toInt())} EGP",
                   style: const TextStyle(fontWeight: FontWeight.bold),
                 ),
               ],
@@ -272,7 +272,7 @@ class ItemTaxesWidget extends StatelessWidget {
             ),
             Text(
               AppLocalizations.of(context)!.translate('records_taxes'),
-              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
+              style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
             ),
             const SizedBox(
               height: 7,
@@ -436,10 +436,10 @@ class ItemTaxesWidget extends StatelessWidget {
                 Text(
                   AppLocalizations.of(context)!.translate('total_taxes'),
                   maxLines: 3,
-                  style: TextStyle(fontWeight: FontWeight.bold),
+                  style: const TextStyle(fontWeight: FontWeight.bold),
                 ),
                 Text(
-                  f.format(finalTaxes.toInt()),
+                  "${f.format(finalTaxes.toInt())} EGP",
                   style: const TextStyle(fontWeight: FontWeight.bold),
                 ),
               ],
@@ -456,10 +456,11 @@ class ItemTaxesWidget extends StatelessWidget {
               children: [
                 Text(
                   AppLocalizations.of(context)!.translate('total_fees'),
-                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
+                  style: const TextStyle(
+                      fontWeight: FontWeight.bold, fontSize: 20),
                 ),
                 Text(
-                  f.format(finalTotal.toInt()),
+                  "${f.format(finalTotal.toInt())} EGP",
                   style: TextStyle(
                     fontWeight: FontWeight.bold,
                     fontSize: 20.sp,
