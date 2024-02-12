@@ -175,6 +175,7 @@ class _TraderHomeScreenState extends State<TraderHomeScreen>
         }
       case 3:
         {
+          BlocProvider.of<SectionBloc>(context).add(SectionLoadEvent());
           setState(() {
             title = AppLocalizations.of(context)!.translate('tariff_title');
 

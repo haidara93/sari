@@ -22,7 +22,9 @@ class AccordionRepository {
     if (prefs.getString(fileName) != null &&
         prefs.getString(fileName)!.isNotEmpty) {
       var jsonData = prefs.getString(fileName)!;
+      print(jsonData);
       var res = jsonDecode(jsonData);
+      sections = [];
       for (var element in res) {
         sections.add(Section.fromJson(element));
       }
