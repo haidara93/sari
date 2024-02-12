@@ -15,10 +15,10 @@ class AccordionRepository {
 
   Future<List<Section?>> getSections() async {
     prefs = await SharedPreferences.getInstance();
-    String fileName = "sections";
 
     var jwt = prefs.getString("token");
     var lang = prefs.getString("language") ?? "en";
+    String fileName = "${lang}sections";
     if (prefs.getString(fileName) != null &&
         prefs.getString(fileName)!.isNotEmpty) {
       var jsonData = prefs.getString(fileName)!;
@@ -48,7 +48,7 @@ class AccordionRepository {
     prefs = await SharedPreferences.getInstance();
     var jwt = prefs.getString("token");
     var lang = prefs.getString("language") ?? "en";
-    String fileName = "chapters$sectionId";
+    String fileName = "${lang}chapters$sectionId";
 
     if (prefs.getString(fileName) != null &&
         prefs.getString(fileName)!.isNotEmpty) {
@@ -82,7 +82,7 @@ class AccordionRepository {
     var jwt = prefs.getString("token");
 
     var lang = prefs.getString("language") ?? "en";
-    String fileName = "subchapters$chapterId";
+    String fileName = "${lang}subchapters$chapterId";
 
     if (prefs.getString(fileName) != null &&
         prefs.getString(fileName)!.isNotEmpty) {
@@ -116,7 +116,7 @@ class AccordionRepository {
     var jwt = prefs.getString("token");
     var lang = prefs.getString("language") ?? "en";
 
-    String fileName = "fees$subchapterId";
+    String fileName = "${lang}fees$subchapterId";
 
     if (prefs.getString(fileName) != null &&
         prefs.getString(fileName)!.isNotEmpty) {
