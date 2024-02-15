@@ -747,7 +747,9 @@ class _StepperMultiOrderBrokerScreenState
                             orderBrokerProvider
                                 .setSource(flagselectstate.origin);
                             sourceControllers.text =
-                                flagselectstate.origin.label!;
+                                localeState.value.languageCode == 'en'
+                                    ? flagselectstate.origin.label!
+                                    : flagselectstate.origin.labelar!;
                           },
                         );
                       } else {
@@ -755,7 +757,9 @@ class _StepperMultiOrderBrokerScreenState
                           () {
                             origins[_countselected] = flagselectstate.origin;
                             originControllers[_countselected].text =
-                                flagselectstate.origin.label!;
+                                localeState.value.languageCode == 'en'
+                                    ? flagselectstate.origin.label!
+                                    : flagselectstate.origin.labelar!;
                           },
                         );
                         selectOrigin(flagselectstate.origin, _countselected);
@@ -1423,12 +1427,22 @@ class _StepperMultiOrderBrokerScreenState
                                             Colors.white,
                                             Colors.white,
                                             Colors.white,
+                                            Colors.white,
+                                            Colors.white,
+                                            Colors.white,
+                                            Colors.white,
+                                            Colors.white,
                                           ],
                                         begin: Alignment.topCenter,
                                         end: Alignment.bottomCenter)
                                     : LinearGradient(
                                         colors: [
                                             AppColor.goldenYellow,
+                                            Colors.white,
+                                            Colors.white,
+                                            Colors.white,
+                                            Colors.white,
+                                            Colors.white,
                                             Colors.white,
                                             Colors.white,
                                             Colors.white,
@@ -1450,6 +1464,18 @@ class _StepperMultiOrderBrokerScreenState
                               child: Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
+                                    Focus(
+                                      // focusNode: _ordernode,
+                                      child: Text(
+                                        AppLocalizations.of(context)!
+                                            .translate('goods_details'),
+                                        style: TextStyle(
+                                          fontSize: 17,
+                                          fontWeight: FontWeight.bold,
+                                          color: AppColor.deepBlue,
+                                        ),
+                                      ),
+                                    ),
                                     ListView.builder(
                                       shrinkWrap: true,
                                       physics:
@@ -1493,34 +1519,7 @@ class _StepperMultiOrderBrokerScreenState
                                                       CrossAxisAlignment.start,
                                                   children: [
                                                     const SizedBox(
-                                                      height: 10,
-                                                    ),
-                                                    Row(
-                                                      mainAxisAlignment:
-                                                          MainAxisAlignment
-                                                              .start,
-                                                      children: [
-                                                        const SizedBox(
-                                                          width: 35,
-                                                        ),
-                                                        Focus(
-                                                          // focusNode: _ordernode,
-                                                          child: Text(
-                                                            AppLocalizations.of(
-                                                                    context)!
-                                                                .translate(
-                                                                    'goods_details'),
-                                                            style: TextStyle(
-                                                              fontSize: 19,
-                                                              fontWeight:
-                                                                  FontWeight
-                                                                      .bold,
-                                                              color: AppColor
-                                                                  .deepBlue,
-                                                            ),
-                                                          ),
-                                                        ),
-                                                      ],
+                                                      height: 25,
                                                     ),
                                                     Column(
                                                       crossAxisAlignment:
@@ -1659,47 +1658,48 @@ class _StepperMultiOrderBrokerScreenState
                                                                   vertical:
                                                                       11.0,
                                                                 ),
-                                                                prefixIcon: packageControllers[index]
-                                                                            .text ==
-                                                                        ""
-                                                                    ? SizedBox(
-                                                                        width:
-                                                                            130.w,
-                                                                        child:
-                                                                            Row(
-                                                                          mainAxisAlignment:
-                                                                              MainAxisAlignment.end,
-                                                                          children: [
-                                                                            SizedBox(
-                                                                              width: 21.w,
-                                                                              height: 21.h,
-                                                                              child: SvgPicture.asset(
-                                                                                "assets/icons/tarrif_btn.svg",
-                                                                              ),
-                                                                            ),
-                                                                            const SizedBox(
-                                                                              width: 3,
-                                                                            ),
-                                                                            FittedBox(
-                                                                              fit: BoxFit.scaleDown,
-                                                                              child: Text(
-                                                                                AppLocalizations.of(context)!.translate('tariff_browser'),
-                                                                                textAlign: TextAlign.center,
-                                                                                style: TextStyle(
-                                                                                  color: AppColor.lightBlue,
-                                                                                  fontSize: 15.sp,
-                                                                                  fontWeight: FontWeight.bold,
+                                                                prefixIcon:
+                                                                    packageControllers[index].text ==
+                                                                            ""
+                                                                        ? SizedBox(
+                                                                            width:
+                                                                                150.w,
+                                                                            child:
+                                                                                Row(
+                                                                              mainAxisAlignment: MainAxisAlignment.start,
+                                                                              children: [
+                                                                                const SizedBox(
+                                                                                  width: 10,
                                                                                 ),
-                                                                              ),
+                                                                                SizedBox(
+                                                                                  width: 21.w,
+                                                                                  height: 21.h,
+                                                                                  child: SvgPicture.asset(
+                                                                                    "assets/icons/tarrif_btn.svg",
+                                                                                  ),
+                                                                                ),
+                                                                                const SizedBox(
+                                                                                  width: 3,
+                                                                                ),
+                                                                                FittedBox(
+                                                                                  fit: BoxFit.scaleDown,
+                                                                                  child: Text(
+                                                                                    AppLocalizations.of(context)!.translate('tariff_browser'),
+                                                                                    textAlign: TextAlign.center,
+                                                                                    style: TextStyle(
+                                                                                      color: AppColor.lightBlue,
+                                                                                      fontSize: 17.sp,
+                                                                                      fontWeight: FontWeight.bold,
+                                                                                    ),
+                                                                                  ),
+                                                                                ),
+                                                                                const SizedBox(
+                                                                                  width: 3,
+                                                                                ),
+                                                                              ],
                                                                             ),
-                                                                            const SizedBox(
-                                                                              width: 3,
-                                                                            ),
-                                                                          ],
-                                                                        ),
-                                                                      )
-                                                                    : const SizedBox
-                                                                        .shrink(),
+                                                                          )
+                                                                        : null,
                                                               ),
                                                               onSubmitted:
                                                                   (value) {
@@ -1774,8 +1774,12 @@ class _StepperMultiOrderBrokerScreenState
                                                         ),
                                                       ],
                                                     ),
-                                                    const SizedBox(
-                                                      height: 14,
+                                                    Visibility(
+                                                      visible:
+                                                          allowexports[index],
+                                                      child: const SizedBox(
+                                                        height: 7,
+                                                      ),
                                                     ),
                                                     Visibility(
                                                       visible:
@@ -1791,12 +1795,8 @@ class _StepperMultiOrderBrokerScreenState
                                                         ),
                                                       ),
                                                     ),
-                                                    Visibility(
-                                                      visible:
-                                                          allowexports[index],
-                                                      child: const SizedBox(
-                                                        height: 14,
-                                                      ),
+                                                    const SizedBox(
+                                                      height: 14,
                                                     ),
                                                     Visibility(
                                                       visible: feeerrors[index],

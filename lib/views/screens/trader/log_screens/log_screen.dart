@@ -278,7 +278,7 @@ class _LogScreenState extends State<LogScreen>
                                             ));
                                       },
                                       child: Card(
-                                        elevation: 3,
+                                        elevation: 1,
                                         shape: const RoundedRectangleBorder(
                                           borderRadius: BorderRadius.all(
                                             Radius.circular(10),

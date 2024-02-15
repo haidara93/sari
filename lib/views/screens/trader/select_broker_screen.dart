@@ -527,9 +527,9 @@ class _SelectBrokerScreenState extends State<SelectBrokerScreen> {
                                                                           width:
                                                                               100.w,
                                                                           child:
-                                                                              const Center(
+                                                                              Center(
                                                                             child:
-                                                                                Text("CB request"),
+                                                                                Text(AppLocalizations.of(context)!.translate('cb_request')),
                                                                           ),
                                                                         ),
                                                                         onTap:

@@ -549,9 +549,9 @@ class _SelectBrokerProfileScreenState extends State<SelectBrokerProfileScreen> {
                     child: Container(
                       decoration: const BoxDecoration(
                         color: Colors.white,
-                        border: Border(
-                          top: BorderSide(color: Colors.grey, width: 1),
-                        ),
+                        // border: Border(
+                        //   top: BorderSide(color: Colors.grey, width: 1),
+                        // ),
                       ),
                       width: MediaQuery.of(context).size.width,
                       child: Padding(
@@ -619,8 +619,10 @@ class _SelectBrokerProfileScreenState extends State<SelectBrokerProfileScreen> {
                                                   .size
                                                   .width *
                                               .75,
-                                          child: const Center(
-                                            child: Text("CB request"),
+                                          child: Center(
+                                            child: Text(
+                                                AppLocalizations.of(context)!
+                                                    .translate('cb_request')),
                                           ),
                                         ),
                                         onTap: () {

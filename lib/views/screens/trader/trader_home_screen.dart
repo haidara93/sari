@@ -2856,69 +2856,82 @@ class _TraderHomeScreenState extends State<TraderHomeScreen>
                                             width: MediaQuery.of(context)
                                                 .size
                                                 .width,
-                                            child: Row(
+                                            child: Column(
                                               children: [
-                                                SizedBox(
-                                                  height: 50,
-                                                  width: 70,
-                                                  child: SvgPicture.network(
-                                                    state.origins[index]
-                                                        .imageURL!,
-                                                    height: 50,
-                                                    width: 70,
-                                                    // semanticsLabel: 'A shark?!',
-                                                    placeholderBuilder:
-                                                        (BuildContext
-                                                                context) =>
-                                                            Container(
-                                                      height: 35.h,
-                                                      width: 45.w,
-                                                      decoration: BoxDecoration(
-                                                        color: Colors.grey[200],
-                                                        borderRadius:
-                                                            BorderRadius
-                                                                .circular(5),
+                                                Row(
+                                                  children: [
+                                                    SizedBox(
+                                                      height: 35,
+                                                      width: 55,
+                                                      child: SvgPicture.network(
+                                                        state.origins[index]
+                                                            .imageURL!,
+                                                        height: 35,
+                                                        width: 55,
+                                                        // semanticsLabel: 'A shark?!',
+                                                        placeholderBuilder:
+                                                            (BuildContext
+                                                                    context) =>
+                                                                Container(
+                                                          height: 35.h,
+                                                          width: 45.w,
+                                                          decoration:
+                                                              BoxDecoration(
+                                                            color: Colors
+                                                                .grey[200],
+                                                            borderRadius:
+                                                                BorderRadius
+                                                                    .circular(
+                                                                        5),
+                                                          ),
+                                                        ),
                                                       ),
                                                     ),
-                                                  ),
-                                                ),
-                                                const SizedBox(width: 7),
-                                                Container(
-                                                  constraints: BoxConstraints(
-                                                    maxWidth: 280.w,
-                                                  ),
-                                                  child: Text(
-                                                    localeState.value
-                                                                .languageCode ==
-                                                            'en'
-                                                        ? state.origins[index]
-                                                            .label!
-                                                        : state.origins[index]
-                                                            .labelar!,
-                                                    // overflow:
-                                                    //     TextOverflow.ellipsis,
-                                                    maxLines: 2,
-                                                    style: TextStyle(
-                                                      fontSize: 17,
+                                                    const SizedBox(width: 7),
+                                                    Container(
+                                                      constraints:
+                                                          BoxConstraints(
+                                                        maxWidth: 280.w,
+                                                      ),
+                                                      child: Text(
+                                                        localeState.value
+                                                                    .languageCode ==
+                                                                'en'
+                                                            ? state
+                                                                .origins[index]
+                                                                .label!
+                                                            : state
+                                                                .origins[index]
+                                                                .labelar!,
+                                                        // overflow:
+                                                        //     TextOverflow.ellipsis,
+                                                        maxLines: 2,
+                                                        style: TextStyle(
+                                                          fontSize: 17,
+                                                        ),
+                                                      ),
                                                     ),
-                                                  ),
+                                                    Spacer(),
+                                                    flagselected == index
+                                                        ? const Icon(
+                                                            Icons
+                                                                .check_box_outlined,
+                                                            color: Colors.green,
+                                                          )
+                                                        : SizedBox.shrink(),
+                                                    // : Icon(
+                                                    //     Icons
+                                                    //         .check_box_outline_blank,
+                                                    //     color:
+                                                    //         AppColor.deepBlue,
+                                                    //   ),
+                                                  ],
+                                                  // subtitle: Text('\$${suggestion['price']}'),
                                                 ),
-                                                Spacer(),
-                                                flagselected == index
-                                                    ? const Icon(
-                                                        Icons
-                                                            .check_box_outlined,
-                                                        color: Colors.green,
-                                                      )
-                                                    : SizedBox.shrink(),
-                                                // : Icon(
-                                                //     Icons
-                                                //         .check_box_outline_blank,
-                                                //     color:
-                                                //         AppColor.deepBlue,
-                                                //   ),
+                                                Divider(
+                                                  color: AppColor.deepYellow,
+                                                ),
                                               ],
-                                              // subtitle: Text('\$${suggestion['price']}'),
                                             ),
                                           ),
                                         )

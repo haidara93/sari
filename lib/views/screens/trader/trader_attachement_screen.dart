@@ -1,10 +1,8 @@
 import 'dart:io';
 
-import 'package:awesome_snackbar_content/awesome_snackbar_content.dart';
 import 'package:custome_mobile/Localization/app_localizations.dart';
 import 'package:custome_mobile/business_logic/bloc/attachment/attachment_bloc.dart';
 import 'package:custome_mobile/business_logic/bloc/attachment/attachment_type_bloc.dart';
-import 'package:custome_mobile/business_logic/bloc/attachment/attachments_list_bloc.dart';
 import 'package:custome_mobile/business_logic/bloc/broker_list_bloc.dart';
 import 'package:custome_mobile/business_logic/bloc/offer_bloc.dart';
 import 'package:custome_mobile/business_logic/bloc/package_type_bloc.dart';
@@ -12,13 +10,10 @@ import 'package:custome_mobile/business_logic/cubit/bottom_nav_bar_cubit.dart';
 import 'package:custome_mobile/business_logic/cubit/locale_cubit.dart';
 import 'package:custome_mobile/data/models/attachments_models.dart';
 import 'package:custome_mobile/data/models/package_model.dart';
-import 'package:custome_mobile/data/models/state_custome_agency_model.dart';
 import 'package:custome_mobile/data/providers/add_attachment_provider.dart';
-import 'package:custome_mobile/data/providers/directorate_provider.dart';
 import 'package:custome_mobile/data/providers/order_broker_provider.dart';
 import 'package:custome_mobile/helpers/color_constants.dart';
 import 'package:custome_mobile/helpers/formatter.dart';
-import 'package:custome_mobile/views/control_view.dart';
 import 'package:custome_mobile/views/screens/trader/select_broker_screen.dart';
 import 'package:custome_mobile/views/widgets/custom_app_bar.dart';
 import 'package:custome_mobile/views/widgets/custom_botton.dart';
@@ -33,6 +28,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
 import 'package:shimmer/shimmer.dart';
+import 'package:file_picker/file_picker.dart';
 
 // ignore: must_be_immutable
 class TraderAttachementScreen extends StatefulWidget {
@@ -92,6 +88,7 @@ class _TraderAttachementScreenState extends State<TraderAttachementScreen> {
   List<File>? _images = [];
   List<File>? _files = [];
   final ImagePicker _picker = ImagePicker();
+
   AttachmentType? selectedAttachmentType;
   List<AttachmentType> attachmentTypes = [];
   final GlobalKey<FormState> _attachmentformkey = GlobalKey<FormState>();
@@ -964,11 +961,11 @@ class _TraderAttachementScreenState extends State<TraderAttachementScreen> {
                                               .translate(
                                                   'please_upload_attachments'),
                                           style: const TextStyle(
-                                            fontSize: 17,
+                                            fontSize: 16,
                                           ),
                                         ),
                                         SizedBox(
-                                          height: 15.h,
+                                          height: 7.h,
                                         ),
                                         // Wrap(
                                         //   children: _buildAttachmentslist(
@@ -1012,61 +1009,87 @@ class _TraderAttachementScreenState extends State<TraderAttachementScreen> {
                                                                   MainAxisAlignment
                                                                       .spaceEvenly,
                                                               children: [
-                                                                // Padding(
-                                                                //   padding: EdgeInsets.symmetric(
-                                                                //       horizontal:
-                                                                //           5.w,
-                                                                //       vertical:
-                                                                //           15.h),
-                                                                //   child:
-                                                                //       InkWell(
-                                                                //     child:
-                                                                //         Stack(
-                                                                //       clipBehavior:
-                                                                //           Clip.none,
-                                                                //       children: [
-                                                                //         Card(
-                                                                //           elevation:
-                                                                //               1,
-                                                                //           child:
-                                                                //               Padding(
-                                                                //             padding: const EdgeInsets.all(8.0),
-                                                                //             child: Center(
-                                                                //               child: SizedBox(
-                                                                //                 height: 55.h,
-                                                                //                 width: 50.w,
-                                                                //                 child: SvgPicture.asset("assets/icons/pdf_icon.svg"),
-                                                                //               ),
-                                                                //             ),
-                                                                //           ),
-                                                                //         ),
-                                                                //         _files!.isNotEmpty
-                                                                //             ? Positioned(
-                                                                //                 right: -7.w,
-                                                                //                 top: -10.h,
-                                                                //                 child: Container(
-                                                                //                   height: 25.h,
-                                                                //                   width: 25.h,
-                                                                //                   padding: const EdgeInsets.all(2),
-                                                                //                   decoration: BoxDecoration(
-                                                                //                     color: AppColor.goldenYellow,
-                                                                //                     borderRadius: BorderRadius.circular(45),
-                                                                //                   ),
-                                                                //                   child: Center(
-                                                                //                     child: Text(
-                                                                //                       _files!.length.toString(),
-                                                                //                       style: const TextStyle(
-                                                                //                         color: Colors.white,
-                                                                //                       ),
-                                                                //                     ),
-                                                                //                   ),
-                                                                //                 ),
-                                                                //               )
-                                                                //             : const SizedBox.shrink()
-                                                                //       ],
-                                                                //     ),
-                                                                //   ),
-                                                                // ),
+                                                                Padding(
+                                                                  padding: EdgeInsets.symmetric(
+                                                                      horizontal:
+                                                                          5.w,
+                                                                      vertical:
+                                                                          15.h),
+                                                                  child:
+                                                                      InkWell(
+                                                                    onTap:
+                                                                        () async {
+                                                                      FilePickerResult?
+                                                                          result =
+                                                                          await FilePicker
+                                                                              .platform
+                                                                              .pickFiles(allowMultiple: true);
+
+                                                                      if (result !=
+                                                                          null) {
+                                                                        _files = result
+                                                                            .paths
+                                                                            .map((path) =>
+                                                                                File(path!))
+                                                                            .toList();
+                                                                      } else {
+                                                                        print(
+                                                                            "No file selected");
+                                                                      }
+
+                                                                      setState2(
+                                                                        () {},
+                                                                      );
+                                                                    },
+                                                                    child:
+                                                                        Stack(
+                                                                      clipBehavior:
+                                                                          Clip.none,
+                                                                      children: [
+                                                                        Card(
+                                                                          elevation:
+                                                                              1,
+                                                                          child:
+                                                                              Padding(
+                                                                            padding:
+                                                                                const EdgeInsets.all(8.0),
+                                                                            child:
+                                                                                Center(
+                                                                              child: SizedBox(
+                                                                                height: 55.h,
+                                                                                width: 50.w,
+                                                                                child: SvgPicture.asset("assets/icons/pdf_icon.svg"),
+                                                                              ),
+                                                                            ),
+                                                                          ),
+                                                                        ),
+                                                                        _files!.isNotEmpty
+                                                                            ? Positioned(
+                                                                                right: -7.w,
+                                                                                top: -10.h,
+                                                                                child: Container(
+                                                                                  height: 25.h,
+                                                                                  width: 25.h,
+                                                                                  padding: const EdgeInsets.all(2),
+                                                                                  decoration: BoxDecoration(
+                                                                                    color: AppColor.goldenYellow,
+                                                                                    borderRadius: BorderRadius.circular(45),
+                                                                                  ),
+                                                                                  child: Center(
+                                                                                    child: Text(
+                                                                                      _files!.length.toString(),
+                                                                                      style: const TextStyle(
+                                                                                        color: Colors.white,
+                                                                                      ),
+                                                                                    ),
+                                                                                  ),
+                                                                                ),
+                                                                              )
+                                                                            : const SizedBox.shrink()
+                                                                      ],
+                                                                    ),
+                                                                  ),
+                                                                ),
                                                                 Padding(
                                                                   padding: EdgeInsets.symmetric(
                                                                       horizontal:
@@ -1343,14 +1366,14 @@ class _TraderAttachementScreenState extends State<TraderAttachementScreen> {
                                                                 ),
                                                         ),
                                                       ),
-                                                      Text(
-                                                        attachmentTypeState
-                                                            .attachmentTypes[0]
-                                                            .name!,
-                                                        style: TextStyle(
-                                                          fontSize: 18.sp,
-                                                        ),
-                                                      ),
+                                                      // Text(
+                                                      //   attachmentTypeState
+                                                      //       .attachmentTypes[0]
+                                                      //       .name!,
+                                                      //   style: TextStyle(
+                                                      //     fontSize: 18.sp,
+                                                      //   ),
+                                                      // ),
                                                     ],
                                                   ),
                                                 );
@@ -1400,7 +1423,7 @@ class _TraderAttachementScreenState extends State<TraderAttachementScreen> {
                                         ),
                                         TextFormField(
                                           controller: _traderNotes,
-                                          maxLines: 2,
+                                          maxLines: 4,
                                           textInputAction: TextInputAction.done,
                                           style: const TextStyle(fontSize: 18),
                                           onChanged: (value) {

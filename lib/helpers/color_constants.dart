@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:hexcolor/hexcolor.dart';
 
 class AppColor {
-  static final lightYellow = HexColor("#C9F4A4");
+  static final lightYellow = HexColor("#E0F5D0");
   static final deepYellow = HexColor("#A3CC84");
   static final lightGreen = HexColor("#EFF6E9");
   static final lightBlue = HexColor("#49AFCA");

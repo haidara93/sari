@@ -131,6 +131,8 @@ class _OfferDetailsScreenState extends State<OfferDetailsScreen>
 
   void calculateCosts() {
     objects = [];
+    print(broker_offerProvider!.products == null);
+    print(broker_offerProvider!.products!.length);
     for (var i = 0; i < broker_offerProvider!.products!.length; i++) {
       objects.add(CalculateObject());
       objects[i].insurance = broker_offerProvider!.taxes![i];
@@ -172,16 +174,13 @@ class _OfferDetailsScreenState extends State<OfferDetailsScreen>
         max: 53,
         period: const Duration(milliseconds: 200),
       );
-      getUserType();
-    });
-    super.initState();
-    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
       trader_offerProvider =
           Provider.of<TraderOfferProvider>(context, listen: false);
       broker_offerProvider =
           Provider.of<BrokerOfferProvider>(context, listen: false);
-      calculateCosts();
+      getUserType();
     });
+    super.initState();
   }
 
   List<Widget> buildProductTiles(String agency, offer.Origin origin,
@@ -380,6 +379,7 @@ class _OfferDetailsScreenState extends State<OfferDetailsScreen>
                     trader_offerProvider!.initAdditionalAttachment(
                         offersstate.offer.additional_attachments!);
                     broker_offerProvider!.initOffer(offersstate.offer);
+                    calculateCosts();
                   }
                 },
                 builder: (context, offerstate) {

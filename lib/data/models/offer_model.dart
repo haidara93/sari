@@ -74,7 +74,6 @@ class Offer {
   });
 
   Offer.fromJson(Map<String, dynamic> json) {
-    print(jsonDecode(json['raw_material'])[0]);
     id = json['id'];
     orderStatus = json['order_status'];
     offerType = json['offer_type'];

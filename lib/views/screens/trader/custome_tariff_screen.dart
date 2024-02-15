@@ -556,7 +556,18 @@ class _CustomeTariffScreenState extends State<CustomeTariffScreen> {
 
   buildFeesTiles(int index3) {
     List<Widget> list = [];
-    list.add(BlocBuilder<FeeBloc, FeeState>(
+    list.add(BlocConsumer<FeeBloc, FeeState>(
+      listener: (context, state) {
+        if (state is FeeLoadedSuccess) {
+          Future.delayed(const Duration(milliseconds: 400))
+              .then((value) => Scrollable.ensureVisible(
+                    chapterKeys[subchapterselected!].currentContext!,
+                    duration: const Duration(
+                      milliseconds: 500,
+                    ),
+                  ));
+        }
+      },
       builder: (context, state) {
         if (state is FeeLoadedSuccess) {
           return Container(
@@ -703,9 +714,24 @@ class _CustomeTariffScreenState extends State<CustomeTariffScreen> {
 
   buildSubChapterTiles(int index2) {
     List<Widget> list = [];
-    list.add(BlocBuilder<SubChapterBloc, SubChapterState>(
+    list.add(BlocConsumer<SubChapterBloc, SubChapterState>(
+      listener: (context, state) {
+        if (state is SubChapterLoadedSuccess) {
+          Future.delayed(const Duration(milliseconds: 400))
+              .then((value) => Scrollable.ensureVisible(
+                    chapterKeys[chapterselected!].currentContext!,
+                    duration: const Duration(
+                      milliseconds: 500,
+                    ),
+                  ));
+        }
+      },
       builder: (context, state) {
         if (state is SubChapterLoadedSuccess) {
+          subchapterKeys = [];
+          for (var element in state.subchapters) {
+            subchapterKeys.add(GlobalKey());
+          }
           return Container(
             color: Colors.white,
             padding: const EdgeInsets.only(top: 0.0),
@@ -761,6 +787,7 @@ class _CustomeTariffScreenState extends State<CustomeTariffScreen> {
                         // ),
                         // leading: const SizedBox.shrink(),
                         title: Row(
+                          key: subchapterKeys[index3],
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           crossAxisAlignment: CrossAxisAlignment.center,
                           children: [
@@ -870,9 +897,24 @@ class _CustomeTariffScreenState extends State<CustomeTariffScreen> {
     // _CustomeTariffScreenState? stateobject =
     //     context.findAncestorStateOfType<_CustomeTariffScreenState>();
     List<Widget> list = [];
-    list.add(BlocBuilder<ChapterBloc, ChapterState>(
+    list.add(BlocConsumer<ChapterBloc, ChapterState>(
+      listener: (context, state) {
+        if (state is ChapterLoadedSuccess) {
+          Future.delayed(const Duration(milliseconds: 400))
+              .then((value) => Scrollable.ensureVisible(
+                    sectionKeys[selected!].currentContext!,
+                    duration: const Duration(
+                      milliseconds: 500,
+                    ),
+                  ));
+        }
+      },
       builder: (context, state) {
         if (state is ChapterLoadedSuccess) {
+          chapterKeys = [];
+          for (var element in state.chapters) {
+            chapterKeys.add(GlobalKey());
+          }
           return Container(
             color: Colors.grey[200],
             padding: const EdgeInsets.only(top: 3.0),
@@ -933,6 +975,7 @@ class _CustomeTariffScreenState extends State<CustomeTariffScreen> {
                           //       : const Icon(Icons.add),
                           // ),
                           title: Row(
+                            key: chapterKeys[index2],
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             crossAxisAlignment: CrossAxisAlignment.center,
                             children: [
@@ -1469,6 +1512,11 @@ class _CustomeTariffScreenState extends State<CustomeTariffScreen> {
     super.dispose();
   }
 
+  List<GlobalKey> sectionKeys = [];
+  List<GlobalKey> chapterKeys = [];
+  List<GlobalKey> subchapterKeys = [];
+  List<GlobalKey> feeKeys = [];
+
   int? selected;
   int? chapterselected;
   int? subchapterselected;
@@ -1878,6 +1926,10 @@ class _CustomeTariffScreenState extends State<CustomeTariffScreen> {
                                 },
                                 builder: (context, state) {
                                   if (state is SectionLoadedSuccess) {
+                                    sectionKeys = [];
+                                    for (var element in state.sections) {
+                                      sectionKeys.add(GlobalKey());
+                                    }
                                     return ListView.builder(
                                       key:
                                           Key('builder ${selected.toString()}'),
@@ -1887,6 +1939,7 @@ class _CustomeTariffScreenState extends State<CustomeTariffScreen> {
                                       itemCount: state.sections.length,
                                       itemBuilder: (context, index) {
                                         return Card(
+                                          // key: sectionKeys[index],
                                           margin: EdgeInsets.symmetric(
                                               vertical: 4.h, horizontal: 3.w),
                                           clipBehavior: Clip.none,
@@ -1915,7 +1968,7 @@ class _CustomeTariffScreenState extends State<CustomeTariffScreen> {
                                                     Colors.transparent),
                                             child: ExpansionTile(
                                               key: Key(
-                                                  index.toString()), //attention
+                                                  "section$index"), //attention
                                               initiallyExpanded:
                                                   index == selected,
                                               tilePadding:
@@ -2028,6 +2081,7 @@ class _CustomeTariffScreenState extends State<CustomeTariffScreen> {
                                               }),
 
                                               title: Row(
+                                                key: sectionKeys[index],
                                                 crossAxisAlignment:
                                                     CrossAxisAlignment.center,
                                                 children: [

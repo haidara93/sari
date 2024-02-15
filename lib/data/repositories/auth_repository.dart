@@ -7,6 +7,7 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 // import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:http/http.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:custome_mobile/business_logic/cubit/locale_cubit.dart';
 
 class AuthRepository {
   late SharedPreferences prefs;
@@ -115,6 +116,8 @@ class AuthRepository {
   }
 
   Future<bool> isAuthenticated() async {
+    // final LocaleCubit localeCubit = LocaleCubit();
+    // await localeCubit.initializeFromPreferences();
     var token = await jwtOrEmpty;
 
     if (token != "") {

@@ -22,7 +22,6 @@ class AccordionRepository {
     if (prefs.getString(fileName) != null &&
         prefs.getString(fileName)!.isNotEmpty) {
       var jsonData = prefs.getString(fileName)!;
-      print(jsonData);
       var res = jsonDecode(jsonData);
       sections = [];
       for (var element in res) {
@@ -133,7 +132,6 @@ class AccordionRepository {
           "$ACCURDION_FEES_ENDPOINT$subchapterId/", lang,
           apiToken: jwt);
       fees = [];
-      print(rs.statusCode);
       if (rs.statusCode == 200) {
         var myDataString = utf8.decode(rs.bodyBytes);
         var result = jsonDecode(myDataString);
@@ -237,13 +235,11 @@ class AccordionRepository {
           subchapterSearch.add(SubChapterSearch.fromJson(element['data'][0]));
         }
       }
-      print("chapter");
       if (result['Fee'] != null) {
         for (var element in result['Fee']) {
           feeSearch.add(FeeSearch.fromJson(element['data'][0]));
         }
       }
-      print("fee");
 
       for (var element in chapterSearch) {
         if ((sections.singleWhere((it) => it!.id == element.idParent1!.id,
@@ -336,8 +332,6 @@ class AccordionRepository {
       bool chexist = false;
       bool subchexist = false;
       bool feeexist = false;
-      print("fee.idParent3!.idParent2!.idParent1!.id");
-      print(feeSearch.length);
       int count = 0;
       try {
         for (var fee in feeSearch) {
@@ -345,7 +339,6 @@ class AccordionRepository {
           if (count > 200) {
             break;
           }
-          print(fee.idParent3!.idParent2!.idParent1!.id);
           if ((sections.singleWhere(
                   (it) => it!.id == fee.idParent3!.idParent2!.idParent1!.id,
                   orElse: () => null)) !=

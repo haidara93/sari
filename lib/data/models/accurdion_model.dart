@@ -661,7 +661,6 @@ class FeeSearch {
         finance!.add(new Finance.fromJson(v));
       });
     }
-    print(jsonEncode(json['fees']));
     fees = Fees.fromJson(json['fees']);
     // if ( != []) {
     //   json['fees'].forEach((v) {
